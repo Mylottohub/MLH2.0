@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+.app__navbar-bg {
+    background-color: #27aae1 !important;
+    padding: 15px;
+    font-family: "Lato", sans-serif;
+    font-weight: 500;
+}
+
+.title_div {
+    padding: 50px;
+    background: #fff200;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 22px;
+    text-align: center !important;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.nav-item:hover .dropdown-menu {
+    display: block !important;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    width: 230px !important;
+    box-shadow: 0px 60px 80px rgba(0, 0, 0, 0.05);
+}
+
+.app_navbar-nav {
+    margin-left: 30px !important;
+}
+
+.nav-link {
+    outline: none;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.nav-link:hover {
+    border-bottom: 3px solid #fff200 !important;
+}
+
+a:active,
+a:hover,
+a:focus {
+    outline: none;
+    text-decoration: none;
+    color: #fff200;
+}
+
+.app__sign-in li {
+    text-decoration: none;
+    list-style-type: none;
+}
+
+.btn-yellow {
+    color: #000;
+    background-color: #fbed1f;
+    border-color: #fbed1f;
+    border-radius: 0 !important;
+}
+
+.app__works h1 {
+    font-family: Karla;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 52px;
+    letter-spacing: -0.4000000059604645px;
+    text-align: center;
+    color: #406777;
+}
+
+.app__works p {
+    font-family: Karla;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0px;
+    text-align: center;
+    color: #406777CC;
+
+}
+
+.app__how-play strong {
+    font-family: Karla;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 28px;
+    letter-spacing: 0px;
+    text-align: center;
+    color: #406777;
+}
+
+.app__how-play small {
+    font-family: Karla;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    letter-spacing: 0px;
+    text-align: center;
+    color: #406777;
+}
+
+.meg_parallax {
+    background: #27AAE1;
+    color: #0B3E53;
+    font-size: 22px;
+    line-height: 26px;
+    padding-top: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+@media (max-width: 750px) {
+    .nav-link {
+        width: 90px;
+    }
+
+    .nav-link a {
+        margin-left: -90px !important;
+    }
+
+    .title_div {
+        font-size: 19px;
+    }
+
+    .app__works p {
+        font-size: 16px;
+    }
+
+    .app__works h1 {
+        font-size: 29px;
+    }
+}

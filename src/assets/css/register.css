@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla&family=Lato&display=swap');
+
+* {
+    font-family: Karla;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+    letter-spacing: 0px;
+}
+
+.app__register h1   {
+    color: #406777;
+    text-align: center;
+    margin-top: 80px;
+}
+
+.app__register h6{
+    color: #406777;
+    text-align: center;
+}
+
+.app__register button {
+    color: #fff !important;
+    background-color: #406777 !important;
+    border-color: #406777 !important;
+    margin-bottom: 90px;
+}
+
+.app__register input {
+    border: 1px solid #406777;
+}

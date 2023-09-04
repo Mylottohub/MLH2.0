@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla&family=Lato&display=swap');
+
+* {
+    font-family: 'Karla', sans-serif;
+    /* font-family: 'Lato', sans-serif; */
+}
+
+.app__select_operator h1 {
+    font-family: Lato;
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 58px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #406777;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.btn-red {
+    color: #fff !important;
+    background-color:#FF2400 !important;
+    border-color: #FF2400 !important;
+    padding: 10px;
+    width: 70%!important;
+}
+
+.service-content p{
+    color: #406777;
+}
+
+.mobile_home_div {
+    background-color: #27AAE1;
+    border-radius: 5px;
+    /* padding: 15px 10px; */
+    line-height: 35px;
+}
+
+.mobile_home_div p {
+    color: #FFF;
+font-family: Karla;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}
+
+.mobile_home_div a {
+    color: var(--Gray-1, #333);
+font-family: Lato;
+font-size: 18px;
+font-style: normal;
+font-weight: 500;
+line-height: 22px; /* 122.222% */
+}
+
+.btn-yellow:hover {
+    color: #000;
+    background-color: #B4A703;
+    border-color: #B4A703;
+}
+
+.app__mobile-sm {
+    display: none!important;
+}
+
+@media(max-width: 760px){
+    .app__select_operator {
+        display: none;
+    }
+
+    .app__mobile-sm {
+        display: block!important;
+    }
+
+    .btn-trans2 {
+        color: #406777;
+        background-color: Transparent;
+        border-color: #406777;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+
+    .btn-blue {
+        color: #fff !important;
+        background-color: #406777 !important;
+        border-color: #406777 !important;
+    }
+
+    .about-area {
+        padding: 35px 0px 150px;
+    }
+}
