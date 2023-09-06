@@ -17,12 +17,12 @@
     margin-top: 30px;
 }
 
-.btn-red {
+.btn-blue {
     color: #fff !important;
-    background-color:#FF2400 !important;
-    border-color: #FF2400 !important;
-    padding: 10px;
-    width: 70%!important;
+    background-color: #406777 !important;
+    border-color: #406777 !important;
+    /* padding: 10px;
+    width: 70%!important; */
 }
 
 .service-content p{

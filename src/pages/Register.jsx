@@ -7,15 +7,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-// import HTTP from "../utils/httpClient";
 import "../assets/css/register.css";
 import { useState } from "react";
 
 const schema = yup.object().shape({
-  fullname: yup.string().required("Name is required"),
-  username: yup.string().required("User Name is required"),
+  fullname: yup.string().required("Name is a required field"),
+  username: yup.string().required("User Name is a required field"),
   email: yup.string().email().required(),
   phone_number: yup.string().min(8).max(15).required(),
+  password: yup.string().min(8).max(15).required(),
 });
 
 const Register = () => {
@@ -33,7 +33,7 @@ const Register = () => {
     setIsSubmitting(true);
     console.log(data);
     setIsSubmitting(false);
-    navigate("/");
+    navigate("/otp");
 
     // Make the API call
     // HTTP
@@ -147,12 +147,33 @@ const Register = () => {
                   </p>
                 )}
               </div>
+
+              <div className="mb-3">
+                <input
+                  type="password"
+                  className="form-control p-3 mb-2"
+                  placeholder="Password"
+                  name="password"
+                  {...register("password", {
+                    required: "Required",
+                  })}
+                />
+                {errors.password && (
+                  <p className="text-danger text-capitalize">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
               <div className="mb-3 form-check">
                 <input type="checkbox" className="form-check-input" />
                 <label className="form-check-label">
                   I have read the Terms and Conditions
                 </label>
               </div>
+              <p style={{ cursor: "pointer", color: "#128481" }}>
+                Already have an account?
+                <span onClick={() => navigate("/login")}>Sign in</span>
+              </p>
               {/* 
               <button type="submit" className="btn btn-primary w-100 p-3">
                 Register

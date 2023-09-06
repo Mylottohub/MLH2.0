@@ -1,0 +1,54 @@
+body {
+    font-family: Karla;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 1.42857143;
+    font-feature-settings: 'liga' off;
+    color: #406777;
+}
+
+.header-top-area {
+    background: #FFF200;
+    padding: 0px 0px;
+}
+
+.btn-trans2_withraw {
+    color: #406777;
+    border-color: #406777;
+} 
+
+.btn-trans2_withraw:hover{
+    color: #406777;
+    border-color: #406777;
+}
+
+.btn-blue2 {
+    color: #fff;
+    background-color: #27AAE1;
+    border-color: #27AAE1;
+    width: 100%;
+}
+
+.btn-blue2:hover {
+    color: #fff;
+    background-color: #27AAE1;
+    border-color: #27AAE1;
+    width: 100%;
+}
+
+.btn-trans2_border {
+    border-color: #406777;;
+    width: 100%;
+}
+
+.btn-trans2_border:hover {
+    border-color: #406777;;
+    width: 100%;
+}
+
+.btn-blue {
+    color: #fff !important;
+    background-color: #406777 !important;
+    border-color: #406777 !important;
+}

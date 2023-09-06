@@ -46,7 +46,7 @@ const Operator = () => {
                     <p>
                       <a
                         // href="https://www.mylottohub.com/welcome/play_action/27"
-                        className="btn btn-red btn-sm btn-block w-100"
+                        className="btn btn-blue btn-sm btn-block w-100"
                       >
                         Play Now
                       </a>

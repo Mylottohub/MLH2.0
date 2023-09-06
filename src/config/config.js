@@ -1,5 +1,5 @@
 const config = {
-    baseURL: "https://cryptocomicslab.com/cclab_backend/cryptocomics-api/public/api/",
+    baseURL: "https://sandbox.mylottohub.com/v1",
   };
   
   export default config;

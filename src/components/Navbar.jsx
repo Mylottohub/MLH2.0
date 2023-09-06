@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import { images } from '../constant'
+import Header from './Header';
 
 const Navbar = () => {
   const navigate = useNavigate();
   return (
     <>
+    <Header/>
          <nav className="navbar navbar-expand-lg app__navbar-bg">
           <div className="container">
             <a className="navbar-brand" style={{cursor:'pointer'}}  onClick={() => navigate("/")}>
@@ -126,6 +128,59 @@ const Navbar = () => {
                     Tutorials
                   </a>
                 </li>
+
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle text-white me-3"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    More
+                  </a>
+                  <ul  className="dropdown-menu">
+                    <li>
+                      <a
+                        className="dropdown-item p-2"
+                       onClick={() => navigate("/about-us")}
+                      >
+                       <i className="fa fa-info"></i>
+                       &nbsp;About us
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="dropdown-item p-2"
+                       onClick={() => navigate("/faq")}
+                      >
+                       <i className="fa fa-question"></i>
+                       &nbsp;FAQs
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        className="dropdown-item p-2"
+                       onClick={() => navigate("/terms")}
+                      >
+                       <i className="fa fa-anchor"></i>
+                       &nbsp;Terms and Conditions
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        className="dropdown-item p-2"
+                       onClick={() => navigate("/contact-us")}
+                      >
+                       <i className="fa fa-phone"></i>
+                       &nbsp;Contact Us
+                      </a>
+                    </li>
+                   
+                  </ul>
+                </li>
               </ul>
 
               <ul className="app__sign-in">
@@ -149,6 +204,7 @@ const Navbar = () => {
                   >
                     <span
                       className="btn btn-yellow"
+                      onClick={() => navigate("/login")}
                       // style="vertical-align: top !important;"
                     >
                       Sign In

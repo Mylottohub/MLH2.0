@@ -116,6 +116,13 @@ a:focus {
     padding-right: 50px;
 }
 
+/* .sub_menu_box {
+    padding: 0px !important;
+    box-shadow: 0px 60px 80px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    width: 230px! important;
+} */
+
 @media (max-width: 750px) {
     .nav-link {
         width: 90px;
