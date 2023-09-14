@@ -3,19 +3,35 @@ import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 // import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 // import HTTP from "../utils/httpClient";
 import "../assets/css/register.css";
-import { useState } from "react";
+import { useUserotpMutation } from "../pages/slices/userApiSlice";
+import { setCredentials } from "../pages/slices/authSlice";
+// import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const schema = yup.object().shape({
-    otp: yup.string().required("Otp is a required"),
+  token: yup.string().required("Otp is a required"),
+  email: yup.string(),
 });
 
 const Otp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [userotp, { isLoading }] = useUserotpMutation();
+
+  // const {userInfo} = useSelector((state) => state.auth);
+  // useEffect(()=> {
+  //   if (userInfo) {
+  //       navigate('/')
+  //   }
+  // },[navigate, userInfo])
+  const email = localStorage.getItem("email");
   const {
     register,
     handleSubmit,
@@ -23,44 +39,21 @@ const Otp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const submitForm = (data) => {
-    setIsSubmitting(true);
+  const submitForm = async (data) => {
     console.log(data);
-    setIsSubmitting(false);
-    navigate("/");
-
-    // Make the API call
-    // HTTP
-    //   .post("/register", data)
-    //   .then((response) => {
-    //     // Display the success message using toast
-    //     setIsSubmitting(false); // Hide the spinner
-    //     toast.success(response.data.message);
-    //     handleClose();
-
-    //     localStorage.setItem("token", response.data.token);
-
-    //     history.push("/otp");
-    //   })
-    //   .catch((error) => {
-    //     setIsSubmitting(false); // Hide the spinner
-
-    //     if (error.response && error.response.data) {
-    //       // If the error has a response and data property (indicating an error response from the server)
-    //       const { message, errors } = error.response.data;
-    //       // Display the custom error message using toast
-    //       if (errors) {
-    //         const errorMessages = Object.values(errors)
-    //           .flat()
-    //           .join(". ");
-    //         toast.error(errorMessages);
-    //       } else {
-    //         toast.error(message || "An error occurred during registration.");
-    //       }
-    //     }
-    //   });
+    try {
+      const res = await userotp(data).unwrap();
+      dispatch(setCredentials(...res));
+      localStorage.setItem("token", data.token);
+      toast.success(res.message);
+      navigate("/");
+    } catch (err) {
+      if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else {
+        toast.error("An error occurred during verification.");
+      }
+    }
   };
 
   return (
@@ -82,28 +75,36 @@ const Otp = () => {
                   type="tel"
                   className="form-control p-3 mb-2"
                   placeholder="Enter Otp"
-                  name="otp"
-                  {...register("otp", {
+                  name="token"
+                  {...register("token", {
                     required: "Required",
                   })}
                 />
-                {errors.otp && (
+                {errors.token && (
                   <p className="text-danger text-capitalize">
-                    {errors.otp.message}
+                    {errors.token.message}
                   </p>
                 )}
+              </div>
+
+              <div className="mb-3" style={{display:'none'}}>
+                <input
+                  type="tel"
+                  className="form-control p-3 mb-2"
+                  name="email"
+                  defaultValue={email}
+                  {...register("email", {
+                    required: "Required",
+                  })}
+                />
               </div>
 
               {/* 
               <button type="submit" className="btn btn-primary w-100 p-3">
                 Register
               </button> */}
-              <Button
-                type="submit"
-                className="w-100 p-3"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
+              <Button type="submit" className="w-100 p-3" disabled={isLoading}>
+                {isLoading ? (
                   <Spinner
                     as="span"
                     animation="border"

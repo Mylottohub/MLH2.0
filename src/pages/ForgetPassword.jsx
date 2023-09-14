@@ -1,5 +1,5 @@
-// import {  useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
@@ -8,28 +8,28 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import {useLoginMutation} from "../pages/slices/userApiSlice"
+import {useForgotpaswordMutation} from "../pages/slices/userApiSlice"
 import {setCredentials} from "../pages/slices/authSlice"
 // import HTTP from "../utils/httpClient";
 import "../assets/css/register.css";
 
 const schema = yup.object().shape({
-  user_details: yup.string().email().required(),
+    user_detail: yup.string().email().required(),
   password: yup.string().min(8).max(15).required(),
 });
 
-const Login = () => {
+const ForgetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [login, {isLoading}] = useLoginMutation();
+  const [forgotpasword, {isLoading}] = useForgotpaswordMutation();
 
-  // const {userInfo} = useSelector((state) => state.auth);
-  // useEffect(()=> {
-  //   if (userInfo) {
-  //       navigate('/otp')
-  //   }
-  // },[navigate, userInfo])
+  const {userInfo} = useSelector((state) => state.auth);
+  useEffect(()=> {
+    if (userInfo) {
+        navigate('/otp')
+    }
+  },[navigate, userInfo])
   const {
     register,
     handleSubmit,
@@ -40,16 +40,14 @@ const Login = () => {
 
   const submitForm  = async (data) => {
     try {
-      const res = await login(data).unwrap() 
-      localStorage.setItem("user_details", data.email);
+      const res = await forgotpasword(data).unwrap() 
       dispatch(setCredentials({...res}))
-      toast.success(res.message)
       navigate('/otp')
     } catch (err) {
         if (err?.data?.error) {
           toast.error(err.data.error);
         } else {
-          toast.error('An error occurred during Login.');
+          toast.error('An error occurred Pls try again.');
         }
     }
   };
@@ -60,12 +58,12 @@ const Login = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-6 mx-auto app__register">
-            <h1 className="mb-4">Login</h1>
-            <h6 className="mb-4">
+            <h1 className="mb-4">Forgot Password</h1>
+            {/* <h6 className="mb-4">
               Play all your favorite Nigerian lotto games from one account on
               mylottohub and get your winnings paid instantly to your bank
               account
-            </h6>
+            </h6> */}
 
             <form onSubmit={handleSubmit(submitForm)}>
               <div className="mb-3">
@@ -73,15 +71,14 @@ const Login = () => {
                   type="email"
                   className="form-control p-3 mb-2"
                   placeholder=" Email Address"
-                  name="user_details"
-                  {...register("user_details", {
+                  name="user_detail"
+                  {...register("user_detail", {
                     required: "Required",
                   })}
                 />
-                {errors.user_details && (
+                {errors.user_detail && (
                   <p className="text-danger text-capitalize">
-                    {/* {errors.user_details.message} */}
-                    Email must be a valid email address
+                    {errors.user_detail.message}
                   </p>
                 )}
               </div>
@@ -103,13 +100,13 @@ const Login = () => {
                 )}
               </div>
               <p style={{ cursor: "pointer", color: "#128481" }}>
-                Don`t have an account?{" "}
-                <span onClick={() => navigate("/register")}>Signup</span>
+              Already have an account?{" "}
+                <span onClick={() => navigate("/login")}>Sign in</span>
               </p>
-              <p style={{ cursor: "pointer", color: "#128481" }}>
+              {/* <p style={{ cursor: "pointer", color: "#128481" }}>
                {" "}
                 <span onClick={() => navigate("/forgot-password")}> Forgot Password</span>
-              </p>
+              </p> */}
             
               <Button
                 type="submit"
@@ -138,4 +135,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgetPassword;

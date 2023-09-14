@@ -1,25 +1,43 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/register.css";
-import { useState } from "react";
+// import { useEffect } from "react";
+import { useRegistersMutation } from "../pages/slices/userApiSlice";
+import { setCredentials } from "../pages/slices/authSlice";
+import ReCaptchaV2 from 'react-google-recaptcha'
+// import 'react-phone-number-input/style.css'
+// import PhoneInputWithCountryFlag from "../components/PhoneInput/PhoneInputWithCountryFlag";
+
 
 const schema = yup.object().shape({
-  fullname: yup.string().required("Name is a required field"),
-  username: yup.string().required("User Name is a required field"),
+  name: yup.string().required("Name is a required field"),
   email: yup.string().email().required(),
-  phone_number: yup.string().min(8).max(15).required(),
+  username: yup.string().required("User Name is a required field"),
+  phone: yup.string().min(8).max(15).required(),
+  // check: yup.string().required("This is a required field"),
   password: yup.string().min(8).max(15).required(),
 });
 
+const siteKey = import.meta.env.VITE_SITE_KEY;
+
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [registers, { isLoading }] = useRegistersMutation();
+  // const { userInfo } = useSelector((state) => state.auth);
+  // useEffect(() => {
+  //   if (userInfo) {
+  //     navigate("/otp");
+  //   }
+  // }, [navigate, userInfo]);
   const {
     register,
     handleSubmit,
@@ -27,44 +45,30 @@ const Register = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitForm = (data) => {
-    setIsSubmitting(true);
-    console.log(data);
-    setIsSubmitting(false);
-    navigate("/otp");
-
-    // Make the API call
-    // HTTP
-    //   .post("/register", data)
-    //   .then((response) => {
-    //     // Display the success message using toast
-    //     setIsSubmitting(false); // Hide the spinner
-    //     toast.success(response.data.message);
-    //     handleClose();
-
-    //     localStorage.setItem("token", response.data.token);
-
-    //     history.push("/otp");
-    //   })
-    //   .catch((error) => {
-    //     setIsSubmitting(false); // Hide the spinner
-
-    //     if (error.response && error.response.data) {
-    //       // If the error has a response and data property (indicating an error response from the server)
-    //       const { message, errors } = error.response.data;
-    //       // Display the custom error message using toast
-    //       if (errors) {
-    //         const errorMessages = Object.values(errors)
-    //           .flat()
-    //           .join(". ");
-    //         toast.error(errorMessages);
-    //       } else {
-    //         toast.error(message || "An error occurred during registration.");
-    //       }
-    //     }
-    //   });
+  const submitForm = async (data) => {
+    try {
+      // console.log(data);
+      // let userEmail = localStorage.setItem('email');
+      localStorage.setItem("email", data.email);
+      // console.log(userEmail);
+      const res = await registers(data).unwrap();
+      dispatch(setCredentials({...res}));
+      toast.success("Registration successful, an OTP has been sent to your email for verfication");
+      navigate("/otp");
+    } catch (err) {
+      if (err?.data?.details) {
+        const errorDetails = err.data.details;
+        Object.values(errorDetails).forEach((errorMessages) => {
+          errorMessages.forEach((errorMessage) => {
+            toast.error(errorMessage);
+          });
+        });
+      } else {
+        // Handle other error cases or display a generic error message
+        toast.error("An error occurred during registration.");
+      }
+    }
   };
 
   return (
@@ -86,14 +90,14 @@ const Register = () => {
                   type="text"
                   className="form-control p-3 mb-2"
                   placeholder="Full Name"
-                  name="fullname"
-                  {...register("fullname", {
+                  name="name"
+                  {...register("name", {
                     required: "Required",
                   })}
                 />
-                {errors.fullname && (
+                {errors.name && (
                   <p className="text-danger text-capitalize">
-                    {errors.fullname.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
@@ -135,18 +139,19 @@ const Register = () => {
                   type="tel"
                   className="form-control p-3 mb-2"
                   placeholder="Phone number"
-                  name="phone_number"
-                  {...register("phone_number", {
+                  name="phone"
+                  {...register("phone", {
                     required: "Required",
                   })}
                 />
-                {errors.phone_number && (
+                {errors.phone && (
                   <p className="text-danger text-capitalize">
-                    {/* {errors.phone_number.message} */}
+                    
                     Phone number is field is required
                   </p>
                 )}
               </div>
+              {/* <PhoneInputWithCountryFlag /> */}
 
               <div className="mb-3">
                 <input
@@ -165,25 +170,30 @@ const Register = () => {
                 )}
               </div>
               <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" />
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  // name="check"
+                  // {...register("check", {
+                  //   required: "Required",
+                  // })}
+                />
                 <label className="form-check-label">
                   I have read the Terms and Conditions
                 </label>
+                {/* {errors.check && (
+                  <p className="text-danger text-capitalize">
+                    {errors.check.message}
+                  </p>
+                )} */}
               </div>
               <p style={{ cursor: "pointer", color: "#128481" }}>
                 Already have an account?
                 <span onClick={() => navigate("/login")}>Sign in</span>
               </p>
-              {/* 
-              <button type="submit" className="btn btn-primary w-100 p-3">
-                Register
-              </button> */}
-              <Button
-                type="submit"
-                className="w-100 p-3"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
+              <ReCaptchaV2 sitekey={siteKey} />
+              <Button type="submit" className="w-100 p-3 mt-3" disabled={isLoading}>
+                {isLoading ? (
                   <Spinner
                     as="span"
                     animation="border"

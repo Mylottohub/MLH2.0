@@ -2,6 +2,7 @@ import Home from "../components/Home";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
 import Faq from "../pages/Faq";
+import ForgetPassword from "../pages/ForgetPassword";
 import Login from "../pages/Login";
 import Otp from "../pages/Otp";
 import Register from "../pages/Register";
@@ -12,6 +13,7 @@ export const routes = [
     id: 1,
     path: "/",
     component: Home,
+    protected: true, // This route is protected
   },
   {
     id: 2,
@@ -47,5 +49,10 @@ export const routes = [
     id: 8,
     path: "/otp",
     component: Otp,
+  },
+  {
+    id: 9,
+    path: "/forgot-password",
+    component: ForgetPassword,
   },
 ];
