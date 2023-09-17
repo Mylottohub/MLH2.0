@@ -1,4 +1,6 @@
 import Home from "../components/Home";
+import PlayGames from "../components/PlayGames/PlayGames";
+import TransactionHistory from "../components/Transactions/TransactionHistory";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
 import Faq from "../pages/Faq";
@@ -54,5 +56,15 @@ export const routes = [
     id: 9,
     path: "/forgot-password",
     component: ForgetPassword,
+  },
+  {
+    id: 10,
+    path: "/transactions",
+    component: TransactionHistory,
+  },
+  {
+    id: 10,
+    path: "/play-game",
+    component: PlayGames,
   },
 ];

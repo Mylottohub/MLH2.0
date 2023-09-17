@@ -39,13 +39,32 @@ const Otp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  // const submitForm = async (data) => {
+  //   try {
+  //     const res = await userotp(data).unwrap();
+  //     dispatch(setCredentials(...res));
+  //     localStorage.setItem("token", res.token);
+  //     localStorage.setItem("data", res.data);
+  //     toast.success("OTP has been confirmed Successfully");
+  //     navigate("/");
+  //   } catch (err) {
+  //     if (err?.data?.message) {
+  //       toast.error(err.data.message);
+  //     } else {
+  //       toast.error("An error occurred during verification.");
+  //     }
+  //   }
+  // };
+
   const submitForm = async (data) => {
-    console.log(data);
     try {
       const res = await userotp(data).unwrap();
-      dispatch(setCredentials(...res));
-      localStorage.setItem("token", data.token);
-      toast.success(res.message);
+      // Assuming res is an object with 'token' and 'data' properties
+      const { token, data: userData } = res;
+      dispatch(setCredentials({ token, data: userData }));
+      localStorage.setItem("token", token);
+      localStorage.setItem("userData", JSON.stringify(userData));
+      toast.success("OTP has been confirmed Successfully");
       navigate("/");
     } catch (err) {
       if (err?.data?.message) {
@@ -55,6 +74,7 @@ const Otp = () => {
       }
     }
   };
+  
 
   return (
     <>

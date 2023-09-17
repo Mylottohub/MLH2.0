@@ -3,15 +3,28 @@ import BModal from "./BModal/BModal";
 import "../assets/css/header.css";
 import { images } from "../constant";
 import { useState } from "react";
+import  Withdraw  from "./Payment/Withdraw";
+import Deposit  from "./Payment/Deposit";
 const Header = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
 
+  const [isOpenDeposit, setIsOpenDeposit] = useState(false);
+  const handleCloseDeposit = () => setIsOpenDeposit(false);
+  const handleOpenDeposit = () => setIsOpenDeposit(true);
+
   const handleWithdraw = () => {
     handleOpen();
   };
+
+  const handleDeposit = () => {
+    handleOpenDeposit();
+  };
+  // const firstname = localStorage.getItem("firstname");
+  // const lastname = localStorage.getItem("lastname");
+  // const email = localStorage.getItem("email");
 
   return (
     <div>
@@ -19,7 +32,7 @@ const Header = () => {
         <div className="header-top-area hidden-sm hidden-xs">
           <div className="container">
             <div className="row">
-              <div className="col-md-3">
+              <div className="col-3">
                 <div
                   className="logo hidden-xs"
                   style={{ paddingBottom: "10px" }}
@@ -36,26 +49,27 @@ const Header = () => {
               <div className="col-md-9">
                 <div className="header-top-right">
                   <div
-                    className="row pull-right"
-                    style={{ padding: "20px 0", width: "70%" }}
+                    className="row pull-right app__header-app"
+                    style={{ padding: "20px", width: "70%" }}
                   >
-                    <div className="col-md-3">
+                    <div className="col-md-3 col-xs-6">
                       <small>
                         ₦0.00
                         <br />
                         Wallet Balance
                       </small>
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-3 col-xs-6">
                       <small>
                         ₦0.00
                         <br />
                         Winnings
                       </small>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 mt-2">
                       <a
                         // href="https://www.mylottohub.com/user/topup"
+                        onClick={() => handleDeposit()}
                         className="btn btn-blue"
                       >
                         <small>Deposit</small>
@@ -78,46 +92,12 @@ const Header = () => {
         </div>
       </header>
       <BModal show={isOpen} onHide={handleClose} size="md">
-        <div style={{ marginTop: "-30px" }}>
-          <div className="container">
-            <span>
-              <strong>Withdraw Funds</strong>
-            </span>
-            <br />
-            <small className="mt-3">
-              Winning Wallet Balance - <strong>₦457,000.00</strong>
-            </small>
-            <hr />
-            <p>
-              Please click the buttons below to either withdraw funds to your
-              bank account or transfer back to your lotto wallet.
-            </p>
-            <br />
-            <p>
-              <a
-                className="btn btn-blue2 btn-block btn-lg"
-              >
-                Cash Out to Bank
-              </a>
-            </p>
+        <Withdraw />
+      </BModal>
 
-            <p>
-              <a
-               className="btn btn-trans2_border btn-block btn-lg"
-              >
-                Transfer to wallet
-              </a>
-            </p>
-           
-          </div>
-
-          {/* <button
-            className="btn text-white mt-4"
-            style={{ background: "#0AB39C", float: "right" }}
-          >
-            Clock in
-          </button> */}
-        </div>
+      <BModal show={isOpenDeposit} onHide={handleCloseDeposit} size="md">
+        {/* <Deposit /> */}
+        <Deposit />
       </BModal>
     </div>
   );

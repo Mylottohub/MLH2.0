@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { images } from "../constant";
 import Header from "./Header";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 import { FaMoneyBill, FaUser } from "react-icons/fa";
 import { BiSolidDashboard } from "react-icons/bi";
 import {
@@ -13,15 +13,15 @@ import {
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { userInfo } = useSelector((state) => state.auth);
+  // const { userInfo } = useSelector((state) => state.auth);
   const token = localStorage.getItem("token");
   const handleLogout = () => {
-     localStorage.clear()
-     navigate('/login')
-  }
+    localStorage.clear();
+    navigate("/login");
+  };
   return (
     <>
-      {userInfo ? (
+      {token ? (
         <>
           <Header />
           <nav className="navbar navbar-expand-lg app__navbar-bg">
@@ -57,6 +57,7 @@ const Navbar = () => {
                         <a
                           className="dropdown-item p-2"
                           // href="https://www.mylottohub.com/play/plotto"
+                          onClick={() => navigate("/")}
                         >
                           <img
                             src={images.lotto_icon}
@@ -248,7 +249,10 @@ const Navbar = () => {
                           </a>
                         </li>
                         <li>
-                          <a className="dropdown-item p-2">
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/transactions")}
+                          >
                             <FaMoneyBill />
                             &nbsp;&nbsp;Transactions
                           </a>
@@ -282,14 +286,6 @@ const Navbar = () => {
                         </span>
                       </a>
                     </li>
-                    {/* <a>
-                      <span
-                        className="btn btn-yellow"
-                        onClick={() => navigate("/login")}
-                      >
-                        Logout
-                      </span>
-                    </a> */}
                   </li>
                 </ul>
               </div>
@@ -497,7 +493,7 @@ const Navbar = () => {
                   >
                     <span
                       className="btn btn-yellow"
-                      onClick={() => navigate("/login")}
+                      navigate
                       // style="vertical-align: top !important;"
                     >
                       Sign In

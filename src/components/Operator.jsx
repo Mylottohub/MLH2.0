@@ -27,7 +27,9 @@ const Operator = () => {
                       />
                     </div>
                   </a>
-                  <div className="service-content text-center">
+                  <div className="service-content text-center" onClick={() => {
+                    navigate('/play-game')
+                  }}>
                     <p>
                       <strong>NEXT GAME:</strong>
                       <br />

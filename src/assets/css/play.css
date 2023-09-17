@@ -1,0 +1,71 @@
+.div_lgrey {
+    background: rgba(64, 103, 119, 0.05) !important;
+    border-radius: 5px;
+    color: #406777;
+    padding: 20px;
+}
+
+.meg_active_game_scroll_div {
+    height: 190px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.blue_dropdown_select {
+    background-color: #406777;
+    color: #FFF;
+}
+
+
+input.chk-btn {
+    display: none;
+}
+
+/*input.chk-btn + label {
+    border: 1px solid grey;
+    background: #4C4C4C;
+    padding: 0px 8px;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 60px;
+    color: #FFF;
+  }*/
+input.chk-btn+label {
+    padding: 18px;
+    color: #406777;
+    text-align: center;
+    font-size: 24px;
+    width: 70px;
+    height: 70px;
+    border: 1px solid #406777;
+    box-sizing: border-box;
+    border-radius: 50px;
+    margin: 3px;
+}
+
+@media (max-width: 767px) {
+    input.chk-btn+label {
+        padding: 3px;
+        color: #406777;
+        text-align: center;
+        font-size: 12px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50px;
+    }
+}
+
+input.chk-btn:not(:checked)+label:hover {
+    box-shadow: 0px 1px 3px;
+}
+
+input.chk-btn+label:active,
+input.chk-btn:checked+label {
+    box-shadow: 0px 0px 3px inset;
+    background: #406777;
+    color: #FFF;
+
+}

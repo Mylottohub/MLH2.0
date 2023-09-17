@@ -52,3 +52,18 @@ body {
     background-color: #406777 !important;
     border-color: #406777 !important;
 }
+
+
+@media(max-width: 767px){
+    .app__header-app {
+        padding: 0!important;
+        width: 100%!important;
+        margin-bottom: 30px;
+        display: flex!important;
+    }
+
+    .header-top-right {
+        display: flex;
+    }
+    
+}
