@@ -190,7 +190,7 @@ const Operator = () => {
               </div>
               &nbsp;&nbsp;&nbsp;<div className="col-xs-6  w-50">
                 <a
-                  href="https://www.mylottohub.com/user/login"
+                   onClick={() => navigate("/login")}
                   className="btn btn-blue btn-block btn-lg"
                 >
                   Login
@@ -207,6 +207,7 @@ const Operator = () => {
                       <a
                         // href="https://www.mylottohub.com/play/plotto"
                         className="btn btn-yellow btn-block"
+                        onClick={() => navigate("/play-game")}
                       >
                         Play Now
                       </a>

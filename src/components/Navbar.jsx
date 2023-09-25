@@ -41,11 +41,11 @@ const Navbar = () => {
                 className="collapse navbar-collapse"
                 id="navbarSupportedContent"
               >
-                <ul className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0">
+                <ul className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0" style={{cursor:'pointer'}}>
                   <li className="nav-item dropdown">
                     <a
                       className="nav-link dropdown-toggle text-white me-3"
-                      href="#"
+                      
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
@@ -57,7 +57,7 @@ const Navbar = () => {
                         <a
                           className="dropdown-item p-2"
                           // href="https://www.mylottohub.com/play/plotto"
-                          onClick={() => navigate("/")}
+                          onClick={() => navigate("/play-game")}
                         >
                           <img
                             src={images.lotto_icon}
@@ -88,62 +88,31 @@ const Navbar = () => {
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3" href="#">
+                    <a className="nav-link text-white me-3" >
                       Results
                     </a>
                   </li>
-                  <li className="nav-item dropdown">
-                    <a
-                      className="nav-link dropdown-toggle text-white me-3"
-                      href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      Lotto Tools
-                    </a>
-                    <ul className="dropdown-menu">
-                      <li>
-                        <a className="dropdown-item p-2">
-                          <img src={images.profore} alt={images.profore} />{" "}
-                          Pro-Forecaster
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          // href="https://www.mylottohub.com/welcome/home_sport"
-                        >
-                          <img src={images.quick} alt={images.quick} /> Quick
-                          Forecast
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          // href="https://www.mylottohub.com/welcome/home_instant"
-                        >
-                          <img src={images.chart} alt={images.chart} /> Create
-                          Lotto Chart
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
 
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3" href="#">
+                    <a className="nav-link text-white me-3" >
+                      Pro-Forecaster
+                    </a>
+                  </li>
+                
+                  <li className="nav-item">
+                    <a className="nav-link text-white me-3"  onClick={() => navigate("/timetable")} >
                       Time Table
                     </a>
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3" href="#">
-                      Community
+                    <a className="nav-link text-white me-3" >
+                    Forecast
                     </a>
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3" href="#">
+                    <a className="nav-link text-white me-3" >
                       Tutorials
                     </a>
                   </li>
@@ -151,7 +120,7 @@ const Navbar = () => {
                   <li className="nav-item dropdown">
                     <a
                       className="nav-link dropdown-toggle text-white me-3"
-                      href="#"
+                      
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
@@ -206,7 +175,7 @@ const Navbar = () => {
                     <li className="nav-item dropdown">
                       <a
                         className="nav-link dropdown-toggle text-white"
-                        href="#"
+                        
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -317,11 +286,11 @@ const Navbar = () => {
               className="collapse navbar-collapse"
               id="navbarSupportedContent"
             >
-              <ul className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0">
+              <ul className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0" style={{cursor:'pointer'}}>
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle text-white me-3"
-                    href="#"
+                    
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
@@ -333,6 +302,7 @@ const Navbar = () => {
                       <a
                         className="dropdown-item p-2"
                         // href="https://www.mylottohub.com/play/plotto"
+                        onClick={() => navigate("/play-game")}
                       >
                         <img src={images.lotto_icon} alt={images.lotto_icon} />{" "}
                         Lotto
@@ -359,62 +329,31 @@ const Navbar = () => {
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" href="#">
+                  <a className="nav-link text-white me-3" >
                     Results
                   </a>
                 </li>
-                <li className="nav-item dropdown">
-                  <a
-                    className="nav-link dropdown-toggle text-white me-3"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    Lotto Tools
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li>
-                      <a className="dropdown-item p-2">
-                        <img src={images.profore} alt={images.profore} />{" "}
-                        Pro-Forecaster
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item p-2"
-                        // href="https://www.mylottohub.com/welcome/home_sport"
-                      >
-                        <img src={images.quick} alt={images.quick} /> Quick
-                        Forecast
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item p-2"
-                        // href="https://www.mylottohub.com/welcome/home_instant"
-                      >
-                        <img src={images.chart} alt={images.chart} /> Create
-                        Lotto Chart
-                      </a>
-                    </li>
-                  </ul>
-                </li>
 
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" href="#">
+                  <a className="nav-link text-white me-3" >
+                  Pro-Forecaster
+                  </a>
+                </li>
+               
+                <li className="nav-item">
+                  <a className="nav-link text-white me-3" onClick={() => navigate("/timetable")}>
                     Time Table
                   </a>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" href="#">
-                    Community
+                  <a className="nav-link text-white me-3" >
+                  Forecast
                   </a>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" href="#">
+                  <a className="nav-link text-white me-3" >
                     Tutorials
                   </a>
                 </li>
@@ -422,7 +361,7 @@ const Navbar = () => {
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle text-white me-3"
-                    href="#"
+                    
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
@@ -493,7 +432,7 @@ const Navbar = () => {
                   >
                     <span
                       className="btn btn-yellow"
-                      navigate
+                      onClick={() => navigate("/login")}
                       // style="vertical-align: top !important;"
                     >
                       Sign In

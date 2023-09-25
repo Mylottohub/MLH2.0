@@ -73,18 +73,7 @@ const Footer = () => {
                           Result
                         </a>
                       </li>
-                     
-                      <li>
-                        <a href="#">
-                          Community
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="#">
-                          Lotto Tools
-                        </a>
-                      </li>
+                  
                       <li>
                         <a href="#">
                           How to Play
@@ -123,18 +112,7 @@ const Footer = () => {
                 <div className="col-md-3 col-sm-6 col-xs-12 col-2">
                   <div className="footer-widget footer-contact">
                     <h2>Download App</h2>
-
-                    <p>
-                      <a href="https://play.google.com/store/apps/details?id=my.lotto.hub">
-                        <img
-                          src="https://www.mylottohub.com/images/google_play.png"
-                          className="img-fluid"
-                        />
-                      </a>
-                    </p>
-                    <br />
-                    <p className="text-center text-white">or</p>
-                    <br />
+                    
                     <p className="text-center">
                       <a
                         href="#"

@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import Otp from "../pages/Otp";
 import Register from "../pages/Register";
 import Terms from "../pages/Terms";
+import TimeTable from "../pages/TimeTable";
 
 export const routes = [
   {
@@ -63,8 +64,13 @@ export const routes = [
     component: TransactionHistory,
   },
   {
-    id: 10,
+    id: 11,
     path: "/play-game",
     component: PlayGames,
+  },
+  {
+    id: 12,
+    path: "/timetable",
+    component: TimeTable,
   },
 ];

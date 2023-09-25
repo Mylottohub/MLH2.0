@@ -2,12 +2,13 @@
 
 import Navbar from "../Navbar";
 // import CheckboxForm from "./CheckedForm";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "../../assets/css/play.css";
 import React, { useEffect, useState } from "react";
 
 const PlayGames = () => {
   const [selectedBetType, setSelectedBetType] = useState("");
+  const [selectedGameType, setSelectedGameType] = useState("");
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [selectedCount, setSelectedCount] = useState(0); // Track selected count
   const maxSelectableNumbers = {
@@ -19,16 +20,39 @@ const PlayGames = () => {
     "PERM 3": 24,
     "PERM 5": 24,
   };
+  const [confirmedBet, setConfirmedBet] = useState(null);
+
+  const handleConfirmBet = () => {
+    const newConfirmedBet = {
+      gname: selectedGameType, 
+      line: "1", 
+      gtype: selectedBetType, 
+      bets:selectedNumbers, 
+      max_win: "₦234,000.00", 
+      total_stake: "₦200",
+    };
+
+    setConfirmedBet(newConfirmedBet);
+  };
+
+  const clearSelectedNumbers = () => {
+    setSelectedNumbers([]);
+    setSelectedCount(0);
+  };
 
   const handleBetTypeChange = (event) => {
     const newBetType = event.target.value;
     setSelectedBetType(newBetType);
 
-    // Clear the selected numbers and count immediately when the bet type changes.
-    setSelectedNumbers([]);
-    setSelectedCount(0);
-  };
+    // Clear selected numbers
+    clearSelectedNumbers();
 
+    // Clear checkboxes
+    const checkboxes = document.querySelectorAll(".chk-btn");
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+  };
   const handleCheckboxChange = (event) => {
     const number = parseInt(event.target.value);
     // Check if the number is already selected.
@@ -50,7 +74,84 @@ const PlayGames = () => {
     }
   };
 
+  const handleGameChange = (e) => {
+    const game = e.target.value;
+    // console.log(game);
+    setSelectedGameType(game)
+  }
+
   const checkboxes = [];
+  const randomizeCheckbox = () => {
+    if (!selectedBetType) {
+      toast.error("Select Bet Type");
+      return;
+    }
+
+    const gtype = selectedBetType;
+    let count;
+
+    switch (gtype) {
+      case "2 DIRECT":
+        count = 2;
+        break;
+      case "3 DIRECT":
+        count = 3;
+        break;
+      case "4 DIRECT":
+        count = 4;
+        break;
+      case "5 DIRECT":
+        count = 5;
+        break;
+      case "6 DIRECT":
+        count = 6;
+        break;
+      case "PERM 2":
+        count = 4;
+        break;
+      case "PERM 3":
+        count = 6;
+        break;
+      case "PERM 4":
+        count = 8;
+        break;
+      case "PERM 5":
+        count = 10;
+        break;
+      case "PERM 6":
+        count = 12;
+        break;
+      default:
+        break;
+    }
+
+    const mustCheck = count;
+    const checkboxes = document.querySelectorAll(".chk-btn");
+
+    if (mustCheck >= checkboxes.length) {
+      toast.error("Not enough numbers available for this bet type.");
+      return;
+    }
+
+    const randomIndices = [];
+    while (randomIndices.length < mustCheck) {
+      const randomIndex = Math.floor(Math.random() * checkboxes.length);
+      if (!randomIndices.includes(randomIndex)) {
+        randomIndices.push(randomIndex);
+      }
+    }
+
+    checkboxes.forEach((checkbox, index) => {
+      checkbox.checked = randomIndices.includes(index);
+    });
+  };
+
+  const clearRandomize = () => {
+    const checkboxes = document.querySelectorAll(".chk-btn");
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+  };
 
   for (let x = 1; x <= 90; x++) {
     const id = `c${x}`;
@@ -73,6 +174,7 @@ const PlayGames = () => {
       </React.Fragment>
     );
   }
+
   return (
     <>
       <Navbar />
@@ -92,16 +194,36 @@ const PlayGames = () => {
               </div>
               <div className="col-md-6 col-xs-8">
                 <div className="row">
-                  <b className="mb-2">Wesco VAG</b>
+                  {/* <b className="mb-2">Wesco VAG</b>
                   <div className="d-flex mb-5">
                     <p>27:06:2021 | 10:20 AM</p>
                     &nbsp; &nbsp; &nbsp; &nbsp;
                     <small>...this game ends in 06hr:07m:02s</small>
-                  </div>
-                  <div className="col-md-12 d-flex">
+                  </div> */}
+                  <div className="col-md-6">
+                    <select
+                      name="game"
+                      className="form-control"
+                      required
+                      id="game"
+                      value={selectedGameType}
+                      onChange={handleGameChange}
+                    >
+                      <option value="">Select Game</option>
+                      <option value="WESCO GREEN">WESCO GREEN</option>
+                      <option value="WESCO GREEN MACH">WESCO GREEN MACH</option>
+                      <option value="WESCO BONUS">WESCO BONUS</option>
+                      <option value="WESCO BONUS MACH">WESCO BONUS MACH</option>
+                      <option value="WESCO TREASURE">WESCO TREASURE</option>
+                      <option value="WESCO TREASURE MACH">WESCO TREASURE MACH</option>
+                      <option value="WESCO MIDWEEK">WESCO MIDWEEK</option>
+                      <option value="WESCO KEY">WESCO KEY</option>
+                      <option value="WESCO KEY MACH">WESCO KEY MACH</option>
+                    </select>
+                    <br />
                     <select
                       name="gtype"
-                      className="form-select p-2 mb-2 blue_dropdown_select w-25"
+                      className="form-select p-2 mb-2 blue_dropdown_select w-100"
                       required=""
                       id="gtype"
                       value={selectedBetType}
@@ -118,7 +240,7 @@ const PlayGames = () => {
                       <option value="PERM 5">PERM 5</option>
                     </select>
                     &nbsp; &nbsp; &nbsp; &nbsp;{" "}
-                    <p className=" btn btn-light p-2 mb-2">Bet History</p>
+                    {/* <p className=" btn btn-light p-2 mb-2">Bet History</p> */}
                   </div>
                 </div>
               </div>
@@ -191,18 +313,23 @@ const PlayGames = () => {
               <div className="div_lgrey">
                 <div className="row">
                   <div className="col-md-4">
-                    <a id="randomize">
+                    <a
+                      id="randomize"
+                      style={{ cursor: "pointer" }}
+                      onClick={randomizeCheckbox}
+                    >
                       <i className="fa fa-crosshairs"></i> Randomize
                     </a>
                   </div>
-                  <div className="col-md-4">
-                    <a id="crandomize">
+
+                  <div className="col-md-4" style={{ cursor: "pointer" }}>
+                    <a id="crandomize" onClick={clearRandomize}>
                       <i className="fa fa-cube"></i> Clear Randomize
                     </a>
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4" style={{ cursor: "pointer" }}>
                     <a id="crandomize">
-                      <i className="fa fa-dashboard"></i> Price Structure
+                      <i className="fa fa-dashboard"></i> Bet History
                     </a>
                   </div>
                 </div>
@@ -212,6 +339,26 @@ const PlayGames = () => {
                 </p>
                 <br />
                 <div>{checkboxes}</div>
+                <br />
+                <br />
+                <input
+                  type="tel"
+                  className="form-control"
+                  value=""
+                  placeholder="Amount"
+                  required
+                  name="amount"
+                 
+                />
+                <br />
+                <button
+                  name="cont_btn"
+                  className="btn btn-primary btn-block btn-lg btn-blue w-100"
+                  id="cont_btn"
+                  onClick={handleConfirmBet}
+                >
+                  CONFIRM BET
+                </button>
               </div>
             </div>
             <div className="col-md-4">
@@ -222,58 +369,87 @@ const PlayGames = () => {
                 >
                   <p>
                     Bet Slip
-                    <br />
+                    {/* <br />
                     <strong>
                       <span id="bgname"></span>
-                    </strong>
+                    </strong> */}
                   </p>
-                  <b>Wesco VAG</b>
                 </div>
-                <div className="div_lgrey">
-                  <div id="bet_info">
-                    <strong>Lines: 1</strong>
-                    <span id="bline"></span>
-                    <br />
-                    <br />
-                    <strong>Type: NAP 2 </strong>
-                    <span id="btype"></span>
-                    <br />
-                    <br />
-                    <strong>My bets: 25, 24, 38, 12 </strong>
-                    <span id="bbets"></span>
-                    <br />
-                    <br />
-                    <p>
-                      <p>Maximum Win: ₦234,000.00</p>
-                      <span id="bmax_win"></span>
-                    </p>
-                    <p>
-                      <p>Total Stake: ₦200</p>
-                      <span id="btotal_stake"></span>
-                    </p>
+                {confirmedBet && (
+                  <div className="div_lgrey" style={{marginTop:'-20px'}}>
+                    <b>Game Name: {confirmedBet.gname}</b> <br />
+                      <br />
+                    <div id="bet_info">
+                      <strong>Lines: {confirmedBet.line}</strong>
+                      <span id="bline"></span>
+                      <br />
+                      <br />
+                      <strong>Type: {confirmedBet.gtype}</strong>
+                      <span id="btype"></span>
+                      <br />
+                      <br />
+                     <strong>My bets: {confirmedBet.bets.join(' ')} </strong>
 
-                    <br />
-                    <div className="row">
-                      <div className="col-md-6">
-                        <p>
-                          <a
-                            className="btn btn-trans2 btn-block btn-outline-danger"
-                            id="bcancel"
-                          >
-                            Cancel
-                          </a>
-                        </p>
+                      <span id="bbets"></span>
+
+                      <div
+                        className="d-flex justify-content-between mt-3 mb-3"
+                        style={{
+                          background: "#fff",
+                          border: "1px solid #406777",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        <p className="mt-2 p-1">0.0</p>
+                        <p className="mt-2 p-1">₦</p>
                       </div>
-                      <div className="col-md-6">
-                        <p>
-                          <a className="btn btn-blue btn-block" id="bplace_bet">
-                            Place Bet
-                          </a>
-                        </p>
+                      <div className="d-flex justify-content-around mt-3 mb-3">
+                        <a
+                          style={{ color: "#406777!important" }}
+                          className="btn mt-2 p-1 bg-light"
+                        >
+                          20
+                        </a>
+                        <a className="btn mt-2 p-1">50</a>
+                        <a className="btn mt-2 p-1">100</a>
+                        <a className="btn mt-2 p-1">200</a>
+                      </div>
+
+                      <p>
+                        <p>Maximum Win: {confirmedBet.max_win}</p>
+                        <span id="bmax_win"></span>
+                      </p>
+                      <p>
+                        <p>Total Stake: {confirmedBet.total_stake}</p>
+                        <span id="btotal_stake"></span>
+                      </p>
+
+                      <br />
+                      <div className="row">
+                        <div className="col-md-6">
+                          <p>
+                            <a
+                              className="btn btn-trans2 btn-block btn-outline-danger"
+                              id="bcancel"
+                            >
+                              Cancel
+                            </a>
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <a
+                              className="btn btn-blue btn-block"
+                              id="bplace_bet"
+                            >
+                              Place Bet
+                            </a>
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

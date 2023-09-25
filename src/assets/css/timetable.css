@@ -1,0 +1,40 @@
+.service-area {
+    padding: 100px 0px;
+}
+
+.service-area2 {
+    padding: 100px 0px 70px;
+}
+
+.table-express>tbody>tr>th{
+    background-color: #406777;
+    padding: 20px !important;
+    color: #fff;
+}
+.table-express>tbody>tr>td{
+    border-top: none !important;
+    padding: 20px !important;
+}
+
+@media (max-width: 767px) {
+    .service-area {
+        padding: 100px 0px;
+    }
+
+    .service-area2 .service-wrap {
+        padding: 30px 15px;
+    }
+    .service-area2 {
+        padding: 35px 0px 100px;
+    }
+
+    .service-area3 .service-wrap {
+		padding: 0px;
+	}
+	.service-area3 .service-img{
+		padding:0px;
+	}
+    .service-area2 .service-wrap {
+        padding: 30px 15px;
+    }
+}
