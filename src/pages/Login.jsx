@@ -14,7 +14,7 @@ import {setCredentials} from "../pages/slices/authSlice"
 import "../assets/css/register.css";
 
 const schema = yup.object().shape({
-  user_details: yup.string().email().required(),
+  email: yup.string().email().required(),
   password: yup.string().min(8).max(15).required(),
 });
 
@@ -41,7 +41,7 @@ const Login = () => {
   const submitForm  = async (data) => {
     try {
       const res = await login(data).unwrap() 
-      localStorage.setItem("user_details", data.user_details);
+      localStorage.setItem("email", data.email);
       dispatch(setCredentials({...res}))
       toast.success(res.message)
       navigate('/otp')
@@ -73,14 +73,14 @@ const Login = () => {
                   type="email"
                   className="form-control p-3 mb-2"
                   placeholder=" Email Address"
-                  name="user_details"
-                  {...register("user_details", {
+                  name="email"
+                  {...register("email", {
                     required: "Required",
                   })}
                 />
-                {errors.user_details && (
+                {errors.email && (
                   <p className="text-danger text-capitalize">
-                    {/* {errors.user_details.message} */}
+                    {/* {errors.email.message} */}
                     Email must be a valid email address
                   </p>
                 )}

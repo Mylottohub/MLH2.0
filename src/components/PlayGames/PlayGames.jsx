@@ -22,19 +22,6 @@ const PlayGames = () => {
   };
   const [confirmedBet, setConfirmedBet] = useState(null);
 
-  const handleConfirmBet = () => {
-    const newConfirmedBet = {
-      gname: selectedGameType, 
-      line: "1", 
-      gtype: selectedBetType, 
-      bets:selectedNumbers, 
-      max_win: "₦234,000.00", 
-      total_stake: "₦200",
-    };
-
-    setConfirmedBet(newConfirmedBet);
-  };
-
   const clearSelectedNumbers = () => {
     setSelectedNumbers([]);
     setSelectedCount(0);
@@ -77,62 +64,90 @@ const PlayGames = () => {
   const handleGameChange = (e) => {
     const game = e.target.value;
     // console.log(game);
-    setSelectedGameType(game)
-  }
+    setSelectedGameType(game);
+  };
 
   const checkboxes = [];
+  // const randomizeCheckbox = () => {
+  //   if (!selectedBetType) {
+  //     toast.error("Select Bet Type");
+  //     return;
+  //   }
+
+  //   const gtype = selectedBetType;
+  //   let count;
+
+  //   switch (gtype) {
+  //     case "2 DIRECT":
+  //       count = 2;
+  //       break;
+  //     case "3 DIRECT":
+  //       count = 3;
+  //       break;
+  //     case "4 DIRECT":
+  //       count = 4;
+  //       break;
+  //     case "5 DIRECT":
+  //       count = 5;
+  //       break;
+  //     case "6 DIRECT":
+  //       count = 6;
+  //       break;
+  //     case "PERM 2":
+  //       count = 4;
+  //       break;
+  //     case "PERM 3":
+  //       count = 6;
+  //       break;
+  //     case "PERM 4":
+  //       count = 8;
+  //       break;
+  //     case "PERM 5":
+  //       count = 10;
+  //       break;
+  //     case "PERM 6":
+  //       count = 12;
+  //       break;
+  //     default:
+  //       break;
+  //   }
+
+  //   const mustCheck = count;
+  //   const checkboxes = document.querySelectorAll(".chk-btn");
+
+  //   if (mustCheck >= checkboxes.length) {
+  //     toast.error("Not enough numbers available for this bet type.");
+  //     return;
+  //   }
+
+  //   const randomIndices = [];
+  //   while (randomIndices.length < mustCheck) {
+  //     const randomIndex = Math.floor(Math.random() * checkboxes.length);
+  //     if (!randomIndices.includes(randomIndex)) {
+  //       randomIndices.push(randomIndex);
+  //     }
+  //   }
+
+  //   checkboxes.forEach((checkbox, index) => {
+  //     checkbox.checked = randomIndices.includes(index);
+  //   });
+  // };
+
   const randomizeCheckbox = () => {
     if (!selectedBetType) {
       toast.error("Select Bet Type");
       return;
     }
-
+  
     const gtype = selectedBetType;
-    let count;
-
-    switch (gtype) {
-      case "2 DIRECT":
-        count = 2;
-        break;
-      case "3 DIRECT":
-        count = 3;
-        break;
-      case "4 DIRECT":
-        count = 4;
-        break;
-      case "5 DIRECT":
-        count = 5;
-        break;
-      case "6 DIRECT":
-        count = 6;
-        break;
-      case "PERM 2":
-        count = 4;
-        break;
-      case "PERM 3":
-        count = 6;
-        break;
-      case "PERM 4":
-        count = 8;
-        break;
-      case "PERM 5":
-        count = 10;
-        break;
-      case "PERM 6":
-        count = 12;
-        break;
-      default:
-        break;
-    }
-
-    const mustCheck = count;
+    const mustCheck = maxSelectableNumbers[gtype];
     const checkboxes = document.querySelectorAll(".chk-btn");
-
+  
     if (mustCheck >= checkboxes.length) {
       toast.error("Not enough numbers available for this bet type.");
       return;
     }
-
+  
     const randomIndices = [];
     while (randomIndices.length < mustCheck) {
       const randomIndex = Math.floor(Math.random() * checkboxes.length);
@@ -140,12 +155,16 @@ const PlayGames = () => {
         randomIndices.push(randomIndex);
       }
     }
-
+  
+    const randomizedNumbers = randomIndices.map((index) => parseInt(checkboxes[index].value));
+    
+    setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
+  
     checkboxes.forEach((checkbox, index) => {
       checkbox.checked = randomIndices.includes(index);
     });
   };
-
+  
   const clearRandomize = () => {
     const checkboxes = document.querySelectorAll(".chk-btn");
     checkboxes.forEach((checkbox) => {
@@ -175,11 +194,107 @@ const PlayGames = () => {
     );
   }
 
+  const handleConfirmBet = (e) => {
+    e.preventDefault();
+    if (!selectedGameType) {
+      toast.error("Select a Game Name");
+      return;
+    }
+    if (!selectedBetType) {
+      toast.error("Select Bet Type");
+      return;
+    }
+
+    const requiredNumbers = maxSelectableNumbers[selectedBetType];
+
+    if (selectedNumbers.length !== requiredNumbers) {
+      toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
+      return;
+    }
+
+    const stakeAmount = parseFloat(
+      document.getElementById("stakeAmount").value
+    );
+
+    if (isNaN(stakeAmount) || stakeAmount < 10) {
+      toast.error("Minimum stake amount is ₦10");
+      return;
+    }
+
+    let multiplier = 1;
+
+    switch (selectedBetType) {
+      case "2 DIRECT":
+        multiplier = 240;
+        break;
+      case "3 DIRECT":
+        multiplier = 2100;
+        break;
+      case "4 DIRECT":
+        multiplier = 6000;
+        break;
+      case "5 DIRECT":
+        multiplier = 44000;
+        break;
+      default:
+        toast.error("Invalid Bet Type");
+        return;
+    }
+
+    const maxWin = stakeAmount * multiplier;
+
+    const newConfirmedBet = {
+      gname: selectedGameType,
+      line: "1",
+      gtype: selectedBetType,
+      bets: selectedNumbers,
+      max_win: `₦${maxWin.toFixed(2)}`,
+      total_stake: `₦${stakeAmount.toFixed(2)}`,
+    };
+
+    setConfirmedBet(newConfirmedBet);
+  };
+
+  const localStorageKey = "betSlip";
+  useEffect(() => {
+    const savedBetSlip = localStorage.getItem(localStorageKey);
+    if (savedBetSlip) {
+      setConfirmedBet(JSON.parse(savedBetSlip));
+    }
+  }, []);
+
+   useEffect(() => {
+    if (confirmedBet) {
+      localStorage.setItem(localStorageKey, JSON.stringify(confirmedBet));
+    } else {
+      localStorage.removeItem(localStorageKey);
+    }
+  }, [confirmedBet]);
+
+  const handleCancelBet = () => {
+    // Clear the confirmed bet and remove it from localStorage
+    setConfirmedBet(null);
+    localStorage.removeItem(localStorageKey);
+  };
+
   return (
     <>
       <Navbar />
       <div className="container">
-        <form action="" method="post" name="play_form" id="play_form">
+        {/* <input
+          type="text"
+          className="form-control"
+          placeholder="Amount"
+          required
+          // name="amount"
+        /> */}
+        <form
+          action=""
+          method="post"
+          onSubmit={handleConfirmBet}
+          name="play_form"
+          id="play_form"
+        >
           <p className="mt-5">
             <strong>Select Operator &gt;&gt; Wesco</strong>
           </p>
@@ -194,12 +309,6 @@ const PlayGames = () => {
               </div>
               <div className="col-md-6 col-xs-8">
                 <div className="row">
-                  {/* <b className="mb-2">Wesco VAG</b>
-                  <div className="d-flex mb-5">
-                    <p>27:06:2021 | 10:20 AM</p>
-                    &nbsp; &nbsp; &nbsp; &nbsp;
-                    <small>...this game ends in 06hr:07m:02s</small>
-                  </div> */}
                   <div className="col-md-6">
                     <select
                       name="game"
@@ -215,7 +324,9 @@ const PlayGames = () => {
                       <option value="WESCO BONUS">WESCO BONUS</option>
                       <option value="WESCO BONUS MACH">WESCO BONUS MACH</option>
                       <option value="WESCO TREASURE">WESCO TREASURE</option>
-                      <option value="WESCO TREASURE MACH">WESCO TREASURE MACH</option>
+                      <option value="WESCO TREASURE MACH">
+                        WESCO TREASURE MACH
+                      </option>
                       <option value="WESCO MIDWEEK">WESCO MIDWEEK</option>
                       <option value="WESCO KEY">WESCO KEY</option>
                       <option value="WESCO KEY MACH">WESCO KEY MACH</option>
@@ -344,11 +455,9 @@ const PlayGames = () => {
                 <input
                   type="tel"
                   className="form-control"
-                  value=""
                   placeholder="Amount"
                   required
-                  name="amount"
-                 
+                  id="stakeAmount"
                 />
                 <br />
                 <button
@@ -367,18 +476,12 @@ const PlayGames = () => {
                   style={{ background: "#4067770D" }}
                   className="div_dgrey text-center p-4"
                 >
-                  <p>
-                    Bet Slip
-                    {/* <br />
-                    <strong>
-                      <span id="bgname"></span>
-                    </strong> */}
-                  </p>
+                  <p>Bet Slip</p>
                 </div>
                 {confirmedBet && (
-                  <div className="div_lgrey" style={{marginTop:'-20px'}}>
+                  <div className="div_lgrey" style={{ marginTop: "-20px" }}>
                     <b>Game Name: {confirmedBet.gname}</b> <br />
-                      <br />
+                    <br />
                     <div id="bet_info">
                       <strong>Lines: {confirmedBet.line}</strong>
                       <span id="bline"></span>
@@ -388,7 +491,7 @@ const PlayGames = () => {
                       <span id="btype"></span>
                       <br />
                       <br />
-                     <strong>My bets: {confirmedBet.bets.join(' ')} </strong>
+                      <strong>My bets: {confirmedBet.bets.join(" ")} </strong>
 
                       <span id="bbets"></span>
 
@@ -431,6 +534,7 @@ const PlayGames = () => {
                             <a
                               className="btn btn-trans2 btn-block btn-outline-danger"
                               id="bcancel"
+                              onClick={handleCancelBet}
                             >
                               Cancel
                             </a>

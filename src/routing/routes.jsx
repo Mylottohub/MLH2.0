@@ -8,8 +8,10 @@ import ForgetPassword from "../pages/ForgetPassword";
 import Login from "../pages/Login";
 import Otp from "../pages/Otp";
 import Register from "../pages/Register";
+import  Result  from "../pages/Result";
 import Terms from "../pages/Terms";
 import TimeTable from "../pages/TimeTable";
+
 
 export const routes = [
   {
@@ -72,5 +74,10 @@ export const routes = [
     id: 12,
     path: "/timetable",
     component: TimeTable,
+  },
+  {
+    id: 13,
+    path: "/result",
+    component: Result,
   },
 ];

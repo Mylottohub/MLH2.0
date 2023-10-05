@@ -2,11 +2,13 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import '../assets/css/timetable.css'
 import Footer from "../components/Footer";
+import Slider from "../components/Slider";
 
 const TimeTable = () => {
   return (
     <React.Fragment>
       <Navbar />
+      <Slider />
       <div className="service-area service-area2 service-area3">
         <div className="container">
           <div className="row">

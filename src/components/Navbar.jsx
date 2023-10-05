@@ -41,11 +41,13 @@ const Navbar = () => {
                 className="collapse navbar-collapse"
                 id="navbarSupportedContent"
               >
-                <ul className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0" style={{cursor:'pointer'}}>
+                <ul
+                  className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0"
+                  style={{ cursor: "pointer" }}
+                >
                   <li className="nav-item dropdown">
                     <a
                       className="nav-link dropdown-toggle text-white me-3"
-                      
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
@@ -88,39 +90,38 @@ const Navbar = () => {
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3" >
+                    <a
+                      className="nav-link text-white me-3"
+                      onClick={() => navigate("/result")}
+                    >
                       Results
                     </a>
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3" >
-                      Pro-Forecaster
-                    </a>
+                    <a className="nav-link text-white me-3">Pro-Forecaster</a>
                   </li>
-                
+
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3"  onClick={() => navigate("/timetable")} >
+                    <a
+                      className="nav-link text-white me-3"
+                      onClick={() => navigate("/timetable")}
+                    >
                       Time Table
                     </a>
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3" >
-                    Forecast
-                    </a>
+                    <a className="nav-link text-white me-3">Forecast</a>
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link text-white me-3" >
-                      Tutorials
-                    </a>
+                    <a className="nav-link text-white me-3">Tutorials</a>
                   </li>
 
                   <li className="nav-item dropdown">
                     <a
                       className="nav-link dropdown-toggle text-white me-3"
-                      
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
@@ -175,7 +176,6 @@ const Navbar = () => {
                     <li className="nav-item dropdown">
                       <a
                         className="nav-link dropdown-toggle text-white"
-                        
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -286,11 +286,13 @@ const Navbar = () => {
               className="collapse navbar-collapse"
               id="navbarSupportedContent"
             >
-              <ul className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0" style={{cursor:'pointer'}}>
+              <ul
+                className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0"
+                style={{ cursor: "pointer" }}
+              >
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle text-white me-3"
-                    
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
@@ -329,39 +331,38 @@ const Navbar = () => {
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" >
+                  <a
+                    className="nav-link text-white me-3"
+                    onClick={() => navigate("/result")}
+                  >
                     Results
                   </a>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" >
-                  Pro-Forecaster
-                  </a>
+                  <a className="nav-link text-white me-3">Pro-Forecaster</a>
                 </li>
-               
+
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" onClick={() => navigate("/timetable")}>
+                  <a
+                    className="nav-link text-white me-3"
+                    onClick={() => navigate("/timetable")}
+                  >
                     Time Table
                   </a>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" >
-                  Forecast
-                  </a>
+                  <a className="nav-link text-white me-3">Forecast</a>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link text-white me-3" >
-                    Tutorials
-                  </a>
+                  <a className="nav-link text-white me-3">Tutorials</a>
                 </li>
 
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle text-white me-3"
-                    
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
