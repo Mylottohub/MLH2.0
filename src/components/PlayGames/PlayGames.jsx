@@ -18,6 +18,7 @@ const PlayGames = () => {
     "5 DIRECT": 5,
     "PERM 2": 24,
     "PERM 3": 24,
+    "PERM 4": 24,
     "PERM 5": 24,
   };
   const [confirmedBet, setConfirmedBet] = useState(null);
@@ -68,58 +69,22 @@ const PlayGames = () => {
   };
 
   const checkboxes = [];
+ 
   // const randomizeCheckbox = () => {
   //   if (!selectedBetType) {
   //     toast.error("Select Bet Type");
   //     return;
   //   }
-
+  
   //   const gtype = selectedBetType;
-  //   let count;
-
-  //   switch (gtype) {
-  //     case "2 DIRECT":
-  //       count = 2;
-  //       break;
-  //     case "3 DIRECT":
-  //       count = 3;
-  //       break;
-  //     case "4 DIRECT":
-  //       count = 4;
-  //       break;
-  //     case "5 DIRECT":
-  //       count = 5;
-  //       break;
-  //     case "6 DIRECT":
-  //       count = 6;
-  //       break;
-  //     case "PERM 2":
-  //       count = 4;
-  //       break;
-  //     case "PERM 3":
-  //       count = 6;
-  //       break;
-  //     case "PERM 4":
-  //       count = 8;
-  //       break;
-  //     case "PERM 5":
-  //       count = 10;
-  //       break;
-  //     case "PERM 6":
-  //       count = 12;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-
-  //   const mustCheck = count;
+  //   const mustCheck = maxSelectableNumbers[gtype];
   //   const checkboxes = document.querySelectorAll(".chk-btn");
-
+  
   //   if (mustCheck >= checkboxes.length) {
   //     toast.error("Not enough numbers available for this bet type.");
   //     return;
   //   }
-
+  
   //   const randomIndices = [];
   //   while (randomIndices.length < mustCheck) {
   //     const randomIndex = Math.floor(Math.random() * checkboxes.length);
@@ -127,44 +92,113 @@ const PlayGames = () => {
   //       randomIndices.push(randomIndex);
   //     }
   //   }
-
+  
+  //   const randomizedNumbers = randomIndices.map((index) => parseInt(checkboxes[index].value));
+    
+  //   setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
+  
   //   checkboxes.forEach((checkbox, index) => {
   //     checkbox.checked = randomIndices.includes(index);
   //   });
   // };
+const randomizeCheckbox = () => {
+  if (!selectedBetType) {
+    toast.error("Select Bet Type");
+    return;
+  }
 
-  const randomizeCheckbox = () => {
-    if (!selectedBetType) {
-      toast.error("Select Bet Type");
-      return;
+  const gtype = selectedBetType;
+  const checkboxes = document.querySelectorAll(".chk-btn");
+
+  if (gtype.startsWith("PERM")) {
+    let numToRandomize;
+
+    switch (gtype) {
+      case "PERM 2":
+        numToRandomize = 3;
+        break;
+      case "PERM 3":
+        numToRandomize = 4;
+        break;
+      case "PERM 4":
+        numToRandomize = 5;
+        break;
+      case "PERM 5":
+        numToRandomize = 6;
+        break;
+      default:
+        toast.error("Invalid Bet Type");
+        return;
     }
-  
-    const gtype = selectedBetType;
-    const mustCheck = maxSelectableNumbers[gtype];
-    const checkboxes = document.querySelectorAll(".chk-btn");
-  
-    if (mustCheck >= checkboxes.length) {
-      toast.error("Not enough numbers available for this bet type.");
-      return;
-    }
-  
+
     const randomIndices = [];
+
+    if (numToRandomize > checkboxes.length) {
+      toast.error(`Not enough numbers available for this bet type: ${gtype}`);
+      return;
+    }
+
+    while (randomIndices.length < numToRandomize) {
+      const randomIndex = Math.floor(Math.random() * checkboxes.length);
+      if (!randomIndices.includes(randomIndex)) {
+        randomIndices.push(randomIndex);
+      }
+    }
+
+    const randomizedNumbers = randomIndices.map(
+      (index) => parseInt(checkboxes[index].value)
+    );
+
+    setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
+
+    checkboxes.forEach((checkbox, index) => {
+      checkbox.checked = randomIndices.includes(index);
+    });
+
+    // if (gtype === "PERM 2" || gtype === "PERM 3" || gtype === "PERM 4" || gtype === "PERM 5") {
+    //   // Disable further selection for "PERM" bet types after randomization
+    //   checkboxes.forEach((checkbox) => {
+    //     checkbox.disabled = true;
+    //   });
+    // }
+  } else {
+    // Handle other bet types here
+    const mustCheck = maxSelectableNumbers[gtype];
+
+    if (mustCheck >= checkboxes.length) {
+      toast.error(`Not enough numbers available for this bet type: ${gtype}`);
+      return;
+    }
+
+    const randomIndices = [];
+
     while (randomIndices.length < mustCheck) {
       const randomIndex = Math.floor(Math.random() * checkboxes.length);
       if (!randomIndices.includes(randomIndex)) {
         randomIndices.push(randomIndex);
       }
     }
-  
-    const randomizedNumbers = randomIndices.map((index) => parseInt(checkboxes[index].value));
-    
+
+    const randomizedNumbers = randomIndices.map(
+      (index) => parseInt(checkboxes[index].value)
+    );
+
     setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
-  
+
     checkboxes.forEach((checkbox, index) => {
       checkbox.checked = randomIndices.includes(index);
     });
-  };
-  
+
+    if (gtype === "2 DIRECT" || gtype === "3 DIRECT" || gtype === "4 DIRECT" || gtype === "5 DIRECT") {
+      // Disable further selection for "DIRECT" bet types after randomization
+      checkboxes.forEach((checkbox) => {
+        checkbox.disabled = true;
+      });
+    }
+  }
+};
+
+
   const clearRandomize = () => {
     const checkboxes = document.querySelectorAll(".chk-btn");
     checkboxes.forEach((checkbox) => {
@@ -194,6 +228,7 @@ const PlayGames = () => {
     );
   }
 
+
   const handleConfirmBet = (e) => {
     e.preventDefault();
     if (!selectedGameType) {
@@ -204,57 +239,124 @@ const PlayGames = () => {
       toast.error("Select Bet Type");
       return;
     }
-
-    const requiredNumbers = maxSelectableNumbers[selectedBetType];
-
-    if (selectedNumbers.length !== requiredNumbers) {
-      toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
-      return;
-    }
-
-    const stakeAmount = parseFloat(
-      document.getElementById("stakeAmount").value
-    );
-
+  
+    const stakeAmount = parseFloat(document.getElementById("stakeAmount").value);
+  
     if (isNaN(stakeAmount) || stakeAmount < 10) {
       toast.error("Minimum stake amount is ₦10");
       return;
     }
-
-    let multiplier = 1;
-
-    switch (selectedBetType) {
-      case "2 DIRECT":
-        multiplier = 240;
-        break;
-      case "3 DIRECT":
-        multiplier = 2100;
-        break;
-      case "4 DIRECT":
-        multiplier = 6000;
-        break;
-      case "5 DIRECT":
-        multiplier = 44000;
-        break;
-      default:
+  
+    // Define an array of valid "DIRECT" bet types
+    const validDirectTypes = ["2 DIRECT", "3 DIRECT", "4 DIRECT", "5 DIRECT"];
+  
+    if (validDirectTypes.includes(selectedBetType)) {
+      const requiredNumbers = maxSelectableNumbers[selectedBetType];
+  
+      if (selectedNumbers.length !== requiredNumbers) {
+        toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
+        return;
+      }
+  
+      const multiplier = calculateDirectMultiplier(requiredNumbers);
+      const maxWin = stakeAmount * multiplier;
+  
+      const newConfirmedBet = {
+        gname: selectedGameType,
+        line: "1",
+        gtype: selectedBetType,
+        bets: selectedNumbers,
+        max_win: `₦${maxWin.toFixed(2)}`,
+        total_stake: `₦${stakeAmount.toFixed(2)}`,
+      };
+  
+      setConfirmedBet(newConfirmedBet);
+    } else if (selectedBetType.startsWith("PERM")) {
+      // Handle "PERM" bets
+      const requiredNumbers = selectedBetType.includes("PERM 2")
+        ? 2
+        : selectedBetType.includes("PERM 3")
+        ? 3
+        : selectedBetType.includes("PERM 4")
+        ? 4
+        : selectedBetType.includes("PERM 5")
+        ? 5
+        : 0;
+  
+      if (requiredNumbers === 0) {
         toast.error("Invalid Bet Type");
         return;
+      }
+  
+      if (selectedNumbers.length !== requiredNumbers) {
+        toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
+        return;
+      }
+  
+      const lines = calculatePermLines(requiredNumbers);
+      const multiplier = calculatePermMultiplier(selectedBetType);
+      const maxWin = stakeAmount * lines * multiplier;
+  
+      const newConfirmedBet = {
+        gname: selectedGameType,
+        line: lines.toString(),
+        gtype: selectedBetType,
+        bets: selectedNumbers,
+        max_win: `₦${maxWin.toFixed(2)}`,
+        total_stake: `₦${stakeAmount.toFixed(2)}`,
+      };
+  
+      setConfirmedBet(newConfirmedBet);
+    } 
+  };
+  
+  const calculateDirectMultiplier = (requiredNumbers) => {
+    switch (requiredNumbers) {
+      case 2:
+        return 240;
+      case 3:
+        return 2100;
+      case 4:
+        return 6000;
+      case 5:
+        return 44000;
+      default:
+        return 0;
     }
-
-    const maxWin = stakeAmount * multiplier;
-
-    const newConfirmedBet = {
-      gname: selectedGameType,
-      line: "1",
-      gtype: selectedBetType,
-      bets: selectedNumbers,
-      max_win: `₦${maxWin.toFixed(2)}`,
-      total_stake: `₦${stakeAmount.toFixed(2)}`,
-    };
-
-    setConfirmedBet(newConfirmedBet);
   };
 
+  const calculatePermMultiplier = (permType) => {
+    switch (permType) {
+      case "PERM 2":
+        return 240;
+      case "PERM 3":
+        return 2100;
+      case "PERM 4":
+        return 6000;
+      case "PERM 5":
+        return 44000;
+      default:
+        return 0;
+    }
+  };
+
+  const calculatePermLines = (requiredNumbers) => {
+    // Define a mapping of required numbers to possible lines for PERM bets
+    const linesMapping = {
+      2: 3,
+      3: 6,
+      4: 10,
+      5: 15,
+      6: 21,
+      7: 28,
+      8: 36,
+      9: 45,
+      10: 55,
+    };
+  
+    return linesMapping[requiredNumbers] || 0;
+  }
+  
   const localStorageKey = "betSlip";
   useEffect(() => {
     const savedBetSlip = localStorage.getItem(localStorageKey);
@@ -281,13 +383,6 @@ const PlayGames = () => {
     <>
       <Navbar />
       <div className="container">
-        {/* <input
-          type="text"
-          className="form-control"
-          placeholder="Amount"
-          required
-          // name="amount"
-        /> */}
         <form
           action=""
           method="post"
