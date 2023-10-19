@@ -12,13 +12,14 @@ export const authSlice = createSlice({
             state.userInfo = action.payload;
             localStorage.setItem('userInfo', JSON.stringify(action.payload))
         },
-        clearCredentials: (state) => {
+        logout: (state) => {
             state.userInfo = null;
             localStorage.removeItem('userInfo')
+            localStorage.removeItem('email')
         }
     }
 })
 
-export const {setCredentials, clearCredentials} = authSlice.actions
+export const {setCredentials, logout} = authSlice.actions
 
 export default authSlice.reducer;

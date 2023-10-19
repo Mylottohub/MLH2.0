@@ -93,4 +93,8 @@ line-height: 22px; /* 122.222% */
     .about-area {
         padding: 35px 0px 150px;
     }
+
+    .mobile__play-games img {
+        width: 30%;
+    }
 }

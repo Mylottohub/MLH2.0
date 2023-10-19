@@ -1,6 +1,6 @@
-import "../assets/css/operator.css";
 import { useNavigate } from 'react-router-dom'
 import operatorData from "../constant/data/data";
+import "../assets/css/operator.css";
 const Operator = () => {
   const navigate = useNavigate();
   return (
@@ -207,7 +207,7 @@ const Operator = () => {
                       <a
                         // href="https://www.mylottohub.com/play/plotto"
                         className="btn btn-yellow btn-block"
-                        onClick={() => navigate("/play-game")}
+                        onClick={() => navigate("/play-lotto")}
                       >
                         Play Now
                       </a>

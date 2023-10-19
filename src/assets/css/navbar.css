@@ -143,4 +143,13 @@ a:focus {
     .app__works h1 {
         font-size: 29px;
     }
+
+    .app__navbar-mobile {
+        margin-top: -7%!important;
+        /* margin-left: -10%; */
+    }
+
+    .app__user-mobile {
+        display: none!important;
+    }
 }

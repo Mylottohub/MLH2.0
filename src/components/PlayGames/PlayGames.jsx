@@ -288,10 +288,10 @@ const randomizeCheckbox = () => {
         return;
       }
   
-      if (selectedNumbers.length !== requiredNumbers) {
-        toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
-        return;
-      }
+      // if (selectedNumbers.length !== requiredNumbers) {
+      //   toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
+      //   return;
+      // }
   
       const lines = calculatePermLines(requiredNumbers);
       const multiplier = calculatePermMultiplier(selectedBetType);
@@ -377,6 +377,7 @@ const randomizeCheckbox = () => {
     // Clear the confirmed bet and remove it from localStorage
     setConfirmedBet(null);
     localStorage.removeItem(localStorageKey);
+    clearRandomize(null)
   };
 
   return (

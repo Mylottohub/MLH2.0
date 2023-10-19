@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 // import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -25,12 +25,6 @@ const Otp = () => {
 
   const [userotp, { isLoading }] = useUserotpMutation();
 
-  // const {userInfo} = useSelector((state) => state.auth);
-  // useEffect(()=> {
-  //   if (userInfo) {
-  //       navigate('/')
-  //   }
-  // },[navigate, userInfo])
   const email = localStorage.getItem("email");
   const {
     register,
@@ -39,31 +33,14 @@ const Otp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  // const submitForm = async (data) => {
-  //   try {
-  //     const res = await userotp(data).unwrap();
-  //     dispatch(setCredentials(...res));
-  //     localStorage.setItem("token", res.token);
-  //     localStorage.setItem("data", res.data);
-  //     toast.success("OTP has been confirmed Successfully");
-  //     navigate("/");
-  //   } catch (err) {
-  //     if (err?.data?.message) {
-  //       toast.error(err.data.message);
-  //     } else {
-  //       toast.error("An error occurred during verification.");
-  //     }
-  //   }
-  // };
-
+  
   const submitForm = async (data) => {
     try {
       const res = await userotp(data).unwrap();
       // Assuming res is an object with 'token' and 'data' properties
-      const { token, data: userData } = res;
-      dispatch(setCredentials({ token, data: userData }));
-      localStorage.setItem("token", token);
-      localStorage.setItem("userData", JSON.stringify(userData));
+      const { token, data: userInfo } = res;
+      dispatch(setCredentials({ token, data: userInfo }));
+    
       toast.success("OTP has been confirmed Successfully");
       navigate("/");
     } catch (err) {

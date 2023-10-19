@@ -1,4 +1,5 @@
 import Home from "../components/Home";
+import OperatorMobile from "../components/OperatorMobile/OperatorMobile";
 import PlayGames from "../components/PlayGames/PlayGames";
 import TransactionHistory from "../components/Transactions/TransactionHistory";
 import About from "../pages/About";
@@ -17,67 +18,86 @@ export const routes = [
   {
     id: 1,
     path: "/",
-    component: Home,
-    protected: true, // This route is protected
+    element: <Home />,
+    protected: false, 
   },
   {
     id: 2,
     path: "/register",
-    component: Register,
+    element: <Register />,
+    protected: false,
   },
   {
     id: 3,
     path: "/about-us",
-    component: About,
+    element: <About />,
+    protected: false,
   },
   {
     id: 4,
     path: "/faq",
-    component: Faq,
+    element: <Faq />,
+    protected: false,
   },
   {
     id: 5,
     path: "/contact-us",
-    component: Contact,
+    element: <Contact />,
+    protected: true,
   },
   {
     id: 6,
     path: "/terms",
-    component: Terms,
+    element: <Terms />,
+    protected: false,
   },
   {
     id: 7,
     path: "/login",
-    component: Login,
+    element: <Login />,
+    protected: false,
   },
   {
     id: 8,
     path: "/otp",
-    component: Otp,
+    element: <Otp />,
+    protected: false,
   },
   {
     id: 9,
     path: "/forgot-password",
-    component: ForgetPassword,
+    element: <ForgetPassword />,
+    protected: false,
   },
   {
     id: 10,
     path: "/transactions",
-    component: TransactionHistory,
+    element: <TransactionHistory />,
+    protected: true,
   },
   {
     id: 11,
     path: "/play-game",
-    component: PlayGames,
+    element: <PlayGames />,
+    protected: true,
   },
   {
     id: 12,
     path: "/timetable",
-    component: TimeTable,
+    element: <TimeTable />,
+    protected: true,
+
   },
   {
     id: 13,
     path: "/result",
-    component: Result,
+    element: <Result />,
+    protected: true,
+  },
+  {
+    id: 14,
+    path: "/play-lotto",
+    element: <OperatorMobile />,
+    protected: true,
   },
 ];

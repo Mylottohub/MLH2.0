@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { images } from "../constant";
 import Header from "./Header";
-// import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaMoneyBill, FaUser } from "react-icons/fa";
 import { BiSolidDashboard } from "react-icons/bi";
 import {
@@ -10,231 +10,257 @@ import {
   BsSubscript,
   BsWallet,
 } from "react-icons/bs";
+import { useState } from "react";
+import BModal from "./BModal/BModal";
+import Deposit from "./Payment/Deposit";
+import WithdrawModal from "./Payment/Withdraw";
+import {logout} from "../pages/slices/authSlice"
 
 const Navbar = () => {
   const navigate = useNavigate();
-  // const { userInfo } = useSelector((state) => state.auth);
-  const token = localStorage.getItem("token");
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClose = () => setIsOpen(false);
+  const handleOpen = () => setIsOpen(true);
+
+  const [isOpenDeposit, setIsOpenDeposit] = useState(false);
+  const handleCloseDeposit = () => setIsOpenDeposit(false);
+  const handleOpenDeposit = () => setIsOpenDeposit(true);
+
+  const handleWithdraw = () => {
+    handleOpen();
+  };
+
+  const handleDeposit = () => {
+    handleOpenDeposit();
+  };
+  const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login");
+   try {
+    dispatch(logout())
+    navigate("/");
+   } catch (error) {
+    console.log(error);
+   }
   };
   return (
     <>
-      {token ? (
+      {userInfo && userInfo.token ? (
         <>
-          <Header />
-          <nav className="navbar navbar-expand-lg app__navbar-bg">
-            <div className="container">
-              <button
-                className="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span className="navbar-toggler-icon"></span>
-              </button>
-              <div
-                className="collapse navbar-collapse"
-                id="navbarSupportedContent"
-              >
-                <ul
-                  className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0"
-                  style={{ cursor: "pointer" }}
+          <div className="mobile__header">
+            <Header />
+            <nav className="navbar navbar-expand-lg app__navbar-bg">
+              <div className="container">
+                <button
+                  className="navbar-toggler app__navbar-mobile"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded="false"
+                  aria-label="Toggle navigation"
                 >
-                  <li className="nav-item dropdown">
-                    <a
-                      className="nav-link dropdown-toggle text-white me-3"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      Play now
-                    </a>
-                    <ul className="dropdown-menu">
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          // href="https://www.mylottohub.com/play/plotto"
-                          onClick={() => navigate("/play-game")}
-                        >
-                          <img
-                            src={images.lotto_icon}
-                            alt={images.lotto_icon}
-                          />{" "}
-                          Lotto
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          // href="https://www.mylottohub.com/welcome/home_sport"
-                        >
-                          <img src={images.bet} alt={images.bet} /> Sport
-                          Betting
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          // href="https://www.mylottohub.com/welcome/home_instant"
-                        >
-                          <img src={images.instant} alt={images.instant} />{" "}
-                          Instant Games
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-
-                  <li className="nav-item">
-                    <a
-                      className="nav-link text-white me-3"
-                      onClick={() => navigate("/result")}
-                    >
-                      Results
-                    </a>
-                  </li>
-
-                  <li className="nav-item">
-                    <a className="nav-link text-white me-3">Pro-Forecaster</a>
-                  </li>
-
-                  <li className="nav-item">
-                    <a
-                      className="nav-link text-white me-3"
-                      onClick={() => navigate("/timetable")}
-                    >
-                      Time Table
-                    </a>
-                  </li>
-
-                  <li className="nav-item">
-                    <a className="nav-link text-white me-3">Forecast</a>
-                  </li>
-
-                  <li className="nav-item">
-                    <a className="nav-link text-white me-3">Tutorials</a>
-                  </li>
-
-                  <li className="nav-item dropdown">
-                    <a
-                      className="nav-link dropdown-toggle text-white me-3"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      More
-                    </a>
-                    <ul className="dropdown-menu">
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          onClick={() => navigate("/about-us")}
-                        >
-                          <i className="fa fa-info"></i>
-                          &nbsp;About us
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          onClick={() => navigate("/faq")}
-                        >
-                          <i className="fa fa-question"></i>
-                          &nbsp;FAQs
-                        </a>
-                      </li>
-
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          onClick={() => navigate("/terms")}
-                        >
-                          <i className="fa fa-anchor"></i>
-                          &nbsp;Terms and Conditions
-                        </a>
-                      </li>
-
-                      <li>
-                        <a
-                          className="dropdown-item p-2"
-                          onClick={() => navigate("/contact-us")}
-                        >
-                          <i className="fa fa-phone"></i>
-                          &nbsp;Contact Us
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-
-                <ul className="app__sign-in d-flex">
-                  <li className="text-right hidden-xs hidden-sm">
+                  <span className="navbar-toggler-icon"></span>
+                </button>
+                <div
+                  className="collapse navbar-collapse"
+                  id="navbarSupportedContent"
+                >
+                  <ul
+                    className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0"
+                    style={{ cursor: "pointer" }}
+                  >
                     <li className="nav-item dropdown">
                       <a
-                        className="nav-link dropdown-toggle text-white"
+                        className="nav-link dropdown-toggle text-white me-3"
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
-                        <small>
-                          shotin
-                          <br />
-                          ID: 33794
-                        </small>
+                        Play now
                       </a>
                       <ul className="dropdown-menu">
                         <li>
-                          <a className="dropdown-item p-2">
-                            <FaUser />
-                            &nbsp;&nbsp;User Profile
-                          </a>
-                        </li>
-                        <li>
-                          <a className="dropdown-item p-2">
-                            <BsWallet />
-                            &nbsp;&nbsp;Wallets
-                          </a>
-                        </li>
-                        <li>
-                          <a className="dropdown-item p-2">
-                            <BsArrow90DegRight />
-                            &nbsp;&nbsp;Deposit
-                          </a>
-                        </li>
-                        <li>
-                          <a className="dropdown-item p-2">
-                            <BiSolidDashboard />
-                            &nbsp;&nbsp;Withdraw
-                          </a>
-                        </li>
-                        <li>
-                          <a className="dropdown-item p-2">
-                            <BsSubscript />
-                            &nbsp;&nbsp;Subscription
+                          <a
+                            className="dropdown-item p-2"
+                            // href="https://www.mylottohub.com/play/plotto"
+                            onClick={() => navigate("/")}
+                          >
+                            <img
+                              src={images.lotto_icon}
+                              alt={images.lotto_icon}
+                            />{" "}
+                            Lotto
                           </a>
                         </li>
                         <li>
                           <a
                             className="dropdown-item p-2"
-                            onClick={() => navigate("/transactions")}
+                            // href="https://www.mylottohub.com/welcome/home_sport"
                           >
-                            <FaMoneyBill />
-                            &nbsp;&nbsp;Transactions
+                            <img src={images.bet} alt={images.bet} /> Sport
+                            Betting
                           </a>
                         </li>
                         <li>
-                          <a className="dropdown-item p-2">
-                            <BsShareFill />
-                            &nbsp;&nbsp;Referral
+                          <a
+                            className="dropdown-item p-2"
+                            // href="https://www.mylottohub.com/welcome/home_instant"
+                          >
+                            <img src={images.instant} alt={images.instant} />{" "}
+                            Instant Games
                           </a>
                         </li>
                       </ul>
                     </li>
-                    {/* <a>
+
+                    <li className="nav-item">
+                      <a
+                        className="nav-link text-white me-3"
+                        onClick={() => navigate("/result")}
+                      >
+                        Results
+                      </a>
+                    </li>
+
+                    <li className="nav-item">
+                      <a className="nav-link text-white me-3">Pro-Forecaster</a>
+                    </li>
+
+                    <li className="nav-item">
+                      <a
+                        className="nav-link text-white me-3"
+                        onClick={() => navigate("/timetable")}
+                      >
+                        Time Table
+                      </a>
+                    </li>
+
+                    <li className="nav-item">
+                      <a className="nav-link text-white me-3">Forecast</a>
+                    </li>
+
+                    <li className="nav-item">
+                      <a className="nav-link text-white me-3">Tutorials</a>
+                    </li>
+
+                    <li className="nav-item dropdown">
+                      <a
+                        className="nav-link dropdown-toggle text-white me-3"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        More
+                      </a>
+                      <ul className="dropdown-menu">
+                        <li>
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/about-us")}
+                          >
+                            <i className="fa fa-info"></i>
+                            &nbsp;About us
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/faq")}
+                          >
+                            <i className="fa fa-question"></i>
+                            &nbsp;FAQs
+                          </a>
+                        </li>
+
+                        <li>
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/terms")}
+                          >
+                            <i className="fa fa-anchor"></i>
+                            &nbsp;Terms and Conditions
+                          </a>
+                        </li>
+
+                        <li>
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/contact-us")}
+                          >
+                            <i className="fa fa-phone"></i>
+                            &nbsp;Contact Us
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+
+                  <ul className="app__sign-in d-flex">
+                    <li className="text-right hidden-xs hidden-sm">
+                      <li className="nav-item dropdown">
+                        <a
+                          className="nav-link dropdown-toggle text-white app__user-mobile"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <small>
+                            {userInfo.data.username}
+                            <br />
+                            ID: {userInfo.data.id}
+                          </small>
+                        </a>
+                        <ul className="dropdown-menu">
+                          <li>
+                            <a className="dropdown-item p-2">
+                              <FaUser />
+                              &nbsp;&nbsp;User Profile
+                            </a>
+                          </li>
+                          <li>
+                            <a className="dropdown-item p-2">
+                              <BsWallet />
+                              &nbsp;&nbsp;Wallets
+                            </a>
+                          </li>
+                          <li>
+                            <a className="dropdown-item p-2">
+                              <BsArrow90DegRight />
+                              &nbsp;&nbsp;Deposit
+                            </a>
+                          </li>
+                          <li>
+                            <a className="dropdown-item p-2">
+                              <BiSolidDashboard />
+                              &nbsp;&nbsp;Withdraw
+                            </a>
+                          </li>
+                          <li>
+                            <a className="dropdown-item p-2">
+                              <BsSubscript />
+                              &nbsp;&nbsp;Subscription
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              className="dropdown-item p-2"
+                              onClick={() => navigate("/transactions")}
+                            >
+                              <FaMoneyBill />
+                              &nbsp;&nbsp;Transactions
+                            </a>
+                          </li>
+                          <li>
+                            <a className="dropdown-item p-2">
+                              <BsShareFill />
+                              &nbsp;&nbsp;Referral
+                            </a>
+                          </li>
+                        </ul>
+                      </li>
+                      {/* <a>
                       <span
                         className="btn btn-yellow"
                         onClick={() => navigate("/login")}
@@ -242,24 +268,62 @@ const Navbar = () => {
                         Logout
                       </span>
                     </a> */}
-                  </li>
-
-                  <li className="text-right hidden-xs hidden-sm">
-                    <li className="nav-item dropdown">
-                      <a>
-                        <span
-                          className="btn btn-white"
-                          onClick={() => handleLogout()}
-                        >
-                          Logout
-                        </span>
-                      </a>
                     </li>
-                  </li>
-                </ul>
+
+                    <li className="text-right hidden-xs hidden-sm">
+                      <li className="nav-item dropdown">
+                        <a>
+                          <span
+                            className="btn btn-white"
+                            onClick={() => handleLogout()}
+                          >
+                            Logout
+                          </span>
+                        </a>
+                      </li>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          </div>
+          <div className="container mobile_bottom_head">
+            <div className="row">
+              <div className="col-10">
+                <small>
+                ₦{userInfo.data.wallet}
+                  <br />
+                  Wallet Balance
+                </small>
+                <br />
+                <br />
+                <a
+                  // href="https://www.mylottohub.com/user/topup"
+                  onClick={() => handleDeposit()}
+                  className="btn btn-blue"
+                >
+                  <small>Deposit</small>
+                </a>
+              </div>
+              <div className="col-2">
+                <small>
+                ₦{userInfo.data.wwallet}
+                  <br />
+                  Winnings
+                </small>
+                <br />
+                <br />
+                <a
+                   onClick={() => handleWithdraw()}
+                  className="btn btn-trans2"
+                  data-toggle="modal"
+                  data-target="#withdraw_modal"
+                >
+                  <small>Withdraw</small>
+                </a>
               </div>
             </div>
-          </nav>
+          </div>
         </>
       ) : (
         <nav className="navbar navbar-expand-lg app__navbar-bg">
@@ -445,6 +509,13 @@ const Navbar = () => {
           </div>
         </nav>
       )}
+      <BModal show={isOpen} onHide={handleClose} size="md">
+        <WithdrawModal />
+      </BModal>
+
+      <BModal show={isOpenDeposit} onHide={handleCloseDeposit} size="md">
+        <Deposit />
+      </BModal>
     </>
   );
 };

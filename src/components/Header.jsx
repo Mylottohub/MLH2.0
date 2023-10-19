@@ -3,8 +3,9 @@ import BModal from "./BModal/BModal";
 import "../assets/css/header.css";
 import { images } from "../constant";
 import { useState } from "react";
-import  Withdraw  from "./Payment/Withdraw";
-import Deposit  from "./Payment/Deposit";
+import Withdraw from "./Payment/Withdraw";
+import Deposit from "./Payment/Deposit";
+import { useSelector } from "react-redux";
 const Header = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -22,9 +23,11 @@ const Header = () => {
   const handleDeposit = () => {
     handleOpenDeposit();
   };
-  // const firstname = localStorage.getItem("firstname");
-  // const lastname = localStorage.getItem("lastname");
-  // const email = localStorage.getItem("email");
+  // const userData = JSON.parse(localStorage.getItem("userData"));
+  // const username = userData.username;
+  // const userId = userData.id;
+  const { userInfo } = useSelector((state) => state.auth);
+
 
   return (
     <div>
@@ -54,21 +57,20 @@ const Header = () => {
                   >
                     <div className="col-md-3 col-xs-6">
                       <small>
-                        ₦0.00
+                      ₦{userInfo.data.wallet}
                         <br />
                         Wallet Balance
                       </small>
                     </div>
                     <div className="col-md-3 col-xs-6">
                       <small>
-                        ₦0.00
+                      ₦{userInfo.data.wwallet}
                         <br />
                         Winnings
                       </small>
                     </div>
                     <div className="col-md-6 mt-2">
                       <a
-                        // href="https://www.mylottohub.com/user/topup"
                         onClick={() => handleDeposit()}
                         className="btn btn-blue"
                       >
@@ -91,12 +93,38 @@ const Header = () => {
           </div>
         </div>
       </header>
+      <div className="mobile__header-hide p-3">
+        <table cellPadding="5">
+          <tbody>
+            <tr>
+              <td>
+                <a onClick={() => navigate("/")}>
+                  <img
+                    src="https://www.mylottohub.com/megzy/images/logo.png"
+                    alt=""
+                    width="107"
+                    height="67"
+                    className="meg_logo"
+                  />
+                </a>
+              </td>
+              <td valign="middle">
+                <small>
+                {userInfo.data.username}
+                  <br />
+                  <strong>User ID:</strong>  {userInfo.data.id}
+                </small>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+           
       <BModal show={isOpen} onHide={handleClose} size="md">
         <Withdraw />
       </BModal>
 
       <BModal show={isOpenDeposit} onHide={handleCloseDeposit} size="md">
-        {/* <Deposit /> */}
         <Deposit />
       </BModal>
     </div>

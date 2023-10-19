@@ -65,5 +65,33 @@ body {
     .header-top-right {
         display: flex;
     }
-    
+
+    .header-area {
+        display: none;
+    }  
+
+    .mobile__header{
+        /* display: flex; */
+        background-color: #27aae1 !important;
+    }
+
+    .mobile__header-hide small {
+        font-size: 25px!important;
+    }
+
+    .mobile_bottom_head {
+        background: #FFF200;
+        padding: 20px;
+        display: flex;
+    }
+}
+
+@media(min-width:768px){
+    .mobile__header-hide {
+        display: none;
+    }
+
+    .mobile_bottom_head  {
+        display: none;
+    }
 }

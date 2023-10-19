@@ -48,10 +48,7 @@ const Register = () => {
 
   const submitForm = async (data) => {
     try {
-      // console.log(data);
-      // let userEmail = localStorage.setItem('email');
       localStorage.setItem("email", data.email);
-      // console.log(userEmail);
       const res = await registers(data).unwrap();
       dispatch(setCredentials({...res}));
       toast.success("Registration successful, an OTP has been sent to your email for verfication");
