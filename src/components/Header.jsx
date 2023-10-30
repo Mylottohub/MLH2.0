@@ -2,10 +2,11 @@ import { useNavigate } from "react-router-dom";
 import BModal from "./BModal/BModal";
 import "../assets/css/header.css";
 import { images } from "../constant";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Withdraw from "./Payment/Withdraw";
 import Deposit from "./Payment/Deposit";
 import { useSelector } from "react-redux";
+import axios from "axios";
 const Header = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -23,11 +24,36 @@ const Header = () => {
   const handleDeposit = () => {
     handleOpenDeposit();
   };
-  // const userData = JSON.parse(localStorage.getItem("userData"));
-  // const username = userData.username;
-  // const userId = userData.id;
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
 
+  useEffect(() => {
+    // Define your API endpoint URL
+    const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
+
+    // Replace "YOUR_BEARER_TOKEN" with the actual bearer token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json", // Set the content type to JSON
+        Accept: "application/json",
+      },
+    };
+
+    // Make an HTTP GET request to fetch user data
+    axios
+      .get(apiUrl, config)
+      .then((response) => {
+        setUserData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, [userInfo.data.id, userInfo.token]);
 
   return (
     <div>
@@ -55,20 +81,25 @@ const Header = () => {
                     className="row pull-right app__header-app"
                     style={{ padding: "20px", width: "70%" }}
                   >
-                    <div className="col-md-3 col-xs-6">
-                      <small>
-                      ₦{userInfo.data.wallet}
-                        <br />
-                        Wallet Balance
-                      </small>
-                    </div>
-                    <div className="col-md-3 col-xs-6">
-                      <small>
-                      ₦{userInfo.data.wwallet}
-                        <br />
-                        Winnings
-                      </small>
-                    </div>
+                    {loading ? (
+                      <p>Balance Loading...</p>
+                    ) : error ? (
+                      <p>Error: {error.message}</p>
+                    ) : userData ? (
+                      <>
+                        <div className="col-md-3 col-xs-6">
+                          <small>₦{userData.wallet}</small>
+                          <br />
+                          Wallet Balance
+                        </div>
+                        <div className="col-md-3 col-xs-6">
+                          <small>₦{userData.wwallet}</small>
+                          <br />
+                          Winnings
+                        </div>
+                      </>
+                    ) : null}
+
                     <div className="col-md-6 mt-2">
                       <a
                         onClick={() => handleDeposit()}
@@ -110,16 +141,16 @@ const Header = () => {
               </td>
               <td valign="middle">
                 <small>
-                {userInfo.data.username}
+                  {userInfo.data.username}
                   <br />
-                  <strong>User ID:</strong>  {userInfo.data.id}
+                  <strong>User ID:</strong> {userInfo.data.id}
                 </small>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-           
+
       <BModal show={isOpen} onHide={handleClose} size="md">
         <Withdraw />
       </BModal>

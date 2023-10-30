@@ -11,7 +11,6 @@ import babaijebu from "../assets/images/baba_ijebu.png"
 import games590 from "../assets/images/590_games.png"
 import golden_chance from "../assets/images/golden_chance.png"
 import lotto_mania from "../assets/images/lotto_mania.png"
-import set_lotto from "../assets/images/set_lotto.png"
 import wesco from "../assets/images/wesco.png"
 import green_lotto from "../assets/images/green_lotto.png"
 import rave from "../assets/images/rave.png"
@@ -32,7 +31,6 @@ const allImages = {
  games590,
  golden_chance,
  lotto_mania,
- set_lotto,
  wesco,
  green_lotto,
  rave,

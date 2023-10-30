@@ -1,8 +1,78 @@
-import { useNavigate } from 'react-router-dom'
-import operatorData from "../constant/data/data";
+import { useNavigate } from "react-router-dom";
+// import operatorData from "../constant/data/data";
 import "../assets/css/operator.css";
+import { useSelector } from "react-redux";
+// import { useOperatorgamesMutation } from "../pages/slices/userApiSlice";
+import { useEffect, useState } from "react";
+import { Spinner } from "react-bootstrap";
 const Operator = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const [operatorData, setOperatorData] = useState({
+    wesco: [],
+    green_lotto: [],
+    lotto_nigeria:[]
+  });
+
+  const operatorTypes = ["wesco", "green_lotto","lotto_nigeria"];
+  useEffect(() => {
+    if (userInfo && userInfo.token) {
+      operatorTypes.forEach(async (operatorType) => {
+        const requestData = { operator_type: operatorType };
+        setIsLoading(true);
+
+        try {
+          const response = await fetch(
+            "https://sandbox.mylottohub.com/v1/get-games",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+              },
+              body: JSON.stringify(requestData),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const data = await response.json();
+
+          // Update the specific operator's data using the operatorType
+          setOperatorData((prevData) => ({
+            ...prevData,
+            [operatorType]: data.result,
+          }));
+          // console.log(operatorData);
+
+          if (Array.isArray(data.result)) {
+            setOperatorData((prevData) => ({
+              ...prevData,
+              [operatorType]: data.result,
+            }));
+            console.log(operatorData);
+          } else if (typeof data.result === "object") {
+            // Handle objects as needed
+            setOperatorData((prevData) => ({
+              ...prevData,
+              [operatorType]: [data.result], // Convert the object to an array
+            }));
+            console.log(operatorData);
+          }
+        } catch (error) {
+          console.error(`Error fetching ${operatorType} games:`, error);
+        } finally {
+          setIsLoading(false);
+        }
+      });
+    }
+  }, [userInfo]);
   return (
     <>
       <div className="container">
@@ -11,53 +81,69 @@ const Operator = () => {
             <h1>Select Operator</h1>
           </div>
 
-          {operatorData.map((operator) => {
-            return (
-              <div
-                key={operator.id}
-                className="col-md-3 col-sm-6 col-xs-12 col-2"
-              >
-                <div className="service-wrap mb-5">
-                  <a>
-                    <div className="service-img">
-                      <img
-                        src={operator.image}
-                        alt=""
-                        className="img-fluid mb-3"
-                      />
-                    </div>
-                  </a>
-                  <div className="service-content text-center" onClick={() => {
-                    navigate('/play-game')
-                  }}>
-                    <p>
-                      <strong>NEXT GAME:</strong>
-                      <br />
-                      {operator.game_name}
-                      <br />{" "}
-                      <span data-countdown="2023/08/29 09:30:00">
-                        <small>
-                          <span className="countdown_box">00 days</span>{" "}
-                          <span className="countdown_box">01 hrs</span>{" "}
-                          <span className="countdown_box">06 mins</span>{" "}
-                          <span className="countdown_box">53 secs</span>
-                        </small>
-                      </span>
-                    </p>
-
-                    <p>
-                      <a
-                        // href="https://www.mylottohub.com/welcome/play_action/27"
-                        className="btn btn-blue btn-sm btn-block w-100"
-                      >
-                        Play Now
+          {isLoading ? (
+            <div className="spinner text-dark text-center">
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            </div>
+          ) : (
+            operatorTypes.map((operatorType) => {
+              const operatorDataArray = operatorData[operatorType];
+              // console.log(operatorDataArray);
+              if (Array.isArray(operatorDataArray)) {
+                const imageSrc = `/images/${operatorType}.png`;
+                return operatorDataArray.map((operator) => (
+                  <div
+                    key={operator.drawid}
+                    className="col-md-3 col-sm-6 col-xs-12 col-2"
+                  >
+                    <div className="service-wrap mb-5">
+                      <a>
+                        <div className="service-img">
+                          <img
+                            src={imageSrc}
+                            alt=""
+                            className="img-fluid mb-3"
+                          />
+                        </div>
                       </a>
-                    </p>
+                      <div
+                        className="service-content text-center"
+                        onClick={() => {
+                          navigate("/play-game");
+                        }}
+                      >
+                        <p>
+                          <strong>NEXT GAME:</strong>
+                          <br />
+                          {operator.drawname}
+                          <br />
+                          <br />{" "}
+                          <span data-countdown="2023/08/29 09:30:00">
+                            <small>
+                              <span>{operator.drawtime}</span>
+                            </small>
+                          </span>
+                        </p>
+                        <p>
+                          <a className="btn btn-blue btn-sm btn-block w-100">
+                            Play Now
+                          </a>
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                ));
+              } else {
+                return null; // Handle the case when it's not an array
+              }
+            })
+          )}
 
           <section className="container mt-5 mb-5">
             <span className="hidden-sm hidden-xs">
@@ -170,39 +256,44 @@ const Operator = () => {
                     algorithm, all from the comfort of their mobile devices.
                   </p>
                   <br />
-                  <a className="btn btn-yellow fw-bolder">Register</a>
+                  {userInfo && userInfo.token ? (
+                    ""
+                  ) : (
+                    <a className="btn btn-yellow fw-bolder">Register</a>
+                  )}
                 </div>
               </div>
             </div>
           </section>
         </div>
-        
+
         <div className="app__mobile-sm mb-5">
           <div className="container">
             <div className="d-flex mt-5">
               <div className="col-xs-6 w-50">
                 <a
-                   onClick={() => navigate("/register")}
+                  onClick={() => navigate("/register")}
                   className="btn btn-trans2 btn-block btn-lg"
                 >
                   Register
                 </a>
               </div>
-              &nbsp;&nbsp;&nbsp;<div className="col-xs-6  w-50">
+              &nbsp;&nbsp;&nbsp;
+              <div className="col-xs-6  w-50">
                 <a
-                   onClick={() => navigate("/login")}
+                  onClick={() => navigate("/login")}
                   className="btn btn-blue btn-block btn-lg"
                 >
                   Login
                 </a>
               </div>
             </div>
-            <br /> 
-           <table width="100%" className="mobile_home_div" cellPadding="15">
+            <br />
+            <table width="100%" className="mobile_home_div" cellPadding="15">
               <tbody>
                 <tr>
                   <td valign="top" width="60%">
-                    <p style={{color: '#FFF !important'}}>LOTTO GAMES</p>
+                    <p style={{ color: "#FFF !important" }}>LOTTO GAMES</p>
                     <p>
                       <a
                         // href="https://www.mylottohub.com/play/plotto"
@@ -231,7 +322,7 @@ const Operator = () => {
               <tbody>
                 <tr>
                   <td valign="top" width="60%">
-                    <p style={{color: '#FFF !important'}}>SPORTS BETTING</p>
+                    <p style={{ color: "#FFF !important" }}>SPORTS BETTING</p>
                     <p>
                       <a
                         // href="https://www.mylottohub.com/welcome/home_sport"
@@ -259,7 +350,7 @@ const Operator = () => {
               <tbody>
                 <tr>
                   <td valign="top" width="60%">
-                    <p style={{color: '#FFF !important'}}>INSTANT GAMES</p>
+                    <p style={{ color: "#FFF !important" }}>INSTANT GAMES</p>
                     <p>
                       <a
                         // href="https://www.mylottohub.com/welcome/home_instant"

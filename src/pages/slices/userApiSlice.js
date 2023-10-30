@@ -6,6 +6,7 @@ const USER_FORGOTPASSWORD = "/forgot";
 const USER_RESETPASSWORD = "/reset";
 const PAY_WITH_PAYSTACK = "/payment-initialize";
 const USER_OTP = "/otp";
+const OPERATOR_GAMES= "/get-games"
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -51,6 +52,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    operatorgames: builder.mutation({
+      query: (data) => ({
+        url: `${OPERATOR_GAMES}`,
+        method: "POST",
+        body: JSON.stringify(data), // Send data as JSON in the request body
+        headers: {
+          "Content-Type": "application/json", // Set the content type to JSON
+            "Accept": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
@@ -59,5 +71,6 @@ export const {
   useRegistersMutation,
   useForgotpaswordMutation,
   useUserotpMutation,
-  usePaystackpaymentMutation
+  usePaystackpaymentMutation,
+  useOperatorgamesMutation
 } = userApiSlice;

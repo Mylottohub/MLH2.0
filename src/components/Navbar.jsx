@@ -14,7 +14,9 @@ import { useState } from "react";
 import BModal from "./BModal/BModal";
 import Deposit from "./Payment/Deposit";
 import WithdrawModal from "./Payment/Withdraw";
-import {logout} from "../pages/slices/authSlice"
+import { logout } from "../pages/slices/authSlice";
+import { useEffect } from "react";
+import axios from "axios";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -33,16 +35,44 @@ const Navbar = () => {
   const handleDeposit = () => {
     handleOpenDeposit();
   };
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // Define your API endpoint URL
+    const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
+
+    // Replace "YOUR_BEARER_TOKEN" with the actual bearer token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json", // Set the content type to JSON
+        Accept: "application/json",
+      },
+    };
+
+    axios
+      .get(apiUrl, config)
+      .then((response) => {
+        setUserData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, [userInfo.data.id, userInfo.token]);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-   try {
-    dispatch(logout())
-    navigate("/");
-   } catch (error) {
-    console.log(error);
-   }
+    try {
+      dispatch(logout());
+      navigate("/");
+    } catch (error) {
+      // console.log(error);
+    }
   };
   return (
     <>
@@ -288,41 +318,49 @@ const Navbar = () => {
             </nav>
           </div>
           <div className="container mobile_bottom_head">
-            <div className="row">
-              <div className="col-10">
-                <small>
-                ₦{userInfo.data.wallet}
-                  <br />
-                  Wallet Balance
-                </small>
-                <br />
-                <br />
-                <a
-                  // href="https://www.mylottohub.com/user/topup"
-                  onClick={() => handleDeposit()}
-                  className="btn btn-blue"
-                >
-                  <small>Deposit</small>
-                </a>
-              </div>
-              <div className="col-2">
-                <small>
-                ₦{userInfo.data.wwallet}
-                  <br />
-                  Winnings
-                </small>
-                <br />
-                <br />
-                <a
-                   onClick={() => handleWithdraw()}
-                  className="btn btn-trans2"
-                  data-toggle="modal"
-                  data-target="#withdraw_modal"
-                >
-                  <small>Withdraw</small>
-                </a>
-              </div>
-            </div>
+            {loading ? (
+              <p>Balance Loading...</p>
+            ) : error ? (
+              <p></p>
+            ) : userData ? (
+              <>
+                <div className="row">
+                  <div className="col-10">
+                    <small>
+                      ₦{userData.wallet}
+                      <br />
+                      Wallet Balance
+                    </small>
+                    <br />
+                    <br />
+                    <a
+                      // href="https://www.mylottohub.com/user/topup"
+                      onClick={() => handleDeposit()}
+                      className="btn btn-blue"
+                    >
+                      <small>Deposit</small>
+                    </a>
+                  </div>
+                  <div className="col-2">
+                    <small>
+                      ₦{userData.wwallet}
+                      <br />
+                      Winnings
+                    </small>
+                    <br />
+                    <br />
+                    <a
+                      onClick={() => handleWithdraw()}
+                      className="btn btn-trans2"
+                      data-toggle="modal"
+                      data-target="#withdraw_modal"
+                    >
+                      <small>Withdraw</small>
+                    </a>
+                  </div>
+                </div>
+              </>
+            ) : null}
           </div>
         </>
       ) : (
