@@ -40,30 +40,6 @@ const Navbar = () => {
   const [error, setError] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
 
-  // useEffect(() => {
-  //   // Define your API endpoint URL
-  //   const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
-
-  //   // Replace "YOUR_BEARER_TOKEN" with the actual bearer token
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${userInfo.token}`,
-  //       "Content-Type": "application/json", // Set the content type to JSON
-  //       Accept: "application/json",
-  //     },
-  //   };
-
-  //   axios
-  //     .get(apiUrl, config)
-  //     .then((response) => {
-  //       setUserData(response.data);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       setError(error);
-  //       setLoading(false);
-  //     });
-  // }, [userInfo.data.id, userInfo.token]);
   useEffect(() => {
     if (userInfo && userInfo.data) {
       // Define your API endpoint URL

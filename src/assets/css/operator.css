@@ -17,6 +17,12 @@
     margin-top: 30px;
 }
 
+.countdown_box {
+    background: rgba(64, 103, 119, 0.1);
+    border-radius: 5px;
+    padding: 5px;
+}
+
 .btn-blue {
     color: #fff !important;
     background-color: #406777 !important;
@@ -25,7 +31,7 @@
     width: 70%!important; */
 }
 
-.service-content p{
+.service-content p {
     color: #406777;
 }
 
@@ -38,20 +44,21 @@
 
 .mobile_home_div p {
     color: #FFF;
-font-family: Karla;
-font-size: 18px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
+    font-family: Karla;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 
 .mobile_home_div a {
     color: var(--Gray-1, #333);
-font-family: Lato;
-font-size: 18px;
-font-style: normal;
-font-weight: 500;
-line-height: 22px; /* 122.222% */
+    font-family: Lato;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    /* 122.222% */
 }
 
 .btn-yellow:hover {
@@ -61,16 +68,16 @@ line-height: 22px; /* 122.222% */
 }
 
 .app__mobile-sm {
-    display: none!important;
+    display: none !important;
 }
 
-@media(max-width: 760px){
+@media(max-width: 760px) {
     .app__select_operator {
         display: none;
     }
 
     .app__mobile-sm {
-        display: block!important;
+        display: block !important;
     }
 
     .btn-trans2 {

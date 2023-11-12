@@ -13,6 +13,7 @@ import golden_chance from "../assets/images/golden_chance.png"
 import lotto_mania from "../assets/images/lotto_mania.png"
 import wesco from "../assets/images/wesco.png"
 import green_lotto from "../assets/images/green_lotto.png"
+import lotto_nigeria from "../assets/images/lotto_nigeria.png"
 import rave from "../assets/images/rave.png"
 import paystack from "../assets/images/paystack.png"
 
@@ -20,6 +21,7 @@ import paystack from "../assets/images/paystack.png"
 const allImages = {
  logo,
  banner_1,
+ lotto_nigeria,
  lotto_icon,
  profore,
  quick,

@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom";
-// import operatorData from "../constant/data/data";
 import "../assets/css/operator.css";
 import { useSelector } from "react-redux";
-// import { useOperatorgamesMutation } from "../pages/slices/userApiSlice";
 import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
+import Countdown from "react-countdown";
 const Operator = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -14,65 +13,49 @@ const Operator = () => {
   const [operatorData, setOperatorData] = useState({
     wesco: [],
     green_lotto: [],
-    lotto_nigeria:[]
+    lotto_nigeria: [],
   });
 
-  const operatorTypes = ["wesco", "green_lotto","lotto_nigeria"];
+  const operatorTypes = ["wesco", "green_lotto", "lotto_nigeria", "Lottomania"];
   useEffect(() => {
-    if (userInfo && userInfo.token) {
-      operatorTypes.forEach(async (operatorType) => {
-        const requestData = { operator_type: operatorType };
-        setIsLoading(true);
+    operatorTypes.forEach(async (operatorType) => {
+      const requestData = { operator_type: operatorType };
+      setIsLoading(true);
 
-        try {
-          const response = await fetch(
-            "https://sandbox.mylottohub.com/v1/get-games",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                Authorization: `Bearer ${userInfo.token}`,
-              },
-              body: JSON.stringify(requestData),
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
+      try {
+        const response = await fetch(
+          "https://sandbox.mylottohub.com/v1/get-games",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(requestData),
           }
+        );
 
-          const data = await response.json();
-
-          // Update the specific operator's data using the operatorType
-          setOperatorData((prevData) => ({
-            ...prevData,
-            [operatorType]: data.result,
-          }));
-          // console.log(operatorData);
-
-          if (Array.isArray(data.result)) {
-            setOperatorData((prevData) => ({
-              ...prevData,
-              [operatorType]: data.result,
-            }));
-            console.log(operatorData);
-          } else if (typeof data.result === "object") {
-            // Handle objects as needed
-            setOperatorData((prevData) => ({
-              ...prevData,
-              [operatorType]: [data.result], // Convert the object to an array
-            }));
-            console.log(operatorData);
-          }
-        } catch (error) {
-          console.error(`Error fetching ${operatorType} games:`, error);
-        } finally {
-          setIsLoading(false);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-      });
-    }
+
+        const data = await response.json();
+
+        // Update the specific operator's data using the operatorType
+        setOperatorData((prevData) => ({
+          ...prevData,
+          [operatorType]: Array.isArray(data.result)
+            ? data.result
+            : [data.result], // Convert the object to an array if it's not an array
+        }));
+      } catch (error) {
+        console.error(`Error fetching ${operatorType} games:`, error);
+      } finally {
+        setIsLoading(false);
+      }
+    });
   }, [userInfo]);
+
   return (
     <>
       <div className="container">
@@ -92,14 +75,63 @@ const Operator = () => {
               />
             </div>
           ) : (
-            operatorTypes.map((operatorType) => {
+            operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];
-              // console.log(operatorDataArray);
-              if (Array.isArray(operatorDataArray)) {
+
+              if (operatorDataArray) {
                 const imageSrc = `/images/${operatorType}.png`;
-                return operatorDataArray.map((operator) => (
+
+                const propertyMapping = {
+                  wesco: {
+                    name: "drawname",
+                    time: "drawtime",
+                    date: "drawdate",
+                  },
+                  lotto_nigeria: { name: "drawAlias", time: "drawDate" },
+                };
+
+                const dataArray = Array.isArray(operatorDataArray)
+                  ? operatorDataArray
+                  : Object.values(operatorDataArray);
+
+                // Filter out games that have already been played
+                const upcomingGames = dataArray.filter(
+                  (game) =>
+                    new Date(
+                      operatorType === "wesco"
+                        ? `${game[propertyMapping[operatorType].date]} ${
+                            game[propertyMapping[operatorType].time]
+                          }`
+                        : game[propertyMapping[operatorType].time]
+                    ) > new Date()
+                );
+
+                // Sort the remaining games based on draw time
+                upcomingGames.sort(
+                  (a, b) =>
+                    new Date(
+                      operatorType === "wesco"
+                        ? `${a[propertyMapping[operatorType].date]} ${
+                            a[propertyMapping[operatorType].time]
+                          }`
+                        : a[propertyMapping[operatorType].time]
+                    ) -
+                    new Date(
+                      operatorType === "wesco"
+                        ? `${b[propertyMapping[operatorType].date]} ${
+                            b[propertyMapping[operatorType].time]
+                          }`
+                        : b[propertyMapping[operatorType].time]
+                    )
+                );
+
+                // Take only the first game (next scheduled game)
+                const nextGame =
+                  upcomingGames.length > 0 ? upcomingGames[0] : null;
+
+                return nextGame ? (
                   <div
-                    key={operator.drawid}
+                    key={index}
                     className="col-md-3 col-sm-6 col-xs-12 col-2"
                   >
                     <div className="service-wrap mb-5">
@@ -112,25 +144,51 @@ const Operator = () => {
                           />
                         </div>
                       </a>
-                      <div
-                        className="service-content text-center"
-                        onClick={() => {
-                          navigate("/play-game");
-                        }}
-                      >
+                      <div className="service-content text-center">
                         <p>
                           <strong>NEXT GAME:</strong>
                           <br />
-                          {operator.drawname}
+                          {nextGame[propertyMapping[operatorType].name]}
                           <br />
-                          <br />{" "}
-                          <span data-countdown="2023/08/29 09:30:00">
-                            <small>
-                              <span>{operator.drawtime}</span>
-                            </small>
-                          </span>
+                          <br />
+                          <Countdown
+                            date={
+                              operatorType === "wesco"
+                                ? `${
+                                    nextGame[propertyMapping[operatorType].date]
+                                  } ${
+                                    nextGame[propertyMapping[operatorType].time]
+                                  }`
+                                : nextGame[propertyMapping[operatorType].time]
+                            }
+                            renderer={({
+                              hours,
+                              minutes,
+                              seconds,
+                              completed,
+                            }) => {
+                              if (completed) return "Game started!";
+                              return (
+                                <>
+                                  <span className="countdown_box me-2">
+                                    {hours}hrs
+                                  </span>
+                                  <span className="countdown_box me-2">
+                                    {minutes}mins
+                                  </span>
+                                  <span className="countdown_box me-2">
+                                    {seconds}secs
+                                  </span>
+                                </>
+                              );
+                            }}
+                          />
                         </p>
-                        <p>
+                        <p
+                          onClick={() => {
+                            navigate("/play-game");
+                          }}
+                        >
                           <a className="btn btn-blue btn-sm btn-block w-100">
                             Play Now
                           </a>
@@ -138,9 +196,9 @@ const Operator = () => {
                       </div>
                     </div>
                   </div>
-                ));
+                ) : null;
               } else {
-                return null; // Handle the case when it's not an array
+                return null;
               }
             })
           )}
@@ -269,25 +327,28 @@ const Operator = () => {
 
         <div className="app__mobile-sm mb-5">
           <div className="container">
-            <div className="d-flex mt-5">
-              <div className="col-xs-6 w-50">
-                <a
-                  onClick={() => navigate("/register")}
-                  className="btn btn-trans2 btn-block btn-lg"
-                >
-                  Register
-                </a>
+            {!userInfo || !userInfo.data ? (
+              <div className="d-flex mt-5">
+                <div className="col-xs-6 w-50">
+                  <a
+                    onClick={() => navigate("/register")}
+                    className="btn btn-trans2 btn-block btn-lg"
+                  >
+                    Register
+                  </a>
+                </div>
+                &nbsp;&nbsp;&nbsp;
+                <div className="col-xs-6  w-50">
+                  <a
+                    onClick={() => navigate("/login")}
+                    className="btn btn-blue btn-block btn-lg"
+                  >
+                    Login
+                  </a>
+                </div>
               </div>
-              &nbsp;&nbsp;&nbsp;
-              <div className="col-xs-6  w-50">
-                <a
-                  onClick={() => navigate("/login")}
-                  className="btn btn-blue btn-block btn-lg"
-                >
-                  Login
-                </a>
-              </div>
-            </div>
+            ) : null}
+
             <br />
             <table width="100%" className="mobile_home_div" cellPadding="15">
               <tbody>

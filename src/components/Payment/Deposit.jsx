@@ -84,7 +84,7 @@ const Deposit = () => {
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": `Bearer ${userInfo.token}`, // Include the Bearer token
+            "Authorization": `Bearer ${userInfo.token}`,
           },
           body: JSON.stringify(paymentData),
         });
