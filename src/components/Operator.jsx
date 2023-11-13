@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import Countdown from "react-countdown";
+
 const Operator = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +15,7 @@ const Operator = () => {
     wesco: [],
     green_lotto: [],
     lotto_nigeria: [],
+    Lottomania: [],
   });
 
   const operatorTypes = ["wesco", "green_lotto", "lotto_nigeria", "Lottomania"];
@@ -78,51 +80,55 @@ const Operator = () => {
             operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];
 
-              if (operatorDataArray) {
+              if (operatorDataArray && operatorDataArray.length > 0) {
                 const imageSrc = `/images/${operatorType}.png`;
 
                 const propertyMapping = {
-                  wesco: {
-                    name: "drawname",
-                    time: "drawtime",
-                    date: "drawdate",
-                  },
+                  wesco: { name: "drawname", time: "drawtime" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
                 };
 
+                // Extract values if operatorDataArray is an object
                 const dataArray = Array.isArray(operatorDataArray)
                   ? operatorDataArray
                   : Object.values(operatorDataArray);
 
-                // Filter out games that have already been played
-                const upcomingGames = dataArray.filter(
-                  (game) =>
-                    new Date(
-                      operatorType === "wesco"
-                        ? `${game[propertyMapping[operatorType].date]} ${
-                            game[propertyMapping[operatorType].time]
-                          }`
-                        : game[propertyMapping[operatorType].time]
-                    ) > new Date()
-                );
+                // ...
 
-                // Sort the remaining games based on draw time
+                // ...
+
+                const upcomingGames = dataArray.filter((game) => {
+                  let drawTime;
+                  const currentTime = new Date();
+
+                  if (operatorType === "lotto_nigeria") {
+                    // For "lotto_nigeria," use the "drawDate" field
+                    drawTime = new Date(
+                      game.drawDate.replace(
+                        /(\d{2})\/(\d{2})\/(\d{4})/,
+                        "$3-$2-$1"
+                      )
+                    );
+                  } else if (operatorType === "wesco") {
+                    // For "wesco," combine "drawdate" and "drawtime"
+                    const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
+
+                    drawTime = new Date(
+                      drawDateTimeString.replace(
+                        /(\d{4})(\d{2})(\d{2}) (\d{2}:\d{2}:\d{2})/,
+                        "$1-$2-$3T$4Z"
+                      )
+                    );
+                  } else {
+                    // Add additional conditions for other operator types if needed
+                  }
+                  return drawTime > currentTime;
+                });
+
                 upcomingGames.sort(
                   (a, b) =>
-                    new Date(
-                      operatorType === "wesco"
-                        ? `${a[propertyMapping[operatorType].date]} ${
-                            a[propertyMapping[operatorType].time]
-                          }`
-                        : a[propertyMapping[operatorType].time]
-                    ) -
-                    new Date(
-                      operatorType === "wesco"
-                        ? `${b[propertyMapping[operatorType].date]} ${
-                            b[propertyMapping[operatorType].time]
-                          }`
-                        : b[propertyMapping[operatorType].time]
-                    )
+                    new Date(a[propertyMapping[operatorType].time]) -
+                    new Date(b[propertyMapping[operatorType].time])
                 );
 
                 // Take only the first game (next scheduled game)
@@ -151,15 +157,28 @@ const Operator = () => {
                           {nextGame[propertyMapping[operatorType].name]}
                           <br />
                           <br />
-                          <Countdown
+
+                          <span>
+                            <small>
+                              <span>
+                                {" "}
+                                {operatorType === "wesco"
+                                  ? nextGame[propertyMapping[operatorType].time]
+                                  : nextGame[
+                                      propertyMapping[operatorType].time
+                                    ].split(" ")[1]}
+                              </span>
+                            </small>
+                          </span>
+                          {/* <Countdown
                             date={
-                              operatorType === "wesco"
-                                ? `${
-                                    nextGame[propertyMapping[operatorType].date]
-                                  } ${
-                                    nextGame[propertyMapping[operatorType].time]
-                                  }`
-                                : nextGame[propertyMapping[operatorType].time]
+                              upcomingGames.length > 1
+                                ? new Date(
+                                    upcomingGames[1][
+                                      propertyMapping[operatorType].time
+                                    ]
+                                  )
+                                : null
                             }
                             renderer={({
                               hours,
@@ -167,22 +186,28 @@ const Operator = () => {
                               seconds,
                               completed,
                             }) => {
-                              if (completed) return "Game started!";
+                              if (completed) return "Next game started!";
                               return (
                                 <>
-                                  <span className="countdown_box me-2">
-                                    {hours}hrs
-                                  </span>
-                                  <span className="countdown_box me-2">
-                                    {minutes}mins
-                                  </span>
-                                  <span className="countdown_box me-2">
-                                    {seconds}secs
-                                  </span>
+                                  {hours ? (
+                                    <span className="countdown_box me-2">
+                                      {hours}hrs
+                                    </span>
+                                  ) : null}
+                                  {minutes ? (
+                                    <span className="countdown_box me-2">
+                                      {minutes}mins
+                                    </span>
+                                  ) : null}
+                                  {seconds ? (
+                                    <span className="countdown_box me-2">
+                                      {seconds}secs
+                                    </span>
+                                  ) : null}
                                 </>
                               );
                             }}
-                          />
+                          /> */}
                         </p>
                         <p
                           onClick={() => {
