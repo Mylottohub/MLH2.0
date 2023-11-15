@@ -135,6 +135,26 @@ const Operator = () => {
                 const nextGame =
                   upcomingGames.length > 0 ? upcomingGames[0] : null;
 
+                const renderGameTime = (operatorType, game) => {
+                  const time = game[propertyMapping[operatorType].time];
+
+                  // Handle "wesco" and other operator types by parsing the time string
+                  const parsedTime = new Date(
+                    time.replace(
+                      /(\d{2})\/(\d{2})\/(\d{4}) (\d{2}:\d{2})/,
+                      "$3-$2-$1T$4Z"
+                    )
+                  );
+
+                  // Check if parsedTime is a valid date
+                  if (!isNaN(parsedTime.getTime())) {
+                    return parsedTime;
+                  } else {
+                    console.error("Invalid date format:", time);
+                    return null;
+                  }
+                };
+
                 return nextGame ? (
                   <div
                     key={index}
@@ -161,53 +181,37 @@ const Operator = () => {
                           <span>
                             <small>
                               <span>
-                                {" "}
-                                {operatorType === "wesco"
-                                  ? nextGame[propertyMapping[operatorType].time]
-                                  : nextGame[
-                                      propertyMapping[operatorType].time
-                                    ].split(" ")[1]}
+                                <Countdown
+                                  date={
+                                    new Date(
+                                      renderGameTime(operatorType, nextGame)
+                                    )
+                                  }
+                                  renderer={({
+                                    days,
+                                    hours,
+                                    minutes,
+                                    seconds,
+                                  }) => (
+                                    <>
+                                      <span className="countdown_box me-2">
+                                        {days}d 
+                                      </span>
+                                      <span className="countdown_box me-2">
+                                        {hours}h 
+                                      </span>
+                                      <span className="countdown_box me-2">
+                                       {minutes}m 
+                                      </span>
+                                      <span className="countdown_box me-2">
+                                        {seconds}s
+                                      </span>
+                                    </>
+                                  )}
+                                />
                               </span>
                             </small>
                           </span>
-                          {/* <Countdown
-                            date={
-                              upcomingGames.length > 1
-                                ? new Date(
-                                    upcomingGames[1][
-                                      propertyMapping[operatorType].time
-                                    ]
-                                  )
-                                : null
-                            }
-                            renderer={({
-                              hours,
-                              minutes,
-                              seconds,
-                              completed,
-                            }) => {
-                              if (completed) return "Next game started!";
-                              return (
-                                <>
-                                  {hours ? (
-                                    <span className="countdown_box me-2">
-                                      {hours}hrs
-                                    </span>
-                                  ) : null}
-                                  {minutes ? (
-                                    <span className="countdown_box me-2">
-                                      {minutes}mins
-                                    </span>
-                                  ) : null}
-                                  {seconds ? (
-                                    <span className="countdown_box me-2">
-                                      {seconds}secs
-                                    </span>
-                                  ) : null}
-                                </>
-                              );
-                            }}
-                          /> */}
                         </p>
                         <p
                           onClick={() => {
