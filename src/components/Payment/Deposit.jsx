@@ -1,4 +1,4 @@
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import { images } from "../../constant";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -17,16 +17,19 @@ const schema = yup.object().shape({
 const Deposit = () => {
   const [showAmountInput, setShowAmountInput] = useState(false);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState("");
+  const [monnifyInfo, setMonnifyInfo] = useState(null);
+  const [showMonnifyModal, setShowMonnifyModal] = useState(false);
 
   const handlePaymentOptionChange = (e) => {
     const selectedOption = e.target.value;
     setSelectedPaymentOption(selectedOption);
     setShowAmountInput(
-      selectedOption === "flutterwave" || selectedOption === "paystack"
+      selectedOption === "flutterwave" ||
+        selectedOption === "paystack" ||
+        selectedOption === "monnify"
     );
   };
 
-  // const [payments, { isLoading }] = usePaystackpaymentMutation();
   const {
     register,
     handleSubmit,
@@ -37,35 +40,11 @@ const Deposit = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const userId = userInfo.data.id.toString();
 
-  // const [payments, { isLoading }] = usePaystackpaymentMutation();
   const [isLoading, setIsLoading] = useState(false);
 
-  // const submitForm = async (data) => {
-  //   try {
-  //     if (selectedPaymentOption === "paystack") {
-  //       // Prepare the Paystack payment data
-  //       const paymentData = {
-  //         id: userId,
-  //         amount: data.amount,
-  //         posting: "paystack",
-  //       };
-
-  //       // Send the payment request to Paystack using the Bearer token
-  //       payments(paymentData, {
-  //         // Pass the Bearer token in the request headers
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Accept: "application/json",
-  //           Authorization: `Bearer ${userInfo.token}`,
-  //         },
-  //       });
-  //     }
-  //   } catch (err) {
-  //     // Handle other errors
-  //     console.log();
-  //     toast.error("An error occured.");
-  //   }
-  // };
+  const handleCloseMonnifyModal = () => {
+    setShowMonnifyModal(false);
+  };
 
   const submitForm = async (data) => {
     setIsLoading(true);
@@ -79,15 +58,18 @@ const Deposit = () => {
         };
 
         // Send the payment request to Paystack with the Bearer token in the headers
-        const paystackResponse = await fetch("https://sandbox.mylottohub.com/v1/payment-initialize", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": `Bearer ${userInfo.token}`,
-          },
-          body: JSON.stringify(paymentData),
-        });
+        const paystackResponse = await fetch(
+          "https://sandbox.mylottohub.com/v1/payment-initialize",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${userInfo.token}`,
+            },
+            body: JSON.stringify(paymentData),
+          }
+        );
 
         if (paystackResponse.ok) {
           const paystackData = await paystackResponse.json();
@@ -96,11 +78,69 @@ const Deposit = () => {
         } else {
           toast.error("An error occurred.");
         }
+      } else if (selectedPaymentOption === "flutterwave") {
+        // Prepare the flutterwave payment data
+        const paymentData = {
+          id: userId,
+          amount: data.amount,
+          posting: "flutterwave",
+        };
+
+        // Send the payment request to flutterwave with the Bearer token in the headers
+        const paystackResponse = await fetch(
+          "https://sandbox.mylottohub.com/v1/payment-initialize",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${userInfo.token}`,
+            },
+            body: JSON.stringify(paymentData),
+          }
+        );
+
+        if (paystackResponse.ok) {
+          const paystackData = await paystackResponse.json();
+          // Redirect the user to the flutterwave checkout page
+          window.location.href = paystackData.redirect_url;
+        } else {
+          toast.error("An error occurred.");
+        }
+      } else if (selectedPaymentOption === "monnify") {
+        // Prepare the monnify payment data
+        const paymentData = {
+          id: userId,
+          amount: data.amount,
+          posting: "monnify",
+        };
+
+        // Send the payment request to monnify with the Bearer token in the headers
+        const paystackResponse = await fetch(
+          "https://sandbox.mylottohub.com/v1/payment-initialize",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${userInfo.token}`,
+            },
+            body: JSON.stringify(paymentData),
+          }
+        );
+
+        if (paystackResponse.ok) {
+          const monnifyData = await paystackResponse.json();
+          setMonnifyInfo(monnifyData);
+          setShowMonnifyModal(true);
+        } else {
+          toast.error("An error occurred.");
+        }
       }
     } catch (err) {
       toast.error("An error occurred.");
-    }finally {
-      setIsLoading(false); 
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -203,6 +243,10 @@ const Deposit = () => {
                       <img src={images.paystack} />
                       Paystack
                     </option>
+                    <option value="monnify">
+                      {/* <img src={images.paystack} /> */}
+                      Monnify
+                    </option>
                   </select>
                 </div>
               </div>
@@ -228,6 +272,22 @@ const Deposit = () => {
             </form>
           </div>
         </div>
+      </div>
+
+      <div>
+        {/* ... (your existing code) */}
+
+        {/* Monnify Modal */}
+        <Modal show={showMonnifyModal} onHide={handleCloseMonnifyModal}  backdrop="static" keyboard={false} size="lg"centered>
+          <Modal.Header closeButton>
+            <h6>Make Payment to the Account below to fund your Account</h6>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Bank Name: {monnifyInfo?.bank_name}</p>
+            <p>Account Name: {monnifyInfo?.account_name}</p>
+            <p>Account Number: {monnifyInfo?.account_number}</p>
+          </Modal.Body>
+        </Modal>
       </div>
     </div>
   );

@@ -93,22 +93,22 @@ const Operator = () => {
                   ? operatorDataArray
                   : Object.values(operatorDataArray);
 
-                // ...
-
-                // ...
-
+      
                 const upcomingGames = dataArray.filter((game) => {
                   let drawTime;
                   const currentTime = new Date();
 
                   if (operatorType === "lotto_nigeria") {
                     // For "lotto_nigeria," use the "drawDate" field
-                    drawTime = new Date(
-                      game.drawDate.replace(
-                        /(\d{2})\/(\d{2})\/(\d{4})/,
-                        "$3-$2-$1"
+                    drawTime = game.drawDate
+                    ? new Date(
+                        game.drawDate.replace(
+                          /(\d{2})\/(\d{2})\/(\d{4})/,
+                          "$3-$2-$1"
+                        )
                       )
-                    );
+                    : null;
+                  
                   } else if (operatorType === "wesco") {
                     // For "wesco," combine "drawdate" and "drawtime"
                     const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
