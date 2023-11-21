@@ -5,10 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import * as yup from "yup";
-// import { useNavigate } from "react-router-dom";
-// import { usePaystackpaymentMutation } from "../../pages/slices/userApiSlice";
 import { useState } from "react";
-// import { setCredentials } from "../../pages/slices/authSlice";
 
 const schema = yup.object().shape({
   amount: yup.string().required("This is a required field"),

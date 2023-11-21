@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import Countdown from "react-countdown";
+import moment from "moment";
 
 const Operator = () => {
   const navigate = useNavigate();
@@ -15,10 +16,10 @@ const Operator = () => {
     wesco: [],
     green_lotto: [],
     lotto_nigeria: [],
-    Lottomania: [],
+    lottomania: [],
   });
 
-  const operatorTypes = ["wesco", "green_lotto", "lotto_nigeria", "Lottomania"];
+  const operatorTypes = ["wesco", "green_lotto", "lotto_nigeria", "lottomania"];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
       const requestData = { operator_type: operatorType };
@@ -79,12 +80,15 @@ const Operator = () => {
           ) : (
             operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];
+              // console.log(operatorDataArray);
 
               if (operatorDataArray && operatorDataArray.length > 0) {
                 const imageSrc = `/images/${operatorType}.png`;
+                // console.log(operatorDataArray);
 
                 const propertyMapping = {
                   wesco: { name: "drawname", time: "drawtime" },
+                  lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
                 };
 
@@ -92,37 +96,27 @@ const Operator = () => {
                 const dataArray = Array.isArray(operatorDataArray)
                   ? operatorDataArray
                   : Object.values(operatorDataArray);
+                // console.log(dataArray);
 
-      
                 const upcomingGames = dataArray.filter((game) => {
+                  const currentTime = moment();
+                
                   let drawTime;
-                  const currentTime = new Date();
-
+                
                   if (operatorType === "lotto_nigeria") {
-                    // For "lotto_nigeria," use the "drawDate" field
+                   
                     drawTime = game.drawDate
-                    ? new Date(
-                        game.drawDate.replace(
-                          /(\d{2})\/(\d{2})\/(\d{4})/,
-                          "$3-$2-$1"
-                        )
-                      )
-                    : null;
-                  
+                      ? moment(game.drawDate, "DD/MM/YYYY HH:mm")
+                      : null;
                   } else if (operatorType === "wesco") {
-                    // For "wesco," combine "drawdate" and "drawtime"
+                  
                     const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
-
-                    drawTime = new Date(
-                      drawDateTimeString.replace(
-                        /(\d{4})(\d{2})(\d{2}) (\d{2}:\d{2}:\d{2})/,
-                        "$1-$2-$3T$4Z"
-                      )
-                    );
-                  } else {
-                    // Add additional conditions for other operator types if needed
+                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                  } else if (operatorType === "lottomania") {
+                    drawTime = moment(game.sdt);
                   }
-                  return drawTime > currentTime;
+                
+                  return drawTime && drawTime.isAfter(currentTime);
                 });
 
                 upcomingGames.sort(
@@ -135,26 +129,34 @@ const Operator = () => {
                 const nextGame =
                   upcomingGames.length > 0 ? upcomingGames[0] : null;
 
-                const renderGameTime = (operatorType, game) => {
-                  const time = game[propertyMapping[operatorType].time];
-
-                  // Handle "wesco" and other operator types by parsing the time string
-                  const parsedTime = new Date(
-                    time.replace(
-                      /(\d{2})\/(\d{2})\/(\d{4}) (\d{2}:\d{2})/,
-                      "$3-$2-$1T$4Z"
-                    )
-                  );
-
-                  // Check if parsedTime is a valid date
-                  if (!isNaN(parsedTime.getTime())) {
-                    return parsedTime;
-                  } else {
-                    console.error("Invalid date format:", time);
-                    return null;
-                  }
-                };
-
+                  const renderGameTime = (operatorType, game) => {
+                    const time = game[propertyMapping[operatorType].time];
+                  
+                    if (operatorType === "lottomania") {
+                      return new Date(time);
+                    } else if (operatorType === "lotto_nigeria") {
+                      const parsedTime = moment(time, "DD/MM/YYYY HH:mm").utcOffset("+00:00").utc();
+                      return parsedTime.toDate();
+                    } else if (operatorType === "wesco") {
+                      // For "wesco," combine "drawdate" and "drawtime" in the correct format
+                      const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
+                      const parsedTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss")
+                        .utcOffset("+00:00")
+                        .utc();
+                  
+                      // Check if parsedTime is valid
+                      if (parsedTime.isValid()) {
+                        return parsedTime.toDate();
+                      } else {
+                        console.error("Invalid date format:", drawDateTimeString);
+                        return null;
+                      }
+                    } else {
+                      // Handle other operator types by parsing the time string
+                      const parsedTime = moment(time, "DD/MM/YYYY HH:mm").utcOffset("+00:00").utc();
+                      return parsedTime.toDate();
+                    }
+                  };
                 return nextGame ? (
                   <div
                     key={index}
@@ -195,16 +197,16 @@ const Operator = () => {
                                   }) => (
                                     <>
                                       <span className="countdown_box me-2">
-                                        {days}d 
+                                        {days}days
                                       </span>
                                       <span className="countdown_box me-2">
-                                        {hours}h 
+                                        {hours}hrs
                                       </span>
                                       <span className="countdown_box me-2">
-                                       {minutes}m 
+                                        {minutes}mins
                                       </span>
                                       <span className="countdown_box me-2">
-                                        {seconds}s
+                                        {seconds}secs
                                       </span>
                                     </>
                                   )}
@@ -215,7 +217,7 @@ const Operator = () => {
                         </p>
                         <p
                           onClick={() => {
-                            navigate("/play-game");
+                            navigate(`/play-game/${operatorType}`);
                           }}
                         >
                           <a className="btn btn-blue btn-sm btn-block w-100">

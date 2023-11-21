@@ -77,7 +77,7 @@ export const routes = [
   },
   {
     id: 11,
-    path: "/play-game",
+    path: "/play-game/:id",
     element: <PlayGames />,
     protected: true,
   },

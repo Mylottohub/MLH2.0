@@ -1,4 +1,47 @@
+import { Button, Modal, Spinner } from "react-bootstrap";
+import { images } from "../../constant";
+import { useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import * as yup from "yup";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+
 const WithdrawModal = () => {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (userInfo && userInfo.data) {
+      // Define your API endpoint URL
+      const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
+  
+      // Replace "YOUR_BEARER_TOKEN" with the actual bearer token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+          "Content-Type": "application json", // Set the content type to JSON
+          Accept: "application/json",
+        },
+      };
+  
+      axios
+        .get(apiUrl, config)
+        .then((response) => {
+          setUserData(response.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          // setError(error);
+          setLoading(false);
+        });
+    }
+  }, [userInfo]);
+  
   return (
     <div>
          <div style={{ marginTop: "-30px" }}>
@@ -8,7 +51,7 @@ const WithdrawModal = () => {
             </span>
             <br />
             <small className="mt-3">
-              Winning Wallet Balance - <strong>₦457,000.00</strong>
+              Winning Wallet Balance - <strong>₦{userInfo.data.wwallet}</strong>
             </small>
             <hr />
             <p>

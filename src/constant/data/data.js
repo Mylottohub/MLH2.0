@@ -23,7 +23,7 @@ const operatorData = [
       {
         id: 5,
         game_name: 'BIGGY',
-        image: images.lotto_nigeria,
+        image: images.lottomania,
       },
       {
         id: 6,

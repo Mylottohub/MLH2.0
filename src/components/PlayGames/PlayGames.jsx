@@ -5,12 +5,59 @@ import Navbar from "../Navbar";
 import { toast } from "react-toastify";
 import "../../assets/css/play.css";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import moment from "moment";
+import Countdown from "react-countdown";
+// import { useSelector } from "react-redux";
 
 const PlayGames = () => {
   const [selectedBetType, setSelectedBetType] = useState("");
   const [selectedGameType, setSelectedGameType] = useState("");
   const [selectedNumbers, setSelectedNumbers] = useState([]);
-  const [selectedCount, setSelectedCount] = useState(0); // Track selected count
+  const [selectedCount, setSelectedCount] = useState(0);
+  const { id } = useParams();
+
+  // const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [perOperator, setPerOperator] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const requestData = { operator_type: id };
+      try {
+        const response = await fetch(
+          "https://sandbox.mylottohub.com/v1/get-games",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(requestData),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        setPerOperator(data.result);
+      } catch (error) {
+        console.error(`Error fetching ${id} games:`, error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData(); // Call the async function
+  }, []);
+  useEffect(() => {
+    // console.log("count", perOperator);
+  }, [perOperator]);
+
   const maxSelectableNumbers = {
     "2 DIRECT": 2,
     "3 DIRECT": 3,
@@ -69,22 +116,22 @@ const PlayGames = () => {
   };
 
   const checkboxes = [];
- 
+
   // const randomizeCheckbox = () => {
   //   if (!selectedBetType) {
   //     toast.error("Select Bet Type");
   //     return;
   //   }
-  
+
   //   const gtype = selectedBetType;
   //   const mustCheck = maxSelectableNumbers[gtype];
   //   const checkboxes = document.querySelectorAll(".chk-btn");
-  
+
   //   if (mustCheck >= checkboxes.length) {
   //     toast.error("Not enough numbers available for this bet type.");
   //     return;
   //   }
-  
+
   //   const randomIndices = [];
   //   while (randomIndices.length < mustCheck) {
   //     const randomIndex = Math.floor(Math.random() * checkboxes.length);
@@ -92,112 +139,109 @@ const PlayGames = () => {
   //       randomIndices.push(randomIndex);
   //     }
   //   }
-  
+
   //   const randomizedNumbers = randomIndices.map((index) => parseInt(checkboxes[index].value));
-    
+
   //   setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
-  
+
   //   checkboxes.forEach((checkbox, index) => {
   //     checkbox.checked = randomIndices.includes(index);
   //   });
   // };
-const randomizeCheckbox = () => {
-  if (!selectedBetType) {
-    toast.error("Select Bet Type");
-    return;
-  }
+  const randomizeCheckbox = () => {
+    if (!selectedBetType) {
+      toast.error("Select Bet Type");
+      return;
+    }
 
-  const gtype = selectedBetType;
-  const checkboxes = document.querySelectorAll(".chk-btn");
+    const gtype = selectedBetType;
+    const checkboxes = document.querySelectorAll(".chk-btn");
 
-  if (gtype.startsWith("PERM")) {
-    let numToRandomize;
+    if (gtype.startsWith("PERM")) {
+      let numToRandomize;
 
-    switch (gtype) {
-      case "PERM 2":
-        numToRandomize = 3;
-        break;
-      case "PERM 3":
-        numToRandomize = 4;
-        break;
-      case "PERM 4":
-        numToRandomize = 5;
-        break;
-      case "PERM 5":
-        numToRandomize = 6;
-        break;
-      default:
-        toast.error("Invalid Bet Type");
+      switch (gtype) {
+        case "PERM 2":
+          numToRandomize = 3;
+          break;
+        case "PERM 3":
+          numToRandomize = 4;
+          break;
+        case "PERM 4":
+          numToRandomize = 5;
+          break;
+        case "PERM 5":
+          numToRandomize = 6;
+          break;
+        default:
+          toast.error("Invalid Bet Type");
+          return;
+      }
+
+      const randomIndices = [];
+
+      if (numToRandomize > checkboxes.length) {
+        toast.error(`Not enough numbers available for this bet type: ${gtype}`);
         return;
-    }
-
-    const randomIndices = [];
-
-    if (numToRandomize > checkboxes.length) {
-      toast.error(`Not enough numbers available for this bet type: ${gtype}`);
-      return;
-    }
-
-    while (randomIndices.length < numToRandomize) {
-      const randomIndex = Math.floor(Math.random() * checkboxes.length);
-      if (!randomIndices.includes(randomIndex)) {
-        randomIndices.push(randomIndex);
       }
-    }
 
-    const randomizedNumbers = randomIndices.map(
-      (index) => parseInt(checkboxes[index].value)
-    );
-
-    setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
-
-    checkboxes.forEach((checkbox, index) => {
-      checkbox.checked = randomIndices.includes(index);
-    });
-
-    // if (gtype === "PERM 2" || gtype === "PERM 3" || gtype === "PERM 4" || gtype === "PERM 5") {
-    //   // Disable further selection for "PERM" bet types after randomization
-    //   checkboxes.forEach((checkbox) => {
-    //     checkbox.disabled = true;
-    //   });
-    // }
-  } else {
-    // Handle other bet types here
-    const mustCheck = maxSelectableNumbers[gtype];
-
-    if (mustCheck >= checkboxes.length) {
-      toast.error(`Not enough numbers available for this bet type: ${gtype}`);
-      return;
-    }
-
-    const randomIndices = [];
-
-    while (randomIndices.length < mustCheck) {
-      const randomIndex = Math.floor(Math.random() * checkboxes.length);
-      if (!randomIndices.includes(randomIndex)) {
-        randomIndices.push(randomIndex);
+      while (randomIndices.length < numToRandomize) {
+        const randomIndex = Math.floor(Math.random() * checkboxes.length);
+        if (!randomIndices.includes(randomIndex)) {
+          randomIndices.push(randomIndex);
+        }
       }
-    }
 
-    const randomizedNumbers = randomIndices.map(
-      (index) => parseInt(checkboxes[index].value)
-    );
+      const randomizedNumbers = randomIndices.map((index) =>
+        parseInt(checkboxes[index].value)
+      );
 
-    setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
+      setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
 
-    checkboxes.forEach((checkbox, index) => {
-      checkbox.checked = randomIndices.includes(index);
-    });
-
-    if (gtype === "2 DIRECT" || gtype === "3 DIRECT" || gtype === "4 DIRECT" || gtype === "5 DIRECT") {
-      // Disable further selection for "DIRECT" bet types after randomization
-      checkboxes.forEach((checkbox) => {
-        checkbox.disabled = true;
+      checkboxes.forEach((checkbox, index) => {
+        checkbox.checked = randomIndices.includes(index);
       });
-    }
-  }
-};
+    } else {
+      // Handle other bet types here
+      const mustCheck = maxSelectableNumbers[gtype];
 
+      if (mustCheck >= checkboxes.length) {
+        toast.error(`Not enough numbers available for this bet type: ${gtype}`);
+        return;
+      }
+
+      const randomIndices = [];
+
+      while (randomIndices.length < mustCheck) {
+        const randomIndex = Math.floor(Math.random() * checkboxes.length);
+        if (!randomIndices.includes(randomIndex)) {
+          randomIndices.push(randomIndex);
+        }
+      }
+
+      const randomizedNumbers = randomIndices.map((index) =>
+        parseInt(checkboxes[index].value)
+      );
+
+      setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
+
+      checkboxes.forEach((checkbox, index) => {
+        checkbox.checked = randomIndices.includes(index);
+      });
+
+      if (
+        gtype === "2 DIRECT" ||
+        gtype === "3 DIRECT" ||
+        gtype === "4 DIRECT" ||
+        gtype === "5 DIRECT"
+      ) {
+        // Disable further selection for "DIRECT" bet types after randomization
+        checkboxes.forEach((checkbox) => {
+          checkbox.disabled = true;
+        });
+      }
+    }
+  };
 
   const clearRandomize = () => {
     const checkboxes = document.querySelectorAll(".chk-btn");
@@ -228,7 +272,6 @@ const randomizeCheckbox = () => {
     );
   }
 
-
   const handleConfirmBet = (e) => {
     e.preventDefault();
     if (!selectedGameType) {
@@ -239,28 +282,32 @@ const randomizeCheckbox = () => {
       toast.error("Select Bet Type");
       return;
     }
-  
-    const stakeAmount = parseFloat(document.getElementById("stakeAmount").value);
-  
+
+    const stakeAmount = parseFloat(
+      document.getElementById("stakeAmount").value
+    );
+
     if (isNaN(stakeAmount) || stakeAmount < 10) {
       toast.error("Minimum stake amount is ₦10");
       return;
     }
-  
+
     // Define an array of valid "DIRECT" bet types
     const validDirectTypes = ["2 DIRECT", "3 DIRECT", "4 DIRECT", "5 DIRECT"];
-  
+
     if (validDirectTypes.includes(selectedBetType)) {
       const requiredNumbers = maxSelectableNumbers[selectedBetType];
-  
+
       if (selectedNumbers.length !== requiredNumbers) {
-        toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
+        toast.error(
+          `Select exactly ${requiredNumbers} numbers for ${selectedBetType}`
+        );
         return;
       }
-  
+
       const multiplier = calculateDirectMultiplier(requiredNumbers);
       const maxWin = stakeAmount * multiplier;
-  
+
       const newConfirmedBet = {
         gname: selectedGameType,
         line: "1",
@@ -269,7 +316,7 @@ const randomizeCheckbox = () => {
         max_win: `₦${maxWin.toFixed(2)}`,
         total_stake: `₦${stakeAmount.toFixed(2)}`,
       };
-  
+
       setConfirmedBet(newConfirmedBet);
     } else if (selectedBetType.startsWith("PERM")) {
       // Handle "PERM" bets
@@ -282,21 +329,21 @@ const randomizeCheckbox = () => {
         : selectedBetType.includes("PERM 5")
         ? 5
         : 0;
-  
+
       if (requiredNumbers === 0) {
         toast.error("Invalid Bet Type");
         return;
       }
-  
+
       // if (selectedNumbers.length !== requiredNumbers) {
       //   toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
       //   return;
       // }
-  
+
       const lines = calculatePermLines(requiredNumbers);
       const multiplier = calculatePermMultiplier(selectedBetType);
       const maxWin = stakeAmount * lines * multiplier;
-  
+
       const newConfirmedBet = {
         gname: selectedGameType,
         line: lines.toString(),
@@ -305,11 +352,11 @@ const randomizeCheckbox = () => {
         max_win: `₦${maxWin.toFixed(2)}`,
         total_stake: `₦${stakeAmount.toFixed(2)}`,
       };
-  
+
       setConfirmedBet(newConfirmedBet);
-    } 
+    }
   };
-  
+
   const calculateDirectMultiplier = (requiredNumbers) => {
     switch (requiredNumbers) {
       case 2:
@@ -353,10 +400,10 @@ const randomizeCheckbox = () => {
       9: 45,
       10: 55,
     };
-  
+
     return linesMapping[requiredNumbers] || 0;
-  }
-  
+  };
+
   const localStorageKey = "betSlip";
   useEffect(() => {
     const savedBetSlip = localStorage.getItem(localStorageKey);
@@ -365,7 +412,7 @@ const randomizeCheckbox = () => {
     }
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     if (confirmedBet) {
       localStorage.setItem(localStorageKey, JSON.stringify(confirmedBet));
     } else {
@@ -377,8 +424,9 @@ const randomizeCheckbox = () => {
     // Clear the confirmed bet and remove it from localStorage
     setConfirmedBet(null);
     localStorage.removeItem(localStorageKey);
-    clearRandomize(null)
+    clearRandomize(null);
   };
+  const imageSrc = `/images/${id}.png`;
 
   return (
     <>
@@ -392,16 +440,13 @@ const randomizeCheckbox = () => {
           id="play_form"
         >
           <p className="mt-5">
-            <strong>Select Operator &gt;&gt; Wesco</strong>
+            <strong>Select Operator &gt;&gt; {id}</strong>
           </p>
           <br />
           <div className="div_lgrey">
             <div className="row">
               <div className="col-md-2 col-xs-4">
-                <img
-                  src="https://www.mylottohub.com/images/operator/Wesco-Logo.png"
-                  className="img-fluid"
-                />
+                <img src={imageSrc} className="img-fluid" />
               </div>
               <div className="col-md-6 col-xs-8">
                 <div className="row">
@@ -415,17 +460,35 @@ const randomizeCheckbox = () => {
                       onChange={handleGameChange}
                     >
                       <option value="">Select Game</option>
-                      <option value="WESCO GREEN">WESCO GREEN</option>
-                      <option value="WESCO GREEN MACH">WESCO GREEN MACH</option>
-                      <option value="WESCO BONUS">WESCO BONUS</option>
-                      <option value="WESCO BONUS MACH">WESCO BONUS MACH</option>
-                      <option value="WESCO TREASURE">WESCO TREASURE</option>
-                      <option value="WESCO TREASURE MACH">
-                        WESCO TREASURE MACH
-                      </option>
-                      <option value="WESCO MIDWEEK">WESCO MIDWEEK</option>
-                      <option value="WESCO KEY">WESCO KEY</option>
-                      <option value="WESCO KEY MACH">WESCO KEY MACH</option>
+
+                      {perOperator.map((item, index) => {
+                        // Check if the operator is "lotto_nigeria"
+                        if (id === "lotto_nigeria") {
+                          return (
+                            <option key={index} value={item.drawAlias}>
+                              {item.drawAlias}
+                            </option>
+                          );
+                        } else if (id === "lottomania") {
+                          return (
+                            <option key={index} value={item.gn}>
+                              {item.gn}
+                            </option>
+                          );
+                        } else if (id === "wesco") {
+                          return (
+                            <option
+                              className="text-uppercase"
+                              key={index}
+                              value={item.drawname}
+                            >
+                              {item.drawname}
+                            </option>
+                          );
+                        }
+
+                        return null; // For other operators, you can add similar checks
+                      })}
                     </select>
                     <br />
                     <select
@@ -461,53 +524,160 @@ const randomizeCheckbox = () => {
                             style={{ background: "#406777" }}
                             className="text-white p-4 text-center"
                           >
-                            Select Next Game
+                            Active Games
                           </p>
                         </th>
                       </tr>
-                      <tr>
-                        <td>
-                          <small>
-                            <strong>Wesco VAG:</strong>
-                          </small>
-                        </td>
-                        <td>
-                          <small>
-                            <span data-countdown2="2023/09/14 10:40:00">
-                              <small>00 days 00 hrs 38 mins 20 secs</small>
-                            </span>
-                          </small>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <small>
-                            <strong>WESCO BONANZA:</strong>
-                          </small>
-                        </td>
-                        <td>
-                          <small>
-                            <span data-countdown2="2023/09/14 11:50:00">
-                              <small>00 days 01 hrs 48 mins 20 secs</small>
-                            </span>
-                          </small>
-                        </td>
-                      </tr>
 
-                      <tr>
-                        <td>
-                          <small>
-                            <strong>WESCO LUCKY MACH:</strong>
-                          </small>
-                        </td>
-                        <td>
-                          <small>
-                            <span data-countdown2="2023/09/14 22:25:00">
-                              <small>00 days 12 hrs 23 mins 20 secs</small>
-                            </span>
-                          </small>
-                        </td>
-                      </tr>
+                      {perOperator.map((item, index) => {
+                        if (id === "lotto_nigeria") {
+                          const drawDateTime = moment(
+                            item.drawDate,
+                            "DD/MM/YYYY HH:mm"
+                          );
+                          const currentTime = moment();
+                          const timeDifference = drawDateTime.diff(currentTime);
+
+                          if (timeDifference > 0) {
+                            return (
+                              <>
+                                <tr key={index}>
+                                  <td>
+                                    <small>
+                                      <strong>{item.drawAlias}:</strong>
+                                    </small>
+                                  </td>
+                                  <td>
+                                    <small>
+                                      <span>
+                                        <small>
+                                          <Countdown
+                                            date={
+                                              currentTime.valueOf() +
+                                              timeDifference
+                                            }
+                                            renderer={({
+                                              days,
+                                              hours,
+                                              minutes,
+                                              seconds,
+                                            }) => (
+                                              <>
+                                                {days}days {hours}hrs {minutes}
+                                                mins {seconds}secs
+                                              </>
+                                            )}
+                                          />
+                                        </small>
+                                      </span>
+                                    </small>
+                                  </td>
+                                </tr>
+                              </>
+                            );
+                          } else {
+                            return null;
+                          }
+                        } else if (id === "wesco") {
+                          const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
+                          const drawDateTime = moment(
+                            drawDateTimeString,
+                            "YYYYMMDD HH:mm:ss"
+                          );
+                          const currentTime = moment();
+                          const timeDifference = drawDateTime.diff(currentTime);
+
+                          if (timeDifference > 0) {
+                            return (
+                              <>
+                                <tr key={index}>
+                                  <td>
+                                    <small>
+                                      <strong>{item.drawname}:</strong>
+                                    </small>
+                                  </td>
+                                  <td>
+                                    <small>
+                                      <span>
+                                        <small>
+                                          <Countdown
+                                            date={
+                                              currentTime.valueOf() +
+                                              timeDifference
+                                            }
+                                            renderer={({
+                                              days,
+                                              hours,
+                                              minutes,
+                                              seconds,
+                                            }) => (
+                                              <>
+                                                {days}days {hours}hrs {minutes}
+                                                mins {seconds}secs
+                                              </>
+                                            )}
+                                          />
+                                        </small>
+                                      </span>
+                                    </small>
+                                  </td>
+                                </tr>
+                              </>
+                            );
+                          } else {
+                            return null;
+                          }
+                         
+                        } else if (id === "lottomania") {
+                          const drawDateTime = moment(item.sdt);
+
+                          const currentTime = moment();
+                          const timeDifference = drawDateTime.diff(currentTime);
+
+                          if (timeDifference > 0) {
+                            return (
+                              <>
+                                <tr key={index}>
+                                  <td>
+                                    <small>
+                                      <strong>{item.gn}:</strong>
+                                    </small>
+                                  </td>
+                                  <td>
+                                    <small>
+                                      <span>
+                                        <small>
+                                          <Countdown
+                                            date={
+                                              currentTime.valueOf() +
+                                              timeDifference
+                                            }
+                                            renderer={({
+                                              days,
+                                              hours,
+                                              minutes,
+                                              seconds,
+                                            }) => (
+                                              <>
+                                                {days}days {hours}hrs {minutes}
+                                                mins {seconds}secs
+                                              </>
+                                            )}
+                                          />
+                                        </small>
+                                      </span>
+                                    </small>
+                                  </td>
+                                </tr>
+                              </>
+                            );
+                          } else {
+                            return null;
+                          }
+                        }
+
+                        return null; // For other operators, you can add similar checks
+                      })}
                     </tbody>
                   </table>
                 </div>
