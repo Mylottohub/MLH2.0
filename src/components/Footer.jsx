@@ -31,7 +31,7 @@ const Footer = () => {
             <div className="container">
               <div className="row">
                 <div
-                  className="col-md-5 col-sm-6 col-xs-12 col-2"
+                  className="col-md-4 col-sm-6 col-xs-12 col-2"
                   style={{ paddingTop: "60px" }}
                 >
                   <div className="footer-widget footer-logo">
@@ -41,7 +41,7 @@ const Footer = () => {
                           src="https://www.mylottohub.com/megzy/images/logo.png"
                           alt=""
                           className="img-fluid img-fluid"
-                          width="240"
+                          width="280"
                         />
                       </div>
                       <div className="col-md-8">
@@ -82,7 +82,7 @@ const Footer = () => {
                     </ul>
                   </div>
                 </div>
-                <div className="col-md-2 col-sm-6 col-xs-12 col-2">
+                <div className="col-md-3 col-sm-6 col-xs-12 col-2">
                   <div className="footer-widget footer-menu">
                     <h2>Company</h2>
                     <ul>
@@ -97,7 +97,7 @@ const Footer = () => {
                         </a>
                       </li>
                       <li>
-                        <a href="#" onClick={() => navigate("/terms")}>
+                        <a href="#" className="w-100" onClick={() => navigate("/terms")}>
                           Terms and Conditions
                         </a>
                       </li>

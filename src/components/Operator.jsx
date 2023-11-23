@@ -220,7 +220,7 @@ const Operator = () => {
                             navigate(`/play-game/${operatorType}`);
                           }}
                         >
-                          <a className="btn btn-blue btn-sm btn-block w-100">
+                          <a className="btn btn-blue btn-sm btn-block w-100 p-2">
                             Play Now
                           </a>
                         </p>
@@ -250,7 +250,7 @@ const Operator = () => {
           </section>
 
           <section className="container app__how-play">
-            <div className="row text-center mt-5">
+            <div className="row text-center mt-5 mb-5">
               <div className="col-md-4">
                 <p>
                   <img
@@ -261,14 +261,14 @@ const Operator = () => {
                 </p>
                 <br />
                 <p>
-                  <small>
+                  <p>
                     <strong>Sign Up/ play with any Operator</strong>
                     <br />
                     <br />
-                    Pay once and it’s yours forever. Use it to build as many
-                    sites as you need; long form, presentations, splash sites,
-                    and more.
-                  </small>
+                   <p style={{textAlign:'justify'}}> Pay once and it’s yours forever. Use it to build as many
+                    sites as you ned; long form, presentations, splash sites,
+                    and more.</p>
+                  </p>
                 </p>
               </div>
               <div className="col-md-4">
@@ -285,9 +285,9 @@ const Operator = () => {
                     <strong>Your Winnings in one wallet</strong>
                     <br />
                     <br />
-                    Pay once and it’s yours forever. Use it to build as many
-                    sites as you need; long form, presentations, splash sites,
-                    and more.
+                   <p style={{textAlign:'justify'}}> Pay once and it’s yours forever. Use it to build as many
+                    sites as you need; long form, presentations, splash sites, and more.</p>
+                    
                   </small>
                 </p>
               </div>
@@ -305,9 +305,9 @@ const Operator = () => {
                     <strong>Withdraw to your account</strong>
                     <br />
                     <br />
-                    Pay once and it’s yours forever. Use it to build as many
-                    sites as you need; long form, presentations, splash sites,
-                    and more.
+                    <p style={{textAlign:'justify'}}>Pay once and it’s yours forever. Use it to build as many
+                    sites as you need; long form, presentations, splash sites,  and more.</p>
+                   
                   </small>
                 </p>
               </div>
@@ -332,9 +332,9 @@ const Operator = () => {
                   style={{ paddingTop: "50px", paddingBottom: "50px" }}
                 >
                   <h2 style={{ color: "#0B3E53" }}>
-                    <strong>Complete and Accurate Data</strong>
+                   Complete and Accurate Data
                   </h2>
-                  <p>
+                  <p style={{ fontSize:'20px', lineHeight:'35px' }}>
                     MYLOTTOHUB is a web based platform, designed to gradually
                     help transit lottery into the digital age through its mobile
                     and desktop based site. It was developed to help drive the

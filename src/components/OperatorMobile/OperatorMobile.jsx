@@ -5,6 +5,8 @@ import "../../assets/css/operator.css";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
+import Countdown from "react-countdown";
+import moment from "moment";
 
 const OperatorMobile = () => {
   const navigate = useNavigate();
@@ -16,10 +18,10 @@ const OperatorMobile = () => {
     wesco: [],
     green_lotto: [],
     lotto_nigeria: [],
-    Lottomania: [],
+    lottomania: [],
   });
 
-  const operatorTypes = ["wesco", "green_lotto", "lotto_nigeria", "Lottomania"];
+  const operatorTypes = ["wesco", "green_lotto", "lotto_nigeria", "lottomania"];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
       const requestData = { operator_type: operatorType };
@@ -70,7 +72,7 @@ const OperatorMobile = () => {
             <h4 className="fw-bolder">Select Operator and Play Game</h4>
           </div>
 
-          {isLoading ? (
+         {isLoading ? (
             <div className="spinner text-dark text-center">
               <Spinner
                 as="span"
@@ -83,12 +85,15 @@ const OperatorMobile = () => {
           ) : (
             operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];
+              // console.log(operatorDataArray);
 
               if (operatorDataArray && operatorDataArray.length > 0) {
                 const imageSrc = `/images/${operatorType}.png`;
+                // console.log(operatorDataArray);
 
                 const propertyMapping = {
                   wesco: { name: "drawname", time: "drawtime" },
+                  lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
                 };
 
@@ -96,37 +101,27 @@ const OperatorMobile = () => {
                 const dataArray = Array.isArray(operatorDataArray)
                   ? operatorDataArray
                   : Object.values(operatorDataArray);
-
-                // ...
-
-                // ...
+                // console.log(dataArray);
 
                 const upcomingGames = dataArray.filter((game) => {
+                  const currentTime = moment();
+                
                   let drawTime;
-                  const currentTime = new Date();
-
+                
                   if (operatorType === "lotto_nigeria") {
-                    // For "lotto_nigeria," use the "drawDate" field
-                    drawTime = new Date(
-                      game.drawDate.replace(
-                        /(\d{2})\/(\d{2})\/(\d{4})/,
-                        "$3-$2-$1"
-                      )
-                    );
+                   
+                    drawTime = game.drawDate
+                      ? moment(game.drawDate, "DD/MM/YYYY HH:mm")
+                      : null;
                   } else if (operatorType === "wesco") {
-                    // For "wesco," combine "drawdate" and "drawtime"
+                  
                     const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
-
-                    drawTime = new Date(
-                      drawDateTimeString.replace(
-                        /(\d{4})(\d{2})(\d{2}) (\d{2}:\d{2}:\d{2})/,
-                        "$1-$2-$3T$4Z"
-                      )
-                    );
-                  } else {
-                    // Add additional conditions for other operator types if needed
+                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                  } else if (operatorType === "lottomania") {
+                    drawTime = moment(game.sdt);
                   }
-                  return drawTime > currentTime;
+                
+                  return drawTime && drawTime.isAfter(currentTime);
                 });
 
                 upcomingGames.sort(
@@ -139,45 +134,98 @@ const OperatorMobile = () => {
                 const nextGame =
                   upcomingGames.length > 0 ? upcomingGames[0] : null;
 
+                  const renderGameTime = (operatorType, game) => {
+                    const time = game[propertyMapping[operatorType].time];
+                  
+                    if (operatorType === "lottomania") {
+                      return new Date(time);
+                    } else if (operatorType === "lotto_nigeria") {
+                      const parsedTime = moment(time, "DD/MM/YYYY HH:mm").utcOffset("+00:00").utc();
+                      return parsedTime.toDate();
+                    } else if (operatorType === "wesco") {
+                      // For "wesco," combine "drawdate" and "drawtime" in the correct format
+                      const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
+                      const parsedTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss")
+                        .utcOffset("+00:00")
+                        .utc();
+                  
+                      // Check if parsedTime is valid
+                      if (parsedTime.isValid()) {
+                        return parsedTime.toDate();
+                      } else {
+                        console.error("Invalid date format:", drawDateTimeString);
+                        return null;
+                      }
+                    } else {
+                      // Handle other operator types by parsing the time string
+                      const parsedTime = moment(time, "DD/MM/YYYY HH:mm").utcOffset("+00:00").utc();
+                      return parsedTime.toDate();
+                    }
+                  };
                 return nextGame ? (
-                  <div key={index} className="col-md-3 col-sm-6">
+                  <div
+                    key={index}
+                    className="col-md-3"
+                  >
                     <div className="service-wrap mb-5">
+                      <a>
+                        <div className="service-img">
+                          <img
+                            src={imageSrc}
+                            alt=""
+                            className="img-fluid mb-3 me-auto"
+                          />
+                        </div>
+                      </a>
                       <div className="service-content text-center">
-                        <img
-                          src={imageSrc}
-                          alt=""
-                          className="img-fluid mb-3 text-center"
-                        />
-                        <p
-                         
-                        >
+                        <p>
                           <strong>NEXT GAME:</strong>
                           <br />
                           {nextGame[propertyMapping[operatorType].name]}
-                          <br />{" "}
-                          <span data-countdown="2023/08/29 09:30:00">
+                          <br />
+                          <br />
+
+                          <span>
                             <small>
-                              {/* <span className="countdown_box">00 days</span>{" "}
-                            <span className="countdown_box">01 hrs</span>{" "}
-                            <span className="countdown_box">06 mins</span>{" "}
-                            <span className="countdown_box">53 secs</span> */}{" "}
-                              {operatorType === "wesco"
-                                ? nextGame[propertyMapping[operatorType].time]
-                                : nextGame[
-                                    propertyMapping[operatorType].time
-                                  ].split(" ")[1]}
+                              <span>
+                                <Countdown
+                                  date={
+                                    new Date(
+                                      renderGameTime(operatorType, nextGame)
+                                    )
+                                  }
+                                  renderer={({
+                                    days,
+                                    hours,
+                                    minutes,
+                                    seconds,
+                                  }) => (
+                                    <>
+                                      <span className="countdown_box me-2">
+                                        {days}days
+                                      </span>
+                                      <span className="countdown_box me-2">
+                                        {hours}hrs
+                                      </span>
+                                      <span className="countdown_box me-2">
+                                        {minutes}mins
+                                      </span>
+                                      <span className="countdown_box me-2">
+                                        {seconds}secs
+                                      </span>
+                                    </>
+                                  )}
+                                />
+                              </span>
                             </small>
                           </span>
                         </p>
-
-                        <p>
-                          <a
-                            // href="https://www.mylottohub.com/welcome/play_action/27"
-                            className="btn btn-blue btn-sm btn-block w-100"
-                            onClick={() => {
-                              navigate("/play-game");
-                            }}
-                          >
+                        <p
+                          onClick={() => {
+                            navigate(`/play-game/${operatorType}`);
+                          }}
+                        >
+                          <a className="btn btn-blue btn-sm btn-block w-100 p-2">
                             Play Now
                           </a>
                         </p>
@@ -190,6 +238,7 @@ const OperatorMobile = () => {
               }
             })
           )}
+
         </div>
       </div>
       <footer>

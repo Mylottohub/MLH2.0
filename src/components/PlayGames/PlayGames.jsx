@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import Countdown from "react-countdown";
+import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 
 const PlayGames = () => {
@@ -20,6 +21,7 @@ const PlayGames = () => {
   // const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [perOperator, setPerOperator] = useState([]);
+  const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -272,7 +274,7 @@ const PlayGames = () => {
     );
   }
 
-  const handleConfirmBet = (e) => {
+  const handleConfirmBet = async  (e) => {
     e.preventDefault();
     if (!selectedGameType) {
       toast.error("Select a Game Name");
@@ -319,30 +321,30 @@ const PlayGames = () => {
 
       setConfirmedBet(newConfirmedBet);
     } else if (selectedBetType.startsWith("PERM")) {
-      // Handle "PERM" bets
       const requiredNumbers = selectedBetType.includes("PERM 2")
-        ? 2
-        : selectedBetType.includes("PERM 3")
-        ? 3
-        : selectedBetType.includes("PERM 4")
-        ? 4
-        : selectedBetType.includes("PERM 5")
-        ? 5
-        : 0;
+      ? 3 // Minimum of 3 numbers for PERM 2
+      : selectedBetType.includes("PERM 3")
+      ? 4 // Minimum of 4 numbers for PERM 3
+      : selectedBetType.includes("PERM 4")
+      ? 5 // Minimum of 5 numbers for PERM 4
+      : selectedBetType.includes("PERM 5")
+      ? 6 // Minimum of 6 numbers for PERM 5
+      : 0;
 
-      if (requiredNumbers === 0) {
-        toast.error("Invalid Bet Type");
-        return;
-      }
+    if (requiredNumbers === 0) {
+      toast.error("Invalid Bet Type");
+      return;
+    }
 
-      // if (selectedNumbers.length !== requiredNumbers) {
-      //   toast.error(`Select exactly ${requiredNumbers} numbers for ${selectedBetType}`);
-      //   return;
-      // }
+    if (selectedNumbers.length < requiredNumbers) {
+      toast.error(`Select at least ${requiredNumbers} numbers for ${selectedBetType}`);
+      return;
+    }
 
-      const lines = calculatePermLines(requiredNumbers);
+      const lines = await calculatePermLines(selectedBetType, selectedNumbers);
       const multiplier = calculatePermMultiplier(selectedBetType);
       const maxWin = stakeAmount * lines * multiplier;
+      const totalStakeAmount = stakeAmount * lines
 
       const newConfirmedBet = {
         gname: selectedGameType,
@@ -350,7 +352,7 @@ const PlayGames = () => {
         gtype: selectedBetType,
         bets: selectedNumbers,
         max_win: `₦${maxWin.toFixed(2)}`,
-        total_stake: `₦${stakeAmount.toFixed(2)}`,
+        total_stake: `₦${totalStakeAmount.toFixed(2)}`,
       };
 
       setConfirmedBet(newConfirmedBet);
@@ -386,23 +388,51 @@ const PlayGames = () => {
         return 0;
     }
   };
-
-  const calculatePermLines = (requiredNumbers) => {
-    // Define a mapping of required numbers to possible lines for PERM bets
-    const linesMapping = {
-      2: 3,
-      3: 6,
-      4: 10,
-      5: 15,
-      6: 21,
-      7: 28,
-      8: 36,
-      9: 45,
-      10: 55,
-    };
-
-    return linesMapping[requiredNumbers] || 0;
+  const calculatePermLines = async (gameType, selectedNumbers) => {
+    try {
+      const response = await fetch("https://sandbox.mylottohub.com/v1/line-calculator", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          gameType: gameType,
+          num: selectedNumbers,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+  
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error("Error calculating lines:", error);
+      return 0;
+    }
   };
+  
+
+  // const calculatePermLines = (requiredNumbers) => {
+  //   // Define a mapping of required numbers to possible lines for PERM bets
+  //   const linesMapping = {
+  //     2: 3,
+  //     3: 6,
+  //     4: 10,
+  //     5: 15,
+  //     6: 21,
+  //     7: 28,
+  //     8: 36,
+  //     9: 45,
+  //     10: 55,
+  //   };
+
+  //   return linesMapping[requiredNumbers] || 0;
+  // };
 
   const localStorageKey = "betSlip";
   useEffect(() => {
@@ -440,7 +470,14 @@ const PlayGames = () => {
           id="play_form"
         >
           <p className="mt-5">
-            <strong>Select Operator &gt;&gt; {id}</strong>
+            <strong className="text-capitalize">
+              Select Operator &gt;&gt;
+              {id === "lotto_nigeria" ? (
+                <strong>Set Lotto</strong>
+              ) : (
+                <strong>Select Operator &gt;&gt; {id}</strong>
+              )}
+            </strong>
           </p>
           <br />
           <div className="div_lgrey">
@@ -627,7 +664,6 @@ const PlayGames = () => {
                           } else {
                             return null;
                           }
-                         
                         } else if (id === "lottomania") {
                           const drawDateTime = moment(item.sdt);
 
@@ -757,7 +793,7 @@ const PlayGames = () => {
                       <span id="btype"></span>
                       <br />
                       <br />
-                      <strong>My bets: {confirmedBet.bets.join(" ")} </strong>
+                      <strong>My bets: {confirmedBet.bets.join(", ")} </strong>
 
                       <span id="bbets"></span>
 

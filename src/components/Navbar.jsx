@@ -374,7 +374,7 @@ const Navbar = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/")}
             >
-              <img src={images.logo} alt={images.logo} />
+              <img width="118" src={images.logo} alt={images.logo} />
             </a>
             <button
               className="navbar-toggler"
@@ -392,10 +392,10 @@ const Navbar = () => {
               id="navbarSupportedContent"
             >
               <ul
-                className="navbar-nav app_navbar-nav me-auto mb-2  mb-lg-0"
-                style={{ cursor: "pointer" }}
+                className="navbar-nav app_navbar-nav me-auto mb-2 mb-lg-0"
+                style={{ cursor: "pointer"}}
               >
-                <li className="nav-item dropdown">
+                <li className="nav-item dropdown fw-bold">
                   <a
                     className="nav-link dropdown-toggle text-white me-3"
                     role="button"
@@ -409,7 +409,7 @@ const Navbar = () => {
                       <a
                         className="dropdown-item p-2"
                         // href="https://www.mylottohub.com/play/plotto"
-                        onClick={() => navigate("/play-game")}
+                        onClick={() => navigate("/")}
                       >
                         <img src={images.lotto_icon} alt={images.lotto_icon} />{" "}
                         Lotto
@@ -435,7 +435,7 @@ const Navbar = () => {
                   </ul>
                 </li>
 
-                <li className="nav-item">
+                <li className="nav-item  fw-bold">
                   <a
                     className="nav-link text-white me-3"
                     onClick={() => navigate("/result")}
@@ -444,11 +444,11 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li className="nav-item">
-                  <a className="nav-link text-white me-3">Pro-Forecaster</a>
+                <li className="nav-item  fw-bold">
+                  <a className="nav-link w-100 text-white">Pro-Forecaster</a>
                 </li>
 
-                <li className="nav-item">
+                <li className="nav-item  fw-bold">
                   <a
                     className="nav-link text-white me-3"
                     onClick={() => navigate("/timetable")}
@@ -457,15 +457,15 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li className="nav-item">
+                <li className="nav-item  fw-bold">
                   <a className="nav-link text-white me-3">Forecast</a>
                 </li>
 
-                <li className="nav-item">
+                <li className="nav-item  fw-bold">
                   <a className="nav-link text-white me-3">Tutorials</a>
                 </li>
 
-                <li className="nav-item dropdown">
+                <li className="nav-item dropdown  fw-bold">
                   <a
                     className="nav-link dropdown-toggle text-white me-3"
                     role="button"
@@ -524,7 +524,7 @@ const Navbar = () => {
                   // style="padding-top: 22px !important;"
                   >
                     <span
-                      className="btn text-white me-3"
+                      className="btn text-white me-3  fw-bold"
                       onClick={() => navigate("/register")}
                       // style="vertical-align: top !important;"
                     >
@@ -537,7 +537,7 @@ const Navbar = () => {
                   // style="padding-top: 22px !important;"
                   >
                     <span
-                      className="btn btn-yellow"
+                      className="btn btn-yellow  fw-bold"
                       onClick={() => navigate("/login")}
                       // style="vertical-align: top !important;"
                     >
