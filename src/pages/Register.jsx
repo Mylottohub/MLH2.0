@@ -11,10 +11,11 @@ import "../assets/css/register.css";
 // import { useEffect } from "react";
 import { useRegistersMutation } from "../pages/slices/userApiSlice";
 import { setCredentials } from "../pages/slices/authSlice";
-import ReCaptchaV2 from 'react-google-recaptcha'
+import ReCaptchaV2 from "react-google-recaptcha";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 // import 'react-phone-number-input/style.css'
 // import PhoneInputWithCountryFlag from "../components/PhoneInput/PhoneInputWithCountryFlag";
-
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is a required field"),
@@ -23,6 +24,7 @@ const schema = yup.object().shape({
   phone: yup.string().min(8).max(15).required(),
   // check: yup.string().required("This is a required field"),
   password: yup.string().min(8).max(15).required(),
+  password_confirmation: yup.string().oneOf([yup.ref("password"), null]),
 });
 
 const siteKey = import.meta.env.VITE_SITE_KEY;
@@ -32,12 +34,16 @@ const Register = () => {
   const dispatch = useDispatch();
 
   const [registers, { isLoading }] = useRegistersMutation();
-  // const { userInfo } = useSelector((state) => state.auth);
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     navigate("/otp");
-  //   }
-  // }, [navigate, userInfo]);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const {
     register,
     handleSubmit,
@@ -50,8 +56,10 @@ const Register = () => {
     try {
       localStorage.setItem("email", data.email);
       const res = await registers(data).unwrap();
-      dispatch(setCredentials({...res}));
-      toast.success("Registration successful, an OTP has been sent to your email for verfication");
+      dispatch(setCredentials({ ...res }));
+      toast.success(
+        "Registration successful, an OTP has been sent to your email for verfication"
+      );
       navigate("/otp");
     } catch (err) {
       if (err?.data?.details) {
@@ -73,7 +81,7 @@ const Register = () => {
       <Navbar />
       <div className="container">
         <div className="row">
-          <div className="col-lg-6 mx-auto app__register">
+          <div className="col-lg-6 mx-auto mb-5 app__register">
             <h1 className="mb-4">Register</h1>
             <h6 className="mb-4">
               Play all your favorite Nigerian lotto games from one account on
@@ -85,7 +93,7 @@ const Register = () => {
               <div className="mb-3">
                 <input
                   type="text"
-                  className="form-control p-3 mb-2"
+                  className="form-control mb-2"
                   placeholder="Full Name"
                   name="name"
                   {...register("name", {
@@ -101,7 +109,7 @@ const Register = () => {
               <div className="mb-3">
                 <input
                   type="text"
-                  className="form-control p-3 mb-2"
+                  className="form-control mb-2"
                   placeholder=" Username"
                   name="username"
                   {...register("username", {
@@ -118,7 +126,7 @@ const Register = () => {
               <div className="mb-3">
                 <input
                   type="email"
-                  className="form-control p-3 mb-2"
+                  className="form-control mb-2"
                   placeholder=" Email Address"
                   name="email"
                   {...register("email", {
@@ -134,7 +142,7 @@ const Register = () => {
               <div className="mb-3">
                 <input
                   type="tel"
-                  className="form-control p-3 mb-2"
+                  className="form-control mb-2"
                   placeholder="Phone number"
                   name="phone"
                   {...register("phone", {
@@ -143,53 +151,94 @@ const Register = () => {
                 />
                 {errors.phone && (
                   <p className="text-danger text-capitalize">
-                    
                     Phone number is field is required
                   </p>
                 )}
               </div>
-              {/* <PhoneInputWithCountryFlag /> */}
+              {/* <PhoneInputWithCountryFlag  /> */}
 
-              <div className="mb-3">
+              <div className="mb-3 d-flex h-25">
                 <input
-                  type="password"
-                  className="form-control p-3 mb-2"
+                  type={showPassword ? "text" : "password"}
+                  className="form-control mb-2"
                   placeholder="Password"
                   name="password"
                   {...register("password", {
                     required: "Required",
                   })}
                 />
-                {errors.password && (
-                  <p className="text-danger text-capitalize">
-                    {errors.password.message}
-                  </p>
-                )}
+                &nbsp; &nbsp;
+                <div>
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    style={{ color: "#6E9A8D" }}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
               </div>
-              <div className="mb-3 form-check">
+              {errors.password && (
+                <p className="text-danger text-capitalize">
+                  {errors.password.message}
+                </p>
+              )}
+
+              <div className="d-flex">
                 <input
-                  type="checkbox"
-                  className="form-check-input"
-                  // name="check"
-                  // {...register("check", {
-                  //   required: "Required",
-                  // })}
+                  type={showConfirmPassword ? "text" : "password"}
+                  className="form-control"
+                  placeholder="Confirm Password"
+                  aria-describedby="emailHelp"
+                  name="password_confirmation"
+                  {...register("password_confirmation", {
+                    required: "Required",
+                  })}
                 />
+                &nbsp; &nbsp;
+                <div className="input-group-append">
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={toggleConfirmPasswordVisibility}
+                    style={{ color: "#6E9A8D" }}
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+              {errors.password_confirmation && (
+                <p className="text-danger text-capitalize mt-3">
+                  Password does not match
+                </p>
+              )}
+
+              <div className="mb-3 form-check mt-4">
+                <input type="checkbox" className="form-check-input" required />
                 <label className="form-check-label">
-                  I have read the Terms and Conditions
+                  I have read the{" "}
+                  <a
+                    className="text-primary"
+                    onClick={() => {
+                      navigate(`/terms`);
+                    }}
+                    style={{ textDecoration: "none", cursor: "pointer" }}
+                  >
+                    Terms and Conditions
+                  </a>
                 </label>
-                {/* {errors.check && (
-                  <p className="text-danger text-capitalize">
-                    {errors.check.message}
-                  </p>
-                )} */}
               </div>
               <p style={{ cursor: "pointer", color: "#128481" }}>
                 Already have an account?
                 <span onClick={() => navigate("/login")}>Sign in</span>
               </p>
               <ReCaptchaV2 sitekey={siteKey} />
-              <Button type="submit" className="w-100 p-3 mt-3" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-100 p-3 mt-3"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <Spinner
                     as="span"

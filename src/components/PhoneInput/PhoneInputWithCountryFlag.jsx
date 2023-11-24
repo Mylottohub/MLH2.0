@@ -33,17 +33,13 @@ const PhoneInputWithCountryFlag = () => {
   };
 
   return (
-    <div className="p-3 mb-2">
+    <div className="mb-2">
       <PhoneInput
         placeholder="Enter phone number"
         required
         value={value}
         onChange={setValue}
-        defaultCountry={countryCode} // Set the default country code
-        //   countries={['US', 'CA', 'MX', ...]} // Add more country codes as per your requirements
-        // Add any other props you need for the PhoneInput component
-      />
-      {/* You can add additional code to display the flag based on the country code */}
+        defaultCountry={countryCode} />
     </div>
   );
 };

@@ -8,10 +8,12 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import {useLoginMutation} from "../pages/slices/userApiSlice"
-import {setCredentials} from "../pages/slices/authSlice"
+import { useLoginMutation } from "../pages/slices/userApiSlice";
+import { setCredentials } from "../pages/slices/authSlice";
 // import HTTP from "../utils/httpClient";
 import "../assets/css/register.css";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -22,14 +24,13 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [login, {isLoading}] = useLoginMutation();
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  // const {userInfo} = useSelector((state) => state.auth);
-  // useEffect(()=> {
-  //   if (userInfo) {
-  //       navigate('/otp')
-  //   }
-  // },[navigate, userInfo])
+  const [login, { isLoading }] = useLoginMutation();
+
   const {
     register,
     handleSubmit,
@@ -38,19 +39,19 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const submitForm  = async (data) => {
+  const submitForm = async (data) => {
     try {
-      const res = await login(data).unwrap() 
+      const res = await login(data).unwrap();
       localStorage.setItem("email", data.email);
-      dispatch(setCredentials({...res}))
-      toast.success(res.message)
-      navigate('/otp')
+      dispatch(setCredentials({ ...res }));
+      toast.success(res.message);
+      navigate("/otp");
     } catch (err) {
-        if (err?.data?.error) {
-          toast.error(err.data.error);
-        } else {
-          toast.error('An error occurred during Login.');
-        }
+      if (err?.data?.error) {
+        toast.error(err.data.error);
+      } else {
+        toast.error("An error occurred during Login.");
+      }
     }
   };
 
@@ -71,7 +72,7 @@ const Login = () => {
               <div className="mb-3">
                 <input
                   type="email"
-                  className="form-control p-3 mb-2"
+                  className="form-control mb-4"
                   placeholder=" Email Address"
                   name="email"
                   {...register("email", {
@@ -86,36 +87,46 @@ const Login = () => {
                 )}
               </div>
 
-              <div className="mb-3">
+              <div className="mb-3 d-flex">
                 <input
-                  type="password"
-                  className="form-control p-3 mb-2"
+                  type={showPassword ? "text" : "password"}
+                  className="form-control mb-2"
                   placeholder="Password"
                   name="password"
                   {...register("password", {
                     required: "Required",
                   })}
                 />
-                {errors.password && (
-                  <p className="text-danger text-capitalize">
-                    {errors.password.message}
-                  </p>
-                )}
+                &nbsp; &nbsp;
+                <div>
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    style={{ color: "#6E9A8D" }}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
               </div>
+              {errors.password && (
+                <p className="text-danger text-capitalize">
+                  {errors.password.message}
+                </p>
+              )}
               <p style={{ cursor: "pointer", color: "#128481" }}>
                 Don`t have an account?{" "}
-                <span onClick={() => navigate("/register")}>Signup</span>
+                <span className="text-primary" onClick={() => navigate("/register")}>Signup</span>
               </p>
               <p style={{ cursor: "pointer", color: "#128481" }}>
-               {" "}
-                <span onClick={() => navigate("/forgot-password")}> Forgot Password</span>
+                {" "}
+                <span onClick={() => navigate("/forgot-password")}>
+                  {" "}
+                  Forgot Password
+                </span>
               </p>
-            
-              <Button
-                type="submit"
-                className="w-100 p-3"
-                disabled={isLoading}
-              >
+
+              <Button type="submit" className="w-100 p-3 mb-5" disabled={isLoading}>
                 {isLoading ? (
                   <Spinner
                     as="span"

@@ -106,7 +106,7 @@ const Navbar = () => {
                   >
                     <li className="nav-item dropdown">
                       <a
-                        className="nav-link dropdown-toggle text-white me-3"
+                        className="nav-link dropdown-toggle text-white me-3 fw-bold"
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -116,7 +116,7 @@ const Navbar = () => {
                       <ul className="dropdown-menu">
                         <li>
                           <a
-                            className="dropdown-item p-2"
+                            className="dropdown-item p-2 fw-bold"
                             // href="https://www.mylottohub.com/play/plotto"
                             onClick={() => navigate("/")}
                           >
@@ -129,7 +129,7 @@ const Navbar = () => {
                         </li>
                         <li>
                           <a
-                            className="dropdown-item p-2"
+                            className="dropdown-item p-2 fw-bold"
                             // href="https://www.mylottohub.com/welcome/home_sport"
                           >
                             <img src={images.bet} alt={images.bet} /> Sport
@@ -138,7 +138,7 @@ const Navbar = () => {
                         </li>
                         <li>
                           <a
-                            className="dropdown-item p-2"
+                            className="dropdown-item p-2 fw-bold"
                             // href="https://www.mylottohub.com/welcome/home_instant"
                           >
                             <img src={images.instant} alt={images.instant} />{" "}
@@ -150,7 +150,7 @@ const Navbar = () => {
 
                     <li className="nav-item">
                       <a
-                        className="nav-link text-white me-3"
+                        className="nav-link text-white me-3 fw-bold"
                         onClick={() => navigate("/result")}
                       >
                         Results
@@ -158,12 +158,12 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3">Pro-Forecaster</a>
+                      <a className="nav-link text-white me-3 fw-bold">Pro-Forecaster</a>
                     </li>
 
                     <li className="nav-item">
                       <a
-                        className="nav-link text-white me-3"
+                        className="nav-link text-white me-3 fw-bold"
                         onClick={() => navigate("/timetable")}
                       >
                         Time Table
@@ -171,16 +171,16 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3">Forecast</a>
+                      <a className="nav-link text-white me-3 fw-bold">Forecast</a>
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3">Tutorials</a>
+                      <a className="nav-link text-white me-3 fw-bold">Tutorials</a>
                     </li>
 
                     <li className="nav-item dropdown">
                       <a
-                        className="nav-link dropdown-toggle text-white me-3"
+                        className="nav-link dropdown-toggle text-white me-3 fw-bold"
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -190,7 +190,7 @@ const Navbar = () => {
                       <ul className="dropdown-menu">
                         <li>
                           <a
-                            className="dropdown-item p-2"
+                            className="dropdown-item p-2 fw-bold"
                             onClick={() => navigate("/about-us")}
                           >
                             <i className="fa fa-info"></i>
@@ -199,7 +199,7 @@ const Navbar = () => {
                         </li>
                         <li>
                           <a
-                            className="dropdown-item p-2"
+                            className="dropdown-item p-2 fw-bold"
                             onClick={() => navigate("/faq")}
                           >
                             <i className="fa fa-question"></i>
@@ -209,7 +209,7 @@ const Navbar = () => {
 
                         <li>
                           <a
-                            className="dropdown-item p-2"
+                            className="dropdown-item p-2 fw-bold"
                             onClick={() => navigate("/terms")}
                           >
                             <i className="fa fa-anchor"></i>
@@ -219,7 +219,7 @@ const Navbar = () => {
 
                         <li>
                           <a
-                            className="dropdown-item p-2"
+                            className="dropdown-item p-2 fw-bold"
                             onClick={() => navigate("/contact-us")}
                           >
                             <i className="fa fa-phone"></i>

@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import moment from "moment";
 import Countdown from "react-countdown";
 import { useSelector } from "react-redux";
+import { Button, Spinner } from "react-bootstrap";
 // import { useSelector } from "react-redux";
 
 const PlayGames = () => {
@@ -20,6 +21,8 @@ const PlayGames = () => {
 
   // const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingConfrimBet, setIsLoadingConfirmBet] = useState(false);
+  const [isLoadingPlayBet, setIsLoadingPlayBet] = useState(false);
   const [perOperator, setPerOperator] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -249,7 +252,11 @@ const PlayGames = () => {
     const checkboxes = document.querySelectorAll(".chk-btn");
     checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
+      checkbox.disabled = false; // Enable the checkboxes
     });
+    // Clear the selected numbers in the state
+    setSelectedNumbers([]);
+    setSelectedCount(0);
   };
 
   for (let x = 1; x <= 90; x++) {
@@ -274,7 +281,7 @@ const PlayGames = () => {
     );
   }
 
-  const handleConfirmBet = async  (e) => {
+  const handleConfirmBet = async (e) => {
     e.preventDefault();
     if (!selectedGameType) {
       toast.error("Select a Game Name");
@@ -322,29 +329,31 @@ const PlayGames = () => {
       setConfirmedBet(newConfirmedBet);
     } else if (selectedBetType.startsWith("PERM")) {
       const requiredNumbers = selectedBetType.includes("PERM 2")
-      ? 3 // Minimum of 3 numbers for PERM 2
-      : selectedBetType.includes("PERM 3")
-      ? 4 // Minimum of 4 numbers for PERM 3
-      : selectedBetType.includes("PERM 4")
-      ? 5 // Minimum of 5 numbers for PERM 4
-      : selectedBetType.includes("PERM 5")
-      ? 6 // Minimum of 6 numbers for PERM 5
-      : 0;
+        ? 3 // Minimum of 3 numbers for PERM 2
+        : selectedBetType.includes("PERM 3")
+        ? 4 // Minimum of 4 numbers for PERM 3
+        : selectedBetType.includes("PERM 4")
+        ? 5 // Minimum of 5 numbers for PERM 4
+        : selectedBetType.includes("PERM 5")
+        ? 6 // Minimum of 6 numbers for PERM 5
+        : 0;
 
-    if (requiredNumbers === 0) {
-      toast.error("Invalid Bet Type");
-      return;
-    }
+      if (requiredNumbers === 0) {
+        toast.error("Invalid Bet Type");
+        return;
+      }
 
-    if (selectedNumbers.length < requiredNumbers) {
-      toast.error(`Select at least ${requiredNumbers} numbers for ${selectedBetType}`);
-      return;
-    }
+      if (selectedNumbers.length < requiredNumbers) {
+        toast.error(
+          `Select at least ${requiredNumbers} numbers for ${selectedBetType}`
+        );
+        return;
+      }
 
       const lines = await calculatePermLines(selectedBetType, selectedNumbers);
       const multiplier = calculatePermMultiplier(selectedBetType);
       const maxWin = stakeAmount * lines * multiplier;
-      const totalStakeAmount = stakeAmount * lines
+      const totalStakeAmount = stakeAmount * lines;
 
       const newConfirmedBet = {
         gname: selectedGameType,
@@ -389,50 +398,40 @@ const PlayGames = () => {
     }
   };
   const calculatePermLines = async (gameType, selectedNumbers) => {
+    setIsLoadingConfirmBet(true);
     try {
-      const response = await fetch("https://sandbox.mylottohub.com/v1/line-calculator", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          gameType: gameType,
-          num: selectedNumbers,
-        }),
-      });
-  
+      const response = await fetch(
+        "https://sandbox.mylottohub.com/v1/line-calculator",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            gameType: gameType,
+            num: selectedNumbers,
+          }),
+        }
+      );
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-  
+
       const data = await response.json();
-      console.log(data);
+      if (data) {
+        toast.success("Bet Slip Updated successfully");
+      }
       return data;
     } catch (error) {
       console.error("Error calculating lines:", error);
       return 0;
+    } finally {
+      setIsLoadingConfirmBet(false);
     }
   };
-  
-
-  // const calculatePermLines = (requiredNumbers) => {
-  //   // Define a mapping of required numbers to possible lines for PERM bets
-  //   const linesMapping = {
-  //     2: 3,
-  //     3: 6,
-  //     4: 10,
-  //     5: 15,
-  //     6: 21,
-  //     7: 28,
-  //     8: 36,
-  //     9: 45,
-  //     10: 55,
-  //   };
-
-  //   return linesMapping[requiredNumbers] || 0;
-  // };
 
   const localStorageKey = "betSlip";
   useEffect(() => {
@@ -455,7 +454,140 @@ const PlayGames = () => {
     setConfirmedBet(null);
     localStorage.removeItem(localStorageKey);
     clearRandomize(null);
+    toast.success("Bet Slip Canceled Successfully");
   };
+
+  const mapToOperatorPayload = (operatorType, betInfo) => {
+    const { gname, line, gtype, bets, max_win, total_stake } = betInfo;
+
+    // Assuming operatorData is an array of games
+    const selectedGame = perOperator.find((game) => {
+      if (operatorType === "lotto_nigeria") {
+        return game.drawAlias === gname;
+      } else if (operatorType === "wesco") {
+        return game.drawname === gname;
+      } else if (operatorType === "lottomania") {
+        return game.gn === gname;
+      }
+      // Add other cases as needed
+
+      return false;
+    });
+
+    if (!selectedGame) {
+      console.error(`Game not found: ${gname}`);
+      return {};
+    }
+
+    switch (operatorType) {
+      case "lotto_nigeria":
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          max_win: parseFloat(max_win.replace("₦", "")),
+          ball: bets,
+          operator_type: operatorType,
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          sdt: selectedGame.drawDate,
+          drawID: selectedGame.drawId,
+          drawDate: selectedGame.drawDate,
+          drawTime: selectedGame.drawDate,
+        };
+      case "wesco":
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          max_win: parseFloat(max_win.replace("₦", "")),
+          ball: bets,
+          operator_type: operatorType,
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          sdt: selectedGame.drawtime,
+          drawID: selectedGame.drawid,
+          drawDate: selectedGame.drawdate,
+          drawTime: selectedGame.drawtime,
+          closetime: selectedGame.closetime,
+        };
+      case "lottomania": {
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          max_win: parseFloat(max_win.replace("₦", "")),
+          ball: bets,
+          operator_type: operatorType,
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          gid: selectedGame.gid,
+          sdt: selectedGame.sdt,
+          // drawID: selectedGame.drawid,
+          drawDate: selectedGame.sdt,
+          drawTime: selectedGame.sdt,
+          closetime: selectedGame.sdt,
+          // gid: operatorData.gid,
+          // sdt: sdtDate,
+          // drawDate: sdtDate,
+          // drawTime: sdtDate,
+          // closetime: sdtDate,
+        };
+      }
+      default:
+        // Handle other operators as needed
+        return {};
+    }
+  };
+
+  const playGame = async () => {
+    setIsLoadingPlayBet(true);
+    // Check if a bet is confirmed
+    if (!confirmedBet) {
+      toast.error("No bet confirmed to play.");
+      return;
+    }
+
+    const payload = mapToOperatorPayload(id, confirmedBet);
+    console.log("Payload:", payload);
+
+    try {
+      const response = await fetch(
+        "https://sandbox.mylottohub.com/v1/play-games",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      // console.log(data);
+      if (data) {
+        toast.success("Your selected game has been submitted successfully");
+      }
+    } catch (error) {
+      toast.error("Error playing the game:", error);
+      // Handle the error, show an error message, etc.
+    } finally {
+      setIsLoadingPlayBet(false);
+    }
+  };
+
   const imageSrc = `/images/${id}.png`;
 
   return (
@@ -471,9 +603,8 @@ const PlayGames = () => {
         >
           <p className="mt-5">
             <strong className="text-capitalize">
-              Select Operator &gt;&gt;
               {id === "lotto_nigeria" ? (
-                <strong>Set Lotto</strong>
+                <strong> Select Operator &gt;&gt; Set Lotto</strong>
               ) : (
                 <strong>Select Operator &gt;&gt; {id}</strong>
               )}
@@ -566,154 +697,172 @@ const PlayGames = () => {
                         </th>
                       </tr>
 
-                      {perOperator.map((item, index) => {
-                        if (id === "lotto_nigeria") {
-                          const drawDateTime = moment(
-                            item.drawDate,
-                            "DD/MM/YYYY HH:mm"
-                          );
-                          const currentTime = moment();
-                          const timeDifference = drawDateTime.diff(currentTime);
-
-                          if (timeDifference > 0) {
-                            return (
-                              <>
-                                <tr key={index}>
-                                  <td>
-                                    <small>
-                                      <strong>{item.drawAlias}:</strong>
-                                    </small>
-                                  </td>
-                                  <td>
-                                    <small>
-                                      <span>
-                                        <small>
-                                          <Countdown
-                                            date={
-                                              currentTime.valueOf() +
-                                              timeDifference
-                                            }
-                                            renderer={({
-                                              days,
-                                              hours,
-                                              minutes,
-                                              seconds,
-                                            }) => (
-                                              <>
-                                                {days}days {hours}hrs {minutes}
-                                                mins {seconds}secs
-                                              </>
-                                            )}
-                                          />
-                                        </small>
-                                      </span>
-                                    </small>
-                                  </td>
-                                </tr>
-                              </>
+                      {isLoading ? (
+                        <div className="spinner text-dark text-center">
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      ) : (
+                        perOperator.map((item, index) => {
+                          if (id === "lotto_nigeria") {
+                            const drawDateTime = moment(
+                              item.drawDate,
+                              "DD/MM/YYYY HH:mm"
                             );
-                          } else {
-                            return null;
-                          }
-                        } else if (id === "wesco") {
-                          const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
-                          const drawDateTime = moment(
-                            drawDateTimeString,
-                            "YYYYMMDD HH:mm:ss"
-                          );
-                          const currentTime = moment();
-                          const timeDifference = drawDateTime.diff(currentTime);
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
 
-                          if (timeDifference > 0) {
-                            return (
-                              <>
-                                <tr key={index}>
-                                  <td>
-                                    <small>
-                                      <strong>{item.drawname}:</strong>
-                                    </small>
-                                  </td>
-                                  <td>
-                                    <small>
-                                      <span>
-                                        <small>
-                                          <Countdown
-                                            date={
-                                              currentTime.valueOf() +
-                                              timeDifference
-                                            }
-                                            renderer={({
-                                              days,
-                                              hours,
-                                              minutes,
-                                              seconds,
-                                            }) => (
-                                              <>
-                                                {days}days {hours}hrs {minutes}
-                                                mins {seconds}secs
-                                              </>
-                                            )}
-                                          />
-                                        </small>
-                                      </span>
-                                    </small>
-                                  </td>
-                                </tr>
-                              </>
+                            if (timeDifference > 0) {
+                              return (
+                                <>
+                                  <tr key={index}>
+                                    <td>
+                                      <small>
+                                        <strong>{item.drawAlias}:</strong>
+                                      </small>
+                                    </td>
+                                    <td>
+                                      <small>
+                                        <span>
+                                          <small>
+                                            <Countdown
+                                              date={
+                                                currentTime.valueOf() +
+                                                timeDifference
+                                              }
+                                              renderer={({
+                                                days,
+                                                hours,
+                                                minutes,
+                                                seconds,
+                                              }) => (
+                                                <>
+                                                  {days}days {hours}hrs{" "}
+                                                  {minutes}
+                                                  mins {seconds}secs
+                                                </>
+                                              )}
+                                            />
+                                          </small>
+                                        </span>
+                                      </small>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            } else {
+                              return null;
+                            }
+                          } else if (id === "wesco") {
+                            const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
+                            const drawDateTime = moment(
+                              drawDateTimeString,
+                              "YYYYMMDD HH:mm:ss"
                             );
-                          } else {
-                            return null;
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
+
+                            if (timeDifference > 0) {
+                              return (
+                                <>
+                                  <tr key={index}>
+                                    <td>
+                                      <small>
+                                        <strong>{item.drawname}:</strong>
+                                      </small>
+                                    </td>
+                                    <td>
+                                      <small>
+                                        <span>
+                                          <small>
+                                            <Countdown
+                                              date={
+                                                currentTime.valueOf() +
+                                                timeDifference
+                                              }
+                                              renderer={({
+                                                days,
+                                                hours,
+                                                minutes,
+                                                seconds,
+                                              }) => (
+                                                <>
+                                                  {days}days {hours}hrs{" "}
+                                                  {minutes}
+                                                  mins {seconds}secs
+                                                </>
+                                              )}
+                                            />
+                                          </small>
+                                        </span>
+                                      </small>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            } else {
+                              return null;
+                            }
+                          } else if (id === "lottomania") {
+                            const drawDateTime = moment(item.sdt);
+
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
+
+                            if (timeDifference > 0) {
+                              return (
+                                <>
+                                  <tr key={index}>
+                                    <td>
+                                      <small>
+                                        <strong>{item.gn}:</strong>
+                                      </small>
+                                    </td>
+                                    <td>
+                                      <small>
+                                        <span>
+                                          <small>
+                                            <Countdown
+                                              date={
+                                                currentTime.valueOf() +
+                                                timeDifference
+                                              }
+                                              renderer={({
+                                                days,
+                                                hours,
+                                                minutes,
+                                                seconds,
+                                              }) => (
+                                                <>
+                                                  {days}days {hours}hrs{" "}
+                                                  {minutes}
+                                                  mins {seconds}secs
+                                                </>
+                                              )}
+                                            />
+                                          </small>
+                                        </span>
+                                      </small>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            } else {
+                              return null;
+                            }
                           }
-                        } else if (id === "lottomania") {
-                          const drawDateTime = moment(item.sdt);
 
-                          const currentTime = moment();
-                          const timeDifference = drawDateTime.diff(currentTime);
-
-                          if (timeDifference > 0) {
-                            return (
-                              <>
-                                <tr key={index}>
-                                  <td>
-                                    <small>
-                                      <strong>{item.gn}:</strong>
-                                    </small>
-                                  </td>
-                                  <td>
-                                    <small>
-                                      <span>
-                                        <small>
-                                          <Countdown
-                                            date={
-                                              currentTime.valueOf() +
-                                              timeDifference
-                                            }
-                                            renderer={({
-                                              days,
-                                              hours,
-                                              minutes,
-                                              seconds,
-                                            }) => (
-                                              <>
-                                                {days}days {hours}hrs {minutes}
-                                                mins {seconds}secs
-                                              </>
-                                            )}
-                                          />
-                                        </small>
-                                      </span>
-                                    </small>
-                                  </td>
-                                </tr>
-                              </>
-                            );
-                          } else {
-                            return null;
-                          }
-                        }
-
-                        return null; // For other operators, you can add similar checks
-                      })}
+                          return null; // For other operators, you can add similar checks
+                        })
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -762,14 +911,27 @@ const PlayGames = () => {
                   id="stakeAmount"
                 />
                 <br />
-                <button
+
+                <Button
+                  type="submit"
                   name="cont_btn"
                   className="btn btn-primary btn-block btn-lg btn-blue w-100"
                   id="cont_btn"
                   onClick={handleConfirmBet}
+                  disabled={isLoadingConfrimBet}
                 >
-                  CONFIRM BET
-                </button>
+                  {isLoadingConfrimBet ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "CONFIRM BET"
+                  )}
+                </Button>
               </div>
             </div>
             <div className="col-md-4">
@@ -790,14 +952,14 @@ const PlayGames = () => {
                       <br />
                       <br />
                       <strong>Type: {confirmedBet.gtype}</strong>
-                      <span id="btype"></span>
                       <br />
                       <br />
+
                       <strong>My bets: {confirmedBet.bets.join(", ")} </strong>
 
                       <span id="bbets"></span>
 
-                      <div
+                      {/* <div
                         className="d-flex justify-content-between mt-3 mb-3"
                         style={{
                           background: "#fff",
@@ -818,17 +980,31 @@ const PlayGames = () => {
                         <a className="btn mt-2 p-1">50</a>
                         <a className="btn mt-2 p-1">100</a>
                         <a className="btn mt-2 p-1">200</a>
-                      </div>
+                      </div> */}
 
-                      <p>
-                        <p>Maximum Win: {confirmedBet.max_win}</p>
-                        <span id="bmax_win"></span>
-                      </p>
-                      <p>
-                        <p>Total Stake: {confirmedBet.total_stake}</p>
-                        <span id="btotal_stake"></span>
+                      <p className="fw-bold mt-4">
+                        Maximum Win: {confirmedBet.max_win}
                       </p>
 
+                      <p className="fw-bold mt-4">
+                        Total Stake: {confirmedBet.total_stake}
+                      </p>
+                      <br />
+                      <br />
+                      <label className="fw-bolder">Play From:</label>
+
+                      <br />
+                      <br />
+                      <select
+                        name="account"
+                        className="form-control"
+                        id="account"
+                      >
+                        <option value="wallet">Main Wallet</option>
+
+                        <option value="gl_bwallet">Bonus Wallet</option>
+                      </select>
+                      <br />
                       <br />
                       <div className="row">
                         <div className="col-md-6">
@@ -843,14 +1019,24 @@ const PlayGames = () => {
                           </p>
                         </div>
                         <div className="col-md-6">
-                          <p>
-                            <a
-                              className="btn btn-blue btn-block"
-                              id="bplace_bet"
-                            >
-                              Place Bet
-                            </a>
-                          </p>
+                          <Button
+                            type="submit"
+                            className="btn btn-blue btn-block"
+                            onClick={playGame}
+                            disabled={isLoadingPlayBet}
+                          >
+                            {isLoadingPlayBet ? (
+                              <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              "Place Bet"
+                            )}
+                          </Button>
                         </div>
                       </div>
                     </div>

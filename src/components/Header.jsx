@@ -63,8 +63,7 @@ const Header = () => {
             <div className="row">
               <div className="col-3">
                 <div
-                  className="logo hidden-xs"
-                  style={{ paddingBottom: "10px" }}
+                  className="logo hidden-xs mt-1 p-2"
                 >
                   <a
                     className="navbar-brand"
