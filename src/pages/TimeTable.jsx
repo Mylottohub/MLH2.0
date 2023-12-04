@@ -145,7 +145,7 @@ const TimeTable = () => {
                 </div>
                 <div className="col-md-8">
                   <strong className="mb-5">Timetable</strong>
-                  <div>
+                  <div className="table-scrollable">
                     <table className="table table-express mt-5">
                       <tbody>
                         <tr>
@@ -156,7 +156,7 @@ const TimeTable = () => {
                         </tr>
                       </tbody>
 
-                      {timetable.map((record, index) => (
+                      {/* {timetable.map((record, index) => (
                         <tbody key={index}>
                           <tr>
                             <td>{record?.name}</td>
@@ -165,7 +165,25 @@ const TimeTable = () => {
                             <td>{record?.end_time}</td>
                           </tr>
                         </tbody>
-                      ))}
+                      ))} */}
+
+                      {timetable
+                        .slice()
+                        .sort((a, b) => {
+                          const timeA = new Date(`1970-01-01T${a.start_time}`);
+                          const timeB = new Date(`1970-01-01T${b.start_time}`);
+                          return timeA - timeB;
+                        })
+                        .map((record, index) => (
+                          <tbody key={index}>
+                            <tr>
+                              <td>{record?.name}</td>
+                              <td>{record?.day}</td>
+                              <td>{record?.start_time}</td>
+                              <td>{record?.end_time}</td>
+                            </tr>
+                          </tbody>
+                        ))}
                     </table>
                   </div>
                 </div>
