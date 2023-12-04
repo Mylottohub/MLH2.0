@@ -6,7 +6,9 @@ const USER_FORGOTPASSWORD = "/forgot";
 const USER_RESETPASSWORD = "/reset";
 const PAY_WITH_PAYSTACK = "/payment-initialize";
 const USER_OTP = "/otp";
-const OPERATOR_GAMES= "/get-games"
+const OPERATOR_GAMES= "/get-games";
+// const OPERATOR_TIMETABLE = "/mylotto_get_timetable";
+// const { userInfo } = useSelector((state) => state.auth);
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -52,6 +54,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    // timetable: builder.mutation({
+    //   query: (data) => ({
+    //     url: `${OPERATOR_TIMETABLE}`,
+    //     method: "GET",
+    //     body: data,
+    //     headers: {
+    //       "Content-Type": "application/json", // Set the content type to JSON
+    //         "Accept": "application/json",
+    //     },
+    //   }),
+    // }),
     operatorgames: builder.mutation({
       query: (data) => ({
         url: `${OPERATOR_GAMES}`,
@@ -72,5 +85,6 @@ export const {
   useForgotpaswordMutation,
   useUserotpMutation,
   usePaystackpaymentMutation,
-  useOperatorgamesMutation
+  useOperatorgamesMutation,
+  // useTimetableMutation
 } = userApiSlice;

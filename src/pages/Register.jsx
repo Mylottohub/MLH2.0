@@ -157,7 +157,7 @@ const Register = () => {
               </div>
               {/* <PhoneInputWithCountryFlag  /> */}
 
-              <div className="mb-3 d-flex h-25">
+              {/* <div className="mb-3 d-flex h-25">
                 <input
                   type={showPassword ? "text" : "password"}
                   className="form-control mb-2"
@@ -178,6 +178,30 @@ const Register = () => {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
+              </div> */}
+                <div className="mb-3 position-relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="form-control mb-2"
+                  placeholder="Password"
+                  name="password"
+                  {...register("password", {
+                    required: "Required",
+                  })}
+                />
+                <div
+                  className="position-absolute end-0 top-50 translate-middle-y"
+                  style={{ right: "10px", cursor: "pointer" }}
+                >
+                  <p
+                   
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    style={{ color: "#6E9A8D", marginLeft:'-30px', marginTop:'10px' }}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </p>
+                </div>
               </div>
               {errors.password && (
                 <p className="text-danger text-capitalize">
@@ -185,7 +209,8 @@ const Register = () => {
                 </p>
               )}
 
-              <div className="d-flex">
+      
+                <div className="mb-3 position-relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   className="form-control"
@@ -196,16 +221,17 @@ const Register = () => {
                     required: "Required",
                   })}
                 />
-                &nbsp; &nbsp;
-                <div className="input-group-append">
-                  <button
-                    className="btn"
+             
+                <div   className="position-absolute end-0 top-50 translate-middle-y"
+                  style={{ right: "10px", cursor: "pointer" }}>
+                  <p
+                   
                     type="button"
                     onClick={toggleConfirmPasswordVisibility}
-                    style={{ color: "#6E9A8D" }}
+                    style={{ color: "#6E9A8D", marginLeft:'-30px', marginTop:'10px' }}
                   >
                     {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
+                  </p>
                 </div>
               </div>
               {errors.password_confirmation && (

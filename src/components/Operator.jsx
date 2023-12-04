@@ -77,6 +77,12 @@ const Operator = () => {
                 aria-hidden="true"
               />
             </div>
+          ) : operatorTypes.length === 0 ? (
+            <tr>
+              <td colSpan="8" className="flex justify-center text-center p-5">
+                Next Game Display at 12:00am
+              </td>
+            </tr>
           ) : (
             operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];

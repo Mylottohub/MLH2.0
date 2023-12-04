@@ -1,17 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla&family=Lato&display=swap');
+
 .service-area {
     padding: 100px 0px;
 }
+
+/* * {
+    font-family: Karla;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 1.42857143;
+    font-feature-settings: 'liga' off;
+    color: #406777;
+} */
 
 .service-area2 {
     padding: 100px 0px 70px;
 }
 
-.table-express>tbody>tr>th{
+td {
+    color: #406777 !important;
+    font-size: 18px;
+}
+
+.spinner-container {
+    height: 10vh;
+    /* Adjust as needed */
+    margin: auto !important;
+    margin-left: 100px;
+}
+
+.table-scrollable {
+    overflow-x: auto;
+    max-width: 600px;
+    box-shadow: inset 0 0 5px rgba(150, 150 ,150,0.35);
+    margin: auto;
+  }
+
+.table-express>tbody>tr>th {
     background-color: #406777;
     padding: 20px !important;
     color: #fff;
 }
-.table-express>tbody>tr>td{
+
+.table-express>tbody>tr>td {
     border-top: none !important;
     padding: 20px !important;
 }
@@ -24,16 +56,19 @@
     .service-area2 .service-wrap {
         padding: 30px 15px;
     }
+
     .service-area2 {
         padding: 35px 0px 100px;
     }
 
     .service-area3 .service-wrap {
-		padding: 0px;
-	}
-	.service-area3 .service-img{
-		padding:0px;
-	}
+        padding: 0px;
+    }
+
+    .service-area3 .service-img {
+        padding: 0px;
+    }
+
     .service-area2 .service-wrap {
         padding: 30px 15px;
     }

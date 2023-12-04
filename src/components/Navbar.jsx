@@ -42,18 +42,16 @@ const Navbar = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.data) {
-      // Define your API endpoint URL
       const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
-  
-      // Replace "YOUR_BEARER_TOKEN" with the actual bearer token
+
       const config = {
         headers: {
           Authorization: `Bearer ${userInfo.token}`,
-          "Content-Type": "application json", // Set the content type to JSON
+          "Content-Type": "application json",
           Accept: "application/json",
         },
       };
-  
+
       axios
         .get(apiUrl, config)
         .then((response) => {
@@ -66,7 +64,7 @@ const Navbar = () => {
         });
     }
   }, [userInfo]);
-  
+
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -158,7 +156,9 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3 fw-bold">Pro-Forecaster</a>
+                      <a className="nav-link text-white me-3 fw-bold">
+                        Pro-Forecaster
+                      </a>
                     </li>
 
                     <li className="nav-item">
@@ -171,11 +171,15 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3 fw-bold">Forecast</a>
+                      <a className="nav-link text-white me-3 fw-bold">
+                        Forecast
+                      </a>
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3 fw-bold">Tutorials</a>
+                      <a className="nav-link text-white me-3 fw-bold">
+                        Tutorials
+                      </a>
                     </li>
 
                     <li className="nav-item dropdown">
@@ -259,13 +263,19 @@ const Navbar = () => {
                             </a>
                           </li>
                           <li>
-                            <a className="dropdown-item p-2">
+                            <a
+                              className="dropdown-item p-2"
+                              onClick={() => handleDeposit()}
+                            >
                               <BsArrow90DegRight />
                               &nbsp;&nbsp;Deposit
                             </a>
                           </li>
                           <li>
-                            <a className="dropdown-item p-2">
+                            <a
+                              className="dropdown-item p-2"
+                              onClick={() => handleWithdraw()}
+                            >
                               <BiSolidDashboard />
                               &nbsp;&nbsp;Withdraw
                             </a>
@@ -393,7 +403,7 @@ const Navbar = () => {
             >
               <ul
                 className="navbar-nav app_navbar-nav me-auto mb-2 mb-lg-0"
-                style={{ cursor: "pointer"}}
+                style={{ cursor: "pointer" }}
               >
                 <li className="nav-item dropdown fw-bold">
                   <a

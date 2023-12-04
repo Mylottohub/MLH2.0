@@ -1,7 +1,4 @@
-// import React from 'react'
-
 import Navbar from "../Navbar";
-// import CheckboxForm from "./CheckedForm";
 import { toast } from "react-toastify";
 import "../../assets/css/play.css";
 import React, { useEffect, useState } from "react";
@@ -10,7 +7,6 @@ import moment from "moment";
 import Countdown from "react-countdown";
 import { useSelector } from "react-redux";
 import { Button, Spinner } from "react-bootstrap";
-// import { useSelector } from "react-redux";
 
 const PlayGames = () => {
   const [selectedBetType, setSelectedBetType] = useState("");
@@ -18,8 +14,6 @@ const PlayGames = () => {
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [selectedCount, setSelectedCount] = useState(0);
   const { id } = useParams();
-
-  // const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingConfrimBet, setIsLoadingConfirmBet] = useState(false);
   const [isLoadingPlayBet, setIsLoadingPlayBet] = useState(false);

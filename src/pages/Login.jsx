@@ -10,7 +10,6 @@ import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../pages/slices/userApiSlice";
 import { setCredentials } from "../pages/slices/authSlice";
-// import HTTP from "../utils/httpClient";
 import "../assets/css/register.css";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -24,7 +23,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -87,7 +86,7 @@ const Login = () => {
                 )}
               </div>
 
-              <div className="mb-3 d-flex">
+              <div className="mb-3 position-relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   className="form-control mb-2"
@@ -97,18 +96,21 @@ const Login = () => {
                     required: "Required",
                   })}
                 />
-                &nbsp; &nbsp;
-                <div>
-                  <button
-                    className="btn"
+                <div
+                  className="position-absolute end-0 top-50 translate-middle-y"
+                  style={{ right: "10px", cursor: "pointer" }}
+                >
+                  <p
+                   
                     type="button"
                     onClick={togglePasswordVisibility}
-                    style={{ color: "#6E9A8D" }}
+                    style={{ color: "#6E9A8D", marginLeft:'-30px', marginTop:'10px' }}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
+                  </p>
                 </div>
               </div>
+
               {errors.password && (
                 <p className="text-danger text-capitalize">
                   {errors.password.message}
@@ -116,7 +118,12 @@ const Login = () => {
               )}
               <p style={{ cursor: "pointer", color: "#128481" }}>
                 Don`t have an account?{" "}
-                <span className="text-primary" onClick={() => navigate("/register")}>Signup</span>
+                <span
+                  className="text-primary"
+                  onClick={() => navigate("/register")}
+                >
+                  Signup
+                </span>
               </p>
               <p style={{ cursor: "pointer", color: "#128481" }}>
                 {" "}
@@ -126,7 +133,11 @@ const Login = () => {
                 </span>
               </p>
 
-              <Button type="submit" className="w-100 p-3 mb-5" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-100 p-3 mb-5"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <Spinner
                     as="span"
