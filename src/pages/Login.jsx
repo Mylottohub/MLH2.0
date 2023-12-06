@@ -71,7 +71,7 @@ const Login = () => {
               <div className="mb-3">
                 <input
                   type="email"
-                  className="form-control mb-4"
+                  className="form-control mb-4 p-3"
                   placeholder=" Email Address"
                   name="email"
                   {...register("email", {
@@ -89,7 +89,7 @@ const Login = () => {
               <div className="mb-3 position-relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="form-control mb-2"
+                  className="form-control mb-2 p-3"
                   placeholder="Password"
                   name="password"
                   {...register("password", {

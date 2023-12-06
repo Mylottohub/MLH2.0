@@ -1,4 +1,4 @@
-import logo from "../assets/images/logo.jpg";
+import logo from "../assets/images/Artboard.png";
 import banner_1 from "../assets/images/banner_1.png";
 import lotto_icon from "../assets/images/lotto.svg";
 import profore from "../assets/images/profore.svg";
@@ -16,6 +16,7 @@ import green_lotto from "../assets/images/green_lotto.png"
 import lotto_nigeria from "../assets/images/lotto_nigeria.png"
 import rave from "../assets/images/rave.png"
 import paystack from "../assets/images/paystack.png"
+import payment_gate from "../assets/images/payment_gate.png"
 
 
 const allImages = {
@@ -36,7 +37,8 @@ const allImages = {
  wesco,
  green_lotto,
  rave,
- paystack
+ paystack,
+ payment_gate
 };
 
 export default allImages;

@@ -5,12 +5,13 @@ import Footer from "../components/Footer";
 import Slider from "../components/Slider";
 import HTTP from "../utils/httpClient";
 import { Spinner } from "react-bootstrap";
+import moment from "moment";
 
 const TimeTable = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [timetable, setTimetable] = useState([]);
-  const [selectedOperator, setSelectedOperator] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
+
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const token = userInfo && userInfo.token;
@@ -23,40 +24,25 @@ const TimeTable = () => {
     },
   };
 
+  const handleDayChange = (e) => {
+    setSelectedDay(e.target.value);
+  };
+
   const fetchData = () => {
-    setIsLoading(true);
-    const params = {
-      operator: selectedOperator,
-      day: selectedDay,
-    };
-    HTTP.get(`/mylotto_get_timetable`, { ...configHeaders, params })
+    HTTP.get(`/mylotto_get_timetable`, { ...configHeaders })
       .then((response) => {
+        setIsLoading(false);
         setTimetable(response.data.data);
       })
       .catch((error) => {
         console.log(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
   };
 
   useEffect(() => {
     fetchData();
-  }, [selectedOperator, selectedDay, setTimetable, token]);
-
-  const handleOperatorChange = (event) => {
-    setSelectedOperator(event.target.value);
-  };
-
-  const handleDayChange = (event) => {
-    setSelectedDay(event.target.value);
-  };
-
-  const handleFilterSubmit = (event) => {
-    event.preventDefault();
-    fetchData();
-  };
+  }, [setTimetable, token]);
+  console.log(selectedDay);
 
   return (
     <React.Fragment>
@@ -66,14 +52,15 @@ const TimeTable = () => {
         <div className="container">
           <div className="row">
             {isLoading ? (
-              <div className="spinner text-dark text-center">
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
+              <div
+                style={{ marginTop: "320px", textAlign: "center" }}
+                className="me-auto"
+              >
+                <tr>
+                  <td colSpan="7" className="text-center p-2 w-100">
+                    <Spinner color="#fff" loading={isLoading} size={20} />
+                  </td>
+                </tr>
               </div>
             ) : (
               <>
@@ -83,20 +70,22 @@ const TimeTable = () => {
                   </p>
                   <br />
                   <div style={{ marginTop: "12px" }} className="div_lgrey">
-                    <form method="post" action="" onSubmit={handleFilterSubmit}>
-                      <table
-                        className="table-responsive"
-                        cellPadding="5"
-                        width="90%"
-                      >
+                    <form
+                      method="post"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        fetchData(selectedDay);
+                      }}
+                    >
+                      <table cellPadding="5" width="90%">
                         <tbody>
                           <tr>
                             <td>
                               <select
                                 name="operator"
                                 className="form-select"
-                                value={selectedOperator}
-                                onChange={handleOperatorChange}
+                                onChange={handleDayChange}
+                                value={selectedDay}
                               >
                                 <option value="">Select Operator</option>
                                 <option value="26">5/90 Games</option>
@@ -113,9 +102,9 @@ const TimeTable = () => {
                             <td>
                               <select
                                 name="day"
-                                value={selectedDay}
-                                onChange={handleDayChange}
                                 className="form-select"
+                                onChange={handleDayChange} // Call handleDayChange on change
+                                value={selectedDay}
                               >
                                 <option value="">Select Day</option>
                                 <option value="Monday">Monday</option>
@@ -143,20 +132,28 @@ const TimeTable = () => {
                     </form>
                   </div>
                 </div>
+
                 <div className="col-md-8">
                   <strong className="mb-5">Timetable</strong>
-                  <div className="table-scrollable">
-                    <table className="table table-express mt-5">
-                      <tbody>
-                        <tr>
-                          <th>GAME</th>
-                          <th>DAY</th>
-                          <th>CLOSING TIME</th>
-                          <th>DRAW TIME</th>
-                        </tr>
-                      </tbody>
-
-                      {/* {timetable.map((record, index) => (
+                  <table className="table table-express mt-5">
+                    <tbody>
+                      <tr>
+                        <th>GAME</th>
+                        <th>DAY</th>
+                        <th>CLOSING TIME</th>
+                        <th>DRAW TIME</th>
+                      </tr>
+                    </tbody>
+                    {timetable
+                      .filter(
+                        (record) => moment().format("dddd") === record.day
+                      )
+                      .sort((a, b) => {
+                        const timeA = new Date(`1970-01-01T${a.start_time}`);
+                        const timeB = new Date(`1970-01-01T${b.start_time}`);
+                        return timeA - timeB;
+                      })
+                      .map((record, index) => (
                         <tbody key={index}>
                           <tr>
                             <td>{record?.name}</td>
@@ -165,27 +162,8 @@ const TimeTable = () => {
                             <td>{record?.end_time}</td>
                           </tr>
                         </tbody>
-                      ))} */}
-
-                      {timetable
-                        .slice()
-                        .sort((a, b) => {
-                          const timeA = new Date(`1970-01-01T${a.start_time}`);
-                          const timeB = new Date(`1970-01-01T${b.start_time}`);
-                          return timeA - timeB;
-                        })
-                        .map((record, index) => (
-                          <tbody key={index}>
-                            <tr>
-                              <td>{record?.name}</td>
-                              <td>{record?.day}</td>
-                              <td>{record?.start_time}</td>
-                              <td>{record?.end_time}</td>
-                            </tr>
-                          </tbody>
-                        ))}
-                    </table>
-                  </div>
+                      ))}
+                  </table>
                 </div>
               </>
             )}

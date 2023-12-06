@@ -37,7 +37,7 @@ const TransactionHistory = () => {
   useEffect(() => {
     fetchData();
   }, [userInfo.token]);
-  console.log(transaction);
+
   return (
     <>
       <Navbar />
@@ -71,7 +71,7 @@ const TransactionHistory = () => {
             ) : transaction.length === 0 ? (
               <tr>
                 <td colSpan="8" className="flex justify-center text-center p-5">
-                  No Transaction History
+                  No Record Found
                 </td>
               </tr>
             ) : (

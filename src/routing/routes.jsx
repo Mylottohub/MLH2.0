@@ -12,7 +12,8 @@ import Register from "../pages/Register";
 import  Result  from "../pages/Result";
 import Terms from "../pages/Terms";
 import TimeTable from "../pages/TimeTable";
-
+import ViewMoreResults from "../pages/ViewMoreResults";
+ViewMoreResults
 
 export const routes = [
   {
@@ -98,6 +99,12 @@ export const routes = [
     id: 14,
     path: "/play-lotto",
     element: <OperatorMobile />,
+    protected: true,
+  },
+  {
+    id: 15,
+    path: "/view-more/:id",
+    element: <ViewMoreResults />,
     protected: true,
   },
 ];

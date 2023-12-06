@@ -93,7 +93,7 @@ const Register = () => {
               <div className="mb-3">
                 <input
                   type="text"
-                  className="form-control mb-2"
+                  className="form-control mb-2 p-3"
                   placeholder="Full Name"
                   name="name"
                   {...register("name", {
@@ -109,7 +109,7 @@ const Register = () => {
               <div className="mb-3">
                 <input
                   type="text"
-                  className="form-control mb-2"
+                  className="form-control mb-2 p-3"
                   placeholder=" Username"
                   name="username"
                   {...register("username", {
@@ -126,7 +126,7 @@ const Register = () => {
               <div className="mb-3">
                 <input
                   type="email"
-                  className="form-control mb-2"
+                  className="form-control mb-2 p-3"
                   placeholder=" Email Address"
                   name="email"
                   {...register("email", {
@@ -142,7 +142,7 @@ const Register = () => {
               <div className="mb-3">
                 <input
                   type="tel"
-                  className="form-control mb-2"
+                  className="form-control mb-2 p-3"
                   placeholder="Phone number"
                   name="phone"
                   {...register("phone", {
@@ -182,7 +182,7 @@ const Register = () => {
                 <div className="mb-3 position-relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="form-control mb-2"
+                  className="form-control mb-2 p-3"
                   placeholder="Password"
                   name="password"
                   {...register("password", {
@@ -213,7 +213,7 @@ const Register = () => {
                 <div className="mb-3 position-relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
-                  className="form-control"
+                  className="form-control p-3"
                   placeholder="Confirm Password"
                   aria-describedby="emailHelp"
                   name="password_confirmation"
@@ -255,7 +255,7 @@ const Register = () => {
                   </a>
                 </label>
               </div>
-              <p style={{ cursor: "pointer", color: "#128481" }}>
+              <p className="text-primary" style={{ cursor: "pointer" }}>
                 Already have an account?
                 <span onClick={() => navigate("/login")}>Sign in</span>
               </p>

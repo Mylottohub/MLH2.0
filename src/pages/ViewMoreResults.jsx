@@ -1,0 +1,619 @@
+import Navbar from "../components/Navbar";
+import Slider from "../components/Slider";
+import "../assets/css/result.css";
+import { useState } from "react";
+import HTTP from "../utils/httpClient";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import moment from "moment";
+import { Spinner } from "react-bootstrap";
+import Footer from "../components/Footer";
+import { useNavigate, useParams } from "react-router-dom";
+import Countdown from "react-countdown";
+
+const ViewMoreResults = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResults] = useState([]);
+  const [perOperator, setPerOperator] = useState([]);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  let operatorID = null;
+
+  if (id == 26) {
+    operatorID = "Ghana-Games-logo";
+  } else if (id == 28) {
+    operatorID = "wesco";
+  } else if (id == 42) {
+    operatorID = "wgclogo";
+  } else if (id == 45) {
+    operatorID = "lottomania";
+  } else if (id == 57) {
+    operatorID = "lotto_nigeria";
+  }
+
+  const imageSrc = `/images/${operatorID}.png`;
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const configHeaders = {
+    headers: {
+      "content-type": "application/json",
+      accept: "application/json",
+      Authorization: `Bearer ${userInfo.token}`,
+    },
+  };
+
+  const fetchData = () => {
+    setIsLoading(true);
+    HTTP.get(`/mylotto_get_results`, { ...configHeaders })
+      .then((response) => {
+        setResults(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const requestData = { operator_type: operatorID };
+      try {
+        const response = await fetch(
+          "https://sandbox.mylottohub.com/v1/get-games",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(requestData),
+          }
+        );
+
+        const data = await response.json();
+
+        setPerOperator(data.result);
+      } catch (error) {
+        console.error(`Error fetching ${id} games:`, error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData(); // Call the async function
+  }, []);
+  //   console.log(perOperator);
+
+  useEffect(() => {
+    if (userInfo.token) {
+      fetchData();
+    }
+  }, [userInfo.token]);
+
+  return (
+    <div>
+      <Navbar />
+      <Slider />
+
+      <div className="about-area ptb-120">
+        <div className="container">
+          <div className="meg_container mt-5">
+            <span className="hidden-xs hidden-sm mb-5">
+              <h4>
+                <strong>Latest Results &gt;&gt; Operator Results</strong>
+              </h4>
+            </span>
+            {isLoading ? (
+              <div className="spinner-container d-flex align-items-center justify-content-center">
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : result.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="8"
+                  className="spinner-container d-flex align-items-center justify-content-center"
+                >
+                  No Record Found
+                </td>
+              </tr>
+            ) : (
+              <>
+                <table cellPadding="3">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <table cellPadding="3">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <div className="numboxgreen">&nbsp;</div>
+                              </td>
+                              <td>Winning</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                      <td>
+                        <table cellPadding="3">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <div className="numboxred">&nbsp;</div>
+                              </td>
+                              <td>Machine</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br />
+                <div className="div_lgrey" style={{ padding: "0px;" }}>
+                  <div className="row">
+                    <div
+                      className="col-md-2 col-xs-4"
+                      style={{ padding: "0px;" }}
+                    >
+                      <img src={imageSrc} className="img-fluid" />
+                    </div>
+                    <div
+                      className="col-md-6 col-xs-8"
+                      style={{ padding: "20px;" }}
+                    >
+                      {perOperator.map((item, index) => {
+                        if (operatorID === "lotto_nigeria") {
+                          if (index === 0) {
+                            return (
+                              <div key={index}>
+                                <strong> {item.drawAlias}</strong> <br />
+                                <br />
+                                {moment(item.drawDate, "DD/MM/YYYY HH:mm")
+                                  .local()
+                                  .format("DD MMM, YYYY")}{" "}
+                                |{" "}
+                                {moment(
+                                  item.drawDate,
+                                  "MM/DD/YYYY HH:mm"
+                                ).format("HH:mm")}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() =>
+                                    navigate(`/play-game/${operatorID}`)
+                                  }
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        } else if (operatorID === "lottomania") {
+                          if (index === 0) {
+                            return (
+                              <div key={index}>
+                                <strong> {item.gn}</strong> <br />
+                                <br />
+                                {moment(item.sdt) // Assuming item.sdt is the timestamp
+                                  .local()
+                                  .format("DD MMM, YYYY")}{" "}
+                                | {moment(item.sdt).format("HH:mm")}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() =>
+                                    navigate(`/play-game/${operatorID}`)
+                                  }
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        } else if (operatorID === "wesco") {
+                          if (index == 0) {
+                            return (
+                              <div key={index}>
+                                <strong>{item.drawname}</strong> <br />
+                                <br />
+                                {moment
+                                  .utc(item.drawdate, "YYYY-MM-DD")
+                                  .local()
+                                  .format("MMM DD, YYYY")}{" "}
+                                | {item.drawtime}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() =>
+                                    navigate(`/play-game/${operatorID}`)
+                                  }
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </div>
+                    <div className="col-md-4 col-xs-12">
+                      <table cellPadding="10" width="100%">
+                        <tbody>
+                          <tr>
+                            <th>
+                              <p>Countdown to Next Game Draw</p>
+                            </th>
+                          </tr>
+                          <tr>
+                            <td align="center">
+                              <br />
+                              <br />
+                              {perOperator.map((item, index) => {
+                                if (operatorID === "lotto_nigeria") {
+                                  const drawDateTime = moment(
+                                    item.drawDate,
+                                    "DD/MM/YYYY HH:mm"
+                                  );
+                                  const currentTime = moment();
+                                  const timeDifference =
+                                    drawDateTime.diff(currentTime);
+
+                                  if (timeDifference > 0) {
+                                    if (index == 0) {
+                                      return (
+                                        <>
+                                          <span>
+                                            <small className="countdown_box">
+                                              <Countdown
+                                                date={
+                                                  currentTime.valueOf() +
+                                                  timeDifference
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <>
+                                                    <span className="countdown_box me-2">
+                                                      {days}days
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {hours}hrs
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {minutes}mins
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {seconds}secs
+                                                    </span>
+                                                  </>
+                                                )}
+                                              />
+                                            </small>
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                  } else {
+                                    return null;
+                                  }
+                                } else if (operatorID === "wesco") {
+                                  const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
+                                  const drawDateTime = moment(
+                                    drawDateTimeString,
+                                    "YYYYMMDD HH:mm:ss"
+                                  );
+                                  const currentTime = moment();
+                                  const timeDifference =
+                                    drawDateTime.diff(currentTime);
+
+                                  if (timeDifference > 0) {
+                                    if (index == 0) {
+                                      return (
+                                        <>
+                                          <span>
+                                            <small className="countdown_box">
+                                              <Countdown
+                                                date={
+                                                  currentTime.valueOf() +
+                                                  timeDifference
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <>
+                                                    <span className="countdown_box me-2">
+                                                      {days}days
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {hours}hrs
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {minutes}mins
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {seconds}secs
+                                                    </span>
+                                                  </>
+                                                )}
+                                              />
+                                            </small>
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                  } else {
+                                    return null;
+                                  }
+                                } else if (operatorID === "lottomania") {
+                                  const drawDateTime = moment(item.sdt);
+
+                                  const currentTime = moment();
+                                  const timeDifference =
+                                    drawDateTime.diff(currentTime);
+
+                                  if (timeDifference > 0) {
+                                    if (index == 0) {
+                                      return (
+                                        <>
+                                          <span>
+                                            <small className="countdown_box">
+                                              <Countdown
+                                                date={
+                                                  currentTime.valueOf() +
+                                                  timeDifference
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <>
+                                                    <span className="countdown_box me-2">
+                                                      {days}days
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {hours}hrs
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {minutes}mins
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {seconds}secs
+                                                    </span>
+                                                  </>
+                                                )}
+                                              />
+                                            </small>
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                  } else {
+                                    return (
+                                      <>
+                                        <button className="text-center bg-danger">
+                                          No Record Found
+                                        </button>
+                                      </>
+                                    );
+                                  }
+                                }
+
+                                return null;
+                              })}
+                              {/* */}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row mt-5 mb-5">
+                  {result.map((record, index) => {
+                    // console.log(record.name);
+                    if (record.name === "Lottomania") {
+                      return (
+                        <>
+                          {record.results
+                            .sort((a, b) => new Date(b.date) - new Date(a.date))
+                            .map((data, dataIndex) => {
+                              return (
+                                <div key={index} className="col-md-4 mb-5">
+                                  <div key={dataIndex} className="div_lgrey">
+                                    <p></p>
+                                    <br />
+                                    <p className="text-center">
+                                      <small>
+                                        Draw Time:{" "}
+                                        {moment
+                                          .utc(data.date, "YYYY-MM-DD HH:mm:ss")
+                                          .local()
+                                          .format("MMM DD, YYYY h:mm:ss a")}
+                                      </small>
+                                    </p>
+                                    <br />
+                                    <table cellPadding="3" align="center">
+                                      <tbody>
+                                        <tr>
+                                          {data?.winning_number?.split("-").map(
+                                            (digit, j) =>
+                                              digit && (
+                                                <td key={j}>
+                                                  <div className="numboxgreen">
+                                                    {digit}
+                                                  </div>
+                                                </td>
+                                              )
+                                          )}
+                                        </tr>
+                                        <tr>
+                                          {data?.machine_number?.split("-").map(
+                                            (digit, j) =>
+                                              digit && (
+                                                <td key={j}>
+                                                  <div className="numboxred">
+                                                    {digit}
+                                                  </div>
+                                                </td>
+                                              )
+                                          )}
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                        </>
+                      );
+                    } else if (record.name === "Set Lotto") {
+                      {
+                        record.results
+                          .sort((a, b) => new Date(b.date) - new Date(a.date))
+                          .map((data, dataIndex) => {
+                            return (
+                              <div key={index} className="col-md-4 mb-5">
+                                <div key={dataIndex} className="div_lgrey">
+                                  <p></p>
+                                  <br />
+                                  <p className="text-center">
+                                    <small>
+                                      Draw Time:{" "}
+                                      {moment
+                                        .utc(data.date, "YYYY-MM-DD HH:mm:ss")
+                                        .local()
+                                        .format("MMM DD, YYYY h:mm:ss a")}
+                                    </small>
+                                  </p>
+                                  <br />
+                                  <table cellPadding="3" align="center">
+                                    <tbody>
+                                      <tr>
+                                        {data?.winning_number?.split("-").map(
+                                          (digit, j) =>
+                                            digit && (
+                                              <td key={j}>
+                                                <div className="numboxgreen">
+                                                  {digit}
+                                                </div>
+                                              </td>
+                                            )
+                                        )}
+                                      </tr>
+                                      <tr>
+                                        {data?.machine_number?.split("-").map(
+                                          (digit, j) =>
+                                            digit && (
+                                              <td key={j}>
+                                                <div className="numboxred">
+                                                  {digit}
+                                                </div>
+                                              </td>
+                                            )
+                                        )}
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            );
+                          });
+                      }
+                    } else if (record.name === "Wesco") {
+                      {
+                        record.results
+                          .sort((a, b) => new Date(b.date) - new Date(a.date))
+                          .map((data, dataIndex) => {
+                            return (
+                              <div key={index} className="col-md-4 mb-5">
+                                <div key={dataIndex} className="div_lgrey">
+                                  <p></p>
+                                  <br />
+                                  <p className="text-center">
+                                    <small>
+                                      Draw Time:{" "}
+                                      {moment
+                                        .utc(data.date, "YYYY-MM-DD HH:mm:ss")
+                                        .local()
+                                        .format("MMM DD, YYYY h:mm:ss a")}
+                                    </small>
+                                  </p>
+                                  <br />
+                                  <table cellPadding="3" align="center">
+                                    <tbody>
+                                      <tr>
+                                        {data?.winning_number?.split("-").map(
+                                          (digit, j) =>
+                                            digit && (
+                                              <td key={j}>
+                                                <div className="numboxgreen">
+                                                  {digit}
+                                                </div>
+                                              </td>
+                                            )
+                                        )}
+                                      </tr>
+                                      <tr>
+                                        {data?.machine_number?.split("-").map(
+                                          (digit, j) =>
+                                            digit && (
+                                              <td key={j}>
+                                                <div className="numboxred">
+                                                  {digit}
+                                                </div>
+                                              </td>
+                                            )
+                                        )}
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            );
+                          });
+                      }
+                    } else {
+                      <p className="text-danger text-center">
+                        No record found
+                      </p>;
+                    }
+                  })}
+                </div>
+              </>
+            )}
+
+            <div className="clearfix"></div>
+            <br />
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default ViewMoreResults;

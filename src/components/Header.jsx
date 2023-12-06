@@ -62,15 +62,19 @@ const Header = () => {
           <div className="container">
             <div className="row">
               <div className="col-3">
-                <div
-                  className="logo hidden-xs mt-1 p-2"
-                >
+                <div className="logo hidden-xs mt-1 p-2">
                   <a
                     className="navbar-brand"
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate("/")}
                   >
-                    <img src={images.logo} alt={images.logo} />
+                    <img
+                      className="img-fluid"
+                      width="113"
+                      height="67"
+                      src={images.logo}
+                      alt={images.logo}
+                    />
                   </a>
                 </div>
               </div>
@@ -130,7 +134,7 @@ const Header = () => {
               <td>
                 <a onClick={() => navigate("/")}>
                   <img
-                    src="https://www.mylottohub.com/megzy/images/logo.png"
+                    src={images.logo}
                     alt=""
                     width="107"
                     height="67"

@@ -1,12 +1,15 @@
 import "../assets/css/footer.css";
 import { useNavigate } from "react-router-dom";
+import { images } from "../constant";
+
 const Footer = () => {
   const navigate = useNavigate();
   return (
     <>
       <div>
-        <div className="footer-area">
-          <table align="center" width="90%">
+        <div className="footer-area mt-5">
+          <img src={images.payment_gate} className="img-fluid" alt="" />
+          {/* <table align="center" width="90%">
             <tbody>
               <tr>
                 <td>
@@ -25,7 +28,7 @@ const Footer = () => {
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> */}
           <br />
           <div className="footer-area_overview footer-top-area black-opacity bg-img-4 hidden-xs">
             <div className="container">
@@ -38,7 +41,7 @@ const Footer = () => {
                     <div className="row">
                       <div className="col-md-4">
                         <img
-                          src="https://www.mylottohub.com/megzy/images/logo.png"
+                          src={images.logo}
                           alt=""
                           className="img-fluid img-fluid"
                           width="280"

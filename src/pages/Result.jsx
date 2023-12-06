@@ -1,8 +1,48 @@
 import Navbar from "../components/Navbar";
 import Slider from "../components/Slider";
-import '../assets/css/result.css'
+import "../assets/css/result.css";
+import { useState } from "react";
+import HTTP from "../utils/httpClient";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import moment from "moment";
+import { Spinner } from "react-bootstrap";
+import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Result = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResults] = useState([]);
+  const navigate = useNavigate();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const configHeaders = {
+    headers: {
+      "content-type": "application/json",
+      accept: "application/json",
+      Authorization: `Bearer ${userInfo.token}`,
+    },
+  };
+
+  const fetchData = () => {
+    setIsLoading(true);
+    HTTP.get(`/mylotto_get_results`, { ...configHeaders })
+      .then((response) => {
+        setResults(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [userInfo.token]);
+
   return (
     <div>
       <Navbar />
@@ -16,62 +56,105 @@ const Result = () => {
                 <strong>Latest Results</strong>
               </h4>
             </span>
-
-            <div className="hidden-xs hidden-sm mt-5">
-              <div className="row">
-                <div className="col-md-2">
-                  <img
-                    src="https://www.mylottohub.com/images/operator/set_logo_1-01.png"
-                    className="img-fluid img-rounded"
-                  />
-                </div>
-                <div className="col-md-10 div_lgrey">
-                  <strong>LUCKY G MC</strong>
-                  <br />
-                  <small>
-                    <strong>Draw Time:</strong> Sep 26, 2023 10:00:02 pm
-                  </small>
-                  <br />
-                  <br />
-                  <br />
-                  <table cellPadding="5">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div className="numboxwhite">37</div>
-                        </td>
-                        <td>
-                          <div className="numboxwhite">62</div>
-                        </td>
-                        <td>
-                          <div className="numboxwhite">6</div>
-                        </td>
-                        <td>
-                          <div className="numboxwhite">90</div>
-                        </td>
-                        <td>
-                          <div className="numboxwhite">9</div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <div className="clearfix"></div>
-                  <div className="pull-right">
-                    <a className="text-decoration-none" href="#">
-                      <small>
-                        <strong>View More&gt;&gt;</strong>
-                      </small>
-                    </a>
-                  </div>
-                </div>
+            {isLoading ? (
+              <div className="spinner-container d-flex align-items-center justify-content-center">
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
               </div>
-            </div>
+            ) : result.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="8"
+                  className="spinner-container d-flex align-items-center justify-content-center"
+                >
+                  No Record Found
+                </td>
+              </tr>
+            ) : (
+              <>
+                {result
+                  .sort(
+                    (a, b) =>
+                      new Date(b.results[0]?.date) -
+                      new Date(a.results[0]?.date)
+                  )
+                  .map((record, index) => {
+                    const imageSrc = `/images/${record.logo}`;
+                    const latestResult = record.results[0];
+
+                    return (
+                      <div key={index} className="hidden-xs hidden-sm mt-5">
+                        <div className="row">
+                          <div className="col-md-2">
+                            <img
+                              src={imageSrc}
+                              className="img-fluid img-rounded"
+                              alt={`Logo ${record.name}`}
+                            />
+                          </div>
+                          <div className="col-md-10 div_lgrey">
+                            <strong>{latestResult?.game}</strong>
+                            <br />
+                            <small>
+                              <strong>Draw Time:</strong>
+                              {latestResult?.date && (
+                                <span>
+                                  {moment
+                                    .utc(
+                                      latestResult.date,
+                                      "YYYY-MM-DD HH:mm:ss"
+                                    )
+                                    .local()
+                                    .format("MMM DD, YYYY h:mm:ss a")}
+                                </span>
+                              )}
+                            </small>
+                            <br />
+                            <br />
+                            <br />
+
+                            {latestResult?.winning_number
+                              ?.split("-")
+                              .map((digit, j) => (
+                                <td key={j}>
+                                  <div className="numboxwhite">{digit}</div>
+                                </td>
+                              ))}
+
+                            <div className="clearfix"></div>
+                            <div className="pull-right">
+                              <a
+                                onClick={() =>
+                                  navigate(
+                                    `/view-more/${latestResult?.operator}`
+                                  )
+                                }
+                                className="text-decoration-none"
+                              >
+                                <small>
+                                  <strong>View More&gt;&gt;</strong>
+                                </small>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </>
+            )}
+
             <div className="clearfix"></div>
             <br />
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

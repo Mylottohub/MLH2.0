@@ -197,7 +197,7 @@ const Navbar = () => {
                             className="dropdown-item p-2 fw-bold"
                             onClick={() => navigate("/about-us")}
                           >
-                            <i className="fa fa-info"></i>
+                            {/* <i className="fa fa-info"></i> */}
                             &nbsp;About us
                           </a>
                         </li>
@@ -206,7 +206,7 @@ const Navbar = () => {
                             className="dropdown-item p-2 fw-bold"
                             onClick={() => navigate("/faq")}
                           >
-                            <i className="fa fa-question"></i>
+                            {/* <i className="fa fa-question"></i> */}
                             &nbsp;FAQs
                           </a>
                         </li>
@@ -216,7 +216,7 @@ const Navbar = () => {
                             className="dropdown-item p-2 fw-bold"
                             onClick={() => navigate("/terms")}
                           >
-                            <i className="fa fa-anchor"></i>
+                            {/* <i className="fa fa-anchor"></i> */}
                             &nbsp;Terms and Conditions
                           </a>
                         </li>
@@ -226,7 +226,7 @@ const Navbar = () => {
                             className="dropdown-item p-2 fw-bold"
                             onClick={() => navigate("/contact-us")}
                           >
-                            <i className="fa fa-phone"></i>
+                            {/* <i className="fa fa-phone"></i> */}
                             &nbsp;Contact Us
                           </a>
                         </li>

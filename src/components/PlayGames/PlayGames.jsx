@@ -549,7 +549,7 @@ const PlayGames = () => {
     }
 
     const payload = mapToOperatorPayload(id, confirmedBet);
-    console.log("Payload:", payload);
+
 
     try {
       const response = await fetch(
