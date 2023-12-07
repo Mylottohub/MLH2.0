@@ -11,6 +11,7 @@ const TimeTable = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [timetable, setTimetable] = useState([]);
   const [selectedDay, setSelectedDay] = useState("");
+  const [selectedOperator, setSelectedOperator] = useState("");
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
@@ -27,6 +28,9 @@ const TimeTable = () => {
   const handleDayChange = (e) => {
     setSelectedDay(e.target.value);
   };
+  const handleOperatorChange = (e) => {
+    setSelectedOperator(e.target.value);
+  };
 
   const fetchData = () => {
     HTTP.get(`/mylotto_get_timetable`, { ...configHeaders })
@@ -41,8 +45,9 @@ const TimeTable = () => {
 
   useEffect(() => {
     fetchData();
-  }, [setTimetable, token]);
-  console.log(selectedDay);
+  }, [setTimetable, setTimetable, token, selectedDay, selectedOperator, token]);
+  // console.log(selectedOperator);
+  // console.log(selectedDay);
 
   return (
     <React.Fragment>
@@ -74,7 +79,16 @@ const TimeTable = () => {
                       method="post"
                       onSubmit={(e) => {
                         e.preventDefault();
-                        fetchData(selectedDay);
+
+                        const filteredTimetable = timetable.filter(
+                          (record) =>
+                            (selectedDay === "" ||
+                              record.day === selectedDay) &&
+                            (selectedOperator === "" ||
+                              record.operator.toString() === selectedOperator)
+                        );
+                        setTimetable(filteredTimetable);
+                        console.log(filteredTimetable);
                       }}
                     >
                       <table cellPadding="5" width="90%">
@@ -84,8 +98,8 @@ const TimeTable = () => {
                               <select
                                 name="operator"
                                 className="form-select"
-                                onChange={handleDayChange}
-                                value={selectedDay}
+                                onChange={handleOperatorChange}
+                                value={selectedOperator}
                               >
                                 <option value="">Select Operator</option>
                                 <option value="26">5/90 Games</option>
@@ -103,7 +117,7 @@ const TimeTable = () => {
                               <select
                                 name="day"
                                 className="form-select"
-                                onChange={handleDayChange} // Call handleDayChange on change
+                                onChange={handleDayChange}
                                 value={selectedDay}
                               >
                                 <option value="">Select Day</option>
@@ -117,7 +131,7 @@ const TimeTable = () => {
                               </select>
                             </td>
                           </tr>
-                          <tr>
+                          {/* <tr>
                             <td>
                               <input
                                 type="submit"
@@ -126,7 +140,7 @@ const TimeTable = () => {
                                 value="Filter"
                               />
                             </td>
-                          </tr>
+                          </tr> */}
                         </tbody>
                       </table>
                     </form>
@@ -146,7 +160,10 @@ const TimeTable = () => {
                     </tbody>
                     {timetable
                       .filter(
-                        (record) => moment().format("dddd") === record.day
+                        (record) =>
+                          (selectedDay === "" || record.day === selectedDay) &&
+                          (selectedOperator === "" ||
+                            record.operator.toString() === selectedOperator)
                       )
                       .sort((a, b) => {
                         const timeA = new Date(`1970-01-01T${a.start_time}`);
