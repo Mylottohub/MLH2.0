@@ -12,9 +12,9 @@ const TimeTable = () => {
   const [timetable, setTimetable] = useState([]);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedOperator, setSelectedOperator] = useState("");
+  const [filteredTimetable, setFilteredTimetable] = useState([]);
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
   const token = userInfo && userInfo.token;
 
   const configHeaders = {
@@ -28,26 +28,34 @@ const TimeTable = () => {
   const handleDayChange = (e) => {
     setSelectedDay(e.target.value);
   };
+
   const handleOperatorChange = (e) => {
     setSelectedOperator(e.target.value);
   };
 
   const fetchData = () => {
+    setIsLoading(true);
     HTTP.get(`/mylotto_get_timetable`, { ...configHeaders })
       .then((response) => {
         setIsLoading(false);
         setTimetable(response.data.data);
+        filterTimetable(response.data.data);
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
       });
+  };
+
+  const filterTimetable = (data) => {
+    const currentDay = moment().format("dddd");
+    const currentDayTimetable = data.filter((record) => record.day === currentDay);
+    setFilteredTimetable(currentDayTimetable);
   };
 
   useEffect(() => {
     fetchData();
-  }, [setTimetable, setTimetable, token, selectedDay, selectedOperator, token]);
-  // console.log(selectedOperator);
-  // console.log(selectedDay);
+  }, [token]);
 
   return (
     <React.Fragment>
@@ -79,16 +87,13 @@ const TimeTable = () => {
                       method="post"
                       onSubmit={(e) => {
                         e.preventDefault();
-
-                        const filteredTimetable = timetable.filter(
+                        const filtered = timetable.filter(
                           (record) =>
-                            (selectedDay === "" ||
-                              record.day === selectedDay) &&
+                            (selectedDay === "" || record.day === selectedDay) &&
                             (selectedOperator === "" ||
                               record.operator.toString() === selectedOperator)
                         );
-                        setTimetable(filteredTimetable);
-                        console.log(filteredTimetable);
+                        setFilteredTimetable(filtered);
                       }}
                     >
                       <table cellPadding="5" width="90%">
@@ -131,7 +136,7 @@ const TimeTable = () => {
                               </select>
                             </td>
                           </tr>
-                          {/* <tr>
+                          <tr>
                             <td>
                               <input
                                 type="submit"
@@ -140,7 +145,7 @@ const TimeTable = () => {
                                 value="Filter"
                               />
                             </td>
-                          </tr> */}
+                          </tr>
                         </tbody>
                       </table>
                     </form>
@@ -158,28 +163,43 @@ const TimeTable = () => {
                         <th>DRAW TIME</th>
                       </tr>
                     </tbody>
-                    {timetable
-                      .filter(
-                        (record) =>
-                          (selectedDay === "" || record.day === selectedDay) &&
-                          (selectedOperator === "" ||
-                            record.operator.toString() === selectedOperator)
-                      )
-                      .sort((a, b) => {
-                        const timeA = new Date(`1970-01-01T${a.start_time}`);
-                        const timeB = new Date(`1970-01-01T${b.start_time}`);
-                        return timeA - timeB;
-                      })
-                      .map((record, index) => (
-                        <tbody key={index}>
-                          <tr>
-                            <td>{record?.name}</td>
-                            <td>{record?.day}</td>
-                            <td>{record?.start_time}</td>
-                            <td>{record?.end_time}</td>
-                          </tr>
-                        </tbody>
-                      ))}
+                    {filteredTimetable.length > 0
+                      ? filteredTimetable
+                          .sort((a, b) => {
+                            const timeA = new Date(`1970-01-01T${a.start_time}`);
+                            const timeB = new Date(`1970-01-01T${b.start_time}`);
+                            return timeA - timeB;
+                          })
+                          .map((record, index) => (
+                            <tbody key={index}>
+                              <tr>
+                                <td>{record?.name}</td>
+                                <td>{record?.day}</td>
+                                <td>{record?.start_time}</td>
+                                <td>{record?.end_time}</td>
+                              </tr>
+                            </tbody>
+                          ))
+                      : timetable
+                          .filter(
+                            (record) =>
+                              moment().format("dddd") === record.day
+                          )
+                          .sort((a, b) => {
+                            const timeA = new Date(`1970-01-01T${a.start_time}`);
+                            const timeB = new Date(`1970-01-01T${b.start_time}`);
+                            return timeA - timeB;
+                          })
+                          .map((record, index) => (
+                            <tbody key={index}>
+                              <tr>
+                                <td>{record?.name}</td>
+                                <td>{record?.day}</td>
+                                <td>{record?.start_time}</td>
+                                <td>{record?.end_time}</td>
+                              </tr>
+                            </tbody>
+                          ))}
                   </table>
                 </div>
               </>
