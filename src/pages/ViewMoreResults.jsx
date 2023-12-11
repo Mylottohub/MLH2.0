@@ -490,15 +490,17 @@ const ViewMoreResults = () => {
                             })}
                         </>
                       );
-                    } else if (record.name === "Set Lotto") {
+                    } else if (record.name == 'Set Lotto') {
+                        // console.log(record.name);
                       {
                         record.results
                           .sort((a, b) => new Date(b.date) - new Date(a.date))
                           .map((data, dataIndex) => {
+                            // console.log(data.game);
                             return (
                               <div key={index} className="col-md-4 mb-5">
                                 <div key={dataIndex} className="div_lgrey">
-                                  <p></p>
+                                  <p>{data.game}</p>
                                   <br />
                                   <p className="text-center">
                                     <small>

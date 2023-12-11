@@ -86,5 +86,6 @@ export const {
   useUserotpMutation,
   usePaystackpaymentMutation,
   useOperatorgamesMutation,
+  useResetpaswordMutation
   // useTimetableMutation
 } = userApiSlice;

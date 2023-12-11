@@ -1,5 +1,5 @@
-// import {  useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
@@ -8,28 +8,33 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../pages/slices/userApiSlice";
+import { useResetpaswordMutation } from "../pages/slices/userApiSlice";
 import { setCredentials } from "../pages/slices/authSlice";
-import "../assets/css/register.css";
-import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import "../assets/css/register.css";
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(8).max(15).required(),
+  email: yup.string().email().required("This is a required field"),
+  password: yup.string().required("This is a required field"),
 });
 
-const Login = () => {
+const ResetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [showPassword, setShowPassword] = useState(true);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [resetpasword, { isLoading }] = useResetpaswordMutation();
+  const email = localStorage.getItem("email");
 
+  const { userInfo } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
   const {
     register,
     handleSubmit,
@@ -40,16 +45,14 @@ const Login = () => {
 
   const submitForm = async (data) => {
     try {
-      const res = await login(data).unwrap();
-      localStorage.setItem("email", data.email);
+      const res = await resetpasword(data).unwrap();
       dispatch(setCredentials({ ...res }));
-      toast.success(res.message);
-      navigate("/otp");
+      navigate("/");
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);
       } else {
-        toast.error("An error occurred during Login.");
+        toast.error("An error occurred Pls try again.");
       }
     }
   };
@@ -60,32 +63,15 @@ const Login = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-6 mx-auto app__register">
-            <h1 className="mb-4">Login</h1>
-            <h6 className="mb-4">
+            <h1 className="mb-4">Reset Password</h1>
+            {/* <h6 className="mb-4">
               Play all your favorite Nigerian lotto games from one account on
               mylottohub and get your winnings paid instantly to your bank
               account
-            </h6>
+            </h6> */}
 
             <form onSubmit={handleSubmit(submitForm)}>
-              <div className="mb-3">
-                <input
-                  type="email"
-                  className="form-control mb-4 p-3"
-                  placeholder=" Email Address"
-                  name="email"
-                  {...register("email", {
-                    required: "Required",
-                  })}
-                />
-                {errors.email && (
-                  <p className="text-danger text-capitalize">
-                    {/* {errors.email.message} */}
-                    Email must be a valid email address
-                  </p>
-                )}
-              </div>
-
+            
               <div className="mb-3 position-relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -101,43 +87,42 @@ const Login = () => {
                   style={{ right: "10px", cursor: "pointer" }}
                 >
                   <p
-                   
                     type="button"
                     onClick={togglePasswordVisibility}
-                    style={{ color: "#6E9A8D", marginLeft:'-30px', marginTop:'10px' }}
+                    style={{
+                      color: "#6E9A8D",
+                      marginLeft: "-30px",
+                      marginTop: "10px",
+                    }}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </p>
                 </div>
+                {errors.password && (
+                  <p className="text-danger text-capitalize">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
-              {errors.password && (
-                <p className="text-danger text-capitalize">
-                  {errors.password.message}
-                </p>
-              )}
-              <p style={{ cursor: "pointer", color: "#406777" }}>
-                Don`t have an account?{" "}
-                <span
-                  className="text-primary"
-                  onClick={() => navigate("/register")}
-                >
-                  Sign Up
-                </span>
-              </p>
-              <p style={{ cursor: "pointer", color: "#406777" }}>
-                {" "}
-                <span onClick={() => navigate("/forgot-password")}>
-                  {" "}
-                  Forgot Password
-                </span>
-              </p>
+              <div className="mb-3" style={{ display: "none" }}>
+                <input
+                  type="tel"
+                  className="form-control p-3 mb-2"
+                  name="email"
+                  defaultValue={email}
+                  {...register("email", {
+                    required: "Required",
+                  })}
+                />
+              </div>
 
-              <Button
-                type="submit"
-                className="w-100 p-3 mb-5"
-                disabled={isLoading}
-              >
+              {/* <p style={{ cursor: "pointer", color: "#406777" }}>
+                Already have an account?{" "}
+                <span onClick={() => navigate("/login")}>Sign in</span>
+              </p> */}
+
+              <Button type="submit" className="w-100 p-3" disabled={isLoading}>
                 {isLoading ? (
                   <Spinner
                     as="span"
@@ -147,7 +132,7 @@ const Login = () => {
                     aria-hidden="true"
                   />
                 ) : (
-                  " Login"
+                  " Reset"
                 )}
               </Button>
             </form>
@@ -160,4 +145,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

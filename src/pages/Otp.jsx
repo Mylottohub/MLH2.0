@@ -24,6 +24,7 @@ const Otp = () => {
   const [userotp, { isLoading }] = useUserotpMutation();
 
   const email = localStorage.getItem("email");
+  const userPasswordMessage = localStorage.getItem("password-reset");
   const {
     register,
     handleSubmit,
@@ -31,16 +32,21 @@ const Otp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  
+
   const submitForm = async (data) => {
     try {
       const res = await userotp(data).unwrap();
-      // Assuming res is an object with 'token' and 'data' properties
       const { token, data: userInfo } = res;
+      // console.log(res);
       dispatch(setCredentials({ token, data: userInfo }));
-    
+
       toast.success("OTP has been confirmed Successfully");
-      navigate("/");
+      if (userPasswordMessage === 'password-reset') {
+        navigate("/reset-password");
+        localStorage.removeItem('password-reset')
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       if (err?.data?.message) {
         toast.error(err.data.message);
@@ -49,7 +55,6 @@ const Otp = () => {
       }
     }
   };
-  
 
   return (
     <>
@@ -82,7 +87,7 @@ const Otp = () => {
                 )}
               </div>
 
-              <div className="mb-3" style={{display:'none'}}>
+              <div className="mb-3" style={{ display: "none" }}>
                 <input
                   type="tel"
                   className="form-control p-3 mb-2"

@@ -42,6 +42,11 @@ font-weight: 400;
 line-height: 18.7px; /* 103.889% */
 }
 
+.app__terms ol {
+    line-height: 33px;
+    text-align: justify;
+}
+
 .app__terms small{
     color: #406777;
 font-feature-settings: 'liga' off;

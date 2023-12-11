@@ -64,7 +64,6 @@ const Footer = () => {
                   <div className="footer-widget footer-menu">
                     <h2>Quick Links</h2>
                     <ul>
-                      
                       <li>
                         <a href="#">
                           Forecast

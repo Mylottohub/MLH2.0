@@ -106,22 +106,20 @@ const Operator = () => {
 
                 const upcomingGames = dataArray.filter((game) => {
                   const currentTime = moment();
-                
+
                   let drawTime;
-                
+
                   if (operatorType === "lotto_nigeria") {
-                   
                     drawTime = game.drawDate
                       ? moment(game.drawDate, "DD/MM/YYYY HH:mm")
                       : null;
                   } else if (operatorType === "wesco") {
-                  
                     const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   } else if (operatorType === "lottomania") {
                     drawTime = moment(game.sdt);
                   }
-                
+
                   return drawTime && drawTime.isAfter(currentTime);
                 });
 
@@ -135,34 +133,41 @@ const Operator = () => {
                 const nextGame =
                   upcomingGames.length > 0 ? upcomingGames[0] : null;
 
-                  const renderGameTime = (operatorType, game) => {
-                    const time = game[propertyMapping[operatorType].time];
-                  
-                    if (operatorType === "lottomania") {
-                      return new Date(time);
-                    } else if (operatorType === "lotto_nigeria") {
-                      const parsedTime = moment(time, "DD/MM/YYYY HH:mm").utcOffset("+00:00").utc();
+                const renderGameTime = (operatorType, game) => {
+                  const time = game[propertyMapping[operatorType].time];
+
+                  if (operatorType === "lottomania") {
+                    return new Date(time);
+                  } else if (operatorType === "lotto_nigeria") {
+                    const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
+                      .utcOffset("+00:00")
+                      .utc();
+                    return parsedTime.toDate();
+                  } else if (operatorType === "wesco") {
+                    // For "wesco," combine "drawdate" and "drawtime" in the correct format
+                    const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
+                    const parsedTime = moment(
+                      drawDateTimeString,
+                      "YYYYMMDD HH:mm:ss"
+                    )
+                      .utcOffset("+00:00")
+                      .utc();
+
+                    // Check if parsedTime is valid
+                    if (parsedTime.isValid()) {
                       return parsedTime.toDate();
-                    } else if (operatorType === "wesco") {
-                      // For "wesco," combine "drawdate" and "drawtime" in the correct format
-                      const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
-                      const parsedTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss")
-                        .utcOffset("+00:00")
-                        .utc();
-                  
-                      // Check if parsedTime is valid
-                      if (parsedTime.isValid()) {
-                        return parsedTime.toDate();
-                      } else {
-                        console.error("Invalid date format:", drawDateTimeString);
-                        return null;
-                      }
                     } else {
-                      // Handle other operator types by parsing the time string
-                      const parsedTime = moment(time, "DD/MM/YYYY HH:mm").utcOffset("+00:00").utc();
-                      return parsedTime.toDate();
+                      console.error("Invalid date format:", drawDateTimeString);
+                      return null;
                     }
-                  };
+                  } else {
+                    // Handle other operator types by parsing the time string
+                    const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
+                      .utcOffset("+00:00")
+                      .utc();
+                    return parsedTime.toDate();
+                  }
+                };
                 return nextGame ? (
                   <div
                     key={index}
@@ -271,9 +276,12 @@ const Operator = () => {
                     <strong>Sign Up/ play with any Operator</strong>
                     <br />
                     <br />
-                   <p style={{textAlign:'justify'}}> Pay once and it’s yours forever. Use it to build as many
-                    sites as you ned; long form, presentations, splash sites,
-                    and more.</p>
+                    <p style={{ textAlign: "justify" }} className="mt-2">
+                      {" "}
+                      Pay once and it’s yours forever. Use it to build as many
+                      sites as you ned; long form, presentations, splash sites,
+                      and more.
+                    </p>
                   </p>
                 </p>
               </div>
@@ -291,9 +299,12 @@ const Operator = () => {
                     <strong>Your Winnings in one wallet</strong>
                     <br />
                     <br />
-                   <p style={{textAlign:'justify'}}> Pay once and it’s yours forever. Use it to build as many
-                    sites as you need; long form, presentations, splash sites, and more.</p>
-                    
+                    <p style={{ textAlign: "justify" }}>
+                      {" "}
+                      Pay once and it’s yours forever. Use it to build as many
+                      sites as you need; long form, presentations, splash sites,
+                      and more.
+                    </p>
                   </small>
                 </p>
               </div>
@@ -311,9 +322,11 @@ const Operator = () => {
                     <strong>Withdraw to your account</strong>
                     <br />
                     <br />
-                    <p style={{textAlign:'justify'}}>Pay once and it’s yours forever. Use it to build as many
-                    sites as you need; long form, presentations, splash sites,  and more.</p>
-                   
+                    <p style={{ textAlign: "justify" }}>
+                      Pay once and it’s yours forever. Use it to build as many
+                      sites as you need; long form, presentations, splash sites,
+                      and more.
+                    </p>
                   </small>
                 </p>
               </div>
@@ -337,10 +350,13 @@ const Operator = () => {
                   className="col-md-7"
                   style={{ paddingTop: "50px", paddingBottom: "50px" }}
                 >
-                  <h2 style={{ color: "#0B3E53" }}>
-                   Complete and Accurate Data
+                  <h2
+                    className="fw-bolder text-uppercase mb-4"
+                    style={{ color: "#0B3E53" }}
+                  >
+                    Complete and Accurate Data
                   </h2>
-                  <p style={{ fontSize:'20px', lineHeight:'35px' }}>
+                  <p style={{ fontSize: "22px", lineHeight: "35px" }}>
                     MYLOTTOHUB is a web based platform, designed to gradually
                     help transit lottery into the digital age through its mobile
                     and desktop based site. It was developed to help drive the
@@ -354,7 +370,12 @@ const Operator = () => {
                   {userInfo && userInfo.token ? (
                     ""
                   ) : (
-                    <a className="btn btn-yellow fw-bolder">Register</a>
+                    <a
+                      onClick={() => navigate("/register")}
+                      className="btn btn-yellow fw-bolder"
+                    >
+                      Register
+                    </a>
                   )}
                 </div>
               </div>

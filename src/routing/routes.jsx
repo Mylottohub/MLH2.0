@@ -9,11 +9,12 @@ import ForgetPassword from "../pages/ForgetPassword";
 import Login from "../pages/Login";
 import Otp from "../pages/Otp";
 import Register from "../pages/Register";
+import ResetPassword from "../pages/ResetPassword";
 import  Result  from "../pages/Result";
 import Terms from "../pages/Terms";
 import TimeTable from "../pages/TimeTable";
 import ViewMoreResults from "../pages/ViewMoreResults";
-ViewMoreResults
+
 
 export const routes = [
   {
@@ -86,7 +87,7 @@ export const routes = [
     id: 12,
     path: "/timetable",
     element: <TimeTable />,
-    protected: true,
+    protected: false,
 
   },
   {
@@ -106,5 +107,11 @@ export const routes = [
     path: "/view-more/:id",
     element: <ViewMoreResults />,
     protected: true,
+  },
+  {
+    id: 16,
+    path: "/reset-password",
+    element: <ResetPassword />,
+    protected: false,
   },
 ];

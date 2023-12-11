@@ -255,9 +255,18 @@ const Register = () => {
                   </a>
                 </label>
               </div>
-              <p className="text-primary" style={{ cursor: "pointer" }}>
+              {/* <p className="text-primary" style={{ cursor: "pointer" }}>
                 Already have an account?
                 <span onClick={() => navigate("/login")}>Sign in</span>
+              </p> */}
+               <p style={{ cursor: "pointer", color: "#406777" }}>
+               Already have an account?
+                <span
+                  className="text-primary"
+                  onClick={() => navigate("/login")}
+                >
+                  Sign in
+                </span>
               </p>
               <ReCaptchaV2 sitekey={siteKey} />
               <Button
