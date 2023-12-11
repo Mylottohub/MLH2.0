@@ -6,10 +6,10 @@ import About from "../pages/About";
 import Contact from "../pages/Contact";
 import Faq from "../pages/Faq";
 import ForgetPassword from "../pages/ForgetPassword";
+import ResetPassword from "../pages/ResetPassword";
 import Login from "../pages/Login";
 import Otp from "../pages/Otp";
 import Register from "../pages/Register";
-import ResetPassword from "../pages/ResetPassword";
 import  Result  from "../pages/Result";
 import Terms from "../pages/Terms";
 import TimeTable from "../pages/TimeTable";
@@ -72,6 +72,12 @@ export const routes = [
     protected: false,
   },
   {
+    id: 16,
+    path: "/reset-password",
+    element: <ResetPassword />,
+    protected: false,
+  },
+  {
     id: 10,
     path: "/transactions",
     element: <TransactionHistory />,
@@ -108,10 +114,5 @@ export const routes = [
     element: <ViewMoreResults />,
     protected: true,
   },
-  {
-    id: 16,
-    path: "/reset-password",
-    element: <ResetPassword />,
-    protected: false,
-  },
+ 
 ];

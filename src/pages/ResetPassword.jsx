@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
@@ -29,12 +29,12 @@ const ResetPassword = () => {
   const [resetpasword, { isLoading }] = useResetpaswordMutation();
   const email = localStorage.getItem("email");
 
-  const { userInfo } = useSelector((state) => state.auth);
-  useEffect(() => {
-    if (userInfo) {
-      navigate("/");
-    }
-  }, [navigate, userInfo]);
+//   const { userInfo } = useSelector((state) => state.auth);
+//   useEffect(() => {
+//     if (userInfo) {
+//       navigate("/");
+//     }
+//   }, [navigate, userInfo]);
   const {
     register,
     handleSubmit,
@@ -47,6 +47,7 @@ const ResetPassword = () => {
     try {
       const res = await resetpasword(data).unwrap();
       dispatch(setCredentials({ ...res }));
+      toast.success("Password updated Successfully");
       navigate("/");
     } catch (err) {
       if (err?.data?.error) {

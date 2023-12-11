@@ -37,14 +37,12 @@ const Otp = () => {
     try {
       const res = await userotp(data).unwrap();
       const { token, data: userInfo } = res;
-      // console.log(res);
-      dispatch(setCredentials({ token, data: userInfo }));
-
       toast.success("OTP has been confirmed Successfully");
-      if (userPasswordMessage === 'password-reset') {
+      if (userPasswordMessage) {
         navigate("/reset-password");
-        localStorage.removeItem('password-reset')
+        localStorage.removeItem("password-reset");
       } else {
+        dispatch(setCredentials({ token, data: userInfo }));
         navigate("/");
       }
     } catch (err) {

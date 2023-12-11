@@ -43,6 +43,7 @@ const ForgetPassword = () => {
       localStorage.setItem("email", data.user_details);
       localStorage.setItem("password-reset", "password-reset");
       dispatch(setCredentials({...res}))
+      toast.success('OTP code generated successfully');
       navigate('/otp')
     } catch (err) {
         if (err?.data?.error) {
