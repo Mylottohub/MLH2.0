@@ -143,11 +143,11 @@ const Header = () => {
                 </a>
               </td>
               <td valign="middle">
-                <small>
+                <p>
                   {userInfo.data.username}
                   <br />
                   <strong>User ID:</strong> {userInfo.data.id}
-                </small>
+                </p>
               </td>
             </tr>
           </tbody>

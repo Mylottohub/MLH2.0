@@ -43,6 +43,7 @@ const Result = () => {
     fetchData();
   }, [userInfo.token]);
 
+
   return (
     <div>
       <Navbar />

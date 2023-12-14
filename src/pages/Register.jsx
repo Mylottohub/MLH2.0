@@ -18,9 +18,10 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 // import PhoneInputWithCountryFlag from "../components/PhoneInput/PhoneInputWithCountryFlag";
 
 const schema = yup.object().shape({
-  name: yup.string().required("Name is a required field"),
+  first_name: yup.string().required("This is a required field"),
   email: yup.string().email().required(),
-  username: yup.string().required("User Name is a required field"),
+  username: yup.string().required("This is a required field"),
+  last_name: yup.string().required("This is a required field"),
   phone: yup.string().min(8).max(15).required(),
   // check: yup.string().required("This is a required field"),
   password: yup.string().min(8).max(15).required(),
@@ -94,18 +95,36 @@ const Register = () => {
                 <input
                   type="text"
                   className="form-control mb-2 p-3"
-                  placeholder="Full Name"
-                  name="name"
-                  {...register("name", {
+                  placeholder="First Name"
+                  name="first_name"
+                  {...register("first_name", {
                     required: "Required",
                   })}
                 />
-                {errors.name && (
+                {errors.first_name && (
                   <p className="text-danger text-capitalize">
-                    {errors.name.message}
+                    {errors.first_name.message}
                   </p>
                 )}
               </div>
+
+              <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control mb-2 p-3"
+                  placeholder="Last Name"
+                  name="last_name"
+                  {...register("last_name", {
+                    required: "Required",
+                  })}
+                />
+                {errors.last_name && (
+                  <p className="text-danger text-capitalize">
+                    {errors.last_name.message}
+                  </p>
+                )}
+              </div>
+
               <div className="mb-3">
                 <input
                   type="text"
@@ -143,11 +162,14 @@ const Register = () => {
                 <input
                   type="tel"
                   className="form-control mb-2 p-3"
-                  placeholder="Phone number"
+                  placeholder="08012345678"
                   name="phone"
                   {...register("phone", {
                     required: "Required",
                   })}
+                  onInput={(e) =>
+                    (e.target.value = e.target.value.slice(0, 11))
+                  }
                 />
                 {errors.phone && (
                   <p className="text-danger text-capitalize">
@@ -155,30 +177,7 @@ const Register = () => {
                   </p>
                 )}
               </div>
-              {/* <PhoneInputWithCountryFlag  /> */}
-
-              {/* <div className="mb-3 d-flex h-25">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="form-control mb-2"
-                  placeholder="Password"
-                  name="password"
-                  {...register("password", {
-                    required: "Required",
-                  })}
-                />
-                &nbsp; &nbsp;
-                <div>
-                  <button
-                    className="btn"
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    style={{ color: "#6E9A8D" }}
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-              </div> */}
+            
                 <div className="mb-3 position-relative">
                 <input
                   type={showPassword ? "text" : "password"}

@@ -44,6 +44,16 @@ input.chk-btn+label {
         height: 30px;
         border-radius: 50px;
     }
+
+    /* .app__play-bet img {
+        width: 100%!important;
+    } */
+
+    /* .app__play-games img  {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }  */
 }
 
 input.chk-btn:not(:checked)+label:hover {

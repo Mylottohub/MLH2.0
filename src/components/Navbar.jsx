@@ -115,7 +115,6 @@ const Navbar = () => {
                         <li>
                           <a
                             className="dropdown-item p-2 fw-bold"
-                            // href="https://www.mylottohub.com/play/plotto"
                             onClick={() => navigate("/")}
                           >
                             <img
@@ -126,19 +125,13 @@ const Navbar = () => {
                           </a>
                         </li>
                         <li>
-                          <a
-                            className="dropdown-item p-2 fw-bold"
-                            // href="https://www.mylottohub.com/welcome/home_sport"
-                          >
+                          <a className="dropdown-item p-2 fw-bold">
                             <img src={images.bet} alt={images.bet} /> Sport
                             Betting
                           </a>
                         </li>
                         <li>
-                          <a
-                            className="dropdown-item p-2 fw-bold"
-                            // href="https://www.mylottohub.com/welcome/home_instant"
-                          >
+                          <a className="dropdown-item p-2 fw-bold">
                             <img src={images.instant} alt={images.instant} />{" "}
                             Instant Games
                           </a>
@@ -303,14 +296,7 @@ const Navbar = () => {
                           </li>
                         </ul>
                       </li>
-                      {/* <a>
-                      <span
-                        className="btn btn-yellow"
-                        onClick={() => navigate("/login")}
-                      >
-                        Logout
-                      </span>
-                    </a> */}
+                    
                     </li>
 
                     <li className="text-right hidden-xs hidden-sm">

@@ -550,7 +550,6 @@ const PlayGames = () => {
 
     const payload = mapToOperatorPayload(id, confirmedBet);
 
-
     try {
       const response = await fetch(
         "https://sandbox.mylottohub.com/v1/play-games",
@@ -607,12 +606,12 @@ const PlayGames = () => {
           <br />
           <div className="div_lgrey">
             <div className="row">
-              <div className="col-md-2 col-xs-4">
+              <div className="col-4 col-lg-2 app__play-games">
                 <img src={imageSrc} className="img-fluid" />
               </div>
-              <div className="col-md-6 col-xs-8">
+              <div className="col-8 col-lg-6 app__play-bet">
                 <div className="row">
-                  <div className="col-md-6">
+                  <div className="col-12 col-lg-6">
                     <select
                       name="game"
                       className="form-control"
@@ -624,7 +623,6 @@ const PlayGames = () => {
                       <option value="">Select Game</option>
 
                       {perOperator.map((item, index) => {
-                        // Check if the operator is "lotto_nigeria"
                         if (id === "lotto_nigeria") {
                           return (
                             <option key={index} value={item.drawAlias}>
@@ -649,7 +647,7 @@ const PlayGames = () => {
                           );
                         }
 
-                        return null; // For other operators, you can add similar checks
+                        return null;
                       })}
                     </select>
                     <br />
@@ -676,7 +674,7 @@ const PlayGames = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 col-xs-12 hidden-xs">
+              <div className="col-12 col-lg-4 hidden-xs">
                 <div className="meg_active_game_scroll_div">
                   <table cellPadding="10" width="100%">
                     <tbody>
@@ -684,7 +682,7 @@ const PlayGames = () => {
                         <th colSpan="2">
                           <p
                             style={{ background: "#406777" }}
-                            className="text-white p-4 text-center"
+                            className="text-white  text-center"
                           >
                             Active Games
                           </p>
@@ -868,7 +866,7 @@ const PlayGames = () => {
             <div className="col-md-8">
               <div className="div_lgrey">
                 <div className="row">
-                  <div className="col-md-4">
+                  <div className="col-md-4 mb-3">
                     <a
                       id="randomize"
                       style={{ cursor: "pointer" }}
@@ -878,7 +876,7 @@ const PlayGames = () => {
                     </a>
                   </div>
 
-                  <div className="col-md-4" style={{ cursor: "pointer" }}>
+                  <div className="col-md-4 mb-3" style={{ cursor: "pointer" }}>
                     <a id="crandomize" onClick={clearRandomize}>
                       <i className="fa fa-cube"></i> Clear Randomize
                     </a>
