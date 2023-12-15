@@ -15,7 +15,8 @@ import "../assets/css/register.css";
 
 const schema = yup.object().shape({
   email: yup.string().email().required("This is a required field"),
-  password: yup.string().required("This is a required field"),
+  password: yup.string().min(8).max(15).required(),
+
 });
 
 const ResetPassword = () => {
@@ -77,7 +78,7 @@ const ResetPassword = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   className="form-control mb-2 p-3"
-                  placeholder="Password"
+                  placeholder="Enter New Password"
                   name="password"
                   {...register("password", {
                     required: "Required",
@@ -133,7 +134,7 @@ const ResetPassword = () => {
                     aria-hidden="true"
                   />
                 ) : (
-                  " Reset"
+                  " Save"
                 )}
               </Button>
             </form>
