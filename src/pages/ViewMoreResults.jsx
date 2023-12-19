@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar";
 import Slider from "../components/Slider";
 import "../assets/css/result.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import HTTP from "../utils/httpClient";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -159,17 +159,17 @@ const ViewMoreResults = () => {
                   </tbody>
                 </table>
                 <br />
-                <div className="div_lgrey" style={{ padding: "0px;" }}>
+                <div className="div_lgrey" style={{ padding: "0px" }}>
                   <div className="row">
                     <div
                       className="col-md-2 col-xs-4"
-                      style={{ padding: "0px;" }}
+                      style={{ padding: "0px" }}
                     >
                       <img src={imageSrc} className="img-fluid" />
                     </div>
                     <div
                       className="col-md-6 col-xs-8"
-                      style={{ padding: "20px;" }}
+                      style={{ padding: "20px" }}
                     >
                       {perOperator.map((item, index) => {
                         if (operatorID === "lotto_nigeria") {
@@ -433,226 +433,367 @@ const ViewMoreResults = () => {
                 </div>
 
                 <div className="row mt-5 mb-5">
-                  {result.map((record, index) => {
-                    if (record.name === "Wesco") {
-                      return (
-                        <>
-                          {record.results
-                            .sort((a, b) => new Date(b.date) - new Date(a.date))
-                            .map((data, dataIndex) => {
-                              return (
-                                <div key={index} className="col-md-4 mb-5">
-                                  <div key={dataIndex} className="div_lgrey">
-                                  <p className="text-center"><strong>{data.game}</strong></p>
-                                    <br />
-                                    <p className="text-center">
-                                      <small>
-                                        Draw Time:{" "}
-                                        {moment
-                                          .utc(data.date, "YYYY-MM-DD HH:mm:ss")
-                                          .local()
-                                          .format("MMM DD, YYYY h:mm:ss a")}
-                                      </small>
-                                    </p>
-                                    <br />
-                                    <table cellPadding="3" align="center">
-                                      <tbody>
-                                        <tr>
-                                          {data?.winning_number?.split("-").map(
-                                            (digit, j) =>
-                                              digit && (
-                                                <td key={j}>
-                                                  <div className="numboxgreen">
-                                                    {digit}
-                                                  </div>
-                                                </td>
-                                              )
-                                          )}
-                                        </tr>
-                                        <tr>
-                                          {data?.machine_number?.split("-").map(
-                                            (digit, j) =>
-                                              digit && (
-                                                <td key={j}>
-                                                  <div className="numboxred">
-                                                    {digit}
-                                                  </div>
-                                                </td>
-                                              )
-                                          )}
-                                        </tr>
-                                      </tbody>
-                                    </table>
+                  {result
+                    .filter((record) => record.id === parseInt(id, 10))
+                    .map((record) => {
+                      if (record.name === "Wesco") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                return (
+                                  <div
+                                    key={`${record.id}-${dataIndex}`}
+                                    className="col-md-4 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
+                                            )
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table cellPadding="3" align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                          <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxred">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
                                   </div>
-                                </div>
-                              );
-                            })}
-                        </>
-                      );
-                    } else if (record.name === "Set Lotto") {
-                      console.log(record.name);
-                     
-                        record.results
-                          .sort((a, b) => new Date(b.date) - new Date(a.date))
-                          .map((data, dataIndex) => {
-                            // console.log(data.game);
-                            return (
-                              <div key={index} className="col-md-4 mb-5">
-                                <div key={dataIndex} className="div_lgrey">
-                                <p className="text-center"><strong>{data.game}</strong></p>
-                                  <br />
-                                  <p className="text-center">
-                                    <small>
-                                      Draw Time:{" "}
-                                      {moment
-                                        .utc(data.date, "YYYY-MM-DD HH:mm:ss")
-                                        .local()
-                                        .format("MMM DD, YYYY h:mm:ss a")}
-                                    </small>
-                                  </p>
-                                  <br />
-                                  <table cellPadding="3" align="center">
-                                    <tbody>
-                                      <tr>
-                                        {data?.winning_number?.split("-").map(
-                                          (digit, j) =>
-                                            digit && (
-                                              <td key={j}>
-                                                <div className="numboxgreen">
-                                                  {digit}
-                                                </div>
-                                              </td>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      } else if (record.name == "Set Lotto") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                return (
+                                  <div
+                                    key={`${record.id}-${dataIndex}`}
+                                    className="col-md-4 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
                                             )
-                                        )}
-                                      </tr>
-                                      <tr>
-                                        {data?.machine_number?.split("-").map(
-                                          (digit, j) =>
-                                            digit && (
-                                              <td key={j}>
-                                                <div className="numboxred">
-                                                  {digit}
-                                                </div>
-                                              </td>
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table cellPadding="3" align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                          <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxred">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      } else if (record.name === "Lottomania") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                return (
+                                  <div
+                                    key={`${record.id}-${dataIndex}`}
+                                    className="col-md-4 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
                                             )
-                                        )}
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
-                            );
-                          });
-                    
-                    } else if (record.name === "Lottomania") {
-                      record.results
-                        // .sort((a, b) => new Date(b.date) - new Date(a.date))
-                        .map((data, dataIndex) => {
-                          console.log(data);
-                          return (
-                            <div key={index} className="col-md-4 mb-5">
-                              <div key={dataIndex} className="div_lgrey">
-                              <p><strong>WESCO CANADA MACH</strong></p>
-                                <br />
-                                <p className="text-center">
-                                  <small>
-                                    Draw Time:{" "}
-                                    {moment
-                                      .utc(data.date, "YYYY-MM-DD HH:mm:ss")
-                                      .local()
-                                      .format("MMM DD, YYYY h:mm:ss a")}
-                                  </small>
-                                </p>
-                                <br />
-                                <table cellPadding="3" align="center">
-                                  <tbody>
-                                    <tr>
-                                      {data?.winning_number?.split("-").map(
-                                        (digit, j) =>
-                                          digit && (
-                                            <td key={j}>
-                                              <div className="numboxgreen">
-                                                {digit}
-                                              </div>
-                                            </td>
-                                          )
-                                      )}
-                                    </tr>
-                                    <tr>
-                                      {data?.machine_number?.split("-").map(
-                                        (digit, j) =>
-                                          digit && (
-                                            <td key={j}>
-                                              <div className="numboxred">
-                                                {digit}
-                                              </div>
-                                            </td>
-                                          )
-                                      )}
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          );
-                        });
-                    } else if (record.name === "Golden chance") {
-                      record.results
-                        .sort((a, b) => new Date(b.date) - new Date(a.date))
-                        .map((data, dataIndex) => {
-                          return (
-                            <div key={index} className="col-md-4 mb-5">
-                              <div key={dataIndex} className="div_lgrey">
-                                <p></p>
-                                <br />
-                                <p className="text-center">
-                                  <small>
-                                    Draw Time:{" "}
-                                    {moment
-                                      .utc(data.date, "YYYY-MM-DD HH:mm:ss")
-                                      .local()
-                                      .format("MMM DD, YYYY h:mm:ss a")}
-                                  </small>
-                                </p>
-                                <br />
-                                <table cellPadding="3" align="center">
-                                  <tbody>
-                                    <tr>
-                                      {data?.winning_number?.split("-").map(
-                                        (digit, j) =>
-                                          digit && (
-                                            <td key={j}>
-                                              <div className="numboxgreen">
-                                                {digit}
-                                              </div>
-                                            </td>
-                                          )
-                                      )}
-                                    </tr>
-                                    <tr>
-                                      {data?.machine_number?.split("-").map(
-                                        (digit, j) =>
-                                          digit && (
-                                            <td key={j}>
-                                              <div className="numboxred">
-                                                {digit}
-                                              </div>
-                                            </td>
-                                          )
-                                      )}
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          );
-                        });
-                    } else {
-                      <p className="text-danger text-center">
-                        No record found
-                      </p>;
-                    }
-                  })}
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table cellPadding="3" align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                          <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxred">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      } else if (record.name === "Golden Chance") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                // console.log(record);
+                                return (
+                                  <div
+                                    key={`${record.id}-${dataIndex}`}
+                                    className="col-md-4 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
+                                            )
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table cellPadding="3" align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                          <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxred">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      } else if (record.name === "5/90 Games") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                // console.log(record);
+                                return (
+                                  <div
+                                    key={`${record.id}-${dataIndex}`}
+                                    className="col-md-4 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
+                                            )
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table cellPadding="3" align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                          <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxred">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      } else {
+                        return (
+                          <p
+                            key={record.id}
+                            className="text-danger text-center"
+                          >
+                            {/* No record found */}
+                          </p>
+                        );
+                      }
+                    })}
                 </div>
               </>
             )}

@@ -137,7 +137,7 @@ const Result = () => {
                                 }
                                 className="text-decoration-none"
                               >
-                                <small>
+                                <small style={{cursor:'pointer'}}>
                                   <strong>View More&gt;&gt;</strong>
                                 </small>
                               </a>
