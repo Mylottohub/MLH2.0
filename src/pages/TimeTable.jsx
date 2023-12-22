@@ -49,7 +49,9 @@ const TimeTable = () => {
 
   const filterTimetable = (data) => {
     const currentDay = moment().format("dddd");
-    const currentDayTimetable = data.filter((record) => record.day === currentDay);
+    const currentDayTimetable = data.filter(
+      (record) => record.day === currentDay
+    );
     setFilteredTimetable(currentDayTimetable);
   };
 
@@ -70,7 +72,7 @@ const TimeTable = () => {
                 className="me-auto"
               >
                 <tr>
-                  <td colSpan="7" className="text-center p-2 w-100">
+                  <td colSpan="3" className="text-center p-2 w-100">
                     <Spinner color="#fff" loading={isLoading} size={20} />
                   </td>
                 </tr>
@@ -89,7 +91,8 @@ const TimeTable = () => {
                         e.preventDefault();
                         const filtered = timetable.filter(
                           (record) =>
-                            (selectedDay === "" || record.day === selectedDay) &&
+                            (selectedDay === "" ||
+                              record.day === selectedDay) &&
                             (selectedOperator === "" ||
                               record.operator.toString() === selectedOperator)
                         );
@@ -154,53 +157,62 @@ const TimeTable = () => {
 
                 <div className="col-md-8">
                   <strong className="mb-5">Timetable</strong>
-                  <table className="table table-express mt-5">
-                    <tbody>
-                      <tr>
-                        <th>GAME</th>
-                        <th>DAY</th>
-                        <th>CLOSING TIME</th>
-                        <th>DRAW TIME</th>
-                      </tr>
-                    </tbody>
-                    {filteredTimetable.length > 0
-                      ? filteredTimetable
-                          .sort((a, b) => {
-                            const timeA = new Date(`1970-01-01T${a.start_time}`);
-                            const timeB = new Date(`1970-01-01T${b.start_time}`);
-                            return timeA - timeB;
-                          })
-                          .map((record, index) => (
-                            <tbody key={index}>
-                              <tr>
-                                <td>{record?.name}</td>
-                                <td>{record?.day}</td>
-                                <td>{record?.start_time}</td>
-                                <td>{record?.end_time}</td>
-                              </tr>
-                            </tbody>
-                          ))
-                      : timetable
-                          .filter(
-                            (record) =>
-                              moment().format("dddd") === record.day
-                          )
-                          .sort((a, b) => {
-                            const timeA = new Date(`1970-01-01T${a.start_time}`);
-                            const timeB = new Date(`1970-01-01T${b.start_time}`);
-                            return timeA - timeB;
-                          })
-                          .map((record, index) => (
-                            <tbody key={index}>
-                              <tr>
-                                <td>{record?.name}</td>
-                                <td>{record?.day}</td>
-                                <td>{record?.start_time}</td>
-                                <td>{record?.end_time}</td>
-                              </tr>
-                            </tbody>
-                          ))}
-                  </table>
+                  <div className="table-responsive">
+                    <table className="table table-express mt-5">
+                      <tbody>
+                        <tr>
+                          <th>GAME</th>
+                          <th>DAY</th>
+                          <th>CLOSING TIME</th>
+                          <th>DRAW TIME</th>
+                        </tr>
+                      </tbody>
+                      {filteredTimetable.length > 0
+                        ? filteredTimetable
+                            .sort((a, b) => {
+                              const timeA = new Date(
+                                `1970-01-01T${a.start_time}`
+                              );
+                              const timeB = new Date(
+                                `1970-01-01T${b.start_time}`
+                              );
+                              return timeA - timeB;
+                            })
+                            .map((record, index) => (
+                              <tbody key={index}>
+                                <tr>
+                                  <td>{record?.name}</td>
+                                  <td>{record?.day}</td>
+                                  <td>{record?.start_time}</td>
+                                  <td>{record?.end_time}</td>
+                                </tr>
+                              </tbody>
+                            ))
+                        : timetable
+                            .filter(
+                              (record) => moment().format("dddd") === record.day
+                            )
+                            .sort((a, b) => {
+                              const timeA = new Date(
+                                `1970-01-01T${a.start_time}`
+                              );
+                              const timeB = new Date(
+                                `1970-01-01T${b.start_time}`
+                              );
+                              return timeA - timeB;
+                            })
+                            .map((record, index) => (
+                              <tbody key={index}>
+                                <tr>
+                                  <td>{record?.name}</td>
+                                  <td>{record?.day}</td>
+                                  <td>{record?.start_time}</td>
+                                  <td>{record?.end_time}</td>
+                                </tr>
+                              </tbody>
+                            ))}
+                    </table>
+                  </div>
                 </div>
               </>
             )}

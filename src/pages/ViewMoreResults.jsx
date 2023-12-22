@@ -162,13 +162,13 @@ const ViewMoreResults = () => {
                 <div className="div_lgrey" style={{ padding: "0px" }}>
                   <div className="row">
                     <div
-                      className="col-md-2 col-xs-4"
+                      className="col-4 col-lg-2 col-xs-4"
                       style={{ padding: "0px" }}
                     >
                       <img src={imageSrc} className="img-fluid" />
                     </div>
                     <div
-                      className="col-md-6 col-xs-8"
+                      className="col-8 col-lg-6 col-xs-8"
                       style={{ padding: "20px" }}
                     >
                       {perOperator.map((item, index) => {
@@ -184,7 +184,7 @@ const ViewMoreResults = () => {
                                 |{" "}
                                 {moment(
                                   item.drawDate,
-                                  "MM/DD/YYYY HH:mm"
+                                  "DD/MM/YYYY HH:mm"
                                 ).format("HH:mm")}
                                 <br />
                                 <br />
@@ -251,7 +251,7 @@ const ViewMoreResults = () => {
                         }
                       })}
                     </div>
-                    <div className="col-md-4 col-xs-12">
+                    <div className="col-md-4 col-xs-12 mb-3">
                       <table cellPadding="10" width="100%">
                         <tbody>
                           <tr>
@@ -486,16 +486,15 @@ const ViewMoreResults = () => {
                                           <tr>
                                             {data?.machine_number
                                               ?.split("-")
-                                              .map(
-                                                (digit, j) =>
-                                                  digit && (
-                                                    <td key={j}>
-                                                      <div className="numboxred">
-                                                        {digit}
-                                                      </div>
-                                                    </td>
-                                                  )
-                                              )}
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  {digit !== "0" ? (
+                                                    <div className="numboxred">
+                                                      {digit}
+                                                    </div>
+                                                  ) : null}
+                                                </td>
+                                              ))}
                                           </tr>
                                         </tbody>
                                       </table>
@@ -555,16 +554,13 @@ const ViewMoreResults = () => {
                                           <tr>
                                             {data?.machine_number
                                               ?.split("-")
-                                              .map(
-                                                (digit, j) =>
-                                                  digit && (
-                                                    <td key={j}>
-                                                      <div className="numboxred">
-                                                        {digit}
-                                                      </div>
-                                                    </td>
-                                                  )
-                                              )}
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  <div className="numboxred">
+                                                    {digit !== "0"}
+                                                  </div>
+                                                </td>
+                                              ))}
                                           </tr>
                                         </tbody>
                                       </table>
@@ -622,18 +618,17 @@ const ViewMoreResults = () => {
                                               )}
                                           </tr>
                                           <tr>
-                                            {data?.machine_number
+                                          {data?.machine_number
                                               ?.split("-")
-                                              .map(
-                                                (digit, j) =>
-                                                  digit && (
-                                                    <td key={j}>
-                                                      <div className="numboxred">
-                                                        {digit}
-                                                      </div>
-                                                    </td>
-                                                  )
-                                              )}
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  {digit !== "0" ? (
+                                                    <div className="numboxred">
+                                                      {digit}
+                                                    </div>
+                                                  ) : null}
+                                                </td>
+                                              ))}
                                           </tr>
                                         </tbody>
                                       </table>
@@ -692,18 +687,17 @@ const ViewMoreResults = () => {
                                               )}
                                           </tr>
                                           <tr>
-                                            {data?.machine_number
+                                          {data?.machine_number
                                               ?.split("-")
-                                              .map(
-                                                (digit, j) =>
-                                                  digit && (
-                                                    <td key={j}>
-                                                      <div className="numboxred">
-                                                        {digit}
-                                                      </div>
-                                                    </td>
-                                                  )
-                                              )}
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  {digit !== "0" ? (
+                                                    <div className="numboxred">
+                                                      {digit}
+                                                    </div>
+                                                  ) : null}
+                                                </td>
+                                              ))}
                                           </tr>
                                         </tbody>
                                       </table>
@@ -762,18 +756,17 @@ const ViewMoreResults = () => {
                                               )}
                                           </tr>
                                           <tr>
-                                            {data?.machine_number
+                                          {data?.machine_number
                                               ?.split("-")
-                                              .map(
-                                                (digit, j) =>
-                                                  digit && (
-                                                    <td key={j}>
-                                                      <div className="numboxred">
-                                                        {digit}
-                                                      </div>
-                                                    </td>
-                                                  )
-                                              )}
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  {digit !== "0" ? (
+                                                    <div className="numboxred">
+                                                      {digit}
+                                                    </div>
+                                                  ) : null}
+                                                </td>
+                                              ))}
                                           </tr>
                                         </tbody>
                                       </table>

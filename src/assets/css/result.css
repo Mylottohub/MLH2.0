@@ -68,4 +68,8 @@ th {
     box-sizing: border-box;
     border-radius: 50px;
 }
+
+.countdown_box  {
+    font-size: 17px;
+}
 }

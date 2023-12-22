@@ -36,6 +36,10 @@ td {
     box-shadow: inset 0 0 5px rgba(150, 150 ,150,0.35);
     margin: auto;
   }
+  .table-express>tbody>tr>th {
+   text-align: left;
+}
+
 
 .table-express>tbody>tr>th {
     background-color: #406777;
@@ -47,6 +51,7 @@ td {
     border-top: none !important;
     padding: 20px !important;
 }
+
 
 @media (max-width: 767px) {
     .service-area {

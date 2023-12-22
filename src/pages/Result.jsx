@@ -90,15 +90,15 @@ const Result = () => {
 
                     return (
                       <div key={index} className="hidden-xs hidden-sm mt-5">
-                        <div className="row">
-                          <div className="col-md-2">
+                        <div className="row app__all-result">
+                          <div className="col-3 col-lg-2">
                             <img
                               src={imageSrc}
                               className="img-fluid img-rounded"
                               alt={`Logo ${record.name}`}
                             />
                           </div>
-                          <div className="col-md-10 div_lgrey">
+                          <div className="col-9 col-lg-10 div_lgrey">
                             <strong>{latestResult?.game}</strong>
                             <br />
                             <small>
@@ -127,8 +127,8 @@ const Result = () => {
                                 </td>
                               ))}
 
-                            <div className="clearfix"></div>
-                            <div className="pull-right">
+                          
+                            <div className="pull-right mt-4 mb-3">
                               <a
                                 onClick={() =>
                                   navigate(
@@ -145,6 +145,8 @@ const Result = () => {
                           </div>
                         </div>
                       </div>
+
+                      
                     );
                   })}
               </>

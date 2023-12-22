@@ -170,74 +170,72 @@ const OperatorMobile = () => {
                 return nextGame ? (
                   <div key={index} className="col-md-3">
                     <div className="hidden-md hidden-lg div_vlgrey">
-                      <a>
-                        <table width="100%" cellPadding="3">
-                          <tbody>
-                            <tr valign="top">
-                              <td width="41%">
-                                <img src={imageSrc} className="img-fluid" />
-                              </td>
-                              <td style={{ lineHeight: "19px!important;" }}>
-                                <small>
-                                  <strong>NEXT DRAW</strong>
-                                </small>
-                                <br />
-                                <small>
-                                  {" "}
-                                  {nextGame[propertyMapping[operatorType].name]}
-                                </small>
-                                <br />
+                      <table width="100%" cellPadding="3">
+                        <tbody>
+                          <tr valign="top">
+                            <td width="41%">
+                              <img src={imageSrc} className="img-fluid" />
+                            </td>
+                            <td style={{ lineHeight: "19px!important;" }}>
+                              <small>
+                                <strong>NEXT DRAW</strong>
+                              </small>
+                              <br />
+                              <small>
+                                {" "}
+                                {nextGame[propertyMapping[operatorType].name]}
+                              </small>
+                              <br />
 
-                                <small>
-                                  <span>
-                                    <Countdown
-                                      date={
-                                        new Date(
-                                          renderGameTime(operatorType, nextGame)
-                                        )
-                                      }
-                                      renderer={({
-                                        days,
-                                        hours,
-                                        minutes,
-                                        seconds,
-                                      }) => (
-                                        <>
-                                          <span className="countdown_box">
-                                            {days}days
-                                          </span> {" "}
-                                          <span className="countdown_box">
-                                            {hours}hrs 
-                                          </span>{" "}
-                                          <span className="countdown_box">
-                                            {minutes}mins
-                                          </span>{" "}
-                                          <span className="countdown_box">
-                                            {seconds}secs
-                                          </span>{" "}
-                                        </>
-                                      )}
-                                    />
-                                  </span>
-                                </small>
+                              <small>
+                                <span>
+                                  <Countdown
+                                    date={
+                                      new Date(
+                                        renderGameTime(operatorType, nextGame)
+                                      )
+                                    }
+                                    renderer={({
+                                      days,
+                                      hours,
+                                      minutes,
+                                      seconds,
+                                    }) => (
+                                      <>
+                                        <span className="countdown_box">
+                                          {days}days
+                                        </span>{" "}
+                                        <span className="countdown_box">
+                                          {hours}hrs
+                                        </span>{" "}
+                                        <span className="countdown_box">
+                                          {minutes}mins
+                                        </span>{" "}
+                                        <span className="countdown_box">
+                                          {seconds}secs
+                                        </span>{" "}
+                                      </>
+                                    )}
+                                  />
+                                </span>
+                              </small>
 
-                                <br />
-                                <br />
-                                <p>
-                                  <a
-                                    onClick={() => {
-                                      navigate(`/play-game/${operatorType}`);
-                                    }}
-                                    className="btn btn-blue btn-sm btn-block"
-                                  >
-                                    Play Now
-                                  </a>
-                                </p>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </a>
+                              <br />
+                              <br />
+                              <p>
+                                <a
+                                  onClick={() => {
+                                    navigate(`/play-game/${operatorType}`);
+                                  }}
+                                  className="btn btn-blue btn-sm btn-block"
+                                >
+                                  Play Now
+                                </a>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 ) : null;
