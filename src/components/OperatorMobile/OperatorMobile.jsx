@@ -19,9 +19,16 @@ const OperatorMobile = () => {
     green_lotto: [],
     lotto_nigeria: [],
     lottomania: [],
+    ghana_game: [],
   });
 
-  const operatorTypes = ["wesco", "green_lotto", "lotto_nigeria", "lottomania"];
+  const operatorTypes = [
+    "ghana_game",
+    "wesco",
+    "green_lotto",
+    "lottomania",
+    "lotto_nigeria",
+  ];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
       const requestData = { operator_type: operatorType };
@@ -85,23 +92,21 @@ const OperatorMobile = () => {
           ) : (
             operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];
-              // console.log(operatorDataArray);
 
               if (operatorDataArray && operatorDataArray.length > 0) {
                 const imageSrc = `/images/${operatorType}.png`;
-                // console.log(operatorDataArray);
 
                 const propertyMapping = {
+                  ghana_game: { name: "gn", time: "sdt" },
                   wesco: { name: "drawname", time: "drawtime" },
+                  green_lotto: { name: "drawname", time: "drawtime" },
                   lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
                 };
 
-                // Extract values if operatorDataArray is an object
                 const dataArray = Array.isArray(operatorDataArray)
                   ? operatorDataArray
                   : Object.values(operatorDataArray);
-                // console.log(dataArray);
 
                 const upcomingGames = dataArray.filter((game) => {
                   const currentTime = moment();
@@ -117,6 +122,11 @@ const OperatorMobile = () => {
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   } else if (operatorType === "lottomania") {
                     drawTime = moment(game.sdt);
+                  } else if (operatorType === "ghana_game") {
+                    drawTime = moment(game?.sdt);
+                  } else if (operatorType === "green_lotto") {
+                    const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
+                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   }
 
                   return drawTime && drawTime.isAfter(currentTime);
@@ -137,6 +147,8 @@ const OperatorMobile = () => {
 
                   if (operatorType === "lottomania") {
                     return new Date(time);
+                  } else if (operatorType === "ghana_game") {
+                    return new Date(time);
                   } else if (operatorType === "lotto_nigeria") {
                     const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                       .utcOffset("+00:00")
@@ -144,6 +156,22 @@ const OperatorMobile = () => {
                     return parsedTime.toDate();
                   } else if (operatorType === "wesco") {
                     // For "wesco," combine "drawdate" and "drawtime" in the correct format
+                    const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
+                    const parsedTime = moment(
+                      drawDateTimeString,
+                      "YYYYMMDD HH:mm:ss"
+                    )
+                      .utcOffset("+00:00")
+                      .utc();
+
+                    // Check if parsedTime is valid
+                    if (parsedTime.isValid()) {
+                      return parsedTime.toDate();
+                    } else {
+                      console.error("Invalid date format:", drawDateTimeString);
+                      return null;
+                    }
+                  } else if (operatorType === "green_lotto") {
                     const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
                     const parsedTime = moment(
                       drawDateTimeString,

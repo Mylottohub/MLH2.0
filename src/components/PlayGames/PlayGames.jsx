@@ -460,7 +460,11 @@ const PlayGames = () => {
         return game.drawAlias === gname;
       } else if (operatorType === "wesco") {
         return game.drawname === gname;
+      } else if (operatorType === "green_lotto") {
+        return game.drawname === gname;
       } else if (operatorType === "lottomania") {
+        return game.gn === gname;
+      } else if (operatorType === "ghana_game") {
         return game.gn === gname;
       }
       // Add other cases as needed
@@ -509,7 +513,50 @@ const PlayGames = () => {
           drawTime: selectedGame.drawtime,
           closetime: selectedGame.closetime,
         };
+      case "green_lotto":
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          max_win: parseFloat(max_win.replace("₦", "")),
+          ball: bets,
+          operator_type: operatorType,
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          sdt: selectedGame.drawtime,
+          drawID: selectedGame.drawid,
+          drawDate: selectedGame.drawdate,
+          drawTime: selectedGame.drawtime,
+          closetime: selectedGame.closetime,
+        };
       case "lottomania": {
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          max_win: parseFloat(max_win.replace("₦", "")),
+          ball: bets,
+          operator_type: operatorType,
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          gid: selectedGame.gid,
+          sdt: selectedGame.sdt,
+          // drawID: selectedGame.drawid,
+          drawDate: selectedGame.sdt,
+          drawTime: selectedGame.sdt,
+          closetime: selectedGame.sdt,
+          // gid: operatorData.gid,
+          // sdt: sdtDate,
+          // drawDate: sdtDate,
+          // drawTime: sdtDate,
+          // closetime: sdtDate,
+        };
+      }
+      case "ghana_game": {
         return {
           userID: userInfo.data.id,
           line,
@@ -635,7 +682,23 @@ const PlayGames = () => {
                               {item.gn}
                             </option>
                           );
+                        } else if (id === "ghana_game") {
+                          return (
+                            <option key={index} value={item.gn}>
+                              {item.gn}
+                            </option>
+                          );
                         } else if (id === "wesco") {
+                          return (
+                            <option
+                              className="text-uppercase"
+                              key={index}
+                              value={item.drawname}
+                            >
+                              {item.drawname}
+                            </option>
+                          );
+                        } else if (id === "green_lotto") {
                           return (
                             <option
                               className="text-uppercase"
@@ -802,7 +865,106 @@ const PlayGames = () => {
                             } else {
                               return null;
                             }
+                          } else if (id === "green_lotto") {
+                            const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
+                            const drawDateTime = moment(
+                              drawDateTimeString,
+                              "YYYYMMDD HH:mm:ss"
+                            );
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
+
+                            if (timeDifference > 0) {
+                              return (
+                                <>
+                                  <tr key={index}>
+                                    <td>
+                                      <small>
+                                        <strong>{item.drawname}:</strong>
+                                      </small>
+                                    </td>
+                                    <td>
+                                      <small>
+                                        <span>
+                                          <small>
+                                            <Countdown
+                                              date={
+                                                currentTime.valueOf() +
+                                                timeDifference
+                                              }
+                                              renderer={({
+                                                days,
+                                                hours,
+                                                minutes,
+                                                seconds,
+                                              }) => (
+                                                <>
+                                                  {days}days {hours}hrs{" "}
+                                                  {minutes}
+                                                  mins {seconds}secs
+                                                </>
+                                              )}
+                                            />
+                                          </small>
+                                        </span>
+                                      </small>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            } else {
+                              return null;
+                            }
                           } else if (id === "lottomania") {
+                            const drawDateTime = moment(item.sdt);
+
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
+
+                            if (timeDifference > 0) {
+                              return (
+                                <>
+                                  <tr key={index}>
+                                    <td>
+                                      <small>
+                                        <strong>{item.gn}:</strong>
+                                      </small>
+                                    </td>
+                                    <td>
+                                      <small>
+                                        <span>
+                                          <small>
+                                            <Countdown
+                                              date={
+                                                currentTime.valueOf() +
+                                                timeDifference
+                                              }
+                                              renderer={({
+                                                days,
+                                                hours,
+                                                minutes,
+                                                seconds,
+                                              }) => (
+                                                <>
+                                                  {days}days {hours}hrs{" "}
+                                                  {minutes}
+                                                  mins {seconds}secs
+                                                </>
+                                              )}
+                                            />
+                                          </small>
+                                        </span>
+                                      </small>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            } else {
+                              return null;
+                            }
+                          } else if (id === "ghana_game") {
                             const drawDateTime = moment(item.sdt);
 
                             const currentTime = moment();
