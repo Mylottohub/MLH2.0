@@ -43,7 +43,6 @@ const Result = () => {
     fetchData();
   }, [userInfo.token]);
 
-
   return (
     <div>
       <Navbar />
@@ -95,7 +94,7 @@ const Result = () => {
                             <img
                               src={imageSrc}
                               className="img-fluid img-rounded"
-                              alt={`Logo ${record.name}`}
+                              alt={`${record.name}`}
                             />
                           </div>
                           <div className="col-9 col-lg-10 div_lgrey">
@@ -123,11 +122,12 @@ const Result = () => {
                               ?.split("-")
                               .map((digit, j) => (
                                 <td key={j}>
-                                  <div className="numboxwhite">{digit}</div>
+                                  <div className="numboxwhite app__mobile-white">
+                                    {digit}
+                                  </div>
                                 </td>
                               ))}
 
-                          
                             <div className="pull-right mt-4 mb-3">
                               <a
                                 onClick={() =>
@@ -137,7 +137,7 @@ const Result = () => {
                                 }
                                 className="text-decoration-none"
                               >
-                                <small style={{cursor:'pointer'}}>
+                                <small style={{ cursor: "pointer" }}>
                                   <strong>View More&gt;&gt;</strong>
                                 </small>
                               </a>
@@ -145,8 +145,6 @@ const Result = () => {
                           </div>
                         </div>
                       </div>
-
-                      
                     );
                   })}
               </>

@@ -54,22 +54,28 @@ th {
     padding: 20px;
 }
 
-@media (max-width: 767px){
-.numboxwhite {
-    border-radius: 50%;
-    behavior: url(PIE.htc);
-    width: 50px;
-    height: 50px;
-    padding: 10px;
-    color: #406777;
-    text-align: center;
-    font-size: 20px;
-    border: 3px solid #406777;
-    box-sizing: border-box;
-    border-radius: 50px;
-}
+@media (max-width: 767px) {
+    .numboxwhite {
+        border-radius: 50%;
+        behavior: url(PIE.htc);
+        width: 50px;
+        height: 50px;
+        padding: 10px;
+        color: #406777;
+        text-align: center;
+        font-size: 20px;
+        border: 3px solid #406777;
+        box-sizing: border-box;
+        border-radius: 50px;
+    }
 
-.countdown_box  {
-    font-size: 17px;
-}
+    .app__mobile-white {
+        font-size: 12px !important;
+        width: 40px;
+        height: 40px;
+    }
+
+    .countdown_box {
+        font-size: 17px;
+    }
 }
