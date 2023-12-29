@@ -1,9 +1,11 @@
 import "../assets/css/footer.css";
 import { useNavigate } from "react-router-dom";
 import { images } from "../constant";
+import moment from "moment";
 
 const Footer = () => {
   const navigate = useNavigate();
+  const currentYear = moment().format("YYYY");
   return (
     <>
       <div>
@@ -65,21 +67,15 @@ const Footer = () => {
                     <h2>Quick Links</h2>
                     <ul>
                       <li>
-                        <a href="#">
-                          Forecast
-                        </a>
+                        <a href="#">Forecast</a>
                       </li>
 
                       <li>
-                        <a href="#">
-                          Result
-                        </a>
+                        <a href="#">Result</a>
                       </li>
-                  
+
                       <li>
-                        <a href="#">
-                          How to Play
-                        </a>
+                        <a href="#">How to Play</a>
                       </li>
                     </ul>
                   </div>
@@ -89,8 +85,8 @@ const Footer = () => {
                     <h2>Company</h2>
                     <ul>
                       <li>
-                        <a href="#"  onClick={() => navigate("/about-us")}>
-                        About Us
+                        <a href="#" onClick={() => navigate("/about-us")}>
+                          About Us
                         </a>
                       </li>
                       <li>
@@ -99,7 +95,11 @@ const Footer = () => {
                         </a>
                       </li>
                       <li>
-                        <a href="#" className="w-100" onClick={() => navigate("/terms")}>
+                        <a
+                          href="#"
+                          className="w-100"
+                          onClick={() => navigate("/terms")}
+                        >
                           Terms and Conditions
                         </a>
                       </li>
@@ -114,14 +114,17 @@ const Footer = () => {
                 <div className="col-md-3 col-sm-6 col-xs-12 col-2">
                   <div className="footer-widget footer-contact">
                     <h2>Download App</h2>
-                    
+
                     <p className="text-center">
                       <a
                         href="#"
                         className="btn btn-trans btn-lg text-center"
-                        style={{border: '1px solid #fff'}}
+                        style={{ border: "1px solid #fff" }}
                       >
-                        <i className="fa fa-download text-white"> Download APK</i> 
+                        <i className="fa fa-download text-white">
+                          {" "}
+                          Download APK
+                        </i>
                       </a>
                     </p>
                   </div>
@@ -134,8 +137,8 @@ const Footer = () => {
               <div className="row">
                 <div className="col-xs-12 text-center">
                   <p>
-                    Copyright © 2023 <span>My Lotto Hub</span>. All Rights
-                    Reserved.
+                    Copyright © {currentYear} <span>My Lotto Hub</span>. All
+                    Rights Reserved.
                   </p>
                 </div>
               </div>

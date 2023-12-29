@@ -1,17 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { routes } from "./routing/routes";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
-
+import LatestGame from "./components/LatestGame";
 
 function App() {
   return (
     <BrowserRouter>
-      {/* <Routes>
-        {Object.values(routes).map((el) => (
-          <Route path={el.path} key={el.id} element={<el.component />} />
-        ))}
-      </Routes> */}
-       <Routes>
+      <Routes>
         {routes.map((route, index) => (
           <Route
             key={index}
@@ -25,8 +20,8 @@ function App() {
             }
           />
         ))}
-        {/* Add more regular routes here */}
       </Routes>
+      <LatestGame />
     </BrowserRouter>
   );
 }

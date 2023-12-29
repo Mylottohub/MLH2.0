@@ -20,7 +20,7 @@ const ViewMoreResults = () => {
   let operatorID = null;
 
   if (id == 26) {
-    operatorID = "Ghana-Games-logo";
+    operatorID = "ghana_game";
   } else if (id == 28) {
     operatorID = "wesco";
   } else if (id == 42) {
@@ -93,6 +93,7 @@ const ViewMoreResults = () => {
       fetchData();
     }
   }, [userInfo.token]);
+  // console.log(perOperator);
 
   return (
     <div>
@@ -206,6 +207,29 @@ const ViewMoreResults = () => {
                                 <strong> {item.gn}</strong> <br />
                                 <br />
                                 {moment(item.sdt) // Assuming item.sdt is the timestamp
+                                  .local()
+                                  .format("DD MMM, YYYY")}{" "}
+                                | {moment(item.sdt).format("HH:mm")}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() =>
+                                    navigate(`/play-game/${operatorID}`)
+                                  }
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        } else if (operatorID === "ghana_game") {
+                          if (index === 0) {
+                            return (
+                              <div key={index}>
+                                <strong> {item.gn}</strong> <br />
+                                <br />
+                                {moment(item.sdt)
                                   .local()
                                   .format("DD MMM, YYYY")}{" "}
                                 | {moment(item.sdt).format("HH:mm")}
@@ -366,6 +390,60 @@ const ViewMoreResults = () => {
                                     return null;
                                   }
                                 } else if (operatorID === "lottomania") {
+                                  const drawDateTime = moment(item.sdt);
+
+                                  const currentTime = moment();
+                                  const timeDifference =
+                                    drawDateTime.diff(currentTime);
+
+                                  if (timeDifference > 0) {
+                                    if (index == 0) {
+                                      return (
+                                        <>
+                                          <span>
+                                            <small className="countdown_box">
+                                              <Countdown
+                                                date={
+                                                  currentTime.valueOf() +
+                                                  timeDifference
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <>
+                                                    <span className="countdown_box me-2">
+                                                      {days}days
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {hours}hrs
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {minutes}mins
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {seconds}secs
+                                                    </span>
+                                                  </>
+                                                )}
+                                              />
+                                            </small>
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                  } else {
+                                    return (
+                                      <>
+                                        <button className="text-center bg-danger">
+                                          No Record Found
+                                        </button>
+                                      </>
+                                    );
+                                  }
+                                } else if (operatorID === "ghana_game") {
                                   const drawDateTime = moment(item.sdt);
 
                                   const currentTime = moment();
@@ -618,7 +696,7 @@ const ViewMoreResults = () => {
                                               )}
                                           </tr>
                                           <tr>
-                                          {data?.machine_number
+                                            {data?.machine_number
                                               ?.split("-")
                                               .map((digit, j) => (
                                                 <td key={j}>
@@ -687,7 +765,7 @@ const ViewMoreResults = () => {
                                               )}
                                           </tr>
                                           <tr>
-                                          {data?.machine_number
+                                            {data?.machine_number
                                               ?.split("-")
                                               .map((digit, j) => (
                                                 <td key={j}>
@@ -756,7 +834,7 @@ const ViewMoreResults = () => {
                                               )}
                                           </tr>
                                           <tr>
-                                          {data?.machine_number
+                                            {data?.machine_number
                                               ?.split("-")
                                               .map((digit, j) => (
                                                 <td key={j}>
@@ -764,10 +842,27 @@ const ViewMoreResults = () => {
                                                     <div className="numboxred">
                                                       {digit}
                                                     </div>
-                                                  ) : null}
+                                                  ) : (
+                                                    <>
+                                                      <div className="numboxred">
+                                                        {digit !== "0"}
+                                                      </div>
+                                                    </>
+                                                  )}
                                                 </td>
                                               ))}
                                           </tr>
+                                          {/* <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  <div className="numboxred">
+                                                    {digit !== "0"}
+                                                  </div>
+                                                </td>
+                                              ))}
+                                          </tr> */}
                                         </tbody>
                                       </table>
                                     </div>

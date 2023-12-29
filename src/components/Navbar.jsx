@@ -243,7 +243,7 @@ const Navbar = () => {
                           </small>
                         </a>
                         <ul className="dropdown-menu">
-                          <li>
+                          <li onClick={() => navigate("/profile")}>
                             <a className="dropdown-item p-2">
                               <FaUser />
                               &nbsp;&nbsp;User Profile
@@ -296,7 +296,6 @@ const Navbar = () => {
                           </li>
                         </ul>
                       </li>
-                    
                     </li>
 
                     <li className="text-right hidden-xs hidden-sm">

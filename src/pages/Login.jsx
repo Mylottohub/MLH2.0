@@ -101,10 +101,13 @@ const Login = () => {
                   style={{ right: "10px", cursor: "pointer" }}
                 >
                   <p
-                   
                     type="button"
                     onClick={togglePasswordVisibility}
-                    style={{ color: "#6E9A8D", marginLeft:'-30px', marginTop:'10px' }}
+                    style={{
+                      color: "#6E9A8D",
+                      marginLeft: "-30px",
+                      marginTop: "10px",
+                    }}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </p>
@@ -127,7 +130,10 @@ const Login = () => {
               </p>
               <p style={{ cursor: "pointer", color: "#406777" }}>
                 {" "}
-                <span onClick={() => navigate("/forgot-password")}>
+                <span
+                  className="text-primary"
+                  onClick={() => navigate("/forgot-password")}
+                >
                   {" "}
                   Forgot Password
                 </span>

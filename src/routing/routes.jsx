@@ -10,18 +10,18 @@ import ResetPassword from "../pages/ResetPassword";
 import Login from "../pages/Login";
 import Otp from "../pages/Otp";
 import Register from "../pages/Register";
-import  Result  from "../pages/Result";
+import Result from "../pages/Result";
 import Terms from "../pages/Terms";
 import TimeTable from "../pages/TimeTable";
 import ViewMoreResults from "../pages/ViewMoreResults";
-
+import UserProfile from "../components/UserProfile";
 
 export const routes = [
   {
     id: 1,
     path: "/",
     element: <Home />,
-    protected: false, 
+    protected: false,
   },
   {
     id: 2,
@@ -94,7 +94,6 @@ export const routes = [
     path: "/timetable",
     element: <TimeTable />,
     protected: false,
-
   },
   {
     id: 13,
@@ -114,5 +113,10 @@ export const routes = [
     element: <ViewMoreResults />,
     protected: true,
   },
- 
+  {
+    id: 16,
+    path: "/profile",
+    element: <UserProfile />,
+    protected: true,
+  },
 ];
