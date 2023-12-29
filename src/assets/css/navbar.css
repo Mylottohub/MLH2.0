@@ -128,6 +128,10 @@ a:focus {
         width: 90px;
     }
 
+    .app__proforecast {
+        width: 40% !important;
+    }
+
     .nav-link a {
         margin-left: -90px !important;
     }
@@ -145,11 +149,11 @@ a:focus {
     }
 
     .app__navbar-mobile {
-        margin-top: -7%!important;
+        margin-top: -7% !important;
         /* margin-left: -10%; */
     }
 
     .app__user-mobile {
-        display: none!important;
+        display: none !important;
     }
 }

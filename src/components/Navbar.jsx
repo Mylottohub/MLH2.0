@@ -149,7 +149,7 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3 fw-bold">
+                      <a className="nav-link text-white me-3 fw-bold app__proforecast">
                         Pro-Forecaster
                       </a>
                     </li>
@@ -231,7 +231,7 @@ const Navbar = () => {
                     <li className="text-right hidden-xs hidden-sm">
                       <li className="nav-item dropdown">
                         <a
-                          className="nav-link dropdown-toggle text-white app__user-mobile"
+                          className="nav-link dropdown-toggle text-white"
                           role="button"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
@@ -382,10 +382,7 @@ const Navbar = () => {
             >
               <span className="navbar-toggler-icon"></span>
             </button>
-            <div
-              className="collapse navbar-collapse"
-              id="navbarSupportedContent"
-            >
+            <div className=" navbar-collapse" id="navbarSupportedContent">
               <ul
                 className="navbar-nav app_navbar-nav me-auto mb-2 mb-lg-0"
                 style={{ cursor: "pointer" }}
@@ -439,8 +436,10 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li className="nav-item  fw-bold">
-                  <a className="nav-link w-100 text-white">Pro-Forecaster</a>
+                <li className="nav-item  fw-bold ">
+                  <a className="nav-link text-white app__proforecast">
+                    Pro-Forecaster
+                  </a>
                 </li>
 
                 <li className="nav-item  fw-bold">
@@ -472,39 +471,39 @@ const Navbar = () => {
                   <ul className="dropdown-menu">
                     <li>
                       <a
-                        className="dropdown-item p-2"
+                        className="dropdown-item p-2 fw-bold"
                         onClick={() => navigate("/about-us")}
                       >
-                        <i className="fa fa-info"></i>
+                        {/* <i className="fa fa-info"></i> */}
                         &nbsp;About us
                       </a>
                     </li>
                     <li>
                       <a
-                        className="dropdown-item p-2"
+                        className="dropdown-item p-2 fw-bold"
                         onClick={() => navigate("/faq")}
                       >
-                        <i className="fa fa-question"></i>
+                        {/* <i className="fa fa-question"></i> */}
                         &nbsp;FAQs
                       </a>
                     </li>
 
                     <li>
                       <a
-                        className="dropdown-item p-2"
+                        className="dropdown-item p-2 fw-bold"
                         onClick={() => navigate("/terms")}
                       >
-                        <i className="fa fa-anchor"></i>
+                        {/* <i className="fa fa-anchor"></i> */}
                         &nbsp;Terms and Conditions
                       </a>
                     </li>
 
                     <li>
                       <a
-                        className="dropdown-item p-2"
+                        className="dropdown-item p-2 fw-bold"
                         onClick={() => navigate("/contact-us")}
                       >
-                        <i className="fa fa-phone"></i>
+                        {/* <i className="fa fa-phone"></i> */}
                         &nbsp;Contact Us
                       </a>
                     </li>
@@ -514,27 +513,19 @@ const Navbar = () => {
 
               <ul className="app__sign-in">
                 <li className="text-right hidden-xs hidden-sm mt-2">
-                  <a
-                  // href="https://www.mylottohub.com/user/login"
-                  // style="padding-top: 22px !important;"
-                  >
+                  <a>
                     <span
                       className="btn text-white me-3  fw-bold"
                       onClick={() => navigate("/register")}
-                      // style="vertical-align: top !important;"
                     >
                       Sign Up
                     </span>
                   </a>
 
-                  <a
-                  // href="https://www.mylottohub.com/user/login"
-                  // style="padding-top: 22px !important;"
-                  >
+                  <a>
                     <span
                       className="btn btn-yellow  fw-bold"
                       onClick={() => navigate("/login")}
-                      // style="vertical-align: top !important;"
                     >
                       Sign In
                     </span>

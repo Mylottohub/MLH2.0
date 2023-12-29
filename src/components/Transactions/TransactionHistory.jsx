@@ -43,65 +43,67 @@ const TransactionHistory = () => {
       <Navbar />
       <div className="container p-4 mt-5 app__transact-table">
         <h5>Transaction History</h5>
-        <table className="table table-striped table-hover mt-4 table-responsive">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">TICKET ID</th>
-              <th scope="col">DATE</th>
-              <th scope="col">TIME</th>
-              <th scope="col">DESCRIPTION</th>
-              <th scope="col">CURRENT BAL</th>
-              <th scope="col">AMOUNT</th>
-              <th scope="col">CHANNEL</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {isLoading ? (
-              <div className="spinner-container d-flex align-items-center justify-content-center">
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            </div>
-            ) : transaction.length === 0 ? (
+        <div className="table-responsive">
+          <table className="table table-express table-hover mt-4">
+            <tbody>
               <tr>
-                <td colSpan="8" className="flex justify-center text-center p-5">
-                  No Record Found
-                </td>
+                <th scope="col">#</th>
+                <th scope="col">TICKET ID</th>
+                <th scope="col">TYPE</th>
+                <th scope="col">DESCRIPTION</th>
+                <th scope="col">AMOUNT</th>
+                <th scope="col">CHANNEL</th>
+                <th scope="col">CURRENT BAL</th>
+                <th scope="col">DATE</th>
               </tr>
-            ) : (
-              <>
-                {transaction.map((record, index) => {
-                  const formattedDate = moment(record.date)
-                    .utcOffset("+00:00")
-                    .format("DD/MM/YYYY HH:mm");
-                  const formattedTime = moment(
-                    formattedDate,
-                    "DD/MM/YYYY HH:mm"
-                  ).format("hh:mm A");
+            </tbody>
 
-                  return (
-                    <tr key={index} className="table-light">
-                      <th>{index + 1}</th>
-                      <td>{record.ref}</td>
-                      <td>{formattedDate}</td>
-                      <td>{formattedTime}</td>
-                      <td>{record.description}</td>
-                      <td>{record.abalance}</td>
-                      <td>{record.amount}</td>
-                      <td>{record.channel}</td>
-                    </tr>
-                  );
-                })}
-              </>
-            )}
-          </tbody>
-        </table>
+            <tbody>
+              {isLoading ? (
+                <div className="spinner text-dark text-center mt-5">
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                </div>
+              ) : transaction.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="8"
+                    className="flex justify-center text-center p-5"
+                  >
+                    No Record Found
+                  </td>
+                </tr>
+              ) : (
+                <>
+                  {transaction.map((record, index) => {
+                    const formattedDate = moment
+                      .utc(record.date, "YYYY-MM-DD HH:mm:ss")
+                      .local()
+                      .format("Do MMM YYYY | h:mm:ssA");
+
+                    return (
+                      <tr key={index} className="table-light">
+                        <td>{index + 1}</td>
+                        <td>{record.ref}</td>
+                        <td>{record.type}</td>
+                        <td>{record.description}</td>
+                        <td>{record.amount}</td>
+                        <td>{record.channel}</td>
+                        <td>{record.abalance}</td>
+                        <td>{formattedDate}</td>
+                      </tr>
+                    );
+                  })}
+                </>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

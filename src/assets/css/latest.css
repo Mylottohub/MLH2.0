@@ -1,0 +1,32 @@
+.latest-game-container {
+    position: relative;
+}
+
+.meg_next_game_scroll {
+    position: fixed;
+    height: 30px;
+    width: 100%;
+    z-index: 2000;
+    color: #34282c;
+    padding-top: 5px;
+    bottom: 0;
+    font-size: 15px;
+    background-color: #ffd801;
+}
+
+.scrolling-marquee {
+    white-space: nowrap;
+    overflow: hidden;
+    animation: scroll 80s linear infinite;
+    /* Adjust the duration (20s) as needed */
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}

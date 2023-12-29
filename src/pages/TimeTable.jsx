@@ -67,15 +67,14 @@ const TimeTable = () => {
         <div className="container">
           <div className="row">
             {isLoading ? (
-              <div
-                style={{ marginTop: "320px", textAlign: "center" }}
-                className="me-auto"
-              >
-                <tr>
-                  <td colSpan="3" className="text-center p-2 w-100">
-                    <Spinner color="#fff" loading={isLoading} size={20} />
-                  </td>
-                </tr>
+              <div className="spinner text-dark text-center mt-5">
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
               </div>
             ) : (
               <>
