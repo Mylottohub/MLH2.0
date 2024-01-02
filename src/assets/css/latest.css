@@ -17,7 +17,7 @@
 .scrolling-marquee {
     white-space: nowrap;
     overflow: hidden;
-    animation: scroll 80s linear infinite;
+    animation: scroll 70s linear infinite;
     /* Adjust the duration (20s) as needed */
 }
 

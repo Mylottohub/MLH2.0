@@ -3,17 +3,17 @@ import HTTP from "../utils/httpClient";
 import moment from "moment";
 import "../assets/css/latest.css";
 const LatestGame = () => {
-  // const scrollStyle = {
-  //   position: "fixed",
-  //   height: "30px",
-  //   width: "100%",
-  //   zIndex: 2000,
-  //   color: "#34282C",
-  //   paddingTop: "5px",
-  //   bottom: 0,
-  //   fontSize: "15px",
-  //   backgroundColor: "#FFD801",
-  // };
+  const scrollStyle = {
+    position: "fixed",
+    height: "30px",
+    width: "100%",
+    zIndex: 2000,
+    color: "#34282C",
+    paddingTop: "5px",
+    bottom: 0,
+    fontSize: "15px",
+    backgroundColor: "#FFD801",
+  };
   const [timetable, setTimetable] = useState([]);
 
   const fetchData = () => {
@@ -62,24 +62,8 @@ const LatestGame = () => {
       moment(a.start_time, "HH:mm:ss").diff(moment(b.start_time, "HH:mm:ss"))
     );
   return (
-    // <div>
-    //   <div style={scrollStyle} className="meg_next_game_scroll">
-    //     <div>
-    //       <marquee>
-    //         Next Games =&gt;
-    //         {filteredTimetable.map((game) => (
-    //           <span key={game.id}>
-    //             {" "}
-    //             {getOperatorName(game.operator)} - {game.name} -{" "}
-    //             {moment().format("Do MMM YYYY")} ({game.start_time}) |
-    //           </span>
-    //         ))}
-    //       </marquee>
-    //     </div>
-    //   </div>
-    // </div>
     <>
-      <div className="latest-game-container">
+      {/* <div className="latest-game-container">
         <div className="meg_next_game_scroll">
           <div className="scrolling-marquee">
             Next Games =&gt;
@@ -90,6 +74,22 @@ const LatestGame = () => {
                 {moment().format("Do MMM YYYY")} ({game.start_time}) |
               </span>
             ))}
+          </div>
+        </div>
+      </div> */}
+      <div>
+        <div style={scrollStyle} className="meg_next_game_scroll">
+          <div>
+            <marquee>
+              Next Games =&gt;
+              {filteredTimetable.map((game) => (
+                <span key={game.id}>
+                  {" "}
+                  {getOperatorName(game.operator)} - {game.name} -{" "}
+                  {moment().format("Do MMM YYYY")} ({game.start_time}) |
+                </span>
+              ))}
+            </marquee>
           </div>
         </div>
       </div>
