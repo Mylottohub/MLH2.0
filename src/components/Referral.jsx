@@ -59,8 +59,6 @@ const Referral = () => {
         toast("Error sharing link");
       }
     } else {
-      // Fallback for browsers that do not support the share API
-      // You can implement your custom sharing logic here
       console.warn("Share API not supported, implement custom sharing logic");
       toast("Share API not supported");
     }
@@ -83,7 +81,7 @@ const Referral = () => {
           </div>
         ) : (
           <div className="row">
-            <div className="col-6 mb-3">
+            <div className="col-7 mb-3">
               <input
                 id="foo"
                 type="text"
@@ -93,7 +91,7 @@ const Referral = () => {
                 disabled
               />
             </div>
-            <div className="col-3">
+            <div className="col-5">
               <button
                 style={{ background: "#27AAE1" }}
                 className="btn p-2 text-white  btn-copy"
@@ -113,6 +111,26 @@ const Referral = () => {
                 {" "}
                 <BsShareFill />
               </i>
+            </div>
+
+            <div className="table-responsive">
+              <table className="table table-express table-hover mt-4">
+                <tbody>
+                  <tr>
+                    {/* <th scope="col">#</th> */}
+                    <th>USERNAME</th>
+                    <th>SIGNUP DATE</th>
+                  </tr>
+                </tbody>
+
+                <tbody>
+                  <tr className="table-light">
+                    {/* <td></td> */}
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         )}

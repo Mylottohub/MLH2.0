@@ -543,11 +543,23 @@ const Navbar = () => {
           </div>
         </nav>
       )}
-      <BModal show={isOpen} onHide={handleClose} size="md">
+      <BModal
+        backdrop="static"
+        keyboard={false}
+        show={isOpen}
+        onHide={handleClose}
+        size="md"
+      >
         <WithdrawModal />
       </BModal>
 
-      <BModal show={isOpenDeposit} onHide={handleCloseDeposit} size="md">
+      <BModal
+        backdrop="static"
+        keyboard={false}
+        show={isOpenDeposit}
+        onHide={handleCloseDeposit}
+        size="md"
+      >
         <Deposit />
       </BModal>
 
