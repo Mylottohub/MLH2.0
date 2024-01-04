@@ -71,7 +71,9 @@ const Footer = () => {
                       </li>
 
                       <li>
-                        <a href="#">Result</a>
+                        <a onClick={() => navigate("/result")} href="#">
+                          Result
+                        </a>
                       </li>
 
                       <li>
@@ -135,7 +137,7 @@ const Footer = () => {
           <div className="footer-bottom-area hidden-xs">
             <div className="container">
               <div className="row">
-                <div className="col-xs-12 text-center">
+                <div className="col-xs-12 text-center mb-2">
                   <p>
                     Copyright © {currentYear} <span>My Lotto Hub</span>. All
                     Rights Reserved.

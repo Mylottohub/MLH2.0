@@ -30,14 +30,12 @@ const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Define your API endpoint URL
     const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
 
-    // Replace "YOUR_BEARER_TOKEN" with the actual bearer token
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
-        "Content-Type": "application/json", // Set the content type to JSON
+        "Content-Type": "application/json",
         Accept: "application/json",
       },
     };
@@ -154,11 +152,23 @@ const Header = () => {
         </table>
       </div>
 
-      <BModal show={isOpen} onHide={handleClose} size="md">
+      <BModal
+        backdrop="static"
+        keyboard={false}
+        show={isOpen}
+        onHide={handleClose}
+        size="md"
+      >
         <Withdraw />
       </BModal>
 
-      <BModal show={isOpenDeposit} onHide={handleCloseDeposit} size="md">
+      <BModal
+        backdrop="static"
+        keyboard={false}
+        show={isOpenDeposit}
+        onHide={handleCloseDeposit}
+        size="md"
+      >
         <Deposit />
       </BModal>
     </div>

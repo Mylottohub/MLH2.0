@@ -142,14 +142,22 @@ const Contact = () => {
                     <div className="row">
                       <div className="col-md-4">
                         <p>
-                          <a href="https://web.facebook.com/mylottohub">
+                          <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://web.facebook.com/mylottohub"
+                          >
                             <i className="fa fa-facebook"></i> Facebook
                           </a>
                         </p>
                       </div>
                       <div className="col-md-4">
                         <p>
-                          <a href="https://twitter.com/mylottohub">
+                          <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://twitter.com/mylottohub"
+                          >
                             <i className="fa fa-twitter"></i> Twitter
                           </a>
                         </p>

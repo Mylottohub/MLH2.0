@@ -272,10 +272,15 @@ const Deposit = () => {
       </div>
 
       <div>
-        {/* ... (your existing code) */}
-
         {/* Monnify Modal */}
-        <Modal show={showMonnifyModal} onHide={handleCloseMonnifyModal}  backdrop="static" keyboard={false} size="lg"centered>
+        <Modal
+          show={showMonnifyModal}
+          onHide={handleCloseMonnifyModal}
+          backdrop="static"
+          keyboard={false}
+          size="lg"
+          centered
+        >
           <Modal.Header closeButton>
             <h6>Make Payment to the Account below to fund your Account</h6>
           </Modal.Header>

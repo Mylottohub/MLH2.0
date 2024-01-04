@@ -17,6 +17,7 @@ import WithdrawModal from "./Payment/Withdraw";
 import { logout } from "../pages/slices/authSlice";
 import { useEffect } from "react";
 import axios from "axios";
+import UserProfile from "./Payment/UserProfile";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -28,12 +29,21 @@ const Navbar = () => {
   const handleCloseDeposit = () => setIsOpenDeposit(false);
   const handleOpenDeposit = () => setIsOpenDeposit(true);
 
+  const [isOpenUser, setIsOpenUser] = useState(false);
+
+  const handleUserClose = () => setIsOpenUser(false);
+  const handleUserOpen = () => setIsOpenUser(true);
+
   const handleWithdraw = () => {
     handleOpen();
   };
 
   const handleDeposit = () => {
     handleOpenDeposit();
+  };
+
+  const handleUserProfile = () => {
+    handleUserOpen();
   };
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -243,7 +253,8 @@ const Navbar = () => {
                           </small>
                         </a>
                         <ul className="dropdown-menu">
-                          <li onClick={() => navigate("/profile")}>
+                          {/* <li onClick={() => navigate("/profile")}> */}
+                          <li onClick={() => handleUserProfile()}>
                             <a className="dropdown-item p-2">
                               <FaUser />
                               &nbsp;&nbsp;User Profile
@@ -288,7 +299,7 @@ const Navbar = () => {
                               &nbsp;&nbsp;Transactions
                             </a>
                           </li>
-                          <li>
+                          <li onClick={() => navigate("/referral")}>
                             <a className="dropdown-item p-2">
                               <BsShareFill />
                               &nbsp;&nbsp;Referral
@@ -331,11 +342,7 @@ const Navbar = () => {
                     </small>
                     <br />
                     <br />
-                    <a
-                      // href="https://www.mylottohub.com/user/topup"
-                      onClick={() => handleDeposit()}
-                      className="btn btn-blue"
-                    >
+                    <a onClick={() => handleDeposit()} className="btn btn-blue">
                       <small>Deposit</small>
                     </a>
                   </div>
@@ -542,6 +549,10 @@ const Navbar = () => {
 
       <BModal show={isOpenDeposit} onHide={handleCloseDeposit} size="md">
         <Deposit />
+      </BModal>
+
+      <BModal show={isOpenUser} onHide={handleUserClose} size="md">
+        <UserProfile />
       </BModal>
     </>
   );

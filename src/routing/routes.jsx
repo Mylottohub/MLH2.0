@@ -15,6 +15,7 @@ import Terms from "../pages/Terms";
 import TimeTable from "../pages/TimeTable";
 import ViewMoreResults from "../pages/ViewMoreResults";
 import UserProfile from "../components/UserProfile";
+import Referral from "../components/Referral";
 
 export const routes = [
   {
@@ -45,7 +46,7 @@ export const routes = [
     id: 5,
     path: "/contact-us",
     element: <Contact />,
-    protected: true,
+    protected: false,
   },
   {
     id: 6,
@@ -117,6 +118,12 @@ export const routes = [
     id: 16,
     path: "/profile",
     element: <UserProfile />,
+    protected: true,
+  },
+  {
+    id: 17,
+    path: "/referral",
+    element: <Referral />,
     protected: true,
   },
 ];

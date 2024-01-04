@@ -63,20 +63,6 @@ const LatestGame = () => {
     );
   return (
     <>
-      {/* <div className="latest-game-container">
-        <div className="meg_next_game_scroll">
-          <div className="scrolling-marquee">
-            Next Games =&gt;
-            {filteredTimetable.map((game) => (
-              <span key={game.id}>
-                {" "}
-                {getOperatorName(game.operator)} - {game.name} -{" "}
-                {moment().format("Do MMM YYYY")} ({game.start_time}) |
-              </span>
-            ))}
-          </div>
-        </div>
-      </div> */}
       <div>
         <div style={scrollStyle} className="meg_next_game_scroll">
           <div>
