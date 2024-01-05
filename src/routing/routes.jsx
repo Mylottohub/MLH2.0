@@ -16,6 +16,7 @@ import TimeTable from "../pages/TimeTable";
 import ViewMoreResults from "../pages/ViewMoreResults";
 import UserProfile from "../components/UserProfile";
 import Referral from "../components/Referral";
+import Tutorial from "../pages/Tutorial";
 
 export const routes = [
   {
@@ -124,6 +125,12 @@ export const routes = [
     id: 17,
     path: "/referral",
     element: <Referral />,
+    protected: true,
+  },
+  {
+    id: 18,
+    path: "/tutorials",
+    element: <Tutorial />,
     protected: true,
   },
 ];

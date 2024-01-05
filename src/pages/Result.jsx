@@ -42,7 +42,7 @@ const Result = () => {
   useEffect(() => {
     fetchData();
   }, [userInfo.token]);
-  console.log(result);
+  // console.log(result);
 
   return (
     <div>

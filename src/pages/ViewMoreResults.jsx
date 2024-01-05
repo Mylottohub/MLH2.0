@@ -29,6 +29,8 @@ const ViewMoreResults = () => {
     operatorID = "lottomania";
   } else if (id == 57) {
     operatorID = "lotto_nigeria";
+  } else if (id == 43) {
+    operatorID = "green_lotto";
   }
 
   const imageSrc = `/images/${operatorID}.png`;
@@ -247,6 +249,30 @@ const ViewMoreResults = () => {
                             );
                           }
                         } else if (operatorID === "wesco") {
+                          if (index == 0) {
+                            return (
+                              <div key={index}>
+                                <strong>{item.drawname}</strong> <br />
+                                <br />
+                                {moment
+                                  .utc(item.drawdate, "YYYY-MM-DD")
+                                  .local()
+                                  .format("MMM DD, YYYY")}{" "}
+                                | {item.drawtime}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() =>
+                                    navigate(`/play-game/${operatorID}`)
+                                  }
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        } else if (operatorID === "green_lotto") {
                           if (index == 0) {
                             return (
                               <div key={index}>
@@ -496,6 +522,57 @@ const ViewMoreResults = () => {
                                         </button>
                                       </>
                                     );
+                                  }
+                                } else if (operatorID === "green_lotto") {
+                                  const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
+                                  const drawDateTime = moment(
+                                    drawDateTimeString,
+                                    "YYYYMMDD HH:mm:ss"
+                                  );
+                                  const currentTime = moment();
+                                  const timeDifference =
+                                    drawDateTime.diff(currentTime);
+
+                                  if (timeDifference > 0) {
+                                    if (index == 0) {
+                                      return (
+                                        <>
+                                          <span>
+                                            <small className="countdown_box">
+                                              <Countdown
+                                                date={
+                                                  currentTime.valueOf() +
+                                                  timeDifference
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <>
+                                                    <span className="countdown_box me-2">
+                                                      {days}days
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {hours}hrs
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {minutes}mins
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {seconds}secs
+                                                    </span>
+                                                  </>
+                                                )}
+                                              />
+                                            </small>
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                  } else {
+                                    return null;
                                   }
                                 }
 
@@ -863,6 +940,74 @@ const ViewMoreResults = () => {
                                                 </td>
                                               ))}
                                           </tr> */}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      } else if (record.name === "Green lotto") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                return (
+                                  <div
+                                    key={`${record.id}-${dataIndex}`}
+                                    className="col-md-4 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
+                                            )
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table cellPadding="3" align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                          <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  {digit !== "0" ? (
+                                                    <div className="numboxred">
+                                                      {digit}
+                                                    </div>
+                                                  ) : null}
+                                                </td>
+                                              ))}
+                                          </tr>
                                         </tbody>
                                       </table>
                                     </div>

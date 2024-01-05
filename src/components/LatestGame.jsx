@@ -66,7 +66,7 @@ const LatestGame = () => {
       <div>
         <div style={scrollStyle} className="meg_next_game_scroll">
           <div>
-            <marquee>
+            <marquee scrollAmount="3">
               Next Games =&gt;
               {filteredTimetable.map((game) => (
                 <span key={game.id}>

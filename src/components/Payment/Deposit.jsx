@@ -242,7 +242,7 @@ const Deposit = () => {
                     </option>
                     <option value="monnify">
                       {/* <img src={images.paystack} /> */}
-                      Monnify
+                      Bank Transfer (Monnify)
                     </option>
                   </select>
                 </div>

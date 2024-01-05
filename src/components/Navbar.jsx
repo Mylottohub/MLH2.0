@@ -91,6 +91,7 @@ const Navbar = () => {
         <>
           <div className="mobile__header">
             <Header />
+
             <nav className="navbar navbar-expand-lg app__navbar-bg">
               <div className="container">
                 <button
@@ -114,7 +115,7 @@ const Navbar = () => {
                   >
                     <li className="nav-item dropdown">
                       <a
-                        className="nav-link dropdown-toggle text-white me-3 fw-bold"
+                        className="nav-link dropdown-toggle text-white me-3 "
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -124,7 +125,7 @@ const Navbar = () => {
                       <ul className="dropdown-menu">
                         <li>
                           <a
-                            className="dropdown-item p-2 fw-bold"
+                            className="dropdown-item p-2 "
                             onClick={() => navigate("/")}
                           >
                             <img
@@ -135,13 +136,13 @@ const Navbar = () => {
                           </a>
                         </li>
                         <li>
-                          <a className="dropdown-item p-2 fw-bold">
+                          <a className="dropdown-item p-2 ">
                             <img src={images.bet} alt={images.bet} /> Sport
                             Betting
                           </a>
                         </li>
                         <li>
-                          <a className="dropdown-item p-2 fw-bold">
+                          <a className="dropdown-item p-2 ">
                             <img src={images.instant} alt={images.instant} />{" "}
                             Instant Games
                           </a>
@@ -151,7 +152,7 @@ const Navbar = () => {
 
                     <li className="nav-item">
                       <a
-                        className="nav-link text-white me-3 fw-bold"
+                        className="nav-link text-white me-3 "
                         onClick={() => navigate("/result")}
                       >
                         Results
@@ -159,14 +160,14 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3 fw-bold app__proforecast">
+                      <a className="nav-link text-white me-3  app__proforecast">
                         Pro-Forecaster
                       </a>
                     </li>
 
                     <li className="nav-item">
                       <a
-                        className="nav-link text-white me-3 fw-bold"
+                        className="nav-link text-white me-3 "
                         onClick={() => navigate("/timetable")}
                       >
                         Time Table
@@ -174,20 +175,19 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3 fw-bold">
-                        Forecast
-                      </a>
+                      <a className="nav-link text-white me-3 ">Forecast</a>
                     </li>
 
-                    <li className="nav-item">
-                      <a className="nav-link text-white me-3 fw-bold">
-                        Tutorials
-                      </a>
+                    <li
+                      className="nav-item"
+                      onClick={() => navigate("/tutorials")}
+                    >
+                      <a className="nav-link text-white me-3 ">Tutorials</a>
                     </li>
 
                     <li className="nav-item dropdown">
                       <a
-                        className="nav-link dropdown-toggle text-white me-3 fw-bold"
+                        className="nav-link dropdown-toggle text-white me-3 "
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -197,7 +197,7 @@ const Navbar = () => {
                       <ul className="dropdown-menu">
                         <li>
                           <a
-                            className="dropdown-item p-2 fw-bold"
+                            className="dropdown-item p-2 "
                             onClick={() => navigate("/about-us")}
                           >
                             {/* <i className="fa fa-info"></i> */}
@@ -206,7 +206,7 @@ const Navbar = () => {
                         </li>
                         <li>
                           <a
-                            className="dropdown-item p-2 fw-bold"
+                            className="dropdown-item p-2 "
                             onClick={() => navigate("/faq")}
                           >
                             {/* <i className="fa fa-question"></i> */}
@@ -216,7 +216,7 @@ const Navbar = () => {
 
                         <li>
                           <a
-                            className="dropdown-item p-2 fw-bold"
+                            className="dropdown-item p-2 "
                             onClick={() => navigate("/terms")}
                           >
                             {/* <i className="fa fa-anchor"></i> */}
@@ -226,7 +226,7 @@ const Navbar = () => {
 
                         <li>
                           <a
-                            className="dropdown-item p-2 fw-bold"
+                            className="dropdown-item p-2 "
                             onClick={() => navigate("/contact-us")}
                           >
                             {/* <i className="fa fa-phone"></i> */}
@@ -238,7 +238,7 @@ const Navbar = () => {
                   </ul>
 
                   <ul className="app__sign-in d-flex">
-                    <li className="text-right hidden-xs hidden-sm">
+                    <li className="text-left hidden-xs hidden-sm">
                       <li className="nav-item dropdown">
                         <a
                           className="nav-link dropdown-toggle text-white"
@@ -266,6 +266,36 @@ const Navbar = () => {
                               &nbsp;&nbsp;Wallets
                             </a>
                           </li>
+
+                          {/* <div className="btn-group dropend">
+                            <button
+                              type="button"
+                              className="btn dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <BsWallet />
+                              &nbsp;&nbsp;Wallets
+                            </button>
+                            <ul className="dropdown-menu">
+                              <li>
+                                <a className="dropdown-item" href="#">
+                                  Menu item
+                                </a>
+                              </li>
+                              <li>
+                                <a className="dropdown-item" href="#">
+                                  Menu item
+                                </a>
+                              </li>
+                              <li>
+                                <a className="dropdown-item" href="#">
+                                  Menu item
+                                </a>
+                              </li>
+                            </ul>
+                          </div> */}
+
                           <li>
                             <a
                               className="dropdown-item p-2"
@@ -394,7 +424,7 @@ const Navbar = () => {
                 className="navbar-nav app_navbar-nav me-auto mb-2 mb-lg-0"
                 style={{ cursor: "pointer" }}
               >
-                <li className="nav-item dropdown fw-bold">
+                <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle text-white me-3"
                     role="button"
@@ -434,7 +464,7 @@ const Navbar = () => {
                   </ul>
                 </li>
 
-                <li className="nav-item  fw-bold">
+                <li className="nav-item  ">
                   <a
                     className="nav-link text-white me-3"
                     onClick={() => navigate("/result")}
@@ -443,13 +473,13 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li className="nav-item  fw-bold ">
+                <li className="nav-item   ">
                   <a className="nav-link text-white app__proforecast">
                     Pro-Forecaster
                   </a>
                 </li>
 
-                <li className="nav-item  fw-bold">
+                <li className="nav-item  ">
                   <a
                     className="nav-link text-white me-3"
                     onClick={() => navigate("/timetable")}
@@ -458,15 +488,15 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li className="nav-item  fw-bold">
+                <li className="nav-item  ">
                   <a className="nav-link text-white me-3">Forecast</a>
                 </li>
 
-                <li className="nav-item  fw-bold">
+                <li className="nav-item  ">
                   <a className="nav-link text-white me-3">Tutorials</a>
                 </li>
 
-                <li className="nav-item dropdown  fw-bold">
+                <li className="nav-item dropdown  ">
                   <a
                     className="nav-link dropdown-toggle text-white me-3"
                     role="button"
@@ -478,7 +508,7 @@ const Navbar = () => {
                   <ul className="dropdown-menu">
                     <li>
                       <a
-                        className="dropdown-item p-2 fw-bold"
+                        className="dropdown-item p-2 "
                         onClick={() => navigate("/about-us")}
                       >
                         {/* <i className="fa fa-info"></i> */}
@@ -487,7 +517,7 @@ const Navbar = () => {
                     </li>
                     <li>
                       <a
-                        className="dropdown-item p-2 fw-bold"
+                        className="dropdown-item p-2 "
                         onClick={() => navigate("/faq")}
                       >
                         {/* <i className="fa fa-question"></i> */}
@@ -497,7 +527,7 @@ const Navbar = () => {
 
                     <li>
                       <a
-                        className="dropdown-item p-2 fw-bold"
+                        className="dropdown-item p-2 "
                         onClick={() => navigate("/terms")}
                       >
                         {/* <i className="fa fa-anchor"></i> */}
@@ -507,7 +537,7 @@ const Navbar = () => {
 
                     <li>
                       <a
-                        className="dropdown-item p-2 fw-bold"
+                        className="dropdown-item p-2 "
                         onClick={() => navigate("/contact-us")}
                       >
                         {/* <i className="fa fa-phone"></i> */}
@@ -522,7 +552,7 @@ const Navbar = () => {
                 <li className="text-right hidden-xs hidden-sm mt-2">
                   <a>
                     <span
-                      className="btn text-white me-3  fw-bold"
+                      className="btn text-white me-3  "
                       onClick={() => navigate("/register")}
                     >
                       Sign Up
@@ -531,7 +561,7 @@ const Navbar = () => {
 
                   <a>
                     <span
-                      className="btn btn-yellow  fw-bold"
+                      className="btn btn-yellow  "
                       onClick={() => navigate("/login")}
                     >
                       Sign In

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { routes } from "./routing/routes";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import LatestWinner from "./components/LatestWinner";
 import LatestGame from "./components/LatestGame";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           />
         ))}
       </Routes>
+      <LatestWinner />
       <LatestGame />
     </BrowserRouter>
   );
