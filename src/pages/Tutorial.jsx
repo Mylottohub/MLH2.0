@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import Slider from "../components/Slider";
 import Footer from "../components/Footer";
+import HowToPlay from "../components/HowToPlay";
 
 const Tutorial = () => {
   return (
@@ -8,6 +9,7 @@ const Tutorial = () => {
       <Navbar />
       <Slider />
       <div className="container">
+        <HowToPlay />
         <table className="table table-express mt-5">
           <tbody>
             <tr>

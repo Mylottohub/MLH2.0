@@ -1,0 +1,38 @@
+.app__tutorial {
+    font-family: Karla !important;
+    color: #406777;
+}
+
+.app__tutorial p {
+    line-height: 25px
+}
+
+.meg_mobile_table {
+    background: rgba(64, 103, 119, 0.05);
+    border-radius: 5px;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.meg_mobile_table td {
+    word-wrap: break-word !important;
+    font-size: 12px;
+}
+
+.meg_mobile_table td strong {
+    word-wrap: break-word !important;
+    font-size: 12px;
+}
+
+@media(min-width: 768px) {
+    .meg_mobile_table {
+        display: none;
+
+    }
+}
+
+@media(max-width: 767px) {
+    .mobile__hidden-sm {
+        display: none !important;
+    }
+}
