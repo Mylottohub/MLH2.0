@@ -10,7 +10,7 @@ const Tutorial = () => {
       <Slider />
       <div className="container">
         <HowToPlay />
-        <table className="table table-express mt-5">
+        <table className="table table-express">
           <tbody>
             <tr>
               <th>ABOUT MY LOTTO HUB</th>

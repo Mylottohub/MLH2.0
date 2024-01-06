@@ -506,7 +506,6 @@ const HowToPlay = () => {
           </table>
         </div>
         <br />
-        <br />
         <table width="100%" cellPadding="20">
           <tbody>
             <tr>
@@ -676,9 +675,8 @@ const HowToPlay = () => {
           </table>
         </div>
         <br />
-        <br />
         <p>
-          <span className="lead">
+          <span className="lead fw-bolder">
             <strong>HOW TO PLAY ONE BANKER</strong>
           </span>
         </p>
@@ -689,7 +687,7 @@ const HowToPlay = () => {
         <br />
         <br />
         <p>
-          <span className="lead">
+          <span className="lead fw-bolder">
             <strong>HOW TO PLAY AGAINST</strong>
           </span>
         </p>

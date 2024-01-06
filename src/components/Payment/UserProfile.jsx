@@ -71,7 +71,7 @@ const UserProfile = () => {
                   <b>USERNAME:</b> {userData && userData?.username}
                 </p>
                 <p>
-                  <b>PHONE:</b> {userData && userData?.phone}
+                  <b>PHONE:</b> {userData && userData?.tell}
                 </p>
                 <p>
                   <b>EMAIL:</b> {userData && userData?.email}

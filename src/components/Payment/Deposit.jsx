@@ -54,7 +54,6 @@ const Deposit = () => {
           posting: "paystack",
         };
 
-        // Send the payment request to Paystack with the Bearer token in the headers
         const paystackResponse = await fetch(
           "https://sandbox.mylottohub.com/v1/payment-initialize",
           {
