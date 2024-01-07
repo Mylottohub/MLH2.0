@@ -451,7 +451,7 @@ const PlayGames = () => {
     toast.success("Bet Slip Canceled Successfully");
   };
 
-  const mapToOperatorPayload = (operatorType, betInfo) => {
+  const mapToOperatorPayload = (operatorType, betInfo, selectedWallet) => {
     const { gname, line, gtype, bets, max_win, total_stake } = betInfo;
 
     // Assuming operatorData is an array of games
@@ -486,6 +486,7 @@ const PlayGames = () => {
           isPerm: gtype.startsWith("PERM") ? 1 : 0,
           max_win: parseFloat(max_win.replace("₦", "")),
           ball: bets,
+          wallet: selectedWallet,
           operator_type: operatorType,
           game_name: gname,
           amount: total_stake.replace("₦", ""),
@@ -503,6 +504,7 @@ const PlayGames = () => {
           isPerm: gtype.startsWith("PERM") ? 1 : 0,
           max_win: parseFloat(max_win.replace("₦", "")),
           ball: bets,
+          wallet: selectedWallet,
           operator_type: operatorType,
           game_name: gname,
           amount: total_stake.replace("₦", ""),
@@ -521,6 +523,7 @@ const PlayGames = () => {
           isPerm: gtype.startsWith("PERM") ? 1 : 0,
           max_win: parseFloat(max_win.replace("₦", "")),
           ball: bets,
+          wallet: selectedWallet,
           operator_type: operatorType,
           game_name: gname,
           amount: total_stake.replace("₦", ""),
@@ -539,6 +542,7 @@ const PlayGames = () => {
           isPerm: gtype.startsWith("PERM") ? 1 : 0,
           max_win: parseFloat(max_win.replace("₦", "")),
           ball: bets,
+          wallet: selectedWallet,
           operator_type: operatorType,
           game_name: gname,
           amount: total_stake.replace("₦", ""),
@@ -566,6 +570,7 @@ const PlayGames = () => {
           ball: bets,
           operator_type: operatorType,
           game_name: gname,
+          wallet: selectedWallet,
           amount: total_stake.replace("₦", ""),
           total: total_stake.replace("₦", ""),
           gid: selectedGame.gid,
@@ -595,7 +600,9 @@ const PlayGames = () => {
       return;
     }
 
-    const payload = mapToOperatorPayload(id, confirmedBet);
+    const selectedWallet = document.getElementById("account").value;
+
+    const payload = mapToOperatorPayload(id, confirmedBet, selectedWallet);
 
     try {
       const response = await fetch(
@@ -1156,7 +1163,10 @@ const PlayGames = () => {
                       >
                         <option value="wallet">Main Wallet</option>
 
-                        <option value="gl_bwallet">Bonus Wallet</option>
+                        <option value="gl_bwallet">
+                          Operator Bonus Wallet
+                        </option>
+                        <option value="ref_give">Referral Bonus Wallet</option>
                       </select>
                       <br />
                       <br />
