@@ -17,6 +17,7 @@ import ViewMoreResults from "../pages/ViewMoreResults";
 import UserProfile from "../components/UserProfile";
 import Referral from "../components/Referral";
 import Tutorial from "../pages/Tutorial";
+import BetHistory from "../components/BetHistory/BetHistory";
 
 export const routes = [
   {
@@ -131,6 +132,12 @@ export const routes = [
     id: 18,
     path: "/tutorials",
     element: <Tutorial />,
+    protected: true,
+  },
+  {
+    id: 19,
+    path: "/bet-history/:id",
+    element: <BetHistory />,
     protected: true,
   },
 ];

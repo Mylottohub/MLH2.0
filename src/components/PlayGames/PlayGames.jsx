@@ -2,6 +2,7 @@ import Navbar from "../Navbar";
 import { toast } from "react-toastify";
 import "../../assets/css/play.css";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import Countdown from "react-countdown";
@@ -19,6 +20,7 @@ const PlayGames = () => {
   const [isLoadingPlayBet, setIsLoadingPlayBet] = useState(false);
   const [perOperator, setPerOperator] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -248,7 +250,6 @@ const PlayGames = () => {
       checkbox.checked = false;
       checkbox.disabled = false; // Enable the checkboxes
     });
-    // Clear the selected numbers in the state
     setSelectedNumbers([]);
     setSelectedCount(0);
   };
@@ -321,6 +322,7 @@ const PlayGames = () => {
       };
 
       setConfirmedBet(newConfirmedBet);
+      toast.success("Bet Slip Updated successfully");
     } else if (selectedBetType.startsWith("PERM")) {
       const requiredNumbers = selectedBetType.includes("PERM 2")
         ? 3 // Minimum of 3 numbers for PERM 2
@@ -444,7 +446,6 @@ const PlayGames = () => {
   }, [confirmedBet]);
 
   const handleCancelBet = () => {
-    // Clear the confirmed bet and remove it from localStorage
     setConfirmedBet(null);
     localStorage.removeItem(localStorageKey);
     clearRandomize(null);
@@ -594,7 +595,6 @@ const PlayGames = () => {
 
   const playGame = async () => {
     setIsLoadingPlayBet(true);
-    // Check if a bet is confirmed
     if (!confirmedBet) {
       toast.error("No bet confirmed to play.");
       return;
@@ -617,19 +617,18 @@ const PlayGames = () => {
           body: JSON.stringify(payload),
         }
       );
-
+      const responseError = await response.json();
+      // const data = await response.json();
       if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      // console.log(data);
-      if (data) {
+        toast.error(responseError.msg);
+        // throw new Error("Network response was not ok");
+      } else {
+        localStorage.removeItem(localStorageKey);
         toast.success("Your selected game has been submitted successfully");
+        window.location.reload();
       }
     } catch (error) {
-      toast.error("Error playing the game:", error);
-      // Handle the error, show an error message, etc.
+      console.log(error);
     } finally {
       setIsLoadingPlayBet(false);
     }
@@ -652,6 +651,8 @@ const PlayGames = () => {
             <strong className="text-capitalize">
               {id === "lotto_nigeria" ? (
                 <strong> Select Operator &gt;&gt; Set Lotto</strong>
+              ) : id === "ghana_game" ? (
+                <strong> Select Operator &gt;&gt; 5/90 Games</strong>
               ) : (
                 <strong>Select Operator &gt;&gt; {id}</strong>
               )}
@@ -740,7 +741,6 @@ const PlayGames = () => {
                       <option value="PERM 5">PERM 5</option>
                     </select>
                     &nbsp; &nbsp; &nbsp; &nbsp;{" "}
-                    {/* <p className=" btn btn-light p-2 mb-2">Bet History</p> */}
                   </div>
                 </div>
               </div>
@@ -1050,7 +1050,13 @@ const PlayGames = () => {
                       <i className="fa fa-cube"></i> Clear Randomize
                     </a>
                   </div>
-                  <div className="col-md-4" style={{ cursor: "pointer" }}>
+                  <div
+                    onClick={() => {
+                      navigate(`/bet-history/${id}`);
+                    }}
+                    className="col-md-4"
+                    style={{ cursor: "pointer" }}
+                  >
                     <a id="crandomize">
                       <i className="fa fa-dashboard"></i> Bet History
                     </a>
