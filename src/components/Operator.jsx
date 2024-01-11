@@ -120,7 +120,7 @@ const Operator = () => {
                       ? moment(game?.drawDate, "DD/MM/YYYY HH:mm")
                       : null;
                   } else if (operatorType === "wesco") {
-                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
+                    const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   } else if (operatorType === "lottomania") {
                     drawTime = moment(game?.sdt);
@@ -142,6 +142,7 @@ const Operator = () => {
 
                 const nextGame =
                   upcomingGames.length > 0 ? upcomingGames[0] : null;
+                // console.log(nextGame);
 
                 const renderGameTime = (operatorType, game) => {
                   const time = game[propertyMapping[operatorType].time];

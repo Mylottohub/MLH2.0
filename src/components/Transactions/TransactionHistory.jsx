@@ -9,6 +9,7 @@ import moment from "moment";
 const TransactionHistory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [transaction, setTransaction] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -22,7 +23,9 @@ const TransactionHistory = () => {
 
   const fetchData = () => {
     setIsLoading(true);
-    HTTP.get(`/user/transaction/${userInfo.data.id}`, { ...configHeaders })
+    HTTP.get(`/user/transaction/${userInfo.data.id}?page=${currentPage}`, {
+      ...configHeaders,
+    })
       .then((response) => {
         setTransaction(response.data.data);
       })
@@ -37,11 +40,24 @@ const TransactionHistory = () => {
   useEffect(() => {
     fetchData();
   }, [userInfo.token]);
+  const fetchDataTransact = (page) => {
+    setCurrentPage(page);
+  };
 
+  const renderPaginationLabel = (label) => {
+    switch (label) {
+      case "&laquo; Previous":
+        return "Previous";
+      case "Next &raquo;":
+        return "Next";
+      default:
+        return label;
+    }
+  };
   return (
     <>
       <Navbar />
-      <div className="container p-4 mt-5 app__transact-table">
+      <div className="container p-4 mt-5 app__transact-table mb-5">
         <h5>Transaction History</h5>
         <div className="table-responsive">
           <table className="table table-express table-hover mt-4">
@@ -69,7 +85,7 @@ const TransactionHistory = () => {
                     aria-hidden="true"
                   />
                 </div>
-              ) : transaction.length === 0 ? (
+              ) : transaction?.data?.length === 0 ? (
                 <tr>
                   <td
                     colSpan="8"
@@ -80,21 +96,21 @@ const TransactionHistory = () => {
                 </tr>
               ) : (
                 <>
-                  {transaction.map((record, index) => {
+                  {transaction?.data?.map((record, index) => {
                     const formattedDate = moment
-                      .utc(record.date, "YYYY-MM-DD HH:mm:ss")
+                      .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
                       .local()
                       .format("Do MMM YYYY | h:mm:ssA");
 
                     return (
                       <tr key={index} className="table-light">
                         <td>{index + 1}</td>
-                        <td>{record.ref}</td>
-                        <td>{record.type}</td>
-                        <td>{record.description}</td>
-                        <td>{record.amount}</td>
-                        <td>{record.channel}</td>
-                        <td>{record.abalance}</td>
+                        <td>{record?.ref}</td>
+                        <td>{record?.type}</td>
+                        <td>{record?.description}</td>
+                        <td>{record?.amount}</td>
+                        <td>{record?.channel}</td>
+                        <td>{record?.abalance}</td>
                         <td>{formattedDate}</td>
                       </tr>
                     );
@@ -103,6 +119,27 @@ const TransactionHistory = () => {
               )}
             </tbody>
           </table>
+
+          <nav aria-label="Page navigation example">
+            <ul className="pagination">
+              {transaction?.links?.map((link, index) => (
+                <div key={index}>
+                  <li className={`page-item ${link?.active ? "active" : ""}`}>
+                    <a
+                      className="page-link"
+                      href={link?.url}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        fetchDataTransact(link?.label);
+                      }}
+                    >
+                      {renderPaginationLabel(link?.label)}
+                    </a>
+                  </li>
+                </div>
+              ))}
+            </ul>
+          </nav>
         </div>
       </div>
     </>
