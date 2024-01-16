@@ -8,7 +8,7 @@ const HowToPlay = () => {
         <iframe
           width="100%"
           height="355"
-          src="https://www.youtube.com/embed/sk9Inv1AaaQ"
+          src="https://www.youtube.com/embed/sk9Inv1AaaQ?rel=0"
           title="Apps Africa FINAL"
           frameBorder="0"
           allowfullscreen

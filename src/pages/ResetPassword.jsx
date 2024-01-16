@@ -16,7 +16,6 @@ import "../assets/css/register.css";
 const schema = yup.object().shape({
   email: yup.string().email().required("This is a required field"),
   password: yup.string().min(8).max(15).required(),
-
 });
 
 const ResetPassword = () => {
@@ -28,14 +27,14 @@ const ResetPassword = () => {
   };
 
   const [resetpasword, { isLoading }] = useResetpaswordMutation();
-  const email = localStorage.getItem("email");
+  const email = sessionStorage.getItem("email");
 
-//   const { userInfo } = useSelector((state) => state.auth);
-//   useEffect(() => {
-//     if (userInfo) {
-//       navigate("/");
-//     }
-//   }, [navigate, userInfo]);
+  //   const { userInfo } = useSelector((state) => state.auth);
+  //   useEffect(() => {
+  //     if (userInfo) {
+  //       navigate("/");
+  //     }
+  //   }, [navigate, userInfo]);
   const {
     register,
     handleSubmit,
@@ -73,7 +72,6 @@ const ResetPassword = () => {
             </h6> */}
 
             <form onSubmit={handleSubmit(submitForm)}>
-            
               <div className="mb-3 position-relative">
                 <input
                   type={showPassword ? "text" : "password"}

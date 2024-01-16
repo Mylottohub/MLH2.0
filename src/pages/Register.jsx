@@ -55,7 +55,7 @@ const Register = () => {
 
   const submitForm = async (data) => {
     try {
-      localStorage.setItem("email", data.email);
+      sessionStorage.setItem("email", data.email);
       const res = await registers(data).unwrap();
       dispatch(setCredentials({ ...res }));
       toast.success(
@@ -162,7 +162,7 @@ const Register = () => {
                 <input
                   type="tel"
                   className="form-control mb-2 p-3"
-                  placeholder="08012345678"
+                  placeholder="Phone Number"
                   name="phone"
                   {...register("phone", {
                     required: "Required",
@@ -177,8 +177,8 @@ const Register = () => {
                   </p>
                 )}
               </div>
-            
-                <div className="mb-3 position-relative">
+
+              <div className="mb-3 position-relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   className="form-control mb-2 p-3"
@@ -193,10 +193,13 @@ const Register = () => {
                   style={{ right: "10px", cursor: "pointer" }}
                 >
                   <p
-                   
                     type="button"
                     onClick={togglePasswordVisibility}
-                    style={{ color: "#6E9A8D", marginLeft:'-30px', marginTop:'10px' }}
+                    style={{
+                      color: "#6E9A8D",
+                      marginLeft: "-30px",
+                      marginTop: "10px",
+                    }}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </p>
@@ -208,8 +211,7 @@ const Register = () => {
                 </p>
               )}
 
-      
-                <div className="mb-3 position-relative">
+              <div className="mb-3 position-relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   className="form-control p-3"
@@ -220,14 +222,19 @@ const Register = () => {
                     required: "Required",
                   })}
                 />
-             
-                <div   className="position-absolute end-0 top-50 translate-middle-y"
-                  style={{ right: "10px", cursor: "pointer" }}>
+
+                <div
+                  className="position-absolute end-0 top-50 translate-middle-y"
+                  style={{ right: "10px", cursor: "pointer" }}
+                >
                   <p
-                   
                     type="button"
                     onClick={toggleConfirmPasswordVisibility}
-                    style={{ color: "#6E9A8D", marginLeft:'-30px', marginTop:'10px' }}
+                    style={{
+                      color: "#6E9A8D",
+                      marginLeft: "-30px",
+                      marginTop: "10px",
+                    }}
                   >
                     {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                   </p>
@@ -258,8 +265,8 @@ const Register = () => {
                 Already have an account?
                 <span onClick={() => navigate("/login")}>Sign in</span>
               </p> */}
-               <p style={{ cursor: "pointer", color: "#406777" }}>
-               Already have an account?
+              <p style={{ cursor: "pointer", color: "#406777" }}>
+                Already have an account?
                 <span
                   className="text-primary"
                   onClick={() => navigate("/login")}

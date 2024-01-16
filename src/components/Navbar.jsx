@@ -409,7 +409,7 @@ const Navbar = () => {
               <img width="118" src={images.logo} alt={images.logo} />
             </a>
             <button
-              className="navbar-toggler"
+              className="navbar-toggler app__navbar-mobile"
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#navbarSupportedContent"
@@ -419,7 +419,10 @@ const Navbar = () => {
             >
               <span className="navbar-toggler-icon"></span>
             </button>
-            <div className=" navbar-collapse" id="navbarSupportedContent">
+            <div
+              className="collapse navbar-collapse"
+              id="navbarSupportedContent"
+            >
               <ul
                 className="navbar-nav app_navbar-nav me-auto mb-2 mb-lg-0"
                 style={{ cursor: "pointer" }}
@@ -492,8 +495,13 @@ const Navbar = () => {
                   <a className="nav-link text-white me-3">Forecast</a>
                 </li>
 
-                <li className="nav-item  ">
-                  <a className="nav-link text-white me-3">Tutorials</a>
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-white me-3"
+                    onClick={() => navigate("/tutorials")}
+                  >
+                    Tutorials
+                  </a>
                 </li>
 
                 <li className="nav-item dropdown  ">

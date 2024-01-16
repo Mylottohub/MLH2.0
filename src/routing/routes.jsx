@@ -132,7 +132,7 @@ export const routes = [
     id: 18,
     path: "/tutorials",
     element: <Tutorial />,
-    protected: true,
+    protected: false,
   },
   {
     id: 19,

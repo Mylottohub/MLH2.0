@@ -8,27 +8,27 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import {useForgotpaswordMutation} from "../pages/slices/userApiSlice"
-import {setCredentials} from "../pages/slices/authSlice"
+import { useForgotpaswordMutation } from "../pages/slices/userApiSlice";
+import { setCredentials } from "../pages/slices/authSlice";
 // import HTTP from "../utils/httpClient";
 import "../assets/css/register.css";
 
 const schema = yup.object().shape({
-    user_details: yup.string().email().required("This is a required field"),
+  user_details: yup.string().email().required("This is a required field"),
 });
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [forgotpasword, {isLoading}] = useForgotpaswordMutation();
+  const [forgotpasword, { isLoading }] = useForgotpaswordMutation();
 
-  const {userInfo} = useSelector((state) => state.auth);
-  useEffect(()=> {
+  const { userInfo } = useSelector((state) => state.auth);
+  useEffect(() => {
     if (userInfo) {
-        navigate('/otp')
+      navigate("/otp");
     }
-  },[navigate, userInfo])
+  }, [navigate, userInfo]);
   const {
     register,
     handleSubmit,
@@ -37,20 +37,20 @@ const ForgetPassword = () => {
     resolver: yupResolver(schema),
   });
 
-  const submitForm  = async (data) => {
+  const submitForm = async (data) => {
     try {
-      const res = await forgotpasword(data).unwrap() 
-      localStorage.setItem("email", data.user_details);
-      localStorage.setItem("password-reset", "password-reset");
-      dispatch(setCredentials({...res}))
-      toast.success('OTP code generated successfully');
-      navigate('/otp')
+      const res = await forgotpasword(data).unwrap();
+      sessionStorage.setItem("email", data.user_details);
+      sessionStorage.setItem("password-reset", "password-reset");
+      dispatch(setCredentials({ ...res }));
+      toast.success("OTP code generated successfully");
+      navigate("/otp");
     } catch (err) {
-        if (err?.data?.error) {
-          toast.error(err.data.error);
-        } else {
-          toast.error('An error occurred Pls try again.');
-        }
+      if (err?.data?.error) {
+        toast.error(err.data.error);
+      } else {
+        toast.error("An error occurred Pls try again.");
+      }
     }
   };
 
@@ -62,7 +62,7 @@ const ForgetPassword = () => {
           <div className="col-lg-6 mx-auto app__register">
             <h1 className="mb-4">Forgot Password</h1>
             <h6 className="mb-4">
-             Enter your email address to receive an OTP for Password Reset
+              Enter your email address to receive an OTP for Password Reset
             </h6>
 
             <form onSubmit={handleSubmit(submitForm)}>
@@ -84,15 +84,11 @@ const ForgetPassword = () => {
               </div>
 
               <p style={{ cursor: "pointer", color: "#406777" }}>
-              Already have an account?{" "}
+                Already have an account?{" "}
                 <span onClick={() => navigate("/login")}>Sign in</span>
               </p>
-             
-              <Button
-                type="submit"
-                className="w-100 p-3"
-                disabled={isLoading}
-              >
+
+              <Button type="submit" className="w-100 p-3" disabled={isLoading}>
                 {isLoading ? (
                   <Spinner
                     as="span"

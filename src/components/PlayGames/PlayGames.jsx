@@ -431,7 +431,7 @@ const PlayGames = () => {
 
   const localStorageKey = "betSlip";
   useEffect(() => {
-    const savedBetSlip = localStorage.getItem(localStorageKey);
+    const savedBetSlip = sessionStorage.getItem(localStorageKey);
     if (savedBetSlip) {
       setConfirmedBet(JSON.parse(savedBetSlip));
     }
@@ -439,15 +439,15 @@ const PlayGames = () => {
 
   useEffect(() => {
     if (confirmedBet) {
-      localStorage.setItem(localStorageKey, JSON.stringify(confirmedBet));
+      sessionStorage.setItem(localStorageKey, JSON.stringify(confirmedBet));
     } else {
-      localStorage.removeItem(localStorageKey);
+      sessionStorage.removeItem(localStorageKey);
     }
   }, [confirmedBet]);
 
   const handleCancelBet = () => {
     setConfirmedBet(null);
-    localStorage.removeItem(localStorageKey);
+    sessionStorage.removeItem(localStorageKey);
     clearRandomize(null);
     toast.success("Bet Slip Canceled Successfully");
   };
@@ -623,7 +623,7 @@ const PlayGames = () => {
         toast.error(responseError.msg);
         // throw new Error("Network response was not ok");
       } else {
-        localStorage.removeItem(localStorageKey);
+        sessionStorage.removeItem(localStorageKey);
         toast.success("Your selected game has been submitted successfully");
         window.location.reload();
       }

@@ -41,7 +41,7 @@ const Login = () => {
   const submitForm = async (data) => {
     try {
       const res = await login(data).unwrap();
-      localStorage.setItem("email", data.email);
+      sessionStorage.setItem("email", data.email);
       dispatch(setCredentials({ ...res }));
       toast.success(res.message);
       navigate("/otp");

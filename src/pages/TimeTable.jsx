@@ -14,7 +14,7 @@ const TimeTable = () => {
   const [selectedOperator, setSelectedOperator] = useState("");
   const [filteredTimetable, setFilteredTimetable] = useState([]);
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
   const token = userInfo && userInfo.token;
 
   const configHeaders = {

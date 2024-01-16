@@ -13,7 +13,7 @@ import { setCredentials } from "../pages/slices/authSlice";
 import { toast } from "react-toastify";
 
 const schema = yup.object().shape({
-  token: yup.string().required("Otp is a required"),
+  token: yup.string().required("Otp is required"),
   email: yup.string(),
 });
 
@@ -23,8 +23,8 @@ const Otp = () => {
 
   const [userotp, { isLoading }] = useUserotpMutation();
 
-  const email = localStorage.getItem("email");
-  const userPasswordMessage = localStorage.getItem("password-reset");
+  const email = sessionStorage.getItem("email");
+  const userPasswordMessage = sessionStorage.getItem("password-reset");
   const {
     register,
     handleSubmit,
@@ -40,7 +40,7 @@ const Otp = () => {
       toast.success("OTP has been confirmed Successfully");
       if (userPasswordMessage) {
         navigate("/reset-password");
-        localStorage.removeItem("password-reset");
+        sessionStorage.removeItem("password-reset");
       } else {
         dispatch(setCredentials({ token, data: userInfo }));
         navigate("/");
