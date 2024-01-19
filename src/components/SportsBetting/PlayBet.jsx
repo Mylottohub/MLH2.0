@@ -144,7 +144,7 @@ const PlayBet = () => {
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">
-                    BET CODE: {id} TOTAL ODDS:{" "}
+                    BET CODE: {id} &nbsp;&nbsp; &nbsp;&nbsp;TOTAL ODDS:{" "}
                     {calculateTotalOdds(
                       betting?.content?.flatMap((item) => item.selectionList)
                     )}
@@ -152,9 +152,7 @@ const PlayBet = () => {
                   <th scope="col"></th>
                   <th scope="col"></th>
                   {/* <th scope="col">DATE</th> */}
-                  <th scope="col">
-                    DATE: {betting?.content?.flatMap((item) => item.matchTime)}
-                  </th>
+                  <th scope="col">DATE: {betting?.content?.[0]?.matchTime}</th>
                 </tr>
               </tbody>
               <tbody>

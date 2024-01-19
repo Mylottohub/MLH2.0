@@ -51,9 +51,15 @@ const Betting = () => {
               Powered By{" "}
               <img src={images.easywin} className="img-fluid" alt="" />
             </p>
-            <span>Tomorrow</span>
-            <span>Today</span>
-            <span>Yesterday</span>
+            <span className="mt-4" style={{ cursor: "pointer" }}>
+              Tomorrow
+            </span>
+            <span className="mt-4" style={{ cursor: "pointer" }}>
+              Today
+            </span>
+            <span className="mt-4" style={{ cursor: "pointer" }}>
+              Yesterday
+            </span>
           </div>
           <div className="table-responsive">
             <table className="table table-express table-hover mt-4">
@@ -62,7 +68,7 @@ const Betting = () => {
                   <th scope="col">#</th>
                   <th scope="col">BET CODE</th>
                   <th scope="col">STAKE</th>
-                  <th scope="col">EXPECTED WINS</th>
+                  {/* <th scope="col">EXPECTED WINS</th> */}
                   <th scope="col">NO OF GAMES</th>
                   {/* <th scope="col">DATE</th> */}
                   <th scope="col">ACTION</th>
@@ -103,7 +109,7 @@ const Betting = () => {
                           <td>{record?.code}</td>
                           <td>{record?.stake}</td>
                           <td></td>
-                          <td></td>
+                          {/* <td></td> */}
                           {/* <td>{formattedDate}</td> */}
                           <td>
                             {" "}
