@@ -1,54 +1,43 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
+import HTTP from "../../utils/httpClient";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { userInfo } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (userInfo && userInfo.data) {
-      const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
+  const fetchData = async () => {
+    setLoading(true);
 
-      const config = {
+    try {
+      const response = await HTTP.get(`/get-user/${userInfo.data.id}`, {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-          "Content-Type": "application json",
+          "Content-Type": "application/json",
           Accept: "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
         },
-      };
+      });
 
-      axios
-        .get(apiUrl, config)
-        .then((response) => {
-          setUserData(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setLoading(false);
-        });
+      setUserData(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  }, [userInfo]);
+  };
 
-  //   const handleDateChange = (date) => {
-  //     setDob(date);
-  //   };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div>
       <div style={{ marginTop: "-30px" }}>
         <div className="container">
-          {/* <span>
-            <strong>User Profile</strong>
-            <br /> <br />
-            <p>
-              <b>ID:</b> 14160
-            </p>
-          </span> */}
-
           {loading ? (
             <div className="spinner text-dark text-center mt-5">
               <Spinner

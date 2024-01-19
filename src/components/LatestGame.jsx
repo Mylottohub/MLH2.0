@@ -64,7 +64,7 @@ const LatestGame = () => {
   return (
     <>
       <div>
-        <div style={scrollStyle} className="meg_next_game_scroll">
+        <div style={scrollStyle} className="meg_next_game_scroll mt-5">
           <div>
             <marquee scrollAmount="3">
               Next Games =&gt;

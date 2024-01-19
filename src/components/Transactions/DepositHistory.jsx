@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
-
-const TransactionHistory = () => {
+const DepositHistory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [transaction, setTransaction] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,12 +53,11 @@ const TransactionHistory = () => {
         return label;
     }
   };
-
   return (
     <>
       <Navbar />
       <div className="container p-4 mt-5 app__transact-table mb-5">
-        <h5 className="fw-bold">Transaction History</h5>
+        <h5>Transaction History</h5>
         <div className="table-responsive">
           <table className="table table-express table-hover mt-4">
             <tbody>
@@ -97,29 +95,25 @@ const TransactionHistory = () => {
                 </tr>
               ) : (
                 <>
-                  {transaction?.data
-                    ?.sort(
-                      (a, b) => new Date(b.created_at) - new Date(a.created_at)
-                    )
-                    .map((record, index) => {
-                      const formattedDate = moment
-                        .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA");
+                  {transaction?.data?.map((record, index) => {
+                    const formattedDate = moment
+                      .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
+                      .local()
+                      .format("Do MMM YYYY | h:mm:ssA");
 
-                      return (
-                        <tr key={index} className="table-light">
-                          <td>{index + 1}</td>
-                          <td>{record?.ref}</td>
-                          <td>{record?.type}</td>
-                          <td>{record?.description}</td>
-                          <td>{record?.amount}</td>
-                          <td>{record?.channel}</td>
-                          <td>{record?.abalance}</td>
-                          <td>{formattedDate}</td>
-                        </tr>
-                      );
-                    })}
+                    return (
+                      <tr key={index} className="table-light">
+                        <td>{index + 1}</td>
+                        <td>{record?.ref}</td>
+                        <td>{record?.type}</td>
+                        <td>{record?.description}</td>
+                        <td>{record?.amount}</td>
+                        <td>{record?.channel}</td>
+                        <td>{record?.abalance}</td>
+                        <td>{formattedDate}</td>
+                      </tr>
+                    );
+                  })}
                 </>
               )}
             </tbody>
@@ -151,4 +145,4 @@ const TransactionHistory = () => {
   );
 };
 
-export default TransactionHistory;
+export default DepositHistory;

@@ -34,7 +34,7 @@ const LatestWinner = () => {
   return (
     <>
       <div>
-        <div style={scrollStyle} className="meg_latest_winners_scroll">
+        <div style={scrollStyle} className="meg_latest_winners_scroll mt-5">
           <marquee scrollAmount="3">
             Latest Winners =&gt;
             {winners.map((results, index) => (

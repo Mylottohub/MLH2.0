@@ -34,6 +34,13 @@ input.chk-btn+label {
     margin: 3px;
 }
 
+#sport__bet {
+    /* background-color: aqua !important; */
+    margin-top: 20px;
+    margin-bottom: 50px;
+    margin-left: 110px !important;
+}
+
 @media (max-width: 767px) {
     input.chk-btn+label {
         padding: 3px;
@@ -43,6 +50,10 @@ input.chk-btn+label {
         width: 30px;
         height: 30px;
         border-radius: 50px;
+    }
+
+    #sport__bet-num button {
+        width: 100% !important;
     }
 
     /* .app__play-bet img {

@@ -41,7 +41,7 @@
     font-family: Lato !important;
 }
 
-.btn-close {
+#close_btn .btn-close {
     color: #fff !important;
     background-image: url("../images/xclose.png") !important
 }

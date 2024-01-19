@@ -71,7 +71,6 @@ const Register = () => {
           });
         });
       } else {
-        // Handle other error cases or display a generic error message
         toast.error("An error occurred during registration.");
       }
     }
@@ -80,7 +79,7 @@ const Register = () => {
   return (
     <>
       <Navbar />
-      <div className="container">
+      <div className="container mb-5">
         <div className="row">
           <div className="col-lg-6 mx-auto mb-5 app__register">
             <h1 className="mb-4">Register</h1>
@@ -201,7 +200,7 @@ const Register = () => {
                       marginTop: "10px",
                     }}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </p>
                 </div>
               </div>
@@ -236,7 +235,7 @@ const Register = () => {
                       marginTop: "10px",
                     }}
                   >
-                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                   </p>
                 </div>
               </div>

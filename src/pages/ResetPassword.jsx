@@ -29,12 +29,6 @@ const ResetPassword = () => {
   const [resetpasword, { isLoading }] = useResetpaswordMutation();
   const email = sessionStorage.getItem("email");
 
-  //   const { userInfo } = useSelector((state) => state.auth);
-  //   useEffect(() => {
-  //     if (userInfo) {
-  //       navigate("/");
-  //     }
-  //   }, [navigate, userInfo]);
   const {
     register,
     handleSubmit,

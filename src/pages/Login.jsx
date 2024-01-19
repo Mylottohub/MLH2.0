@@ -57,7 +57,7 @@ const Login = () => {
   return (
     <>
       <Navbar />
-      <div className="container">
+      <div className="container mb-5">
         <div className="row">
           <div className="col-lg-6 mx-auto app__register">
             <h1 className="mb-4">Login</h1>

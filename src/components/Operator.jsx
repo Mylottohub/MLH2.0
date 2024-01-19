@@ -471,7 +471,7 @@ const Operator = () => {
                     <p style={{ color: "#FFF !important" }}>SPORTS BETTING</p>
                     <p>
                       <a
-                        // href="https://www.mylottohub.com/welcome/home_sport"
+                        onClick={() => navigate("/betting")}
                         className="btn btn-yellow btn-block"
                       >
                         Play Now

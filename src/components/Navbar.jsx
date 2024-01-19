@@ -2,14 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { images } from "../constant";
 import Header from "./Header";
 import { useDispatch, useSelector } from "react-redux";
-import { FaMoneyBill, FaUser } from "react-icons/fa";
-import { BiSolidDashboard } from "react-icons/bi";
-import {
-  BsArrow90DegRight,
-  BsShareFill,
-  BsSubscript,
-  BsWallet,
-} from "react-icons/bs";
+// import { FaMoneyBill, FaUser } from "react-icons/fa";
+// import { BiSolidDashboard } from "react-icons/bi";
+// import {
+//   BsArrow90DegRight,
+//   BsShareFill,
+//   BsSubscript,
+//   BsWallet,
+// } from "react-icons/bs";
 import { useState } from "react";
 import BModal from "./BModal/BModal";
 import Deposit from "./Payment/Deposit";
@@ -128,22 +128,25 @@ const Navbar = () => {
                             className="dropdown-item p-2 "
                             onClick={() => navigate("/")}
                           >
-                            <img
+                            {/* <img
                               src={images.lotto_icon}
                               alt={images.lotto_icon}
-                            />{" "}
+                            />{" "} */}
                             Lotto
                           </a>
                         </li>
                         <li>
-                          <a className="dropdown-item p-2 ">
-                            <img src={images.bet} alt={images.bet} /> Sport
-                            Betting
+                          <a
+                            className="dropdown-item p-2 "
+                            onClick={() => navigate("/betting")}
+                          >
+                            {/* <img src={images.bet} alt={images.bet} /> */}
+                            Sport Betting
                           </a>
                         </li>
                         <li>
                           <a className="dropdown-item p-2 ">
-                            <img src={images.instant} alt={images.instant} />{" "}
+                            {/* <img src={images.instant} alt={images.instant} />{" "} */}
                             Instant Games
                           </a>
                         </li>
@@ -256,14 +259,14 @@ const Navbar = () => {
                           {/* <li onClick={() => navigate("/profile")}> */}
                           <li onClick={() => handleUserProfile()}>
                             <a className="dropdown-item p-2">
-                              <FaUser />
+                              {/* <FaUser /> */}
                               &nbsp;&nbsp;User Profile
                             </a>
                           </li>
-                          <li>
+                          <li onClick={() => navigate("/wallet")}>
                             <a className="dropdown-item p-2">
-                              <BsWallet />
-                              &nbsp;&nbsp;Wallets
+                              {/* <BsWallet /> */}
+                              &nbsp;&nbsp;Wallet
                             </a>
                           </li>
 
@@ -301,7 +304,7 @@ const Navbar = () => {
                               className="dropdown-item p-2"
                               onClick={() => handleDeposit()}
                             >
-                              <BsArrow90DegRight />
+                              {/* <BsArrow90DegRight /> */}
                               &nbsp;&nbsp;Deposit
                             </a>
                           </li>
@@ -310,13 +313,13 @@ const Navbar = () => {
                               className="dropdown-item p-2"
                               onClick={() => handleWithdraw()}
                             >
-                              <BiSolidDashboard />
+                              {/* <BiSolidDashboard /> */}
                               &nbsp;&nbsp;Withdraw
                             </a>
                           </li>
                           <li>
                             <a className="dropdown-item p-2">
-                              <BsSubscript />
+                              {/* <BsSubscript /> */}
                               &nbsp;&nbsp;Subscription
                             </a>
                           </li>
@@ -325,13 +328,13 @@ const Navbar = () => {
                               className="dropdown-item p-2"
                               onClick={() => navigate("/transactions")}
                             >
-                              <FaMoneyBill />
+                              {/* <FaMoneyBill /> */}
                               &nbsp;&nbsp;Transactions
                             </a>
                           </li>
                           <li onClick={() => navigate("/referral")}>
                             <a className="dropdown-item p-2">
-                              <BsShareFill />
+                              {/* <BsShareFill /> */}
                               &nbsp;&nbsp;Referral
                             </a>
                           </li>
@@ -343,7 +346,7 @@ const Navbar = () => {
                       <li className="nav-item dropdown">
                         <a>
                           <span
-                            className="btn btn-white"
+                            className="btn btn-white text-white"
                             onClick={() => handleLogout()}
                           >
                             Logout
@@ -443,16 +446,18 @@ const Navbar = () => {
                         // href="https://www.mylottohub.com/play/plotto"
                         onClick={() => navigate("/")}
                       >
-                        <img src={images.lotto_icon} alt={images.lotto_icon} />{" "}
+                        {/* <img src={images.lotto_icon} alt={images.lotto_icon} />{" "} */}
                         Lotto
                       </a>
                     </li>
                     <li>
                       <a
                         className="dropdown-item p-2"
+                        onClick={() => navigate("/betting")}
                         // href="https://www.mylottohub.com/welcome/home_sport"
                       >
-                        <img src={images.bet} alt={images.bet} /> Sport Betting
+                        {/* <img src={images.bet} alt={images.bet} />  */}
+                        Sport Betting
                       </a>
                     </li>
                     <li>
@@ -460,7 +465,7 @@ const Navbar = () => {
                         className="dropdown-item p-2"
                         // href="https://www.mylottohub.com/welcome/home_instant"
                       >
-                        <img src={images.instant} alt={images.instant} />{" "}
+                        {/* <img src={images.instant} alt={images.instant} />{" "} */}
                         Instant Games
                       </a>
                     </li>

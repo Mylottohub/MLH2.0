@@ -18,6 +18,10 @@ import UserProfile from "../components/UserProfile";
 import Referral from "../components/Referral";
 import Tutorial from "../pages/Tutorial";
 import BetHistory from "../components/BetHistory/BetHistory";
+import DepositHistory from "../components/Transactions/DepositHistory";
+import Betting from "../components/SportsBetting/Betting";
+import ListAllWallets from "../components/Wallets/ListAllWallets";
+import PlayBet from "../components/SportsBetting/PlayBet";
 
 export const routes = [
   {
@@ -138,6 +142,30 @@ export const routes = [
     id: 19,
     path: "/bet-history/:id",
     element: <BetHistory />,
+    protected: true,
+  },
+  {
+    id: 20,
+    path: "/deposit-history",
+    element: <DepositHistory />,
+    protected: true,
+  },
+  {
+    id: 21,
+    path: "/betting",
+    element: <Betting />,
+    protected: true,
+  },
+  {
+    id: 22,
+    path: "/wallet",
+    element: <ListAllWallets />,
+    protected: true,
+  },
+  {
+    id: 23,
+    path: "/play-bet/:id",
+    element: <PlayBet />,
     protected: true,
   },
 ];

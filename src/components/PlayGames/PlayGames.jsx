@@ -653,6 +653,8 @@ const PlayGames = () => {
                 <strong> Select Operator &gt;&gt; Set Lotto</strong>
               ) : id === "ghana_game" ? (
                 <strong> Select Operator &gt;&gt; 5/90 Games</strong>
+              ) : id === "green_lotto" ? (
+                <strong> Select Operator &gt;&gt; Green Lotto</strong>
               ) : (
                 <strong>Select Operator &gt;&gt; {id}</strong>
               )}
