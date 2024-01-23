@@ -353,7 +353,7 @@ const PlayBet = () => {
                   </div>
                 );
               })}
-              <div className="w-50 mx-auto app__transaction-mobile">
+              <div className="w-50 mx-auto app__transaction-web">
                 <input
                   type="number"
                   min={1}
