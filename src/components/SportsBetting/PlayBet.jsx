@@ -299,7 +299,7 @@ const PlayBet = () => {
               </td>
             </tr>
           ) : (
-            <>
+            <div className="app__transaction-web">
               BET CODE: {id} &nbsp;&nbsp; &nbsp;&nbsp;
               <br />
               <br />
@@ -413,7 +413,7 @@ const PlayBet = () => {
                   )}
                 </Button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </>
