@@ -254,7 +254,7 @@ const BetHistory = () => {
             <tr>
               <td
                 colSpan="8"
-                className="d-flex justify-content-center text-center p-5 app__transaction-mobile"
+                className="d-flex justify-content-center text-center p-5 app__transaction-web"
               >
                 <div className="hidden-xs hidden-sm">
                   <div className="alert alert-danger" role="alert">

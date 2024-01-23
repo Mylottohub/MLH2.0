@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Karla&family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Lato&display=swap');
 
 * {
-    font-family: Karla;
+    font-family: Lato;
     font-size: 16px;
     font-weight: 400;
     line-height: 19px;
@@ -11,35 +11,40 @@
 .app__about-main {
     color: #406777;
 }
+
 .app__terms p {
     color: #406777;
-font-feature-settings: 'liga' off;
-font-family: Karla;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 18.7px; /* 103.889% */
-text-align: justify;
-line-height: 30px;
+    font-feature-settings: 'liga' off;
+    font-family: Lato;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18.7px;
+    /* 103.889% */
+    text-align: justify;
+    line-height: 30px;
 }
-.app__terms strong{
+
+.app__terms strong {
     color: #406777;
-font-feature-settings: 'liga' off;
-font-family: Karla;
-font-size: 22px;
-font-style: normal;
-font-weight: 700;
-line-height: 18.7px; /* 85% */
+    font-feature-settings: 'liga' off;
+    font-family: Lato;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 18.7px;
+    /* 85% */
 }
 
 .app__terms_p {
     color: #406777;
-font-feature-settings: 'liga' off;
-font-family: Karla;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 18.7px; /* 103.889% */
+    font-feature-settings: 'liga' off;
+    font-family: Lato;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18.7px;
+    /* 103.889% */
 }
 
 .app__terms ol {
@@ -47,74 +52,81 @@ line-height: 18.7px; /* 103.889% */
     text-align: justify;
 }
 
-.app__terms small{
+.app__terms small {
     color: #406777;
-font-feature-settings: 'liga' off;
-font-family: Karla;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 20px; /* 111.111% */
+    font-feature-settings: 'liga' off;
+    font-family: Lato;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 111.111% */
 }
 
 #accordionExample button {
     color: #406777;
-font-feature-settings: 'liga' off;
-font-family: Karla;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 18.7px; /* 103.889% */
+    font-feature-settings: 'liga' off;
+    font-family: Lato;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18.7px;
+    /* 103.889% */
 }
 
 .accordion-body {
     color: #406777;
     font-feature-settings: 'liga' off;
-    font-family: Karla;
+    font-family: Lato;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
-    line-height: 25px; /* 138.889% */
+    line-height: 25px;
+    /* 138.889% */
 }
 
 .faq-area strong {
     color: #406777;
-font-feature-settings: 'liga' off;
-font-family: Karla;
-font-size: 24px;
-font-style: normal;
-font-weight: 700;
-line-height: 18.7px; /* 77.917% */
+    font-feature-settings: 'liga' off;
+    font-family: Lato;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 18.7px;
+    /* 77.917% */
 }
 
 .faq-area small {
     color: #406777;
-font-feature-settings: 'liga' off;
-font-family: Karla;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 18.7px; /* 103.889% */
+    font-feature-settings: 'liga' off;
+    font-family: Lato;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18.7px;
+    /* 103.889% */
 }
 
 .app__about-us h4 {
     color: #406777;
-font-family: Karla;
-font-size: 22px;
-font-style: normal;
-font-weight: 400;
-line-height: 137.4%; /* 30.228px */
+    font-family: Lato;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 137.4%;
+    /* 30.228px */
 }
 
-.app__about-main p{
+.app__about-main p {
     color: #406777;
-text-align: center;
-font-family: Karla;
-font-size: 22px;
-font-style: normal;
-font-weight: 400;
-line-height: 151.8%; /* 36.432px */
-letter-spacing: 0.48px;
+    text-align: justify !important;
+    font-family: Lato;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 151.8%;
+    /* 36.432px */
+    letter-spacing: 0.48px;
 }
 
 .meg_round_icon {
@@ -123,14 +135,16 @@ letter-spacing: 0.48px;
     box-shadow: 0px 0px 2px #888;
     padding: 0.9em 0.9em;
 }
+
 .meg_white {
     color: #fff !important;
 }
+
 .bg-warning {
     background-color: #F1BE38;
 }
 
-@media(max-width: 760px){
+@media(max-width: 760px) {
     .app__about-main p {
         font-size: 18px;
     }

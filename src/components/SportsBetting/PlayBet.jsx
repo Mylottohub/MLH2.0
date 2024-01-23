@@ -114,11 +114,13 @@ const PlayBet = () => {
         }
       );
 
+      const responseError = await response.json();
+      // const data = await response.json();
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        toast.error(responseError.msg);
+      } else {
+        toast.success("Your selected game has been submitted successfully");
       }
-
-      toast.success("Game Played Successfully");
       navigate("/betting");
     } catch (error) {
       toast("Error placing bet. Please try again.", error);
@@ -393,7 +395,7 @@ const PlayBet = () => {
 
                 <Button
                   onClick={handlePlaceBet}
-                  className="btn form-control mt-5 mb-3 text-white"
+                  className="btn form-control mt-5 mb-5 text-white"
                   style={{
                     background: "#406777",
                   }}
@@ -412,6 +414,7 @@ const PlayBet = () => {
                     "Place Bet"
                   )}
                 </Button>
+                <br />
               </div>
             </div>
           )}

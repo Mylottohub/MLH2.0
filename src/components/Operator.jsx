@@ -306,9 +306,9 @@ const Operator = () => {
                     <br />
                     <p style={{ textAlign: "justify" }} className="mt-2">
                       {" "}
-                      Pay once and it’s yours forever. Use it to build as many
-                      sites as you ned; long form, presentations, splash sites,
-                      and more.
+                      Register and join mylottohub to enjoy, play over 300 games
+                      across multiple operators from one single account. It is
+                      fast and seamless.
                     </p>
                   </p>
                 </p>
@@ -329,9 +329,9 @@ const Operator = () => {
                     <br />
                     <p style={{ textAlign: "justify" }}>
                       {" "}
-                      Pay once and it’s yours forever. Use it to build as many
-                      sites as you need; long form, presentations, splash sites,
-                      and more.
+                      Register and join mylottohub to enjoy, play over 300 games
+                      across multiple operators from one single account. It is
+                      fast and seamless.
                     </p>
                   </small>
                 </p>
@@ -351,9 +351,8 @@ const Operator = () => {
                     <br />
                     <br />
                     <p style={{ textAlign: "justify" }}>
-                      Pay once and it’s yours forever. Use it to build as many
-                      sites as you need; long form, presentations, splash sites,
-                      and more.
+                      Cashout your winnings directly to your bank account on
+                      request It is fast and instant.
                     </p>
                   </small>
                 </p>

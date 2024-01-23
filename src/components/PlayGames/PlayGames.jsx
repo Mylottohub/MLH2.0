@@ -590,7 +590,6 @@ const PlayGames = () => {
       // const data = await response.json();
       if (!response.ok) {
         toast.error(responseError.msg);
-        // throw new Error("Network response was not ok");
       } else {
         sessionStorage.removeItem(localStorageKey);
         toast.success("Your selected game has been submitted successfully");
