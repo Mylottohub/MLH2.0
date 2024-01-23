@@ -60,6 +60,7 @@ const Login = () => {
       <div className="container mb-5">
         <div className="row">
           <div className="col-lg-6 mx-auto app__register">
+            <div style={{ float: "left", marginBottom: "1%" }}></div>
             <h1 className="mb-4">Login</h1>
             <h6 className="mb-4">
               Play all your favorite Nigerian lotto games from one account on

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { routes } from "./routing/routes";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LatestWinner from "./components/LatestWinner";
@@ -6,7 +6,7 @@ import LatestGame from "./components/LatestGame";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {routes.map((route, index) => (
           <Route
@@ -24,7 +24,7 @@ function App() {
       </Routes>
       <LatestWinner />
       <LatestGame />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

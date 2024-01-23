@@ -65,7 +65,7 @@ const ResetPassword = () => {
               account
             </h6> */}
 
-            <form onSubmit={handleSubmit(submitForm)}>
+            <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
               <div className="mb-3 position-relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -89,7 +89,7 @@ const ResetPassword = () => {
                       marginTop: "10px",
                     }}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </p>
                 </div>
                 {errors.password && (

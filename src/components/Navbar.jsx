@@ -2,14 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { images } from "../constant";
 import Header from "./Header";
 import { useDispatch, useSelector } from "react-redux";
-// import { FaMoneyBill, FaUser } from "react-icons/fa";
-// import { BiSolidDashboard } from "react-icons/bi";
-// import {
-//   BsArrow90DegRight,
-//   BsShareFill,
-//   BsSubscript,
-//   BsWallet,
-// } from "react-icons/bs";
 import { useState } from "react";
 import BModal from "./BModal/BModal";
 import Deposit from "./Payment/Deposit";
@@ -18,6 +10,8 @@ import { logout } from "../pages/slices/authSlice";
 import { useEffect } from "react";
 import axios from "axios";
 import UserProfile from "./Payment/UserProfile";
+import { toast } from "react-toastify";
+import { FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -81,6 +75,7 @@ const Navbar = () => {
     try {
       dispatch(logout());
       navigate("/");
+      toast.success("Logged Out Successfully");
     } catch (error) {
       // console.log(error);
     }
@@ -95,7 +90,7 @@ const Navbar = () => {
             <nav className="navbar navbar-expand-lg app__navbar-bg">
               <div className="container">
                 <button
-                  className="navbar-toggler app__navbar-mobile"
+                  className="btn app__transaction-mobile app__navbar-mobile bg-light"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#navbarSupportedContent"
@@ -105,6 +100,96 @@ const Navbar = () => {
                 >
                   <span className="navbar-toggler-icon"></span>
                 </button>
+                <div
+                  className="text-white app__transaction-mobile"
+                  style={{ marginTop: "-20px" }}
+                >
+                  {" "}
+                  <span>
+                    {" "}
+                    <ul className="d-flex justify-content-between app__sign-in">
+                      <li className="text-center">
+                        <li
+                          className="nav-item dropdown"
+                          // style={{ marginLeft: "-170px" }}
+                        >
+                          <a
+                            id="app__mobile-nav"
+                            className="nav-link dropdown-toggle text-white"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            <FaUser />
+                          </a>
+                          <ul
+                            className="dropdown-menu"
+                            style={{ marginLeft: "-90px" }}
+                          >
+                            <li onClick={() => handleUserProfile()}>
+                              <a className="dropdown-item p-2">
+                                &nbsp;&nbsp;User Profile
+                              </a>
+                            </li>
+                            <li onClick={() => navigate("/wallet")}>
+                              <a className="dropdown-item p-2">
+                                &nbsp;&nbsp;Wallet
+                              </a>
+                            </li>
+
+                            <li>
+                              <a
+                                className="dropdown-item p-2"
+                                onClick={() => handleDeposit()}
+                              >
+                                &nbsp;&nbsp;Deposit
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                className="dropdown-item p-2"
+                                onClick={() => handleWithdraw()}
+                              >
+                                &nbsp;&nbsp;Withdraw
+                              </a>
+                            </li>
+                            <li>
+                              <a className="dropdown-item p-2">
+                                &nbsp;&nbsp;Subscription
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                className="dropdown-item p-2"
+                                onClick={() => navigate("/transactions")}
+                              >
+                                &nbsp;&nbsp;Transactions
+                              </a>
+                            </li>
+                            <li onClick={() => navigate("/referral")}>
+                              <a className="dropdown-item p-2">
+                                &nbsp;&nbsp;Referral
+                              </a>
+                            </li>
+
+                            <li className="text-right hidden-xs hidden-sm">
+                              <li className="nav-item dropdown">
+                                <a>
+                                  <span
+                                    className="btn btn-white"
+                                    onClick={() => handleLogout()}
+                                  >
+                                    Logout
+                                  </span>
+                                </a>
+                              </li>
+                            </li>
+                          </ul>
+                        </li>
+                      </li>
+                    </ul>
+                  </span>
+                </div>
                 <div
                   className="collapse navbar-collapse"
                   id="navbarSupportedContent"
@@ -240,7 +325,7 @@ const Navbar = () => {
                     </li>
                   </ul>
 
-                  <ul className="app__sign-in d-flex">
+                  <ul className="app__sign-in d-flex app__transaction-web">
                     <li className="text-left hidden-xs hidden-sm">
                       <li className="nav-item dropdown">
                         <a

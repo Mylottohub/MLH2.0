@@ -22,8 +22,7 @@ const schema = yup.object().shape({
   email: yup.string().email().required(),
   username: yup.string().required("This is a required field"),
   last_name: yup.string().required("This is a required field"),
-  phone: yup.string().min(8).max(15).required(),
-  // check: yup.string().required("This is a required field"),
+  phone: yup.string().min(11).max(11).required(),
   password: yup.string().min(8).max(15).required(),
   password_confirmation: yup.string().oneOf([yup.ref("password"), null]),
 });
@@ -89,7 +88,7 @@ const Register = () => {
               account
             </h6>
 
-            <form onSubmit={handleSubmit(submitForm)}>
+            <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
               <div className="mb-3">
                 <input
                   type="text"
@@ -159,7 +158,8 @@ const Register = () => {
               </div>
               <div className="mb-3">
                 <input
-                  type="tel"
+                  type="number"
+                  min={1}
                   className="form-control mb-2 p-3"
                   placeholder="Phone Number"
                   name="phone"

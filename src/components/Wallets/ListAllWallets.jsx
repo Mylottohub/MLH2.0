@@ -146,7 +146,7 @@ const ListAllWallets = () => {
                                   onClick={() =>
                                     navigate("/play-game/green_lotto")
                                   }
-                                  className="btn btn-success btn-block  w-100 mt-4"
+                                  className="btn btn-blue btn-block  w-100 mt-4"
                                 >
                                   Play now
                                 </a>
@@ -179,7 +179,7 @@ const ListAllWallets = () => {
                                   onClick={() =>
                                     navigate("/play-game/lotto_nigeria")
                                   }
-                                  className="btn btn-success btn-block  w-100 mt-4"
+                                  className="btn btn-blue btn-block  w-100 mt-4"
                                 >
                                   Play now
                                 </a>
@@ -213,7 +213,7 @@ const ListAllWallets = () => {
                                   onClick={() =>
                                     navigate("/play-game/lottomania")
                                   }
-                                  className="btn btn-success btn-block  w-100 mt-4"
+                                  className="btn btn-blue btn-block  w-100 mt-4"
                                 >
                                   Play now
                                 </a>
@@ -246,7 +246,7 @@ const ListAllWallets = () => {
                                   onClick={() =>
                                     navigate("/play-game/ghana_game")
                                   }
-                                  className="btn btn-success btn-block  w-100 mt-4"
+                                  className="btn btn-blue btn-block  w-100 mt-4"
                                 >
                                   Play now
                                 </a>
@@ -286,7 +286,7 @@ const ListAllWallets = () => {
 
                               <input
                                 type="submit"
-                                className="btn btn-danger mt-3"
+                                className="btn btn-blue mt-3"
                                 name="transfer"
                                 value="Transfer"
                               />

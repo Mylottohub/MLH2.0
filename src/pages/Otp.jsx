@@ -41,6 +41,11 @@ const Otp = () => {
       if (userPasswordMessage) {
         navigate("/reset-password");
         sessionStorage.removeItem("password-reset");
+        console.log(email);
+      } else if (email) {
+        console.log(email);
+        dispatch(setCredentials({ token, data: userInfo }));
+        navigate("/");
       } else {
         dispatch(setCredentials({ token, data: userInfo }));
         navigate("/");

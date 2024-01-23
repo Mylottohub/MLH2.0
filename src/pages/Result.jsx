@@ -86,6 +86,7 @@ const Result = () => {
                   )
                   .map((record, index) => {
                     const imageSrc = `/images/${record.logo}`;
+                    // console.log(record);
                     const latestResult = record.results[0];
 
                     return (

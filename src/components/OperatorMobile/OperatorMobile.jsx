@@ -53,12 +53,11 @@ const OperatorMobile = () => {
 
         const data = await response.json();
 
-        // Update the specific operator's data using the operatorType
         setOperatorData((prevData) => ({
           ...prevData,
           [operatorType]: Array.isArray(data.result)
             ? data.result
-            : [data.result], // Convert the object to an array if it's not an array
+            : [data.result],
         }));
       } catch (error) {
         console.error(`Error fetching ${operatorType} games:`, error);
@@ -196,7 +195,7 @@ const OperatorMobile = () => {
                   }
                 };
                 return nextGame ? (
-                  <div key={index} className="col-md-3">
+                  <div key={index}>
                     <div className="hidden-md hidden-lg div_vlgrey">
                       <table width="100%" cellPadding="3">
                         <tbody>
@@ -214,6 +213,7 @@ const OperatorMobile = () => {
                                 {nextGame[propertyMapping[operatorType].name]}
                               </small>
                               <br />
+                              <br />
 
                               <small>
                                 <span>
@@ -229,7 +229,7 @@ const OperatorMobile = () => {
                                       minutes,
                                       seconds,
                                     }) => (
-                                      <>
+                                      <div className="mb-2">
                                         <span className="countdown_box">
                                           {days}days
                                         </span>{" "}
@@ -239,17 +239,22 @@ const OperatorMobile = () => {
                                         <span className="countdown_box">
                                           {minutes}mins
                                         </span>{" "}
-                                        <span className="countdown_box">
-                                          {seconds}secs
+                                        <br />
+                                        <span style={{ width: "38%" }}>
+                                          <p
+                                            className="countdown_box mt-3"
+                                            style={{ width: "38%" }}
+                                          >
+                                            {" "}
+                                            {seconds}secs
+                                          </p>
                                         </span>{" "}
-                                      </>
+                                      </div>
                                     )}
                                   />
                                 </span>
                               </small>
 
-                              <br />
-                              <br />
                               <p>
                                 <a
                                   onClick={() => {

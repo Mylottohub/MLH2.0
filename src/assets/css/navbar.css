@@ -49,7 +49,8 @@
 #modal_head {
     display: block;
     margin-top: 30px;
-    margin-left: -70px;
+    /* margin-left: -110px; */
+    margin: auto;
 }
 
 .dropdown-menu {
@@ -72,6 +73,10 @@
 
 .nav-link:hover {
     border-bottom: 3px solid #fff200 !important;
+}
+
+#app__mobile-nav {
+    border-bottom: none !important;
 }
 
 a:active,
@@ -144,13 +149,6 @@ a:focus {
     padding-left: 50px;
     padding-right: 50px;
 }
-
-/* .sub_menu_box {
-    padding: 0px !important;
-    box-shadow: 0px 60px 80px rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
-    width: 230px! important;
-} */
 
 @media (max-width: 750px) {
     .nav-link {

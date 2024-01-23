@@ -148,7 +148,7 @@ const BetHistory = () => {
                     <input
                       type="submit"
                       name="filter"
-                      className="btn btn-blue btn-lg"
+                      className="btn btn-blue btn-md"
                       value="Filter"
                     />
                   </td>
@@ -158,45 +158,42 @@ const BetHistory = () => {
           </form>
         </div>
         <div className="table-responsive">
-          <table className="table table-express table-hover mt-5">
-            <tbody>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">TICKET ID</th>
-                <th scope="col">GAME</th>
-                <th scope="col">GAME NAME</th>
-                <th scope="col">STATUS</th>
-                <th scope="col">PLAY DATE</th>
-                <th scope="col">ACTION</th>
-              </tr>
-            </tbody>
-
-            <tbody>
-              {isLoading ? (
-                <div className="spinner text-dark text-center mt-5">
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
+          {isLoading ? (
+            <div className="spinner text-dark text-center mt-5">
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            </div>
+          ) : betHistory?.data?.length === 0 ? (
+            <tr>
+              <td colSpan="8" className="flex justify-center text-center p-5">
+                <div className="hidden-xs hidden-sm">
+                  <p></p>
+                  <div className="alert alert-danger" role="alert">
+                    No Record Found
+                  </div>
                 </div>
-              ) : betHistory?.data?.length === 0 ? (
+              </td>
+            </tr>
+          ) : (
+            <table className="table table-express app__transaction-web table-hover mt-5">
+              <tbody>
                 <tr>
-                  <td
-                    colSpan="8"
-                    className="flex justify-center text-center p-5"
-                  >
-                    <div className="hidden-xs hidden-sm">
-                      <p></p>
-                      <div className="alert alert-danger" role="alert">
-                        No Record Found
-                      </div>
-                    </div>
-                  </td>
+                  <th scope="col">#</th>
+                  <th scope="col">TICKET ID</th>
+                  <th scope="col">GAME</th>
+                  <th scope="col">GAME NAME</th>
+                  <th scope="col">STATUS</th>
+                  <th scope="col">PLAY DATE</th>
+                  <th scope="col">ACTION</th>
                 </tr>
-              ) : (
+              </tbody>
+
+              <tbody>
                 <>
                   {betHistory?.data
                     ?.sort(
@@ -207,13 +204,27 @@ const BetHistory = () => {
                         .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA");
+                      // console.log(record);
 
                       return (
                         <tr key={index} className="table-light">
                           <td>{index + 1}</td>
-                          <td>{record?.TSN}</td>
+                          <td>
+                            {id === "green_lotto" ? (
+                              <td>{record?.TikcetId}</td>
+                            ) : (
+                              <td>{record?.TSN}</td>
+                            )}
+                          </td>
                           <td>{record?.mgametype}</td>
-                          <td>{record?.GameName}</td>
+                          <td>
+                            {" "}
+                            {id === "green_lotto" ? (
+                              <td>{record?.drawname}</td>
+                            ) : (
+                              <td>{record?.GameName}</td>
+                            )}
+                          </td>
                           <td>{record?.status}</td>
                           <td>{formattedDate}</td>
                           <td
@@ -226,9 +237,125 @@ const BetHistory = () => {
                       );
                     })}
                 </>
-              )}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          )}
+          {isLoading ? (
+            <div className="spinner text-dark text-center mt-5 app__transaction-mobile">
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            </div>
+          ) : betHistory?.data?.length === 0 ? (
+            <tr>
+              <td
+                colSpan="8"
+                className="d-flex justify-content-center text-center p-5 app__transaction-mobile"
+              >
+                <div className="hidden-xs hidden-sm">
+                  <div className="alert alert-danger" role="alert">
+                    No Record Found
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ) : (
+            <>
+              {betHistory?.data
+                ?.sort(
+                  (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                )
+                .map((record, index) => {
+                  const formattedDate = moment
+                    .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
+                    .local()
+                    .format("Do MMM YYYY | h:mm:ssA");
+
+                  return (
+                    <div
+                      key={index}
+                      className="p-3 mb-5 mt-3 app__transaction-mobile"
+                      style={{ background: "#f5f7f8" }}
+                    >
+                      <div>
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">Ticket ID:</span>
+                          <span>
+                            {id === "green_lotto" ? (
+                              <td>{record?.TikcetId}</td>
+                            ) : (
+                              <td>{record?.TSN}</td>
+                            )}
+                          </span>
+                        </p>
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">Game:</span>
+                          <span>{record?.mgametype}</span>
+                        </p>
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">Game Name: </span>
+                          <span>{record?.GameName}</span>
+                        </p>
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">Status:</span>{" "}
+                          <span>{record?.status}</span>
+                        </p>
+
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">Play Date:</span>{" "}
+                          <span>{formattedDate}</span>
+                        </p>
+
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">Action:</span>{" "}
+                          <span
+                            style={{ cursor: "pointer" }}
+                            onClick={() => openModal(record)}
+                          >
+                            View More &gt;&gt;{" "}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+            </>
+          )}
+
           <nav aria-label="Page navigation example">
             <ul className="pagination">
               {betHistory?.links?.map((link, index) => (
@@ -254,8 +381,8 @@ const BetHistory = () => {
       </div>
 
       <Modal
-        backdrop="static"
-        keyboard={false}
+        // backdrop="static"
+        // keyboard={false}
         size="md"
         centered
         show={showModal}
@@ -266,52 +393,88 @@ const BetHistory = () => {
           style={{ background: "#406777" }}
           closeButton
         >
-          <p className="ms-auto text-white">
+          <p className="ms-auto text-center text-white">
             {id === "ghana_game" ? (
-              <div>5/90 Games</div>
+              <>
+                <div>5/90</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             ) : id === "lotto_nigeria" ? (
-              <div>Set Lotto</div>
+              <>
+                <div>Set Lotto</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             ) : id === "green_lotto" ? (
-              <div>Green Lotto</div>
+              <>
+                <div>Green Lotto</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             ) : (
-              <div>{id} Bet History</div>
+              <>
+                <div>{id}</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             )}
           </p>
-
-          <span id="modal_head" className="text-white">
-            {selectedBet?.mgametype}
-          </span>
         </Modal.Header>
         <Modal.Body>
           {selectedBet && (
             <div className="p-3">
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">TICKET ID:</span>{" "}
-                <span>{selectedBet.TSN}</span>
+                <span>
+                  {" "}
+                  {id === "green_lotto" ? (
+                    <p> {selectedBet?.TikcetId}</p>
+                  ) : (
+                    <p> {selectedBet?.TSN}</p>
+                  )}
+                </span>
               </p>
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">LINES:</span>{" "}
-                <span>{selectedBet.line}</span>
+                <span>{selectedBet?.line}</span>
               </p>
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">DRAW DATE: </span>{" "}
                 <span>
-                  {moment
-                    .utc(selectedBet.DrawTime, "YYYY-MM-DD HH:mm:ss")
-                    .local()
-                    .format("Do MMM YYYY | h:mm:ssA")}
+                  {id === "green_lotto" ? (
+                    <p>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </p>
+                  ) : (
+                    <p>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.DrawTime, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </p>
+                  )}
                 </span>
               </p>
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">STATUS:</span>{" "}
-                <span>{selectedBet.status}</span>
+                <span>{selectedBet?.status}</span>
               </p>
 
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">PLAY DATE:</span>{" "}
                 <span>
                   {moment
-                    .utc(selectedBet.created_at, "YYYY-MM-DD HH:mm:ss")
+                    .utc(selectedBet?.created_at, "YYYY-MM-DD HH:mm:ss")
                     .local()
                     .format("Do MMM YYYY | h:mm:ssA")}
                 </span>
@@ -319,21 +482,38 @@ const BetHistory = () => {
 
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">SELECTION:</span>{" "}
-                <span>{selectedBet.SelectionType}</span>
+                <span>
+                  {" "}
+                  {id === "green_lotto" ? (
+                    <td>{selectedBet?.mgametype}</td>
+                  ) : id === "lottomania" ? (
+                    <td className="text-capitalize">
+                      {selectedBet?.operator_type}
+                    </td>
+                  ) : (
+                    <td> {selectedBet?.SelectionType}</td>
+                  )}
+                </span>
               </p>
 
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">TOTAL:</span>{" "}
-                <span>{selectedBet.amount}</span>
+                <span>{selectedBet?.amount}</span>
               </p>
 
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">NUMBERS:</span>{" "}
-                <span>{selectedBet.num}</span>
+                <span>{selectedBet?.num}</span>
               </p>
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">GAME NAME:</span>{" "}
-                <span>{selectedBet.GameName}</span>
+                <span>
+                  {id === "green_lotto" ? (
+                    <td>{selectedBet?.drawname}</td>
+                  ) : (
+                    <td> {selectedBet?.GameName}</td>
+                  )}
+                </span>
               </p>
             </div>
           )}

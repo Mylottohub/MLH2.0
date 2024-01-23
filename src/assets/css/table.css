@@ -1,4 +1,37 @@
-thead {color:green!important;}
-.app__transact-table h3{
+thead {
+    color: green !important;
+}
+
+.app__transact-table h3 {
     color: #406777;
+}
+
+.bet__code ul li a {
+    color: #406777 !important;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.bet__code a:hover {
+    border-bottom: 3px solid #406777 !important;
+}
+
+@media (min-width: 768px) {
+    .app__transaction-mobile {
+        display: none;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+    .app__transaction-web {
+        display: none !important;
+    }
+
+    .app__transaction-mobile span {
+        /* background-color: red !important; */
+        text-align: right;
+        font-size: 14px !important;
+    }
 }

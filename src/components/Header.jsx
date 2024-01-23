@@ -40,7 +40,6 @@ const Header = () => {
       },
     };
 
-    // Make an HTTP GET request to fetch user data
     axios
       .get(apiUrl, config)
       .then((response) => {

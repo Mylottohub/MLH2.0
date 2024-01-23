@@ -16,8 +16,8 @@ const WithdrawModal = () => {
 
   // Define the validation schema using yup
   const schema = yup.object().shape({
-    firstName: yup.string().required("First Name is required"),
-    lastName: yup.string().required("Last Name is required"),
+    // firstName: yup.string().required("First Name is required"),
+    // lastName: yup.string().required("Last Name is required"),
     accountNo: yup.string().required("Account Number is required"),
     wallet: yup
       .number()
@@ -76,7 +76,7 @@ const WithdrawModal = () => {
               <br />
               <small className="mt-3">
                 Winning Wallet Balance -{" "}
-                <strong>₦{userInfo.data.wwallet}</strong>
+                <strong>₦{userInfo?.data?.wwallet}</strong>
               </small>
               <hr />
               <p>
@@ -88,34 +88,36 @@ const WithdrawModal = () => {
                 <input
                   type="text"
                   className="form-control mb-2 p-2"
-                  placeholder="First Name"
+                  // placeholder="First Name"
                   name="firstName"
-                  {...register("firstName", {
-                    required: "Required",
-                  })}
+                  disabled
+                  value={userInfo?.data?.first_name}
+                  // {...register("firstName", {
+                  //   required: "Required",
+                  // })}
                 />
-                {errors.firstName && (
+                {/* {errors.firstName && (
                   <p className="text-danger text-capitalize">
                     {errors.firstName.message}
                   </p>
-                )}
+                )} */}
               </div>
               <div>
                 <input
                   type="text"
                   className="form-control  mb-2 p-2"
-                  placeholder="Last Name"
-                  id="lastName"
+                  value={userInfo?.data?.last_name}
                   name="lastName"
-                  {...register("lastName", {
-                    required: "Required",
-                  })}
+                  disabled
+                  // {...register("lastName", {
+                  //   required: "Required",
+                  // })}
                 />
-                {errors.lastName && (
+                {/* {errors.lastName && (
                   <p className="text-danger text-capitalize">
                     {errors.lastName.message}
                   </p>
-                )}
+                )} */}
               </div>
               <div>
                 <input

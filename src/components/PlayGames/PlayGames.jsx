@@ -118,37 +118,6 @@ const PlayGames = () => {
 
   const checkboxes = [];
 
-  // const randomizeCheckbox = () => {
-  //   if (!selectedBetType) {
-  //     toast.error("Select Bet Type");
-  //     return;
-  //   }
-
-  //   const gtype = selectedBetType;
-  //   const mustCheck = maxSelectableNumbers[gtype];
-  //   const checkboxes = document.querySelectorAll(".chk-btn");
-
-  //   if (mustCheck >= checkboxes.length) {
-  //     toast.error("Not enough numbers available for this bet type.");
-  //     return;
-  //   }
-
-  //   const randomIndices = [];
-  //   while (randomIndices.length < mustCheck) {
-  //     const randomIndex = Math.floor(Math.random() * checkboxes.length);
-  //     if (!randomIndices.includes(randomIndex)) {
-  //       randomIndices.push(randomIndex);
-  //     }
-  //   }
-
-  //   const randomizedNumbers = randomIndices.map((index) => parseInt(checkboxes[index].value));
-
-  //   setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
-
-  //   checkboxes.forEach((checkbox, index) => {
-  //     checkbox.checked = randomIndices.includes(index);
-  //   });
-  // };
   const randomizeCheckbox = () => {
     if (!selectedBetType) {
       toast.error("Select Bet Type");
