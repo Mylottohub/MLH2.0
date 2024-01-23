@@ -299,7 +299,7 @@ const PlayBet = () => {
               </td>
             </tr>
           ) : (
-            <div className="app__transaction-web">
+            <div className="app__transaction-mobile">
               BET CODE: {id} &nbsp;&nbsp; &nbsp;&nbsp;
               <br />
               <br />
@@ -353,7 +353,7 @@ const PlayBet = () => {
                   </div>
                 );
               })}
-              <div className="w-50 mx-auto app__transaction-web">
+              <div className="w-50 mx-auto app__transaction-mobile">
                 <input
                   type="number"
                   min={1}
