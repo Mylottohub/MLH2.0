@@ -1,45 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import "../assets/css/profile.css";
-import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
-import axios from "axios";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useGetProfileUser } from "../react-query";
 
 const UserProfile = () => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
   const [dob, setDob] = useState(null);
-  const { userInfo } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (userInfo && userInfo.data) {
-      const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-          "Content-Type": "application json",
-          Accept: "application/json",
-        },
-      };
-
-      axios
-        .get(apiUrl, config)
-        .then((response) => {
-          setUserData(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setError(error);
-          setLoading(false);
-        });
-    }
-  }, [userInfo]);
   const notify = async (copyMe) => {
     try {
       await navigator.clipboard.writeText(copyMe);
@@ -57,7 +29,7 @@ const UserProfile = () => {
     <React.Fragment>
       <Navbar />
       <div className="container">
-        {loading ? (
+        {isLoadingUserProfile ? (
           <div className="spinner text-dark text-center mt-5">
             <Spinner
               as="span"
@@ -81,14 +53,16 @@ const UserProfile = () => {
                       <div
                         className="row"
                         onClick={() =>
-                          notify(`https://www.mylottohub.com/${userData?.id}`)
+                          notify(
+                            `https://www.mylottohub.com/${userProfileResponse?.id}`
+                          )
                         }
                       >
                         <div className="col-md-8 mb-3">
                           <input
                             id="foo"
                             type="text"
-                            value={`https://www.mylottohub.com/${userData?.id}`}
+                            value={`https://www.mylottohub.com/${userProfileResponse?.id}`}
                             className="form-control p-3"
                             readOnly=""
                             disabled
@@ -109,30 +83,32 @@ const UserProfile = () => {
                         <p>
                           <small>
                             <strong className="text-primary mb-3">ID:</strong>{" "}
-                            {userData && userData?.id}
+                            {userProfileResponse && userProfileResponse?.id}
                             <br /> <br />
                             <strong className="text-primary">
                               USERNAME:
                             </strong>{" "}
-                            {userData && userData?.username}
+                            {userProfileResponse &&
+                              userProfileResponse?.username}
                             <br /> <br />
                             <strong className="text-primary">
                               PHONE:
                             </strong>{" "}
-                            {userData && userData?.phone}
+                            {userProfileResponse && userProfileResponse?.phone}
                             <br /> <br />
                             <strong className="text-primary">
                               EMAIL:
                             </strong>{" "}
-                            {userData && userData?.email}
+                            {userProfileResponse && userProfileResponse?.email}
                             <br /> <br />
                             <strong className="text-primary">BALANCE:</strong> ₦
-                            {userData && userData?.wallet}
+                            {userProfileResponse && userProfileResponse?.wallet}
                             <br /> <br />
                             <strong className="text-primary">
                               DATE REGISTERED:
                             </strong>{" "}
-                            {userData && userData?.created_at}
+                            {userProfileResponse &&
+                              userProfileResponse?.created_at}
                             <br />
                             <br />
                           </small>
@@ -143,7 +119,9 @@ const UserProfile = () => {
                             name="name"
                             className="form-control p-3"
                             placeholder="Name"
-                            value={`${userData && userData?.name}`}
+                            value={`${
+                              userProfileResponse && userProfileResponse?.name
+                            }`}
                             readOnly=""
                             disabled
                           />

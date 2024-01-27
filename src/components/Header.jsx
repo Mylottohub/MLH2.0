@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import BModal from "./BModal/BModal";
 import "../assets/css/header.css";
 import { images } from "../constant";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Withdraw from "./Payment/Withdraw";
 import Deposit from "./Payment/Deposit";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import { useGetProfileUser } from "../react-query";
+
 const Header = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -24,33 +24,7 @@ const Header = () => {
   const handleDeposit = () => {
     handleOpenDeposit();
   };
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { userInfo } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    };
-
-    axios
-      .get(apiUrl, config)
-      .then((response) => {
-        setUserData(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }, [userInfo.data.id, userInfo.token]);
+  const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
 
   return (
     <div>
@@ -81,19 +55,17 @@ const Header = () => {
                     className="row pull-right app__header-app"
                     style={{ padding: "20px", width: "70%" }}
                   >
-                    {loading ? (
+                    {isLoadingUserProfile ? (
                       <p>Balance Loading...</p>
-                    ) : error ? (
-                      <p>Error: {error.message}</p>
-                    ) : userData ? (
+                    ) : userProfileResponse ? (
                       <>
                         <div className="col-md-3 col-xs-6">
-                          <small>₦{userData.wallet}</small>
+                          <small>₦{userProfileResponse?.wallet}</small>
                           <br />
                           Wallet Balance
                         </div>
                         <div className="col-md-3 col-xs-6">
-                          <small>₦{userData.wwallet}</small>
+                          <small>₦{userProfileResponse?.wwallet}</small>
                           <br />
                           Winnings
                         </div>
@@ -141,9 +113,9 @@ const Header = () => {
               </td>
               <td valign="middle">
                 <p>
-                  {userInfo.data.username}
+                  {userProfileResponse?.username}
                   <br />
-                  <strong>User ID:</strong> {userInfo.data.id}
+                  <strong>User ID:</strong> {userProfileResponse?.id}
                 </p>
               </td>
             </tr>

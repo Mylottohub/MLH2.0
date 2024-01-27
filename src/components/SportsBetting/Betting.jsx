@@ -90,11 +90,13 @@ const Betting = () => {
                 />
               </div>
             ) : betting?.today?.length === 0 ? (
-              <tr>
-                <td colSpan="8" className="flex justify-center text-center p-5">
-                  No Record Found
-                </td>
-              </tr>
+              <div className="d-flex justify-content-center text-center p-5">
+                <div className="hidden-xs hidden-sm mx-auto">
+                  <div className="alert alert-danger text-center" role="alert">
+                    No Record Found
+                  </div>
+                </div>
+              </div>
             ) : (
               <table className="table table-express table-hover  mt-4">
                 <tbody>
@@ -144,100 +146,97 @@ const Betting = () => {
             )}
           </div>
 
-          {isLoading ? (
-            <div className="spinner text-dark text-center mt-5 app__transaction-mobile">
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            </div>
-          ) : betting?.today?.length === 0 ? (
-            <tr>
-              <td
-                colSpan="8"
-                className="d-flex justify-content-center text-center p-5 app__transaction-mobile"
-              >
-                <div className="hidden-xs hidden-sm">
-                  <div className="alert alert-danger" role="alert">
+          <div className="app__transaction-mobile">
+            {isLoading ? (
+              <div className="spinner text-dark text-center mt-5">
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : betting?.today?.length === 0 ? (
+              <div className="d-flex justify-content-center text-center p-5">
+                <div className="hidden-xs hidden-sm mx-auto">
+                  <div className="alert alert-danger text-center" role="alert">
                     No Record Found
                   </div>
                 </div>
-              </td>
-            </tr>
-          ) : (
-            <>
-              {betting?.today?.map((record, index) => {
-                const formattedDate = moment
-                  .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
-                  .local()
-                  .format("Do MMM YYYY | h:mm:ssA");
+              </div>
+            ) : (
+              <>
+                {betting?.today?.map((record, index) => {
+                  const formattedDate = moment
+                    .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
+                    .local()
+                    .format("Do MMM YYYY | h:mm:ssA");
 
-                return (
-                  <div
-                    key={index}
-                    className="p-3 mb-5 mt-3 app__transaction-mobile"
-                    style={{ background: "#f5f7f8" }}
-                  >
-                    <div>
-                      <p
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span className="fw-bolder">STAKE</span>
-                        <span>{record?.stake}</span>
-                      </p>
-                      <p
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span className="fw-bolder">BET CODE:</span>
-                        <span>{record?.code}</span>
-                      </p>
-                      <p
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span className="fw-bolder">NO OF GAMES: </span>
-                        <span>{record?.noGames}</span>
-                      </p>
+                  return (
+                    <div
+                      key={index}
+                      className="p-3 mb-5 mt-3"
+                      style={{ background: "#f5f7f8" }}
+                    >
+                      <div>
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">STAKE</span>
+                          <span>{record?.stake}</span>
+                        </p>
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">BET CODE:</span>
+                          <span>{record?.code}</span>
+                        </p>
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">NO OF GAMES: </span>
+                          <span>{record?.noGames}</span>
+                        </p>
 
-                      <p
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span className="fw-bolder">DATE: </span>
-                        <span>{formattedDate}</span>
-                      </p>
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="fw-bolder">DATE: </span>
+                          <span>{formattedDate}</span>
+                        </p>
+                      </div>
+                      <span style={{ cursor: "pointer" }}>
+                        <button
+                          onClick={() => {
+                            navigate(`/play-bet/${record.code}`);
+                          }}
+                          style={{ background: "#406777" }}
+                          type="submit"
+                          className="btn w-100 text-white"
+                          disabled={isLoading}
+                        >
+                          Play Now
+                        </button>{" "}
+                      </span>
                     </div>
-                    <span style={{ cursor: "pointer" }}>
-                      <button
-                        onClick={() => {
-                          navigate(`/play-bet/${record.code}`);
-                        }}
-                        style={{ background: "#406777" }}
-                        type="submit"
-                        className="btn w-100 text-white"
-                        disabled={isLoading}
-                      >
-                        Play Now
-                      </button>{" "}
-                    </span>
-                  </div>
-                );
-              })}
-            </>
-          )}
+                  );
+                })}
+              </>
+            )}
+          </div>
         </div>
       </>
     </React.Fragment>

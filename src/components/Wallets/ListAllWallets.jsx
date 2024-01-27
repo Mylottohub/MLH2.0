@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../Navbar";
 import BModal from "../BModal/BModal";
 import WithdrawModal from "../Payment/Withdraw";
 import Deposit from "../Payment/Deposit";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import HTTP from "../../utils/httpClient";
 import { Spinner } from "react-bootstrap";
+import { useGetProfileUser } from "../../react-query";
 
 const ListAllWallets = () => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
@@ -27,40 +25,14 @@ const ListAllWallets = () => {
   const handleDeposit = () => {
     handleOpenDeposit();
   };
-
-  const { userInfo } = useSelector((state) => state.auth);
-
-  const fetchData = async () => {
-    setLoading(true);
-
-    try {
-      const response = await HTTP.get(`/get-user/${userInfo.data.id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      });
-
-      setUserData(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
 
   return (
     <React.Fragment>
       {" "}
       <Navbar />
       <div className="container">
-        {loading ? (
+        {isLoadingUserProfile ? (
           <div className="spinner text-dark text-center mt-5">
             <Spinner
               as="span"
@@ -81,7 +53,7 @@ const ListAllWallets = () => {
                         <strong>Deposit Wallet</strong>
                       </p>
                       <p className="lead text-danger">
-                        ₦ {userData && userData?.wallet}{" "}
+                        ₦ {userProfileResponse && userProfileResponse?.wallet}{" "}
                       </p>
                       <p>
                         <a
@@ -100,7 +72,8 @@ const ListAllWallets = () => {
                       </p>
                       <p className="lead text-danger">
                         {" "}
-                        ₦ {userData && userData?.wwallet}{" "}
+                        ₦ {userProfileResponse &&
+                          userProfileResponse?.wwallet}{" "}
                       </p>
                       <p>
                         <a
@@ -119,7 +92,8 @@ const ListAllWallets = () => {
                       </p>
                       <p className="lead text-danger">
                         {" "}
-                        ₦ {userData && userData?.ref_give}{" "}
+                        ₦ {userProfileResponse &&
+                          userProfileResponse?.ref_give}{" "}
                       </p>
                     </div>
                   </div>
@@ -135,7 +109,9 @@ const ListAllWallets = () => {
                               </p>
                               <p className="lead text-danger">
                                 {" "}
-                                ₦ {userData && userData?.sl_bwallet}{" "}
+                                ₦{" "}
+                                {userProfileResponse &&
+                                  userProfileResponse?.sl_bwallet}{" "}
                               </p>
                             </td>
                           </tr>
@@ -168,7 +144,9 @@ const ListAllWallets = () => {
                               </p>
                               <p className="lead text-danger">
                                 {" "}
-                                ₦ {userData && userData?.sl_bwallet}{" "}
+                                ₦{" "}
+                                {userProfileResponse &&
+                                  userProfileResponse?.sl_bwallet}{" "}
                               </p>
                             </td>
                           </tr>
@@ -201,7 +179,9 @@ const ListAllWallets = () => {
                               </p>
                               <p className="lead text-danger">
                                 {" "}
-                                ₦ {userData && userData?.lm_bwallet}
+                                ₦{" "}
+                                {userProfileResponse &&
+                                  userProfileResponse?.lm_bwallet}
                               </p>
                             </td>
                           </tr>
@@ -235,7 +215,9 @@ const ListAllWallets = () => {
                               </p>
                               <p className="lead text-danger">
                                 {" "}
-                                ₦ {userData && userData?.gh_bwallet}{" "}
+                                ₦{" "}
+                                {userProfileResponse &&
+                                  userProfileResponse?.gh_bwallet}{" "}
                               </p>
                             </td>
                           </tr>

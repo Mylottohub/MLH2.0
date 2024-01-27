@@ -4,6 +4,7 @@ const initialState = {
   userInfo: sessionStorage.getItem("userInfo")
     ? JSON.parse(sessionStorage.getItem("userInfo"))
     : null,
+  tokenExpiration: null,
 };
 
 export const authSlice = createSlice({
@@ -12,16 +13,19 @@ export const authSlice = createSlice({
   reducers: {
     setCredentials: (state, action) => {
       state.userInfo = action.payload;
-      sessionStorage.setItem("userInfo", JSON.stringify(action.payload));
+      state.tokenExpiration = action.payload ? action.payload.expires : null;
     },
+
     logout: (state) => {
       state.userInfo = null;
-      sessionStorage.removeItem("userInfo");
-      sessionStorage.removeItem("email");
+      state.tokenExpiration = null;
+    },
+    clearStore: () => {
+      return initialState;
     },
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout, clearStore } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,4 +1,6 @@
+import { store } from "../../react-redux/store";
 import { apiSlice } from "./apiSlice";
+import { logout, setCredentials } from "./authSlice";
 
 const USER_LOGIN = "/login";
 const USER_REGISTER = "/register";
@@ -6,9 +8,8 @@ const USER_FORGOTPASSWORD = "/forgot";
 const USER_RESETPASSWORD = "/reset";
 const PAY_WITH_PAYSTACK = "/payment-initialize";
 const USER_OTP = "/otp";
-const OPERATOR_GAMES= "/get-games";
-// const OPERATOR_TIMETABLE = "/mylotto_get_timetable";
-// const { userInfo } = useSelector((state) => state.auth);
+const RESEND_OTP = "/resend";
+const OPERATOR_GAMES = "/get-games";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -54,17 +55,25 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    // timetable: builder.mutation({
-    //   query: (data) => ({
-    //     url: `${OPERATOR_TIMETABLE}`,
-    //     method: "GET",
-    //     body: data,
-    //     headers: {
-    //       "Content-Type": "application/json", // Set the content type to JSON
-    //         "Accept": "application/json",
-    //     },
-    //   }),
-    // }),
+    onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+      try {
+        const result = await queryFulfilled;
+        const expiration = result.data?.expires;
+        console.log("sfsfs", expiration);
+        dispatch(setCredentials(result?.data));
+        setupLogoutTimer(expiration);
+      } catch (error) {
+        // Handle login error
+      }
+    },
+    resendotp: builder.mutation({
+      query: (data) => ({
+        url: `${RESEND_OTP}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
     operatorgames: builder.mutation({
       query: (data) => ({
         url: `${OPERATOR_GAMES}`,
@@ -72,7 +81,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: JSON.stringify(data), // Send data as JSON in the request body
         headers: {
           "Content-Type": "application/json", // Set the content type to JSON
-            "Accept": "application/json",
+          Accept: "application/json",
         },
       }),
     }),
@@ -84,8 +93,19 @@ export const {
   useRegistersMutation,
   useForgotpaswordMutation,
   useUserotpMutation,
+  useResendotpMutation,
   usePaystackpaymentMutation,
   useOperatorgamesMutation,
-  useResetpaswordMutation
+  useResetpaswordMutation,
   // useTimetableMutation
 } = userApiSlice;
+const setupLogoutTimer = (expiration) => {
+  const now = Date.now();
+  const delay = expiration * 1000 - now; // Convert seconds to milliseconds
+  if (delay > 0) {
+    setTimeout(() => {
+      // Trigger logout action after the specified delay
+      store.dispatch(logout());
+    }, delay);
+  }
+};

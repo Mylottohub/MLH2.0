@@ -1,42 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { Spinner } from "react-bootstrap";
-import axios from "axios";
 import { toast } from "react-toastify";
 import Navbar from "./Navbar";
-
 import Footer from "./Footer";
 import { BsShareFill } from "react-icons/bs";
+import { useGetProfileUser } from "../react-query";
 
 const Referral = () => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { userInfo } = useSelector((state) => state.auth);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    if (userInfo && userInfo.data) {
-      const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-          "Content-Type": "application json",
-          Accept: "application/json",
-        },
-      };
-
-      axios
-        .get(apiUrl, config)
-        .then((response) => {
-          setUserData(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setError(error);
-          setLoading(false);
-        });
-    }
-  }, [userInfo]);
+  const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
   const notify = async (copyMe) => {
     try {
       await navigator.clipboard.writeText(copyMe);
@@ -52,7 +23,7 @@ const Referral = () => {
         await navigator.share({
           title: "Check out MyLottoHub",
           text: "Join MyLottoHub and explore the exciting world of lotteries!",
-          url: `https://www.mylottohub.com/${userData?.id}`,
+          url: `https://agency.mylottohub.com/${userProfileResponse?.id}`,
         });
       } catch (error) {
         console.error("Error sharing:", error);
@@ -69,7 +40,7 @@ const Referral = () => {
       <div className="container mt-5">
         <h5 className="fw-bold mb-3">Referral</h5>
         <p>Want to refer a friend? Please copy your referral link below.</p>
-        {loading ? (
+        {isLoadingUserProfile ? (
           <div className="spinner text-dark text-center mt-5">
             <Spinner
               as="span"
@@ -85,7 +56,7 @@ const Referral = () => {
               <input
                 id="foo"
                 type="text"
-                value={`https://www.mylottohub.com/${userData?.id}`}
+                value={`https://agency.mylottohub.com/${userProfileResponse?.id}`}
                 className="form-control p-2"
                 readOnly=""
                 disabled
@@ -98,7 +69,9 @@ const Referral = () => {
                 data-clipboard-action="copy"
                 data-clipboard-target="#foo"
                 onClick={() =>
-                  notify(`https://www.mylottohub.com/${userData?.id}`)
+                  notify(
+                    `https://agency.mylottohub.com/${userProfileResponse?.id}`
+                  )
                 }
               >
                 Copy Link

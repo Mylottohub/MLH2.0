@@ -549,11 +549,6 @@ const PlayGames = () => {
           drawDate: selectedGame.sdt,
           drawTime: selectedGame.sdt,
           closetime: selectedGame.sdt,
-          // gid: operatorData.gid,
-          // sdt: sdtDate,
-          // drawDate: sdtDate,
-          // drawTime: sdtDate,
-          // closetime: sdtDate,
         };
       }
       default:

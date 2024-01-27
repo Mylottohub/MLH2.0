@@ -71,15 +71,17 @@ const PlayBet = () => {
   const handleNumberButtonClick = (amount) => {
     setInputAmount(amount);
   };
-
   const calculateTotalOdds = (selections) => {
     if (!selections || selections.length === 0) {
       return 1;
     }
 
-    return selections.reduce((totalOdds, selection) => {
+    const totalOdds = selections.reduce((totalOdds, selection) => {
       return totalOdds * parseFloat(selection.odds);
     }, 1);
+
+    // Round to two decimal places
+    return parseFloat(totalOdds.toFixed(2));
   };
 
   const handlePlaceBet = async () => {

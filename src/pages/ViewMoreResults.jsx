@@ -174,7 +174,7 @@ const ViewMoreResults = () => {
                       className="col-8 col-lg-6 col-xs-8"
                       style={{ padding: "20px" }}
                     >
-                      {perOperator.map((item, index) => {
+                      {perOperator?.map((item, index) => {
                         if (operatorID === "lotto_nigeria") {
                           if (index === 0) {
                             return (
@@ -313,7 +313,7 @@ const ViewMoreResults = () => {
                             <td align="center">
                               <br />
                               <br />
-                              {perOperator.map((item, index) => {
+                              {perOperator?.map((item, index) => {
                                 if (operatorID === "lotto_nigeria") {
                                   const drawDateTime = moment(
                                     item.drawDate,

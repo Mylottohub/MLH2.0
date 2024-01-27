@@ -304,7 +304,10 @@ const Operator = () => {
                     <strong>Sign Up/ play with any Operator</strong>
                     <br />
                     <br />
-                    <p style={{ textAlign: "justify" }} className="mt-2">
+                    <p
+                      style={{ textAlign: "center", lineHeight: "25px" }}
+                      className="mt-2"
+                    >
                       {" "}
                       Register and join mylottohub to enjoy, play over 300 games
                       across multiple operators from one single account. It is
@@ -327,7 +330,7 @@ const Operator = () => {
                     <strong>Your Winnings in one wallet</strong>
                     <br />
                     <br />
-                    <p style={{ textAlign: "justify" }}>
+                    <p style={{ textAlign: "center", lineHeight: "25px" }}>
                       {" "}
                       Register and join mylottohub to enjoy, play over 300 games
                       across multiple operators from one single account. It is
@@ -350,7 +353,7 @@ const Operator = () => {
                     <strong>Withdraw to your account</strong>
                     <br />
                     <br />
-                    <p style={{ textAlign: "justify" }}>
+                    <p style={{ textAlign: "center", lineHeight: "25px" }}>
                       Cashout your winnings directly to your bank account on
                       request It is fast and instant.
                     </p>

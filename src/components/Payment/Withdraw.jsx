@@ -1,18 +1,12 @@
-import { Button, Modal, Spinner } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-toastify";
 import * as yup from "yup";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useGetProfileUser } from "../../react-query";
+import { useState } from "react";
 
 const WithdrawModal = () => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [showWallet, setShowWallet] = useState(false);
-  const { userInfo } = useSelector((state) => state.auth);
 
   // Define the validation schema using yup
   const schema = yup.object().shape({
@@ -39,30 +33,7 @@ const WithdrawModal = () => {
     console.log(data);
     // Add your logic to send data to the server for withdrawal
   };
-
-  useEffect(() => {
-    if (userInfo && userInfo.data) {
-      const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      };
-
-      axios
-        .get(apiUrl, config)
-        .then((response) => {
-          setUserData(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setLoading(false);
-        });
-    }
-  }, [userInfo]);
+  const { userProfileResponse } = useGetProfileUser([]);
 
   return (
     <div>
@@ -76,7 +47,7 @@ const WithdrawModal = () => {
               <br />
               <small className="mt-3">
                 Winning Wallet Balance -{" "}
-                <strong>₦{userInfo?.data?.wwallet}</strong>
+                <strong>₦{userProfileResponse?.wwallet}</strong>
               </small>
               <hr />
               <p>
@@ -91,7 +62,7 @@ const WithdrawModal = () => {
                   // placeholder="First Name"
                   name="firstName"
                   disabled
-                  value={userInfo?.data?.first_name}
+                  value={userProfileResponse?.first_name}
                   // {...register("firstName", {
                   //   required: "Required",
                   // })}
@@ -106,7 +77,7 @@ const WithdrawModal = () => {
                 <input
                   type="text"
                   className="form-control  mb-2 p-2"
-                  value={userInfo?.data?.last_name}
+                  value={userProfileResponse?.last_name}
                   name="lastName"
                   disabled
                   // {...register("lastName", {
@@ -161,7 +132,7 @@ const WithdrawModal = () => {
               <br />
               <small className="mt-3">
                 Winning Wallet Balance -{" "}
-                <strong>₦{userInfo.data.wwallet}</strong>
+                <strong>₦{userProfileResponse?.wwallet}</strong>
               </small>
               <hr />
               <p>
@@ -203,7 +174,7 @@ const WithdrawModal = () => {
               <br />
               <small className="mt-3">
                 Winning Wallet Balance -{" "}
-                <strong>₦{userInfo.data.wwallet}</strong>
+                <strong>₦{userProfileResponse?.wwallet}</strong>
               </small>
               <hr />
               <p>

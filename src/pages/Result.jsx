@@ -85,8 +85,6 @@ const Result = () => {
                       new Date(a.results[0]?.date)
                   )
                   .map((record, index) => {
-                    const imageSrc = `/images/${record.logo}`;
-                    // console.log(record);
                     const latestResult = record.results[0];
 
                     return (
@@ -94,7 +92,7 @@ const Result = () => {
                         <div className="row app__all-result">
                           <div className="col-3 col-lg-2">
                             <img
-                              src={imageSrc}
+                              src={record?.logo}
                               className="img-fluid img-rounded"
                               alt={`${record.name}`}
                             />

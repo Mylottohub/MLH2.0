@@ -8,9 +8,10 @@ import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/register.css";
 import { useUserotpMutation } from "../pages/slices/userApiSlice";
+import { useResendotpMutation } from "../pages/slices/userApiSlice";
 import { setCredentials } from "../pages/slices/authSlice";
-// import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const schema = yup.object().shape({
   token: yup.string().required("Otp is required"),
@@ -22,6 +23,8 @@ const Otp = () => {
   const dispatch = useDispatch();
 
   const [userotp, { isLoading }] = useUserotpMutation();
+  const [resendotp] = useResendotpMutation();
+  const [resendLoading, setResendLoading] = useState(false);
 
   const email = sessionStorage.getItem("email");
   const userPasswordMessage = sessionStorage.getItem("password-reset");
@@ -41,14 +44,15 @@ const Otp = () => {
       if (userPasswordMessage) {
         navigate("/reset-password");
         sessionStorage.removeItem("password-reset");
-        console.log(email);
       } else if (email) {
-        console.log(email);
+        // console.log(email);
         dispatch(setCredentials({ token, data: userInfo }));
         navigate("/");
+        sessionStorage.removeItem("email");
       } else {
         dispatch(setCredentials({ token, data: userInfo }));
         navigate("/");
+        sessionStorage.removeItem("email");
       }
     } catch (err) {
       if (err?.data?.message) {
@@ -56,6 +60,23 @@ const Otp = () => {
       } else {
         toast.error("An error occurred during verification.");
       }
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      setResendLoading(true);
+
+      await resendotp({ email });
+      toast.success("OTP has been resent successfully");
+    } catch (err) {
+      if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else {
+        toast.error("An error occurred while resending OTP.");
+      }
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -102,10 +123,6 @@ const Otp = () => {
                 />
               </div>
 
-              {/* 
-              <button type="submit" className="btn btn-primary w-100 p-3">
-                Register
-              </button> */}
               <Button type="submit" className="w-100 p-3" disabled={isLoading}>
                 {isLoading ? (
                   <Spinner
@@ -120,6 +137,31 @@ const Otp = () => {
                 )}
               </Button>
             </form>
+            <label className="mt-2">
+              Didn’t receive the code?
+              <span
+                className="text-primary"
+                style={{
+                  cursor: "pointer",
+                  textDecoration: "none",
+                }}
+              >
+                {" "}
+                <a onClick={handleResendOtp} disabled={resendLoading}>
+                  {resendLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "Resend OTP"
+                  )}
+                </a>
+              </span>
+            </label>
           </div>
         </div>
       </div>

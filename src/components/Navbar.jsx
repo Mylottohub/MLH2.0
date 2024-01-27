@@ -1,17 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { images } from "../constant";
 import Header from "./Header";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
 import BModal from "./BModal/BModal";
 import Deposit from "./Payment/Deposit";
 import WithdrawModal from "./Payment/Withdraw";
 import { logout } from "../pages/slices/authSlice";
-import { useEffect } from "react";
-import axios from "axios";
 import UserProfile from "./Payment/UserProfile";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
+import { useGetProfileUser } from "../react-query";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -39,35 +38,6 @@ const Navbar = () => {
   const handleUserProfile = () => {
     handleUserOpen();
   };
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { userInfo } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (userInfo && userInfo.data) {
-      const apiUrl = `https://sandbox.mylottohub.com/v1/get-user/${userInfo.data.id}`;
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-          "Content-Type": "application json",
-          Accept: "application/json",
-        },
-      };
-
-      axios
-        .get(apiUrl, config)
-        .then((response) => {
-          setUserData(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setError(error);
-          setLoading(false);
-        });
-    }
-  }, [userInfo]);
 
   const dispatch = useDispatch();
 
@@ -80,9 +50,11 @@ const Navbar = () => {
       // console.log(error);
     }
   };
+  const { userProfileResponse, isLoadingUserProfile, token } =
+    useGetProfileUser([]);
   return (
     <>
-      {userInfo && userInfo.token ? (
+      {token && token ? (
         <>
           <div className="mobile__header">
             <Header />
@@ -120,7 +92,7 @@ const Navbar = () => {
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                           >
-                            <FaUser />
+                            <FaUser className="fa-2x" />
                           </a>
                           <ul
                             className="dropdown-menu"
@@ -335,9 +307,9 @@ const Navbar = () => {
                           aria-expanded="false"
                         >
                           <small>
-                            {userInfo.data.username}
+                            {userProfileResponse?.username}
                             <br />
-                            ID: {userInfo.data.id}
+                            ID: {userProfileResponse?.id}
                           </small>
                         </a>
                         <ul className="dropdown-menu">
@@ -445,16 +417,14 @@ const Navbar = () => {
             </nav>
           </div>
           <div className="container mobile_bottom_head">
-            {loading ? (
+            {isLoadingUserProfile ? (
               <p>Balance Loading...</p>
-            ) : error ? (
-              <p></p>
-            ) : userData ? (
+            ) : userProfileResponse ? (
               <>
                 <div className="row">
                   <div className="col-10">
                     <small>
-                      ₦{userData.wallet}
+                      ₦{userProfileResponse?.wallet}
                       <br />
                       Wallet Balance
                     </small>
@@ -466,7 +436,7 @@ const Navbar = () => {
                   </div>
                   <div className="col-2">
                     <small>
-                      ₦{userData.wwallet}
+                      ₦{userProfileResponse?.wwallet}
                       <br />
                       Winnings
                     </small>

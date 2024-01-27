@@ -58,7 +58,7 @@ const Register = () => {
       const res = await registers(data).unwrap();
       dispatch(setCredentials({ ...res }));
       toast.success(
-        "Registration successful, an OTP has been sent to your email for verfication"
+        "Registration successful, an OTP has been sent to your email for verification"
       );
       navigate("/otp");
     } catch (err) {
