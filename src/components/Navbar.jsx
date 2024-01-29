@@ -234,7 +234,10 @@ const Navbar = () => {
                       </a>
                     </li>
 
-                    <li className="nav-item">
+                    <li
+                      onClick={() => navigate("/forecast")}
+                      className="nav-item"
+                    >
                       <a className="nav-link text-white me-3 ">Forecast</a>
                     </li>
 
@@ -551,7 +554,10 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li className="nav-item  ">
+                <li
+                  onClick={() => navigate("/forecast")}
+                  className="nav-item  "
+                >
                   <a className="nav-link text-white me-3">Forecast</a>
                 </li>
 

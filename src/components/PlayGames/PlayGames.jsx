@@ -588,7 +588,8 @@ const PlayGames = () => {
       } else {
         sessionStorage.removeItem(localStorageKey);
         toast.success("Your selected game has been submitted successfully");
-        window.location.reload();
+        // window.location.reload();
+        navigate(`/`);
       }
     } catch (error) {
       console.log(error);

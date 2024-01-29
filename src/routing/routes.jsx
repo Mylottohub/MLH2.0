@@ -22,6 +22,7 @@ import DepositHistory from "../components/Transactions/DepositHistory";
 import Betting from "../components/SportsBetting/Betting";
 import ListAllWallets from "../components/Wallets/ListAllWallets";
 import PlayBet from "../components/SportsBetting/PlayBet";
+import Forecast from "../pages/Forecast";
 
 export const routes = [
   {
@@ -167,5 +168,11 @@ export const routes = [
     path: "/play-bet/:id",
     element: <PlayBet />,
     protected: true,
+  },
+  {
+    id: 23,
+    path: "/forecast",
+    element: <Forecast />,
+    protected: false,
   },
 ];

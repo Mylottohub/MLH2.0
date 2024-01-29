@@ -8,18 +8,18 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import App from "./App.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { logout } from "./pages/slices/authSlice.js";
+// import { logout } from "./pages/slices/authSlice.js";
 
 const queryClient = new QueryClient();
 
-const handleVisibilityChange = () => {
-  if (document.visibilityState === "hidden") {
-    store.dispatch(logout());
-    queryClient.clear();
-  }
-};
+// const handleVisibilityChange = () => {
+//   if (document.visibilityState === "hidden") {
+//     store.dispatch(logout());
+//     queryClient.clear();
+//   }
+// };
 
-document.addEventListener("visibilitychange", handleVisibilityChange);
+// document.addEventListener("visibilitychange", handleVisibilityChange);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>

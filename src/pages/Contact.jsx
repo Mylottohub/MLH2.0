@@ -27,7 +27,7 @@ const Contact = () => {
                     required=""
                   />
                 </div>
-                <div className="col-xs-12  col-sm-6">
+                <div className="col-xs-12 mb-5 col-sm-6">
                   <input
                     type="email"
                     placeholder="Email"

@@ -110,7 +110,7 @@ const Login = () => {
                       marginTop: "10px",
                     }}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </p>
                 </div>
               </div>

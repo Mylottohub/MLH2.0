@@ -67,7 +67,9 @@ const Footer = () => {
                     <h2>Quick Links</h2>
                     <ul>
                       <li>
-                        <a href="#">Forecast</a>
+                        <a onClick={() => navigate("/forecast")} href="#">
+                          Forecast
+                        </a>
                       </li>
 
                       <li>
