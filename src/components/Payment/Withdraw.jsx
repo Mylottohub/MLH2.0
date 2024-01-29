@@ -51,8 +51,8 @@ const WithdrawModal = () => {
               </small>
               <hr />
               <p>
-                Please click the buttons below to either withdraw funds to your
-                bank account or transfer back to your lotto wallet.
+                To Withdraw, kindly ensure that bank name matches your register
+                name
               </p>
               <div>
                 {/* <label htmlFor="firstName">First Name</label> */}

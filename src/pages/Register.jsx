@@ -82,11 +82,11 @@ const Register = () => {
         <div className="row">
           <div className="col-lg-6 mx-auto mb-5 app__register">
             <h1 className="mb-4">Register</h1>
-            <h6 className="mb-4">
+            <p className="mb-4 text-center">
               Play all your favorite Nigerian lotto games from one account on
               mylottohub and get your winnings paid instantly to your bank
               account
-            </h6>
+            </p>
 
             <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
               <div className="mb-3">

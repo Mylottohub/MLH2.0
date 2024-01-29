@@ -179,14 +179,14 @@ const ViewMoreResults = () => {
                           if (index === 0) {
                             return (
                               <div key={index}>
-                                <strong> {item.drawAlias}</strong> <br />
+                                <strong> {item?.drawAlias}</strong> <br />
                                 <br />
-                                {moment(item.drawDate, "DD/MM/YYYY HH:mm")
+                                {moment(item?.drawDate, "DD/MM/YYYY HH:mm")
                                   .local()
                                   .format("DD MMM, YYYY")}{" "}
                                 |{" "}
                                 {moment(
-                                  item.drawDate,
+                                  item?.drawDate,
                                   "DD/MM/YYYY HH:mm"
                                 ).format("HH:mm")}
                                 <br />
@@ -206,9 +206,9 @@ const ViewMoreResults = () => {
                           if (index === 0) {
                             return (
                               <div key={index}>
-                                <strong> {item.gn}</strong> <br />
+                                <strong> {item?.gn}</strong> <br />
                                 <br />
-                                {moment(item.sdt) // Assuming item.sdt is the timestamp
+                                {moment(item?.sdt) // Assuming item.sdt is the timestamp
                                   .local()
                                   .format("DD MMM, YYYY")}{" "}
                                 | {moment(item.sdt).format("HH:mm")}
@@ -229,12 +229,12 @@ const ViewMoreResults = () => {
                           if (index === 0) {
                             return (
                               <div key={index}>
-                                <strong> {item.gn}</strong> <br />
+                                <strong> {item?.gn}</strong> <br />
                                 <br />
-                                {moment(item.sdt)
+                                {moment(item?.sdt)
                                   .local()
                                   .format("DD MMM, YYYY")}{" "}
-                                | {moment(item.sdt).format("HH:mm")}
+                                | {moment(item?.sdt).format("HH:mm")}
                                 <br />
                                 <br />
                                 <a
@@ -252,13 +252,13 @@ const ViewMoreResults = () => {
                           if (index == 0) {
                             return (
                               <div key={index}>
-                                <strong>{item.drawname}</strong> <br />
+                                <strong>{item?.drawname}</strong> <br />
                                 <br />
                                 {moment
-                                  .utc(item.drawdate, "YYYY-MM-DD")
+                                  .utc(item?.drawdate, "YYYY-MM-DD")
                                   .local()
                                   .format("MMM DD, YYYY")}{" "}
-                                | {item.drawtime}
+                                | {item?.drawtime}
                                 <br />
                                 <br />
                                 <a
@@ -276,13 +276,13 @@ const ViewMoreResults = () => {
                           if (index == 0) {
                             return (
                               <div key={index}>
-                                <strong>{item.drawname}</strong> <br />
+                                <strong>{item?.drawname}</strong> <br />
                                 <br />
                                 {moment
-                                  .utc(item.drawdate, "YYYY-MM-DD")
+                                  .utc(item?.drawdate, "YYYY-MM-DD")
                                   .local()
                                   .format("MMM DD, YYYY")}{" "}
-                                | {item.drawtime}
+                                | {item?.drawtime}
                                 <br />
                                 <br />
                                 <a
@@ -365,7 +365,7 @@ const ViewMoreResults = () => {
                                     return null;
                                   }
                                 } else if (operatorID === "wesco") {
-                                  const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
+                                  const drawDateTimeString = `${item?.drawdate} ${item?.drawtime}`;
                                   const drawDateTime = moment(
                                     drawDateTimeString,
                                     "YYYYMMDD HH:mm:ss"
@@ -524,7 +524,7 @@ const ViewMoreResults = () => {
                                     );
                                   }
                                 } else if (operatorID === "green_lotto") {
-                                  const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
+                                  const drawDateTimeString = `${item?.drawdate} ${item?.drawtime}`;
                                   const drawDateTime = moment(
                                     drawDateTimeString,
                                     "YYYYMMDD HH:mm:ss"
@@ -601,7 +601,7 @@ const ViewMoreResults = () => {
                               .map((data, dataIndex) => {
                                 return (
                                   <div
-                                    key={`${record.id}-${dataIndex}`}
+                                    key={`${record?.id}-${dataIndex}`}
                                     className="col-md-4 mb-5"
                                   >
                                     <div className="div_lgrey">
@@ -669,7 +669,7 @@ const ViewMoreResults = () => {
                               .map((data, dataIndex) => {
                                 return (
                                   <div
-                                    key={`${record.id}-${dataIndex}`}
+                                    key={`${record?.id}-${dataIndex}`}
                                     className="col-md-4 mb-5"
                                   >
                                     <div className="div_lgrey">
@@ -735,7 +735,7 @@ const ViewMoreResults = () => {
                               .map((data, dataIndex) => {
                                 return (
                                   <div
-                                    key={`${record.id}-${dataIndex}`}
+                                    key={`${record?.id}-${dataIndex}`}
                                     className="col-md-4 mb-5"
                                   >
                                     <div className="div_lgrey">
@@ -793,7 +793,7 @@ const ViewMoreResults = () => {
                               })}
                           </React.Fragment>
                         );
-                      } else if (record.name === "Golden Chance") {
+                      } else if (record?.name === "Golden Chance") {
                         return (
                           <React.Fragment key={record.id}>
                             {record.results
@@ -804,7 +804,7 @@ const ViewMoreResults = () => {
                                 // console.log(record);
                                 return (
                                   <div
-                                    key={`${record.id}-${dataIndex}`}
+                                    key={`${record?.id}-${dataIndex}`}
                                     className="col-md-4 mb-5"
                                   >
                                     <div className="div_lgrey">
@@ -862,7 +862,7 @@ const ViewMoreResults = () => {
                               })}
                           </React.Fragment>
                         );
-                      } else if (record.name === "5/90 Games") {
+                      } else if (record?.name === "5/90 Games") {
                         return (
                           <React.Fragment key={record.id}>
                             {record.results
@@ -873,12 +873,12 @@ const ViewMoreResults = () => {
                                 // console.log(record);
                                 return (
                                   <div
-                                    key={`${record.id}-${dataIndex}`}
+                                    key={`${record?.id}-${dataIndex}`}
                                     className="col-md-4 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
-                                        <strong>{data.game}</strong>
+                                        <strong>{data?.game}</strong>
                                       </p>
                                       <br />
                                       <p className="text-center">
@@ -886,7 +886,7 @@ const ViewMoreResults = () => {
                                           Draw Time:{" "}
                                           {moment
                                             .utc(
-                                              data.date,
+                                              data?.date,
                                               "YYYY-MM-DD HH:mm:ss"
                                             )
                                             .local()
@@ -929,17 +929,6 @@ const ViewMoreResults = () => {
                                                 </td>
                                               ))}
                                           </tr>
-                                          {/* <tr>
-                                            {data?.machine_number
-                                              ?.split("-")
-                                              .map((digit, j) => (
-                                                <td key={j}>
-                                                  <div className="numboxred">
-                                                    {digit !== "0"}
-                                                  </div>
-                                                </td>
-                                              ))}
-                                          </tr> */}
                                         </tbody>
                                       </table>
                                     </div>
@@ -950,20 +939,20 @@ const ViewMoreResults = () => {
                         );
                       } else if (record.name === "Green lotto") {
                         return (
-                          <React.Fragment key={record.id}>
-                            {record.results
+                          <React.Fragment key={record?.id}>
+                            {record?.results
                               .sort(
                                 (a, b) => new Date(b.date) - new Date(a.date)
                               )
                               .map((data, dataIndex) => {
                                 return (
                                   <div
-                                    key={`${record.id}-${dataIndex}`}
+                                    key={`${record?.id}-${dataIndex}`}
                                     className="col-md-4 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
-                                        <strong>{data.game}</strong>
+                                        <strong>{data?.game}</strong>
                                       </p>
                                       <br />
                                       <p className="text-center">
