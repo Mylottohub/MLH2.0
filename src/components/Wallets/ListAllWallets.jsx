@@ -6,6 +6,7 @@ import Deposit from "../Payment/Deposit";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import { useGetProfileUser } from "../../react-query";
+import Footer from "../Footer";
 
 const ListAllWallets = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const ListAllWallets = () => {
     <React.Fragment>
       {" "}
       <Navbar />
-      <div className="container">
+      <div className="container mt-5">
         {isLoadingUserProfile ? (
           <div className="spinner text-dark text-center mt-5">
             <Spinner
@@ -43,7 +44,7 @@ const ListAllWallets = () => {
             />
           </div>
         ) : (
-          <div className="meg_container">
+          <div>
             <div className="row mt-5 mb-5">
               <div className="col-md-9 col-xs-12 mb-5">
                 <div className="row">
@@ -52,9 +53,9 @@ const ListAllWallets = () => {
                       <p>
                         <strong>Deposit Wallet</strong>
                       </p>
-                      <p className="lead text-danger">
-                        ₦ {userProfileResponse && userProfileResponse?.wallet}{" "}
-                      </p>
+                      <strong className="lead text-success">
+                        ₦{userProfileResponse && userProfileResponse?.wallet}{" "}
+                      </strong>
                       <p>
                         <a
                           className="btn btn-blue btn-block w-100 mt-4"
@@ -70,11 +71,11 @@ const ListAllWallets = () => {
                       <p>
                         <strong>Winning Wallet</strong>
                       </p>
-                      <p className="lead text-danger">
+                      <strong className="lead text-success">
                         {" "}
-                        ₦ {userProfileResponse &&
+                        ₦{userProfileResponse &&
                           userProfileResponse?.wwallet}{" "}
-                      </p>
+                      </strong>
                       <p>
                         <a
                           className="btn btn-blue btn-block w-100 mt-4"
@@ -90,11 +91,11 @@ const ListAllWallets = () => {
                       <p>
                         <strong>Referral Bonus Wallet</strong>
                       </p>
-                      <p className="lead text-danger">
+                      <strong className="lead text-success">
                         {" "}
-                        ₦ {userProfileResponse &&
+                        ₦{userProfileResponse &&
                           userProfileResponse?.ref_give}{" "}
-                      </p>
+                      </strong>
                     </div>
                   </div>
 
@@ -107,12 +108,12 @@ const ListAllWallets = () => {
                               <p>
                                 <strong>Green Lotto Bonus Wallet</strong>
                               </p>
-                              <p className="lead text-danger">
+                              <strong className="lead text-success">
                                 {" "}
-                                ₦{" "}
+                                ₦
                                 {userProfileResponse &&
                                   userProfileResponse?.sl_bwallet}{" "}
-                              </p>
+                              </strong>
                             </td>
                           </tr>
                           <tr>
@@ -142,9 +143,9 @@ const ListAllWallets = () => {
                               <p>
                                 <strong>Set Lotto Bonus Wallet</strong>
                               </p>
-                              <p className="lead text-danger">
+                              <p className="lead text-success">
                                 {" "}
-                                ₦{" "}
+                                ₦
                                 {userProfileResponse &&
                                   userProfileResponse?.sl_bwallet}{" "}
                               </p>
@@ -177,9 +178,9 @@ const ListAllWallets = () => {
                               <p>
                                 <strong>Lottomania Bonus Wallet</strong>
                               </p>
-                              <p className="lead text-danger">
+                              <p className="lead text-success">
                                 {" "}
-                                ₦{" "}
+                                ₦
                                 {userProfileResponse &&
                                   userProfileResponse?.lm_bwallet}
                               </p>
@@ -213,9 +214,9 @@ const ListAllWallets = () => {
                               <p>
                                 <strong>590 Bonus Wallet</strong>
                               </p>
-                              <p className="lead text-danger">
+                              <p className="lead text-success">
                                 {" "}
-                                ₦{" "}
+                                ₦
                                 {userProfileResponse &&
                                   userProfileResponse?.gh_bwallet}{" "}
                               </p>
@@ -284,6 +285,7 @@ const ListAllWallets = () => {
           </div>
         )}
       </div>
+      <Footer />
       <BModal
         backdrop="static"
         keyboard={false}

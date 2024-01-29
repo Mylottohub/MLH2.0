@@ -125,11 +125,11 @@ const Navbar = () => {
                                 &nbsp;&nbsp;Withdraw
                               </a>
                             </li>
-                            <li>
+                            {/* <li>
                               <a className="dropdown-item p-2">
                                 &nbsp;&nbsp;Subscription
                               </a>
-                            </li>
+                            </li> */}
                             <li>
                               <a
                                 className="dropdown-item p-2"
@@ -144,17 +144,11 @@ const Navbar = () => {
                               </a>
                             </li>
 
-                            <li className="text-right hidden-xs hidden-sm">
-                              <li className="nav-item dropdown">
-                                <a>
-                                  <span
-                                    className="btn btn-white"
-                                    onClick={() => handleLogout()}
-                                  >
-                                    Logout
-                                  </span>
-                                </a>
-                              </li>
+                            <li className="dropdown-item p-2">
+                              <a onClick={() => handleLogout()}>
+                                {" "}
+                                &nbsp;&nbsp; Logout
+                              </a>
                             </li>
                           </ul>
                         </li>

@@ -181,7 +181,7 @@ const BetHistory = () => {
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">TICKET ID</th>
-                    <th scope="col">GAME</th>
+                    <th scope="col">GAME TYPE</th>
                     <th scope="col">GAME NAME</th>
                     <th scope="col">STATUS</th>
                     <th scope="col">PLAY DATE</th>
@@ -201,7 +201,7 @@ const BetHistory = () => {
                           .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
                           .local()
                           .format("Do MMM YYYY | h:mm:ssA");
-                        console.log(record);
+                        // console.log(record);
 
                         return (
                           <tr key={index} className="table-light">
@@ -439,11 +439,11 @@ const BetHistory = () => {
                 <span>
                   {" "}
                   {id === "green_lotto" ? (
-                    <p> {selectedBet?.TikcetId}</p>
+                    <span> {selectedBet?.TikcetId}</span>
                   ) : id === "lotto_nigeria" ? (
-                    <p> {selectedBet?.wagerID}</p>
+                    <span> {selectedBet?.wagerID}</span>
                   ) : (
-                    <p> {selectedBet?.TSN}</p>
+                    <span> {selectedBet?.TSN}</span>
                   )}
                 </span>
               </p>
@@ -455,29 +455,29 @@ const BetHistory = () => {
                 <span className="fw-bolder">DRAW DATE: </span>{" "}
                 <span>
                   {id === "green_lotto" ? (
-                    <p>
+                    <span>
                       {" "}
                       {moment
                         .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA")}
-                    </p>
+                    </span>
                   ) : id === "lotto_nigeria" ? (
-                    <p>
+                    <span>
                       {" "}
                       {moment
                         .utc(selectedBet?.drawDate, "YYYY-MM-DD HH:mm:ss")
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA")}
-                    </p>
+                    </span>
                   ) : (
-                    <p>
+                    <span>
                       {" "}
                       {moment
                         .utc(selectedBet?.DrawTime, "YYYY-MM-DD HH:mm:ss")
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA")}
-                    </p>
+                    </span>
                   )}
                 </span>
               </p>
@@ -490,7 +490,7 @@ const BetHistory = () => {
                 <span className="fw-bolder">PLAY DATE:</span>{" "}
                 <span>
                   {moment
-                    .utc(selectedBet?.created_at, "YYYY-MM-DD HH:mm:ss")
+                    .utc(selectedBet?.date, "YYYY-MM-DD HH:mm:ss")
                     .local()
                     .format("Do MMM YYYY | h:mm:ssA")}
                 </span>
@@ -501,16 +501,17 @@ const BetHistory = () => {
                 <span>
                   {" "}
                   {id === "green_lotto" ? (
-                    <td>{selectedBet?.mgametype}</td>
+                    <span>Green Lotto</span>
                   ) : id === "lotto_nigeria" ? (
-                    <p> {selectedBet?.mgametype}</p>
+                    <span> Set Lotto</span>
                   ) : id === "lottomania" ? (
-                    <td className="text-capitalize">
-                      {selectedBet?.operator_type}
-                    </td>
+                    <span className="text-capitalize">Lottomania</span>
+                  ) : id === "ghana_game" ? (
+                    <span className="text-capitalize">5/90 Games</span>
                   ) : (
-                    <td> {selectedBet?.SelectionType}</td>
+                    <span> {id}</span>
                   )}
+                  {/* {id} */}
                 </span>
               </p>
 
