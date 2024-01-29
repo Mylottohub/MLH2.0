@@ -1,8 +1,8 @@
 import Navbar from "../components/Navbar";
-import useTimeTable from "../react-query/api-hooks/useTimetable";
+// import useTimeTable from "../react-query/api-hooks/useTimetable";
 
 const Forecast = () => {
-  const { operatorTimetable, isLoadingTimetable } = useTimeTable();
+  //   const { operatorTimetable, isLoadingTimetable } = useTimeTable();
   //   console.log(operatorTimetable?.data);
   return (
     <div>
