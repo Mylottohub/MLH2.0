@@ -221,7 +221,7 @@ const Navbar = () => {
 
                     <li className="nav-item">
                       <a className="nav-link text-white me-3  app__proforecast">
-                        Pro-Forecaster
+                        Create Charts
                       </a>
                     </li>
 
@@ -377,12 +377,12 @@ const Navbar = () => {
                               &nbsp;&nbsp;Withdraw
                             </a>
                           </li>
-                          <li>
+                          {/* <li>
                             <a className="dropdown-item p-2">
-                              {/* <BsSubscript /> */}
+                             
                               &nbsp;&nbsp;Subscription
                             </a>
-                          </li>
+                          </li> */}
                           <li>
                             <a
                               className="dropdown-item p-2"
@@ -541,7 +541,7 @@ const Navbar = () => {
 
                 <li className="nav-item   ">
                   <a className="nav-link text-white app__proforecast">
-                    Pro-Forecaster
+                    Create Charts
                   </a>
                 </li>
 

@@ -16,38 +16,37 @@ const faq = [
   {
     id: 3,
     name: "Can I use the money in mylottohub account to play game?",
-    description:
-      "Yes",
+    description: "Yes",
     collapse: "collapseThree",
   },
-  {
-    id: 4,
-    name: "Who is a pro-forecaster?",
-    description:
-      "A pro-forecaster is a professional forecaster who has been identified as someone who is good with predicting what the results of the next lottery draw for a particular game might be.",
-    collapse: "collapseFour",
-  },
-  {
-    id: 5,
-    name: "How long does my subscription last?",
-    description:
-      "Subscription to a pro-forecaster is valid for 7days. After which user will be required to renew his/her subscription.es",
-    collapse: "collapseFive",
-  },
-  {
-    id: 6,
-    name: "How much is the subscription cost for a pro-forecaster?",
-    description:
-      "The weekly subscription cost to a pro-forecaster is N100. And this is valid for just 7 days.",
-    collapse: "collapseSix",
-  },
-  {
-    id: 7,
-    name: "How long does my subscription last?",
-    description:
-      "Subscription to a pro-forecaster is valid for 7days. After which user will be required to renew his/her subscription.es",
-    collapse: "collapseEight",
-  },
+  // {
+  //   id: 4,
+  //   name: "Who is a pro-forecaster?",
+  //   description:
+  //     "A pro-forecaster is a professional forecaster who has been identified as someone who is good with predicting what the results of the next lottery draw for a particular game might be.",
+  //   collapse: "collapseFour",
+  // },
+  // {
+  //   id: 5,
+  //   name: "How long does my subscription last?",
+  //   description:
+  //     "Subscription to a pro-forecaster is valid for 7days. After which user will be required to renew his/her subscription.es",
+  //   collapse: "collapseFive",
+  // },
+  // {
+  //   id: 6,
+  //   name: "How much is the subscription cost for a pro-forecaster?",
+  //   description:
+  //     "The weekly subscription cost to a pro-forecaster is N100. And this is valid for just 7 days.",
+  //   collapse: "collapseSix",
+  // },
+  // {
+  //   id: 7,
+  //   name: "How long does my subscription last?",
+  //   description:
+  //     "Subscription to a pro-forecaster is valid for 7days. After which user will be required to renew his/her subscription.es",
+  //   collapse: "collapseEight",
+  // },
   {
     id: 8,
     name: "What is a chart",
@@ -56,10 +55,10 @@ const faq = [
     collapse: "collapseNine",
   },
   {
-    id:9,
-    name: "What is quicksearch",
+    id: 9,
+    name: "What is Quick Forecast",
     description:
-      "Quick forecast is an algorithm that pulls statistical forecast from our pool of past lottery results. Hence helping players with suggestions for the next possible occurrence.",
+      "Quick Forecast is an algorithm that pulls statistical forecast from our pool of past lottery results. Hence helping players with suggestions for the next possible occurrence.",
     collapse: "collapseTen",
   },
   {
@@ -69,13 +68,13 @@ const faq = [
       "When you have winnings, the won amount is paid directly into your bank account within 24hrs.",
     collapse: "collapse11",
   },
-  {
-    id: 11,
-    name: "What is the lotto community?",
-    description:
-      "Subscription to a pro-forecaster is valid for 7days. After which user will be required to renew his/her subscription.es",
-    collapse: "collapse90",
-  },
+  // {
+  //   id: 11,
+  //   name: "What is the lotto community?",
+  //   description:
+  //     "Subscription to a pro-forecaster is valid for 7days. After which user will be required to renew his/her subscription.es",
+  //   collapse: "collapse90",
+  // },
   {
     id: 12,
     name: "Is mylottohub a lotto operator like baba ijebu or golden chance lotto?",
@@ -90,12 +89,12 @@ const faq = [
       "Our results are live results and they are posted as soon as the lottery draws are made.",
     collapse: "collapse13",
   },
-  {
-    id: 14,
-    name: "Can I get results and forecast games sent direct to my phone?",
-    description:
-      "Yes, you can if you subscribe to our short code and SMS service. This will be available soon.",
-    collapse: "collapse14",
-  },
+  // {
+  //   id: 14,
+  //   name: "Can I get results and forecast games sent direct to my phone?",
+  //   description:
+  //     "Yes, you can if you subscribe to our short code and SMS service. This will be available soon.",
+  //   collapse: "collapse14",
+  // },
 ];
 export default faq;
