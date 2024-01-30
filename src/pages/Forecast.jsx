@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import useTimeTable from "../react-query/api-hooks/useTimetable";
+import useTimeTable from "../react-query/api-hooks/useTimeTable";
 import "../assets/css/forecast.css";
 import Footer from "../components/Footer";
 import axios from "axios";
