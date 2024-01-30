@@ -173,6 +173,6 @@ export const routes = [
     id: 23,
     path: "/forecast",
     element: <Forecast />,
-    protected: false,
+    protected: true,
   },
 ];
