@@ -4,10 +4,12 @@ import { toast } from "react-toastify";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { BsShareFill } from "react-icons/bs";
-import { useGetProfileUser } from "../react-query";
+import { useGetProfileUser, useGetReferral } from "../react-query";
 
 const Referral = () => {
   const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
+  const { userReferred } = useGetReferral([]);
+  // console.log(userReferred);
   const notify = async (copyMe) => {
     try {
       await navigator.clipboard.writeText(copyMe);
@@ -88,21 +90,38 @@ const Referral = () => {
 
             <div className="table-responsive">
               <table className="table table-express table-hover mt-4">
-                <tbody>
-                  <tr>
-                    {/* <th scope="col">#</th> */}
-                    <th>USERNAME</th>
-                    <th>SIGNUP DATE</th>
-                  </tr>
-                </tbody>
+                {userReferred ? (
+                  userReferred.map((record, index) => (
+                    <>
+                      <tbody>
+                        <tr>
+                          <th>USERNAME</th>
+                          <th>SIGNUP DATE</th>
+                          <th>STATUS</th>
+                        </tr>
+                      </tbody>
 
-                <tbody>
-                  <tr className="table-light">
-                    {/* <td></td> */}
-                    <td></td>
-                    <td></td>
-                  </tr>
-                </tbody>
+                      <tbody>
+                        <tr key={index} className="table-light">
+                          <td>{record?.username}</td>
+                          <td>{record?.date}</td>
+                          <td>{record?.status}</td>
+                        </tr>
+                      </tbody>
+                    </>
+                  ))
+                ) : (
+                  <div className="d-flex justify-content-center text-center">
+                    <div className="hidden-xs hidden-sm mx-auto">
+                      <div
+                        className="alert alert-danger text-center"
+                        role="alert"
+                      >
+                        No Record Found
+                      </div>
+                    </div>
+                  </div>
+                )}
               </table>
             </div>
           </div>

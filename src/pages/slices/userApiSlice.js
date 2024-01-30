@@ -59,7 +59,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       try {
         const result = await queryFulfilled;
         const expiration = result.data?.expires;
-        console.log("sfsfs", expiration);
+        // console.log("sfsfs", expiration);
         dispatch(setCredentials(result?.data));
         setupLogoutTimer(expiration);
       } catch (error) {

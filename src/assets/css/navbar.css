@@ -79,6 +79,17 @@
     border-bottom: none !important;
 }
 
+#home-tab,
+#profile-tab,
+#contact-tab {
+    border-bottom: none !important;
+    font-weight: bolder;
+}
+
+#home-tab:hover {
+    border-bottom: none !important;
+}
+
 a:active,
 a:hover,
 a:focus {
@@ -153,6 +164,13 @@ a:focus {
 @media (max-width: 750px) {
     .nav-link {
         width: 90px;
+    }
+
+    #home-tab,
+    #profile-tab,
+    #contact-tab {
+        font-size: 12px;
+        width: 100%;
     }
 
     .app__proforecast {

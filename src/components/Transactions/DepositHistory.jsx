@@ -28,8 +28,8 @@ const DepositHistory = () => {
       .then((response) => {
         setTransaction(response.data.data);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        // console.log(error);
       })
       .finally(() => {
         setIsLoading(false);
