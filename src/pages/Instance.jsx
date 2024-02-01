@@ -25,7 +25,7 @@ const Instance = () => {
               }}
               onClick={() =>
                 window.open(
-                  "https://22bet.ng/casino?tag=d_532169m_7669c_",
+                  "https://betbonanza.com/casino/?trc=14241_14283_0",
                   "_blank"
                 )
               }
