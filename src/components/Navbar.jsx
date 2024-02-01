@@ -196,7 +196,10 @@ const Navbar = () => {
                           </a>
                         </li>
                         <li>
-                          <a className="dropdown-item p-2 ">
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/instant")}
+                          >
                             {/* <img src={images.instant} alt={images.instant} />{" "} */}
                             Instant Games
                           </a>
@@ -515,7 +518,7 @@ const Navbar = () => {
                     <li>
                       <a
                         className="dropdown-item p-2"
-                        // href="https://www.mylottohub.com/welcome/home_instant"
+                        onClick={() => navigate("/instant")}
                       >
                         {/* <img src={images.instant} alt={images.instant} />{" "} */}
                         Instant Games

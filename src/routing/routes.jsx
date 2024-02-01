@@ -23,6 +23,7 @@ import Betting from "../components/SportsBetting/Betting";
 import ListAllWallets from "../components/Wallets/ListAllWallets";
 import PlayBet from "../components/SportsBetting/PlayBet";
 import Forecast from "../pages/Forecast";
+import Instance from "../pages/Instance";
 
 export const routes = [
   {
@@ -170,9 +171,15 @@ export const routes = [
     protected: true,
   },
   {
-    id: 23,
+    id: 24,
     path: "/forecast",
     element: <Forecast />,
+    protected: true,
+  },
+  {
+    id: 25,
+    path: "/instant",
+    element: <Instance />,
     protected: true,
   },
 ];

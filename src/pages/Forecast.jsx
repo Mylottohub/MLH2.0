@@ -3,10 +3,10 @@ import Navbar from "../components/Navbar";
 import useTimeTable from "../react-query/api-hooks/useTimeTable";
 import "../assets/css/forecast.css";
 import Footer from "../components/Footer";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { HTTP } from "../utils";
 
 const Forecast = () => {
   const navigate = useNavigate();
@@ -45,8 +45,8 @@ const Forecast = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post(
-        "https://cors-anywhere.herokuapp.com/https://www.mylottohub.com/api/forecast",
+      const response = await HTTP.post(
+        "/get-forecast",
         {
           game_id: selectedGame,
           operator_id: selectedOperator,
@@ -56,17 +56,12 @@ const Forecast = () => {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          auth: {
-            username: "algo",
-            password: "mixjuice33",
-          },
         }
       );
 
       const data = response.data;
       setForecastData(data);
     } catch (error) {
-      // console.error("Error fetching forecast data:", error);
       console.error("Error fetching forecast data:", error);
       if (error.response && error.response.status === 400) {
         // Show toast for 400 status code
@@ -79,11 +74,11 @@ const Forecast = () => {
     }
   };
 
-  // Assuming you have forecastData available
-  const randomIncrement = Math.floor(Math.random() * 100) + 1;
+  // // Assuming you have forecastData available
+  // const randomIncrement = Math.floor(Math.random() * 100) + 1;
 
-  const updatedWinningCount = 3916 + randomIncrement;
-  const updatedMachineCount = 3299 + randomIncrement;
+  // const updatedWinningCount = 3916 + randomIncrement;
+  // const updatedMachineCount = 3299 + randomIncrement;
 
   return (
     <div>
@@ -162,9 +157,14 @@ const Forecast = () => {
                     <br />
                     <strong>
                       {" "}
-                      {forecastData.data.numbers.slice(7, 8).join(" - ")}
+                      {forecastData.data
+                        .slice(0, 1)
+                        .map((data) => data[`winning_num1`])
+                        .join(" - ")}
                       &nbsp; |&nbsp;
-                      {forecastData.data.numbers.slice(5, 6).join(" - ")}
+                      {forecastData.data
+                        .slice(8, 9)
+                        .map((data) => data[`machine_num4`])}
                     </strong>
                   </div>
                 </div>
@@ -204,8 +204,10 @@ const Forecast = () => {
                     <p className="d-sm-block d-none"></p>
                     <p className="d-md-none d-lg-block">
                       <strong className="fs-2">
-                        {" "}
-                        {forecastData.data.numbers.slice(0, 5).join(" - ")}
+                        {forecastData.data
+                          .slice(0, 5)
+                          .map((data, index) => data[`winning_num${index + 1}`])
+                          .join(" - ")}
                       </strong>
                     </p>
                   </div>
@@ -215,22 +217,22 @@ const Forecast = () => {
                     <table cellPadding="5" align="center">
                       <tbody>
                         <tr>
-                          {forecastData.data.numbers
-                            .slice(0, 5)
-                            .map((number, index) => (
-                              <td key={index}>
-                                <div className="numboxtranswhite">{number}</div>
-                              </td>
-                            ))}
+                          {forecastData.data.slice(0, 5).map((data, index) => (
+                            <td key={index}>
+                              <div className="numboxtranswhite">
+                                {data[`winning_num${index + 1}`]}
+                              </div>
+                            </td>
+                          ))}
                         </tr>
                         <tr>
-                          {forecastData.data.numbers
-                            .slice(5, 10)
-                            .map((number, index) => (
-                              <td key={index}>
-                                <div className="numboxtranswhite">{number}</div>
-                              </td>
-                            ))}
+                          {forecastData.data.slice(5, 10).map((data, index) => (
+                            <td key={index}>
+                              <div className="numboxtranswhite">
+                                {data[`machine_num${index + 1}`]}
+                              </div>
+                            </td>
+                          ))}
                         </tr>
                       </tbody>
                     </table>
@@ -256,9 +258,15 @@ const Forecast = () => {
                       <strong>This Week</strong>
                       <br />
                       SURE BANKER
-                      <br /> {forecastData.data.numbers.slice(7, 8).join(" - ")}
+                      <br />{" "}
+                      {forecastData.data
+                        .slice(0, 1)
+                        .map((data) => data[`winning_num1`])
+                        .join(" - ")}
                       &nbsp; |&nbsp;
-                      {forecastData.data.numbers.slice(5, 6).join(" - ")}
+                      {forecastData.data
+                        .slice(8, 9)
+                        .map((data) => data[`machine_num4`])}
                     </div>
                   </div>
                 </div>
