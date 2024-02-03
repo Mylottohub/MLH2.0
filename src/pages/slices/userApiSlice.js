@@ -4,11 +4,11 @@ import { logout, setCredentials } from "./authSlice";
 
 const USER_LOGIN = "/login";
 const USER_REGISTER = "/register";
-const USER_FORGOTPASSWORD = "/forgot";
-const USER_RESETPASSWORD = "/reset";
+const USER_FORGOTPASSWORD = "/user/forgot";
+const USER_RESETPASSWORD = "/user/reset";
 const PAY_WITH_PAYSTACK = "/payment-initialize";
 const USER_OTP = "/otp";
-const RESEND_OTP = "/resend";
+const RESEND_OTP = "/user/resend-otp";
 const OPERATOR_GAMES = "/get-games";
 
 export const userApiSlice = apiSlice.injectEndpoints({

@@ -200,7 +200,7 @@ const Register = () => {
                       marginTop: "10px",
                     }}
                   >
-                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </p>
                 </div>
               </div>
@@ -235,7 +235,7 @@ const Register = () => {
                       marginTop: "10px",
                     }}
                   >
-                    {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                   </p>
                 </div>
               </div>

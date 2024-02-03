@@ -68,7 +68,7 @@ const ResetPassword = () => {
             <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
               <div className="mb-3 position-relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? "password" : "text"}
                   className="form-control mb-2 p-3"
                   placeholder="Enter New Password"
                   name="password"

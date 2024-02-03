@@ -89,7 +89,7 @@ const Login = () => {
 
               <div className="mb-3 position-relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? "password" : "text"}
                   className="form-control mb-2 p-3"
                   placeholder="Password"
                   name="password"
