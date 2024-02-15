@@ -88,63 +88,132 @@ const Result = () => {
                     const latestResult = record.results[0];
 
                     return (
-                      <div key={index} className="hidden-xs hidden-sm mt-5">
-                        <div className="row app__all-result">
-                          <div className="col-3 col-lg-2">
-                            <img
-                              src={record?.logo}
-                              className="img-fluid img-rounded"
-                              alt={`${record.name}`}
-                            />
-                          </div>
-                          <div className="col-9 col-lg-10 div_lgrey">
-                            <strong>{latestResult?.game}</strong>
-                            <br />
-                            <small>
-                              <strong>Draw Time:</strong>
-                              {latestResult?.date && (
-                                <span>
-                                  {moment
-                                    .utc(
-                                      latestResult.date,
-                                      "YYYY-MM-DD HH:mm:ss"
+                      <>
+                        <div key={index} className="d-none d-sm-block mt-5">
+                          <div className="row app__all-result">
+                            <div className="col-3 col-lg-2">
+                              <img
+                                src={record?.logo}
+                                className="img-fluid img-rounded"
+                                alt={`${record.name}`}
+                              />
+                            </div>
+                            <div className="col-9 col-lg-10 div_lgrey">
+                              <strong>{latestResult?.game}</strong>
+                              <br />
+                              <small>
+                                <strong>Draw Time:</strong>
+                                {latestResult?.date && (
+                                  <span>
+                                    {moment
+                                      .utc(
+                                        latestResult.date,
+                                        "YYYY-MM-DD HH:mm:ss"
+                                      )
+                                      .local()
+                                      .format("MMM DD, YYYY h:mm:ss a")}
+                                  </span>
+                                )}
+                              </small>
+                              <br />
+                              <br />
+                              <br />
+
+                              {latestResult?.winning_number
+                                ?.split("-")
+                                .map((digit, j) => (
+                                  <td key={j}>
+                                    <div className="numboxwhite">{digit}</div>
+                                  </td>
+                                ))}
+
+                              <div className="pull-right mt-4 mb-3">
+                                <a
+                                  onClick={() =>
+                                    navigate(
+                                      `/view-more/${latestResult?.operator}`
                                     )
-                                    .local()
-                                    .format("MMM DD, YYYY h:mm:ss a")}
-                                </span>
-                              )}
-                            </small>
-                            <br />
-                            <br />
-                            <br />
-
-                            {latestResult?.winning_number
-                              ?.split("-")
-                              .map((digit, j) => (
-                                <td key={j}>
-                                  <div className="numboxwhite app__mobile-white">
-                                    {digit}
-                                  </div>
-                                </td>
-                              ))}
-
-                            <div className="pull-right mt-4 mb-3">
-                              <a
-                                onClick={() =>
-                                  navigate(
-                                    `/view-more/${latestResult?.operator}`
-                                  )
-                                }
-                                className="text-decoration-none"
-                              >
-                                <small style={{ cursor: "pointer" }}>
-                                  <strong>View More&gt;&gt;</strong>
-                                </small>
-                              </a>
+                                  }
+                                  className="text-decoration-none"
+                                >
+                                  <small style={{ cursor: "pointer" }}>
+                                    <strong>View More&gt;&gt;</strong>
+                                  </small>
+                                </a>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+
+                        <div className="d-block d-sm-none mb-5 mt-5">
+                          <div className="row">
+                            <div className="col-xs-12">
+                              <div className="div_lgrey">
+                                <table cellPadding="3">
+                                  <tbody>
+                                    <tr>
+                                      <td width="30%">
+                                        <img
+                                          src={record?.logo}
+                                          className="img-fluid img-rounded"
+                                          alt={`${record.name}`}
+                                        />
+                                      </td>
+                                      <td>
+                                        <strong>{latestResult?.game}</strong>
+                                        <br />
+                                        <small>
+                                          {latestResult?.date && (
+                                            <span>
+                                              {moment
+                                                .utc(
+                                                  latestResult.date,
+                                                  "YYYY-MM-DD HH:mm:ss"
+                                                )
+                                                .local()
+                                                .format(
+                                                  "MMM DD, YYYY h:mm:ss a"
+                                                )}
+                                            </span>
+                                          )}
+                                        </small>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                <br />
+
+                                {latestResult?.winning_number
+                                  ?.split("-")
+                                  .map((digit, j) => (
+                                    <td key={j}>
+                                      <div className="numboxwhite app__mobile-white">
+                                        {digit}
+                                      </div>
+                                    </td>
+                                  ))}
+
+                                <br />
+                                <div className="pull-right">
+                                  <a
+                                    onClick={() =>
+                                      navigate(
+                                        `/view-more/${latestResult?.operator}`
+                                      )
+                                    }
+                                    className="text-decoration-none"
+                                  >
+                                    <small style={{ cursor: "pointer" }}>
+                                      View More&gt;&gt;
+                                    </small>
+                                  </a>
+                                </div>
+                                <div className="clearfix"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     );
                   })}
               </>

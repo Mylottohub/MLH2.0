@@ -1,9 +1,63 @@
 // import React from 'react'
 import Navbar from "../components/Navbar";
+import ReCaptchaV2 from "react-google-recaptcha";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import * as yup from "yup";
 import "../assets/css/contact.css";
 import Footer from "../components/Footer";
+import { Button, Spinner } from "react-bootstrap";
+import { setCredentials } from "./slices/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useContactMutation } from "./slices/userApiSlice";
+
+const schema = yup.object().shape({
+  name: yup.string().required("This is a required field"),
+  email: yup.string().email().required(),
+  subject: yup.string().required("This is a required field"),
+  // last_name: yup.string().required("This is a required field"),
+  phone: yup.string().min(11).max(11).required(),
+  message: yup.string().required(),
+});
 
 const Contact = () => {
+  const siteKey = import.meta.env.VITE_SITE_KEY;
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [contact, { isLoading }] = useContactMutation();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const submitForm = async (data) => {
+    try {
+      const res = await contact(data).unwrap();
+      dispatch(setCredentials({ ...res }));
+      toast.success("Message sent Successfully");
+      navigate("/");
+    } catch (err) {
+      if (err?.data?.details) {
+        const errorDetails = err.data.details;
+        Object.values(errorDetails).forEach((errorMessages) => {
+          errorMessages.forEach((errorMessage) => {
+            toast.error(errorMessage);
+          });
+        });
+      } else {
+        toast.error("An error occurred Submitting your request.");
+      }
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -14,60 +68,95 @@ const Contact = () => {
               <strong>Contact Us</strong>
             </h4>
           </span>
-          <div className="contact-form">
-            <form action="" method="post" id="cf">
+          <div className="contact-form app__register">
+            <form onSubmit={handleSubmit(submitForm)}>
               <div className="row">
                 <div className="col-xs-12 mb-5 col-sm-6">
                   <input
                     type="text"
                     placeholder="Name"
-                    id="fname"
+                    className="form-control p-3"
                     name="name"
-                    className="form-control"
-                    required=""
+                    {...register("name", {
+                      required: "Required",
+                    })}
                   />
+                  {errors.name && (
+                    <p className="text-danger text-capitalize mt-3">
+                      {errors.name.message}
+                    </p>
+                  )}
                 </div>
                 <div className="col-xs-12 mb-5 col-sm-6">
                   <input
                     type="email"
                     placeholder="Email"
-                    id="email"
-                    className="form-control"
+                    className="form-control p-3"
                     name="email"
-                    required=""
+                    {...register("email", {
+                      required: "Required",
+                    })}
                   />
+                  {errors.email && (
+                    <p className="text-danger text-capitalize mt-3">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
                 <div className="col-xs-12 mb-5">
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Phone Number"
-                    className="form-control"
-                    id="subject"
-                    name="tell"
-                    required=""
+                    className="form-control p-3"
+                    min="1"
+                    name="phone"
+                    {...register("phone", {
+                      required: "Required",
+                    })}
+                    onInput={(e) =>
+                      (e.target.value = e.target.value.slice(0, 11))
+                    }
                   />
+                  {errors.phone && (
+                    <p className="text-danger text-capitalize mt-3">
+                      {errors.phone.message}
+                    </p>
+                  )}
                 </div>
                 <div className="col-xs-12 mb-5">
                   <input
                     type="text"
                     placeholder="Subject"
-                    id="subject"
-                    className="form-control"
+                    className="form-control p-3"
                     name="subject"
-                    required=""
+                    {...register("subject", {
+                      required: "Required",
+                    })}
                   />
+                  {errors.subject && (
+                    <p className="text-danger text-capitalize mt-3">
+                      {errors.subject.message}
+                    </p>
+                  )}
                 </div>
                 <div className="col-xs-12 mb-5">
                   <textarea
                     // className="contact-textarea"
                     placeholder="Message"
-                    className="form-control"
+                    className="form-control p-3"
                     id="msg"
                     name="message"
-                    required=""
+                    {...register("message", {
+                      required: "Required",
+                    })}
                   ></textarea>
+                  {errors.message && (
+                    <p className="text-danger text-capitalize mt-3">
+                      {errors.message.message}
+                    </p>
+                  )}
                 </div>
-                <div className="col-xs-12">
+                {/* <div className="col-xs-12">
                   <div className="checkbox">
                     <label>
                       <input type="checkbox" name="scopy" value="yes" /> Send me
@@ -76,52 +165,26 @@ const Contact = () => {
                   </div>
                   <br />
                   <br />
-                </div>
-                <div className="col-xs-12">
-                  <div
-                    className="g-recaptcha"
-                    data-sitekey="6LeBQC8lAAAAAM0KoPLtajsebEoJlrFMSjBrsilZ"
-                  >
-                    <div style={{ width: "304px", height: "78px" }}>
-                      <div>
-                        <iframe
-                          title="reCAPTCHA"
-                          src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LeBQC8lAAAAAM0KoPLtajsebEoJlrFMSjBrsilZ&amp;co=aHR0cHM6Ly93d3cubXlsb3R0b2h1Yi5jb206NDQz&amp;hl=en&amp;v=0hCdE87LyjzAkFO5Ff-v7Hj1&amp;size=normal&amp;cb=b9fk0qv6md46"
-                          width="304"
-                          height="78"
-                          role="presentation"
-                          name="a-iwz05lgc6bc2"
-                          frameBorder="0"
-                          scrolling="no"
-                          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation"
-                        ></iframe>
-                      </div>
-                      <textarea
-                        id="g-recaptcha-response"
-                        name="g-recaptcha-response"
-                        className="g-recaptcha-response"
-                        style={{
-                          width: "250px",
-                          height: "40px",
-                          border: "1px solid rgb(193, 193, 193)",
-                          margin: "10px 25px",
-                          padding: "0px",
-                          resize: "none",
-                          display: "none",
-                        }}
-                      ></textarea>
-                    </div>
-                  </div>
-                  <br />
-                </div>
-                <div className="col-xs-12">
-                  <input
-                    type="submit"
-                    className="cont-submit btn-blue app__contact-submit"
-                    name="submit"
-                    value="SEND MESSAGE"
-                  />
-                </div>
+                </div> */}
+
+                <ReCaptchaV2 sitekey={siteKey} />
+                <Button
+                  type="submit"
+                  className="w-100 p-3 mt-5 mb-4"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    " Register"
+                  )}
+                </Button>
               </div>
             </form>
           </div>

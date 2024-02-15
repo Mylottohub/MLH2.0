@@ -10,6 +10,7 @@ const PAY_WITH_PAYSTACK = "/payment-initialize";
 const USER_OTP = "/otp";
 const RESEND_OTP = "/user/resend-otp";
 const OPERATOR_GAMES = "/get-games";
+const USER_CONTACT = "/contact";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -55,12 +56,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    contact: builder.mutation({
+      query: (data) => ({
+        url: `${USER_CONTACT}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
       try {
         const result = await queryFulfilled;
-        const expiration = result.data?.expires;
-        // console.log("sfsfs", expiration);
-        dispatch(setCredentials(result?.data));
+        const expiration = result.data[1]?.expires;
         setupLogoutTimer(expiration);
       } catch (error) {
         // Handle login error
@@ -97,6 +103,7 @@ export const {
   usePaystackpaymentMutation,
   useOperatorgamesMutation,
   useResetpaswordMutation,
+  useContactMutation,
   // useTimetableMutation
 } = userApiSlice;
 const setupLogoutTimer = (expiration) => {

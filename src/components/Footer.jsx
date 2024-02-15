@@ -89,26 +89,34 @@ const Footer = () => {
                     <h2>Company</h2>
                     <ul>
                       <li>
-                        <a href="#" onClick={() => navigate("/about-us")}>
+                        <a
+                          className="text-white"
+                          onClick={() => navigate("/about-us")}
+                        >
                           About Us
                         </a>
                       </li>
                       <li>
-                        <a href="#" onClick={() => navigate("/contact-us")}>
+                        <a
+                          className="text-white"
+                          onClick={() => navigate("/contact-us")}
+                        >
                           Contact Us
                         </a>
                       </li>
                       <li>
                         <a
-                          href="#"
-                          className="w-100"
+                          className="text-white w-100"
                           onClick={() => navigate("/terms")}
                         >
                           Terms and Conditions
                         </a>
                       </li>
                       <li>
-                        <a href="#" onClick={() => navigate("/faq")}>
+                        <a
+                          className="text-white"
+                          onClick={() => navigate("/faq")}
+                        >
                           FAQs
                         </a>
                       </li>

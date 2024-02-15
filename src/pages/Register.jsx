@@ -18,10 +18,10 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 // import PhoneInputWithCountryFlag from "../components/PhoneInput/PhoneInputWithCountryFlag";
 
 const schema = yup.object().shape({
-  first_name: yup.string().required("This is a required field"),
+  name: yup.string().required("This is a required field"),
   email: yup.string().email().required(),
   username: yup.string().required("This is a required field"),
-  last_name: yup.string().required("This is a required field"),
+  // last_name: yup.string().required("This is a required field"),
   phone: yup.string().min(11).max(11).required(),
   password: yup.string().min(8).max(15).required(),
   password_confirmation: yup.string().oneOf([yup.ref("password"), null]),
@@ -93,20 +93,20 @@ const Register = () => {
                 <input
                   type="text"
                   className="form-control mb-2 p-3"
-                  placeholder="First Name"
-                  name="first_name"
-                  {...register("first_name", {
+                  placeholder="Full Name"
+                  name="name"
+                  {...register("name", {
                     required: "Required",
                   })}
                 />
-                {errors.first_name && (
+                {errors.name && (
                   <p className="text-danger text-capitalize">
-                    {errors.first_name.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
 
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <input
                   type="text"
                   className="form-control mb-2 p-3"
@@ -121,7 +121,7 @@ const Register = () => {
                     {errors.last_name.message}
                   </p>
                 )}
-              </div>
+              </div> */}
 
               <div className="mb-3">
                 <input

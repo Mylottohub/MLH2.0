@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import { BsFillCalendarCheckFill } from "react-icons/bs";
-import {FaUsers} from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import "../assets/css/about.css";
 import Footer from "../components/Footer";
 
@@ -9,20 +9,20 @@ const About = () => {
     <>
       <Navbar />
       <div className="container app__about-us">
-        <h4 className="mt-4">About Us</h4>
+        <h4 className="mt-5">About Us</h4>
         <span className="hidden-sm hidden-xs">
-          <div className="title_div mt-5">
+          <div className="title_div mt-5 mb-5">
             Africa`s Number #1 Lotto Community
           </div>
         </span>
         <div className="app__about-main">
-          <p className="w-75 text-center mx-auto lh-base mt-4 mb-5">
+          <p className="w-100 text-center mx-auto mt-4 mb-2">
             <b>MYLOTTOHUB.COM</b> is a web based platform, designed to gradually
             help transit lottery into the digital age through its mobile and
             desktop based site.
           </p>
 
-          <p className="text-center mx-auto lh-base mt-4 mb-5">
+          <p className="text-center mx-auto lh-base mt-4 mb-2">
             It was developed to help drive the Nigerian lottery industry by
             archiving all past and present lottery information from all
             registered and licensed operators, while also helping users predict
@@ -32,7 +32,7 @@ const About = () => {
             operators get increased trust and patronage from the lotto players.
           </p>
 
-          <p className="text-center mx-auto lh-base mt-4 mb-5">
+          <p className="text-center mx-auto lh-base mt-4 mb-2">
             In today`s digital economy, we are driven by 3 core principles: Ease
             of use, Convenience and Affordability for the customer. We are
             passionate about customer engagement and we believe that
@@ -40,7 +40,7 @@ const About = () => {
             decision making process.
           </p>
 
-          <p className="text-center mx-auto lh-base mt-4 mb-5">
+          <p className="text-center mx-auto lh-base mt-4 mb-2">
             All previous results on MyLottoHub.com have been compiled from
             publicly available data and we have spent a considerable amount of
             time collating and verifying this information with operators and
@@ -83,7 +83,7 @@ const About = () => {
                       <tr>
                         <td>
                           <span className="meg_round_icon bg-success meg_white">
-                             <FaUsers className="fa-2x" />
+                            <FaUsers className="fa-2x" />
                           </span>
                         </td>
 
