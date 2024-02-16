@@ -9,25 +9,30 @@ import { Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 const WithdrawModal = () => {
+  // Define the validation schema using yup
+  const { userProfileResponse } = useGetProfileUser([]);
   const [showForm, setShowForm] = useState(false);
   const [showWallet, setShowWallet] = useState(false);
   const [accountName, setAccountName] = useState(""); // State to store account name
   const [typingTimeout, setTypingTimeout] = useState(null);
   const [fetchingAccountName, setFetchingAccountName] = useState(false);
-
+  const [schema, setSchema] = useState(null);
   const { allBanks, isLoadingBank } = useGetAllBank();
-  const { userProfileResponse } = useGetProfileUser([]);
 
-  // Define the validation schema using yup
-  const schema = yup.object().shape({
-    account_no: yup
-      .string()
-      .min(10)
-      .max(10)
-      .required("Account Number is required"),
-    bank_name: yup.string().required("Account Name is required"),
-    email: userProfileResponse?.email,
-  });
+  useEffect(() => {
+    if (userProfileResponse) {
+      const schema = yup.object().shape({
+        account_no: yup
+          .string()
+          .min(10, "Account Number must be at least 10 characters")
+          .max(10, "Account Number cannot exceed 10 characters")
+          .required("Account Number is required"),
+        bank_name: yup.string().required("Account Name is required"),
+        email: yup.string().email().required(),
+      });
+      setSchema(schema);
+    }
+  }, [userProfileResponse]);
 
   const {
     register,
@@ -39,10 +44,44 @@ const WithdrawModal = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    // Handle form submission logic (e.g., send data to the server)
-    console.log(data);
-    // Add your logic to send data to the server for withdrawal
+  const onSubmit = () => {
+    toast.error("Account Successfuly Submitted");
+  };
+  // console.log(userProfileResponse);
+
+  const onSubmitWithdraw = async (e) => {
+    e.preventDefault();
+    // Check if winning wallet balance is less than 1000
+    if (userProfileResponse?.wwallet < 1000) {
+      toast.error(
+        "You must have a minimum of 1000 naira before you can withdraw."
+      );
+      return; // Stop further execution
+    }
+    const amount = e.target.amount.value;
+    try {
+      const response = await HTTP.post(
+        "/payments/withdraw-request",
+        {
+          amount: amount,
+          id: userProfileResponse?.id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      if (response.data.status === "Success") {
+        toast.success("Withdrawal request submitted successfully");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to submit withdrawal request");
+    }
   };
 
   const bankName = watch("bank_name");
@@ -68,7 +107,6 @@ const WithdrawModal = () => {
       );
 
       if (response.data.status === "Success") {
-        console.log(response.data.data.data.account_name);
         const resolvedAccountName = response?.data?.data?.data?.account_name;
         setAccountName(resolvedAccountName);
         setValue("account_name", resolvedAccountName);
@@ -84,27 +122,22 @@ const WithdrawModal = () => {
   };
 
   useEffect(() => {
-    // if (bankName && accountNo) {
-    //   if (typingTimeout) {
-    //     clearTimeout(typingTimeout);
-    //   }
-    //   setTypingTimeout(setTimeout(fetchAccountName, 5000));
-    // }
     if (!accountNo) {
-      // If account number is empty, clear account name
       setAccountName("");
-      setValue("account_name", ""); // Optionally clear the form field
+      setValue("account_name", "");
     } else {
-      // If account number is not empty, fetch account name
-      if (bankName) {
+      if (bankName && accountNo && accountNo.length === 10) {
         if (typingTimeout) {
           clearTimeout(typingTimeout);
         }
-        setTypingTimeout(setTimeout(fetchAccountName, 5000));
+        setTypingTimeout(setTimeout(fetchAccountName, 1000));
+      } else if (bankName && accountNo && accountNo.length < 10) {
+        // Clear account name if account number length is less than 10
+        setAccountName("");
+        setValue("account_name", "");
       }
     }
   }, [bankName, accountNo]);
-
   return (
     <div>
       <div style={{ marginTop: "-30px" }}>
@@ -122,7 +155,7 @@ const WithdrawModal = () => {
                   />
                 </div>
               ) : (
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <>
                   <span>
                     <strong>Withdraw Funds</strong>
                   </span>
@@ -132,73 +165,145 @@ const WithdrawModal = () => {
                     <strong>₦{userProfileResponse?.wwallet}</strong>
                   </small>
                   <hr />
-                  <p>
-                    To Withdraw, Select Your Bank and Enter your Account Number
-                    to Auto Populate Your Account Name
-                  </p>
-                  <div>
-                    {allBanks && Array.isArray(allBanks) && (
-                      <select
-                        className="form-control mb-2 p-2"
-                        {...register("bank_name")}
-                        defaultValue=""
-                      >
-                        <option value="" disabled>
-                          Select Bank
-                        </option>
-                        {allBanks.map((bank) => (
-                          <option key={bank.id} value={bank.name}>
-                            {bank.name}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    {errors.bank_name && (
-                      <p className="text-danger text-capitalize">
-                        {errors.bank_name.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <input
-                      type="tel"
-                      className="form-control mb-2 p-2"
-                      placeholder="Account Number"
-                      id="account_no"
-                      name="account_no"
-                      {...register("account_no", { required: "Required" })}
-                    />
-                    {errors.account_no && (
-                      <p className="text-danger text-capitalize">
-                        {errors.account_no.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <input
-                      type="text"
-                      className="form-control mb-2 p-2"
-                      placeholder="Account Name"
-                      name="account_name"
-                      disabled
-                      value={accountName}
-                    />
-                    {fetchingAccountName && (
-                      <Spinner animation="border" variant="primary" />
-                    )}
-                  </div>
-                  <button
-                    type="submit"
-                    className="btn btn-trans2_border btn-block btn-lg text-white border-0 mt-3"
-                    style={{ background: "#27AAE1" }}
-                  >
-                    Submit
-                  </button>
-                </form>
+
+                  {userProfileResponse.accno ? (
+                    <>
+                      <form onSubmit={onSubmitWithdraw}>
+                        <div>
+                          <input
+                            type="text"
+                            className="form-control mb-2 p-2"
+                            placeholder="Account Number"
+                            name="account_no"
+                            disabled
+                            value={userProfileResponse?.accno}
+                          />
+                        </div>
+                        <div>
+                          <input
+                            type="text"
+                            className="form-control mb-2 p-2"
+                            placeholder="Bank Name"
+                            name="bank_name"
+                            disabled
+                            value={userProfileResponse?.bname}
+                          />
+                        </div>
+                        <div>
+                          <input
+                            type="text"
+                            className="form-control mb-2 p-2"
+                            placeholder="Account Name"
+                            name="account_name"
+                            disabled
+                            value={userProfileResponse?.accname}
+                          />
+                        </div>
+                        <div>
+                          <input
+                            type="number"
+                            className="form-control mb-2 p-2"
+                            placeholder="Amount"
+                            min="1"
+                            name="amount"
+                            required
+                            // onInput={(e) =>
+                            //   (e.target.value = e.target.value.slice(0, 10))
+                            // }
+                          />
+                          {/* {withdrawErrors.amount && (
+                            <p className="text-danger text-capitalize">
+                              {withdrawErrors.amount.message}
+                            </p>
+                          )} */}
+                        </div>
+                        <button
+                          type="submit"
+                          className="btn btn-trans2_border btn-block btn-lg text-white border-0 mt-3"
+                          style={{ background: "#27AAE1" }}
+                        >
+                          Submit
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <p>
+                          To initiate a withdrawal, choose your bank and input
+                          your account number to automatically fill in your
+                          account name.
+                        </p>
+                        <div>
+                          <select
+                            className="form-control mb-2 p-2"
+                            {...register("bank_name")}
+                            defaultValue=""
+                          >
+                            <option value="" disabled>
+                              Select Bank
+                            </option>
+                            {allBanks.map((bank) => (
+                              <option key={bank.id} value={bank.name}>
+                                {bank.name}
+                              </option>
+                            ))}
+                          </select>
+                          {errors.bank_name && (
+                            <p className="text-danger text-capitalize">
+                              {errors.bank_name.message}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <input
+                            type="tel"
+                            className="form-control mb-2 p-2"
+                            placeholder="Account Number"
+                            id="account_no"
+                            name="account_no"
+                            {...register("account_no", {
+                              required: "Required",
+                            })}
+                            onInput={(e) =>
+                              (e.target.value = e.target.value.slice(0, 10))
+                            }
+                          />
+                          {errors.account_no && (
+                            <p className="text-danger text-capitalize">
+                              {errors.account_no.message}
+                            </p>
+                          )}
+                        </div>
+
+                        <div>
+                          <input
+                            type="text"
+                            className="form-control mb-2 p-2"
+                            placeholder="Account Name"
+                            name="account_name"
+                            disabled
+                            value={accountName}
+                          />
+                          {fetchingAccountName && (
+                            <Spinner animation="border" variant="primary" />
+                          )}
+                        </div>
+                        <button
+                          type="submit"
+                          className="btn btn-trans2_border btn-block btn-lg text-white border-0 mt-3"
+                          style={{ background: "#27AAE1" }}
+                        >
+                          Submit
+                        </button>
+                      </form>
+                    </>
+                  )}
+                </>
               )}
             </div>
           ) : showWallet ? (
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form>
               <span>
                 <strong>Transfer to Wallet</strong>
               </span>
@@ -220,15 +325,7 @@ const WithdrawModal = () => {
                   placeholder="₦0.00"
                   id="wallet"
                   name="wallet"
-                  {...register("wallet", {
-                    required: "Required",
-                  })}
                 />
-                {errors.wallet && (
-                  <p className="text-danger text-capitalize">
-                    {errors.wallet.message}
-                  </p>
-                )}
               </div>
 
               <button
