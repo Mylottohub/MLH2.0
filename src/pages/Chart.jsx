@@ -174,24 +174,29 @@ const Chart = () => {
 
   const handleCreateCharts = () => {
     const results = [];
-    result.forEach((operator) => {
-      operator.results.forEach((result) => {
-        const monthIndex = months.indexOf(selections[0].month);
-        const numericMonth = monthIndex !== -1 ? monthIndex + 1 : null;
-        if (
-          result.operator === operatorNames[selections[0].operator] &&
-          result.game.toString() === selections[0].game &&
-          result.month === numericMonth &&
-          result.year.toString() === selections[0].year
-        ) {
-          results.push(result);
-        }
+    selections.forEach((selection) => {
+      // Iterate over each selection
+      result.forEach((operator) => {
+        operator.results.forEach((result) => {
+          const monthIndex = months.indexOf(selection.month); // Use the month from the current selection
+          const numericMonth = monthIndex !== -1 ? monthIndex + 1 : null;
+          if (
+            result.operator === operatorNames[selection.operator] &&
+            result.game.toString() === selection.game &&
+            result.month === numericMonth &&
+            result.year.toString() === selection.year
+          ) {
+            results.push(result);
+          }
+        });
       });
     });
+
     if (results.length === 0) {
       toast.error("No charts found for the selected criteria");
       return;
     }
+
     setFilteredResults(results);
     setShowCreateCharts(true);
     console.log(results);
@@ -331,42 +336,42 @@ const Chart = () => {
 
         {showCreateCharts && (
           <div className="meg_container mb-40">
-            {filteredResults.map((result, index) => (
-              <div key={index}>
-                <p className="lead mt-50">
-                  My selection for <strong>{result?.operator} </strong> |{" "}
-                  <strong>{result?.game}</strong>
-                </p>
-                <table cellPadding="3">
-                  <tr>
-                    <td>
-                      <table cellPadding="3">
-                        <tr>
-                          <td>
-                            <div className="numboxgreen">&nbsp;</div>
-                          </td>
-                          <td>Winning</td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td>
-                      <table cellPadding="3">
-                        <tr>
-                          <td>
-                            <div className="numboxred">&nbsp;</div>
-                          </td>
-                          <td>Machine</td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-                <div className="table-responsive">
+            <div>
+              <table cellPadding="3">
+                <tr>
+                  <td>
+                    <table cellPadding="3">
+                      <tr>
+                        <td>
+                          <div className="numboxgreen">&nbsp;</div>
+                        </td>
+                        <td>Winning</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td>
+                    <table cellPadding="3">
+                      <tr>
+                        <td>
+                          <div className="numboxred">&nbsp;</div>
+                        </td>
+                        <td>Machine</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              {filteredResults.map((result, index) => (
+                <div key={index} className="table-responsive">
                   <table
                     width="100%"
                     cellPadding="20"
                     className="table table-express mt-5"
                   >
+                    <p className="lead mt-50">
+                      My selection for <strong>{result?.operator} </strong> |{" "}
+                      <strong>{result?.game}</strong>
+                    </p>
                     <tr bgColor="#27AAE1" className="meg_white">
                       <th>DATE</th>
                       <th>Numbers</th>
@@ -414,8 +419,8 @@ const Chart = () => {
                     </tr>
                   </table>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </div>
