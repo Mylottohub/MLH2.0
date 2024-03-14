@@ -74,12 +74,6 @@ const Forecast = () => {
     }
   };
 
-  // // Assuming you have forecastData available
-  // const randomIncrement = Math.floor(Math.random() * 100) + 1;
-
-  // const updatedWinningCount = 3916 + randomIncrement;
-  // const updatedMachineCount = 3299 + randomIncrement;
-
   return (
     <div>
       <Navbar />

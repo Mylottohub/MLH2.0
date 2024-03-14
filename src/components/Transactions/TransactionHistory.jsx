@@ -355,15 +355,7 @@ const TransactionHistory = () => {
               </div>
             )}
           </div>
-          {/* <div
-            className="tab-pane fade"
-            id="profile-tab-pane"
-            role="tabpanel"
-            aria-labelledby="profile-tab"
-            tabIndex="0"
-          >
-            Withdraw
-          </div> */}
+
           <div
             className="tab-pane fade"
             id="contact-tab-pane"

@@ -54,7 +54,7 @@ const WithdrawModal = () => {
     // Check if winning wallet balance is less than 1000
     if (userProfileResponse?.wwallet < 1000) {
       toast.error(
-        "You must have a minimum of 1000 naira before you can withdraw."
+        "Amount must be greater than 1000."
       );
       return; // Stop further execution
     }

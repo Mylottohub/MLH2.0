@@ -24,6 +24,7 @@ import ListAllWallets from "../components/Wallets/ListAllWallets";
 import PlayBet from "../components/SportsBetting/PlayBet";
 import Forecast from "../pages/Forecast";
 import Instance from "../pages/Instance";
+import Chart from "../pages/Chart";
 
 export const routes = [
   {
@@ -180,6 +181,12 @@ export const routes = [
     id: 25,
     path: "/instant",
     element: <Instance />,
+    protected: true,
+  },
+  {
+    id: 26,
+    path: "/create-chart",
+    element: <Chart />,
     protected: true,
   },
 ];

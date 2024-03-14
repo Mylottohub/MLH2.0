@@ -15,6 +15,7 @@ import "../assets/css/register.css";
 
 const schema = yup.object().shape({
   email: yup.string().email().required("This is a required field"),
+  token: yup.string().required("This is a required field"),
   password: yup.string().min(8).max(15).required(),
 });
 
@@ -28,6 +29,7 @@ const ResetPassword = () => {
 
   const [resetpasword, { isLoading }] = useResetpaswordMutation();
   const email = sessionStorage.getItem("email");
+  const token = sessionStorage.getItem("token");
 
   const {
     register,
@@ -42,6 +44,7 @@ const ResetPassword = () => {
       const res = await resetpasword(data).unwrap();
       dispatch(setCredentials({ ...res }));
       toast.success("Password updated Successfully");
+      sessionStorage.removeItem("token");
       navigate("/");
     } catch (err) {
       if (err?.data?.error) {
@@ -59,11 +62,6 @@ const ResetPassword = () => {
         <div className="row">
           <div className="col-lg-6 mx-auto app__register">
             <h1 className="mb-4">Reset Password</h1>
-            {/* <h6 className="mb-4">
-              Play all your favorite Nigerian lotto games from one account on
-              mylottohub and get your winnings paid instantly to your bank
-              account
-            </h6> */}
 
             <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
               <div className="mb-3 position-relative">
@@ -101,7 +99,7 @@ const ResetPassword = () => {
 
               <div className="mb-3" style={{ display: "none" }}>
                 <input
-                  type="tel"
+                  type="email"
                   className="form-control p-3 mb-2"
                   name="email"
                   defaultValue={email}
@@ -111,10 +109,17 @@ const ResetPassword = () => {
                 />
               </div>
 
-              {/* <p style={{ cursor: "pointer", color: "#406777" }}>
-                Already have an account?{" "}
-                <span onClick={() => navigate("/login")}>Sign in</span>
-              </p> */}
+              <div className="mb-3" style={{ display: "none" }}>
+                <input
+                  type="text"
+                  className="form-control p-3 mb-2"
+                  name="token"
+                  defaultValue={token}
+                  {...register("token", {
+                    required: "Required",
+                  })}
+                />
+              </div>
 
               <Button type="submit" className="w-100 p-3" disabled={isLoading}>
                 {isLoading ? (

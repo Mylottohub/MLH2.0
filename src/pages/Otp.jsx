@@ -43,9 +43,9 @@ const Otp = () => {
       toast.success("OTP has been confirmed Successfully");
       if (userPasswordMessage) {
         navigate("/reset-password");
+        sessionStorage.setItem("token", data.token);
         sessionStorage.removeItem("password-reset");
       } else if (email) {
-        // console.log(email);
         dispatch(setCredentials({ token, data: userInfo }));
         navigate("/");
         sessionStorage.removeItem("email");
@@ -66,9 +66,12 @@ const Otp = () => {
   const handleResendOtp = async () => {
     try {
       setResendLoading(true);
-
       await resendotp({ email });
-      toast.success("OTP has been resent successfully");
+      if (email) {
+        toast.success("OTP has been resent successfully");
+      } else {
+        toast.error("Pls Provide an Email Address.");
+      }
     } catch (err) {
       if (err?.data?.message) {
         toast.error(err.data.message);

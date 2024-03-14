@@ -26,6 +26,10 @@
         width: 50% !important;
     }
 
+    .select__chart {
+        width: 80% !important;
+    }
+
     .number__drop {
         font-size: 25px;
     }

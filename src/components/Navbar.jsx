@@ -217,7 +217,10 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link text-white me-3  app__proforecast">
+                      <a
+                        className="nav-link text-white me-3  app__proforecast"
+                        onClick={() => navigate("/create-chart")}
+                      >
                         Create Charts
                       </a>
                     </li>
@@ -537,7 +540,10 @@ const Navbar = () => {
                 </li>
 
                 <li className="nav-item   ">
-                  <a className="nav-link text-white app__proforecast">
+                  <a
+                    className="nav-link text-white app__proforecast"
+                    onClick={() => navigate("/create-chart")}
+                  >
                     Create Charts
                   </a>
                 </li>
