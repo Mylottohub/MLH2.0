@@ -13,7 +13,6 @@ function App() {
     script.charset = "UTF-8";
     script.setAttribute("crossorigin", "*");
     document.head.appendChild(script);
-
     return () => {
       document.head.removeChild(script);
     };

@@ -94,7 +94,6 @@ const Operator = () => {
             operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];
               // console.log(operatorDataArray);
-
               if (operatorDataArray && operatorDataArray.length > 0) {
                 const imageSrc = `/images/${operatorType}.png`;
 
@@ -142,7 +141,6 @@ const Operator = () => {
 
                 const nextGame =
                   upcomingGames.length > 0 ? upcomingGames[0] : null;
-                // console.log(nextGame);
 
                 const renderGameTime = (operatorType, game) => {
                   const time = game[propertyMapping[operatorType].time];
