@@ -11,22 +11,14 @@ import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../pages/slices/userApiSlice";
 import { setCredentials } from "../pages/slices/authSlice";
 import "../assets/css/register.css";
-import { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
-  password: yup.string().min(8).max(15).required(),
 });
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [showPassword, setShowPassword] = useState(true);
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
 
   const [login, { isLoading }] = useLoginMutation();
 
@@ -43,8 +35,7 @@ const Login = () => {
       const res = await login(data).unwrap();
       sessionStorage.setItem("email", data.email);
       dispatch(setCredentials({ ...res }));
-      toast.success(res.message);
-      navigate("/otp");
+      window.location.href = res.data;
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);
@@ -81,38 +72,9 @@ const Login = () => {
                 />
                 {errors.email && (
                   <p className="text-danger text-capitalize">
-                    {/* {errors.email.message} */}
                     Email must be a valid email address
                   </p>
                 )}
-              </div>
-
-              <div className="mb-3 position-relative">
-                <input
-                  type={showPassword ? "password" : "text"}
-                  className="form-control mb-2 p-3"
-                  placeholder="Password"
-                  name="password"
-                  {...register("password", {
-                    required: "Required",
-                  })}
-                />
-                <div
-                  className="position-absolute end-0 top-50 translate-middle-y"
-                  style={{ right: "10px", cursor: "pointer" }}
-                >
-                  <p
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    style={{
-                      color: "#6E9A8D",
-                      marginLeft: "-30px",
-                      marginTop: "10px",
-                    }}
-                  >
-                    {showPassword ? <FaEye /> : <FaEyeSlash />}
-                  </p>
-                </div>
               </div>
 
               {errors.password && (
@@ -127,16 +89,6 @@ const Login = () => {
                   onClick={() => navigate("/register")}
                 >
                   Sign Up
-                </span>
-              </p>
-              <p style={{ cursor: "pointer", color: "#406777" }}>
-                {" "}
-                <span
-                  className="text-primary"
-                  onClick={() => navigate("/forgot-password")}
-                >
-                  {" "}
-                  Forgot Password
                 </span>
               </p>
 

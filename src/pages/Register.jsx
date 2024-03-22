@@ -12,8 +12,7 @@ import "../assets/css/register.css";
 import { useRegistersMutation } from "../pages/slices/userApiSlice";
 import { setCredentials } from "../pages/slices/authSlice";
 import ReCaptchaV2 from "react-google-recaptcha";
-import { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 // import 'react-phone-number-input/style.css'
 // import PhoneInputWithCountryFlag from "../components/PhoneInput/PhoneInputWithCountryFlag";
 
@@ -23,8 +22,6 @@ const schema = yup.object().shape({
   username: yup.string().required("This is a required field"),
   // last_name: yup.string().required("This is a required field"),
   phone: yup.string().min(11).max(11).required(),
-  password: yup.string().min(8).max(15).required(),
-  password_confirmation: yup.string().oneOf([yup.ref("password"), null]),
 });
 
 const siteKey = import.meta.env.VITE_SITE_KEY;
@@ -34,15 +31,6 @@ const Register = () => {
   const dispatch = useDispatch();
 
   const [registers, { isLoading }] = useRegistersMutation();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
 
   const {
     register,
@@ -57,20 +45,23 @@ const Register = () => {
       sessionStorage.setItem("email", data.email);
       const res = await registers(data).unwrap();
       dispatch(setCredentials({ ...res }));
-      toast.success(
-        "Registration successful, an OTP has been sent to your email for verification"
-      );
-      navigate("/otp");
+      toast.success("Registration successful");
+      window.location.href = res.data;
     } catch (err) {
-      if (err?.data?.details) {
-        const errorDetails = err.data.details;
-        Object.values(errorDetails).forEach((errorMessages) => {
-          errorMessages.forEach((errorMessage) => {
-            toast.error(errorMessage);
-          });
-        });
+      // if (err?.data?.details) {
+      //   const errorDetails = err.data.details;
+      //   Object.values(errorDetails).forEach((errorMessages) => {
+      //     errorMessages.forEach((errorMessage) => {
+      //       toast.error(errorMessage);
+      //     });
+      //   });
+      // } else {
+      //   toast.error("An error occurred during registration.");
+      // }
+      if (err?.data?.error) {
+        toast.error(err.data.error);
       } else {
-        toast.error("An error occurred during registration.");
+        toast.error("An error occurred during Login.");
       }
     }
   };
@@ -105,23 +96,6 @@ const Register = () => {
                   </p>
                 )}
               </div>
-
-              {/* <div className="mb-3">
-                <input
-                  type="text"
-                  className="form-control mb-2 p-3"
-                  placeholder="Last Name"
-                  name="last_name"
-                  {...register("last_name", {
-                    required: "Required",
-                  })}
-                />
-                {errors.last_name && (
-                  <p className="text-danger text-capitalize">
-                    {errors.last_name.message}
-                  </p>
-                )}
-              </div> */}
 
               <div className="mb-3">
                 <input
@@ -177,74 +151,6 @@ const Register = () => {
                 )}
               </div>
 
-              <div className="mb-3 position-relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="form-control mb-2 p-3"
-                  placeholder="Password"
-                  name="password"
-                  {...register("password", {
-                    required: "Required",
-                  })}
-                />
-                <div
-                  className="position-absolute end-0 top-50 translate-middle-y"
-                  style={{ right: "10px", cursor: "pointer" }}
-                >
-                  <p
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    style={{
-                      color: "#6E9A8D",
-                      marginLeft: "-30px",
-                      marginTop: "10px",
-                    }}
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </p>
-                </div>
-              </div>
-              {errors.password && (
-                <p className="text-danger text-capitalize">
-                  {errors.password.message}
-                </p>
-              )}
-
-              <div className="mb-3 position-relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  className="form-control p-3"
-                  placeholder="Confirm Password"
-                  aria-describedby="emailHelp"
-                  name="password_confirmation"
-                  {...register("password_confirmation", {
-                    required: "Required",
-                  })}
-                />
-
-                <div
-                  className="position-absolute end-0 top-50 translate-middle-y"
-                  style={{ right: "10px", cursor: "pointer" }}
-                >
-                  <p
-                    type="button"
-                    onClick={toggleConfirmPasswordVisibility}
-                    style={{
-                      color: "#6E9A8D",
-                      marginLeft: "-30px",
-                      marginTop: "10px",
-                    }}
-                  >
-                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                  </p>
-                </div>
-              </div>
-              {errors.password_confirmation && (
-                <p className="text-danger text-capitalize mt-3">
-                  Password does not match
-                </p>
-              )}
-
               <div className="mb-3 form-check mt-4">
                 <input type="checkbox" className="form-check-input" required />
                 <label className="form-check-label">
@@ -260,10 +166,7 @@ const Register = () => {
                   </a>
                 </label>
               </div>
-              {/* <p className="text-primary" style={{ cursor: "pointer" }}>
-                Already have an account?
-                <span onClick={() => navigate("/login")}>Sign in</span>
-              </p> */}
+
               <p style={{ cursor: "pointer", color: "#406777" }}>
                 Already have an account?
                 <span

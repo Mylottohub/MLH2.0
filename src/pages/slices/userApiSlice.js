@@ -1,14 +1,13 @@
 import { store } from "../../react-redux/store";
 import { apiSlice } from "./apiSlice";
-import { logout, setCredentials } from "./authSlice";
+import { logout } from "./authSlice";
 
 const USER_LOGIN = "/login";
 const USER_REGISTER = "/register";
 const USER_FORGOTPASSWORD = "/user/forgot";
 const USER_RESETPASSWORD = "/user/reset";
 const PAY_WITH_PAYSTACK = "/payment-initialize";
-const USER_OTP = "/otp";
-const RESEND_OTP = "/user/resend-otp";
+const USER_OTP = "/user-verification";
 const OPERATOR_GAMES = "/get-games";
 const USER_CONTACT = "/contact";
 
@@ -72,21 +71,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
         // Handle login error
       }
     },
-    resendotp: builder.mutation({
-      query: (data) => ({
-        url: `${RESEND_OTP}`,
-        method: "POST",
-        body: data,
-      }),
-    }),
 
     operatorgames: builder.mutation({
       query: (data) => ({
         url: `${OPERATOR_GAMES}`,
         method: "POST",
-        body: JSON.stringify(data), // Send data as JSON in the request body
+        body: JSON.stringify(data),
         headers: {
-          "Content-Type": "application/json", // Set the content type to JSON
+          "Content-Type": "application/json",
           Accept: "application/json",
         },
       }),
@@ -99,7 +91,6 @@ export const {
   useRegistersMutation,
   useForgotpaswordMutation,
   useUserotpMutation,
-  useResendotpMutation,
   usePaystackpaymentMutation,
   useOperatorgamesMutation,
   useResetpaswordMutation,
@@ -108,10 +99,9 @@ export const {
 } = userApiSlice;
 const setupLogoutTimer = (expiration) => {
   const now = Date.now();
-  const delay = expiration * 1000 - now; // Convert seconds to milliseconds
+  const delay = expiration * 1000 - now;
   if (delay > 0) {
     setTimeout(() => {
-      // Trigger logout action after the specified delay
       store.dispatch(logout());
     }, delay);
   }

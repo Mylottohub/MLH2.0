@@ -71,7 +71,7 @@ export const routes = [
   },
   {
     id: 8,
-    path: "/otp",
+    path: "/verify",
     element: <Otp />,
     protected: false,
   },
