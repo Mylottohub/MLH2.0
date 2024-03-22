@@ -49,10 +49,17 @@ const Otp = () => {
         user_details: email,
       };
       const response = await HTTP.post("/user-verification", payload);
-      const url = response?.data?.verificationURL;
+
+      const verificationURL = response?.data?.verificationURL;
+
+      if (verificationURL) {
+        window.location.href = verificationURL;
+      } else {
+        throw new Error("Verification URL not found in response data");
+      }
+
       toast.success("Verification Successful");
       sessionStorage.removeItem("email");
-      window.location.href = url;
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);
