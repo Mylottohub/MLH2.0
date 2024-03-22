@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { routes } from "./routing/routes";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LatestWinner from "./components/LatestWinner";
 import LatestGame from "./components/LatestGame";
+import NotFound from "./components/NotFound/NotFound";
 
 function App() {
   useEffect(() => {
@@ -20,7 +21,7 @@ function App() {
   }, []);
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         {routes.map((route, index) => (
           <Route
@@ -35,10 +36,11 @@ function App() {
             }
           />
         ))}
+        <Route path="*" element={<NotFound />} /> {/* Wildcard route */}
       </Routes>
       <LatestWinner />
       <LatestGame />
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 

@@ -46,7 +46,8 @@ const Register = () => {
       const res = await registers(data).unwrap();
       dispatch(setCredentials({ ...res }));
       toast.success("Registration successful");
-      window.location.href = res.data;
+      console.log(res);
+      window.location.href = res.data.verificationURL;
     } catch (err) {
       // if (err?.data?.details) {
       //   const errorDetails = err.data.details;

@@ -2,25 +2,22 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import "../assets/css/register.css";
-import { useUserotpMutation } from "../pages/slices/userApiSlice";
-import { setCredentials } from "../pages/slices/authSlice";
 import { toast } from "react-toastify";
 import { HTTP } from "../utils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const schema = yup.object().shape({
   email: yup.string(),
 });
 
 const Otp = () => {
-  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
-
-  const [userotp, { isLoading }] = useUserotpMutation();
+  const navigate = useNavigate();
 
   const email = sessionStorage.getItem("email");
 
@@ -32,11 +29,10 @@ const Otp = () => {
     resolver: yupResolver(schema),
   });
 
-  const submitForm = async (data) => {
-    try {
-      const res = await userotp(data).unwrap();
-      dispatch(setCredentials({ ...res }));
+  const submitForm = async () => {
+    setIsLoading(true);
 
+    try {
       const getAccessIdFromURL = () => {
         const searchParams = new URLSearchParams(location.search);
         return searchParams.get("accessId");
@@ -50,26 +46,27 @@ const Otp = () => {
       };
       const response = await HTTP.post("/user-verification", payload);
 
-      const verificationURL = response?.data?.verificationURL;
-
+      const verificationURL = response?.data?.data?.verificationURL;
       if (verificationURL) {
+        toast.success("Verification Successful");
         window.location.href = verificationURL;
-      } else {
-        throw new Error("Verification URL not found in response data");
       }
 
-      toast.success("Verification Successful");
       sessionStorage.removeItem("email");
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);
       } else {
-        toast.error("An error occurred during Login.");
+        toast.error("An error occurred during Verification.");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return (
+  const accessIdPresent = location.search.includes("accessId");
+
+  return accessIdPresent ? (
     <>
       <Navbar />
       <div className="container mb-5">
@@ -84,6 +81,7 @@ const Otp = () => {
                   className="form-control p-3 mb-2"
                   required
                   name="email"
+                  readOnly
                   defaultValue={email}
                   {...register("email", {
                     required: "Required",
@@ -116,6 +114,22 @@ const Otp = () => {
 
       <Footer />
     </>
+  ) : (
+    <div className="container mb-5">
+      <div className="row">
+        <div className="col-lg-6 mx-auto mt-5 app__register">
+          <h1 className="mb-4">PROCEED TO LOGIN FOR VERIFICATION</h1>
+          <a
+            onClick={() => {
+              navigate(`/login`);
+            }}
+            className="w-100 p-3 btn btn-light"
+          >
+            Login
+          </a>
+        </div>
+      </div>
+    </div>
   );
 };
 
