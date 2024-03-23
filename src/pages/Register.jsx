@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "../assets/css/register.css";
 import { useRegistersMutation } from "../pages/slices/userApiSlice";
 import ReCaptchaV2 from "react-google-recaptcha";
+import { useState } from "react";
 
 const schema = yup.object().shape({
   name: yup.string().required("This is a required field"),
@@ -21,6 +22,7 @@ const siteKey = import.meta.env.VITE_SITE_KEY;
 
 const Register = () => {
   const navigate = useNavigate();
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
   const [registers, { isLoading }] = useRegistersMutation();
 
@@ -31,6 +33,9 @@ const Register = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const handleCaptchaVerification = () => {
+    setIsCaptchaVerified(true);
+  };
 
   const submitForm = async (data) => {
     try {
@@ -42,11 +47,14 @@ const Register = () => {
         );
       }
       // window.location.href = res.data.verificationURL;
+      navigate(`/login`);
     } catch (err) {
-      if (err?.data?.error) {
-        toast.error(err.data.error);
+      if (err?.data?.details?.email && err?.data?.details?.email.length > 0) {
+        const errorDetails = err?.data?.details?.email[0];
+        toast.error(errorDetails);
       } else {
-        toast.error("An error occurred during Registration.");
+        // Handle generic error
+        toast.error("An error occurred during registration.");
       }
     }
   };
@@ -161,11 +169,14 @@ const Register = () => {
                   Sign in
                 </span>
               </p>
-              <ReCaptchaV2 sitekey={siteKey} />
+              <ReCaptchaV2
+                sitekey={siteKey}
+                onChange={handleCaptchaVerification}
+              />
               <Button
                 type="submit"
                 className="w-100 p-3 mt-3"
-                disabled={isLoading}
+                disabled={!isCaptchaVerified || isLoading}
               >
                 {isLoading ? (
                   <Spinner
