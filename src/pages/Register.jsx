@@ -1,6 +1,5 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
@@ -10,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import "../assets/css/register.css";
 // import { useEffect } from "react";
 import { useRegistersMutation } from "../pages/slices/userApiSlice";
-import { setCredentials } from "../pages/slices/authSlice";
 import ReCaptchaV2 from "react-google-recaptcha";
 
 // import 'react-phone-number-input/style.css'
@@ -28,7 +26,6 @@ const siteKey = import.meta.env.VITE_SITE_KEY;
 
 const Register = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [registers, { isLoading }] = useRegistersMutation();
 
@@ -44,21 +41,9 @@ const Register = () => {
     try {
       sessionStorage.setItem("email", data.email);
       const res = await registers(data).unwrap();
-      dispatch(setCredentials({ ...res }));
       toast.success("Registration successful");
-      console.log(res);
       window.location.href = res.data.verificationURL;
     } catch (err) {
-      // if (err?.data?.details) {
-      //   const errorDetails = err.data.details;
-      //   Object.values(errorDetails).forEach((errorMessages) => {
-      //     errorMessages.forEach((errorMessage) => {
-      //       toast.error(errorMessage);
-      //     });
-      //   });
-      // } else {
-      //   toast.error("An error occurred during registration.");
-      // }
       if (err?.data?.error) {
         toast.error(err.data.error);
       } else {

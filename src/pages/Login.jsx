@@ -1,5 +1,3 @@
-// import {  useEffect } from "react";
-import { useDispatch } from "react-redux";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
@@ -9,7 +7,6 @@ import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../pages/slices/userApiSlice";
-import { setCredentials } from "../pages/slices/authSlice";
 import "../assets/css/register.css";
 
 const schema = yup.object().shape({
@@ -18,7 +15,7 @@ const schema = yup.object().shape({
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [login, { isLoading }] = useLoginMutation();
 
@@ -34,7 +31,6 @@ const Login = () => {
     try {
       const res = await login(data).unwrap();
       sessionStorage.setItem("email", data.email);
-      dispatch(setCredentials({ ...res }));
       window.location.href = res.data;
     } catch (err) {
       if (err?.data?.error) {
