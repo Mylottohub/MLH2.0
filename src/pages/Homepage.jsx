@@ -11,41 +11,41 @@ import { toast } from "react-toastify";
 import { HTTP } from "../utils";
 
 const Homepage = () => {
-  // const location = useLocation();
-  // const dispatch = useDispatch();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const getCodeFromURL = () => {
-  //     const searchParams = new URLSearchParams(location.search);
-  //     return searchParams.get("code");
-  //   };
+  useEffect(() => {
+    const getCodeFromURL = () => {
+      const searchParams = new URLSearchParams(location.search);
+      return searchParams.get("code");
+    };
 
-  //   const exchangeCodeForToken = async (code) => {
-  //     try {
-  //       const payload = {
-  //         code,
-  //         type: "user", // Add type:user to the payload
-  //       };
-  //       const response = await HTTP.post("/miracl-hook", payload); // Adjust the endpoint accordingly
+    const exchangeCodeForToken = async (code) => {
+      try {
+        const payload = {
+          code,
+          type: "user", // Add type:user to the payload
+        };
+        const response = await HTTP.post("/miracl-hook", payload); // Adjust the endpoint accordingly
 
-  //       const data = response?.data;
-  //       if (data?.token) {
-  //         dispatch(setCredentials(data));
-  //         toast.success("User has been confirmed Successfully");
-  //       } else {
-  //         throw new Error("Token not found in response data");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error exchanging code for token:", error);
-  //       toast.error("An error occurred during authentication.");
-  //     }
-  //   };
+        const data = response?.data;
+        if (data?.token) {
+          dispatch(setCredentials(data));
+          toast.success("User has been confirmed Successfully");
+        } else {
+          throw new Error("Token not found in response data");
+        }
+      } catch (error) {
+        console.error("Error exchanging code for token:", error);
+        toast.error("An error occurred during authentication.");
+      }
+    };
 
-  //   const code = getCodeFromURL();
-  //   if (code) {
-  //     exchangeCodeForToken(code);
-  //   }
-  // }, [location, dispatch]);
+    const code = getCodeFromURL();
+    if (code) {
+      exchangeCodeForToken(code);
+    }
+  }, [location, dispatch]);
   return (
     <React.Fragment>
       <div>
