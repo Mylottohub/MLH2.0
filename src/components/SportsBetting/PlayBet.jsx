@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { HTTP } from "../../utils";
 const PlayBet = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -20,30 +21,24 @@ const PlayBet = () => {
   const [isLoadingPlayBet, setIsLoadingPlayBet] = useState(false);
 
   const { userInfo } = useSelector((state) => state.auth);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       const requestData = { code: id };
       try {
-        const response = await fetch(
-          "https://sandbox.mylottohub.com/v1/get-sports-details",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify(requestData),
-          }
-        );
+        const response = await HTTP.post("/get-sports-details", requestData, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
 
-        if (!response.ok) {
+        if (response.status === 200) {
+          setBetting(response.data.data.bookingInfo);
+        } else {
           throw new Error("Network response was not ok");
         }
-
-        const data = await response.json();
-
-        setBetting(data.data.bookingInfo);
       } catch (error) {
         console.error(error);
       } finally {
@@ -86,7 +81,6 @@ const PlayBet = () => {
 
   const handlePlaceBet = async () => {
     setIsLoadingPlayBet(true);
-    // Validate input amount
     if (!inputAmount || isNaN(inputAmount) || inputAmount < 100) {
       toast.error("Minimum stake amount is ₦100");
       setIsLoadingPlayBet(false);
@@ -103,34 +97,27 @@ const PlayBet = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch(
-        "https://sandbox.mylottohub.com/v1/play-games",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await HTTP.post("/play-games", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      });
 
-      const responseError = await response.json();
-      // const data = await response.json();
-      if (!response.ok) {
-        toast.error(responseError.msg);
-      } else {
+      if (response.status === 200) {
         toast.success("Your selected game has been submitted successfully");
+        navigate("/betting");
+      } else {
+        const responseError = await response.data;
+        toast.error(responseError.msg);
       }
-      navigate("/betting");
     } catch (error) {
-      toast("Error placing bet. Please try again.", error);
+      toast.error("Error placing bet. Please try again.", error);
     } finally {
       setIsLoadingPlayBet(false);
     }
   };
-
   return (
     <React.Fragment>
       <>

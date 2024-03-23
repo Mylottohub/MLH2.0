@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import Countdown from "react-countdown";
 import moment from "moment";
+import { HTTP } from "../../utils";
 
 const OperatorMobile = () => {
   const navigate = useNavigate();
@@ -35,23 +36,14 @@ const OperatorMobile = () => {
       setIsLoading(true);
 
       try {
-        const response = await fetch(
-          "https://sandbox.mylottohub.com/v1/get-games",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify(requestData),
-          }
-        );
+        const response = await HTTP.post("/get-games", requestData, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
+        const data = response.data;
 
         setOperatorData((prevData) => ({
           ...prevData,
@@ -66,7 +58,6 @@ const OperatorMobile = () => {
       }
     });
   }, [userInfo]);
-
   return (
     <div>
       <section>

@@ -65,19 +65,14 @@ const ViewMoreResults = () => {
       setIsLoading(true);
       const requestData = { operator_type: operatorID };
       try {
-        const response = await fetch(
-          "https://sandbox.mylottohub.com/v1/get-games",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify(requestData),
-          }
-        );
+        const response = await HTTP.post("/get-games", requestData, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
 
-        const data = await response.json();
+        const data = response.data;
 
         setPerOperator(data.result);
       } catch (error) {
@@ -89,7 +84,6 @@ const ViewMoreResults = () => {
 
     fetchData(); // Call the async function
   }, []);
-
   useEffect(() => {
     if (userInfo.token) {
       fetchData();

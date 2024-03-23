@@ -54,7 +54,7 @@ const UserProfile = () => {
                         className="row"
                         onClick={() =>
                           notify(
-                            `https://www.mylottohub.com/${userProfileResponse?.id}`
+                            `https://www.mylottohub.com?${userProfileResponse?.id}`
                           )
                         }
                       >
@@ -62,7 +62,7 @@ const UserProfile = () => {
                           <input
                             id="foo"
                             type="text"
-                            value={`https://www.mylottohub.com/${userProfileResponse?.id}`}
+                            value={`https://www.mylottohub.com?${userProfileResponse?.id}`}
                             className="form-control p-3"
                             readOnly=""
                             disabled

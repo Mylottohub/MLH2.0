@@ -31,7 +31,7 @@ const Instance = () => {
               }
             >
               <img
-                src="https://www.mylottohub.com/images/instantgame_game/reactions.png"
+                src="/images/reactions.png"
                 className="img-fluid"
                 style={{
                   borderTopRightRadius: "5px",
@@ -63,7 +63,7 @@ const Instance = () => {
               }
             >
               <img
-                src="https://www.mylottohub.com/images/instantgame_game/tiki-tower.png"
+                src="/images/tiki-tower.png"
                 className="img-fluid"
                 style={{
                   borderTopRightRadius: "5px",
@@ -95,7 +95,7 @@ const Instance = () => {
               }
             >
               <img
-                src="https://www.mylottohub.com/images/instantgame_game/magical.png"
+                src="/images/magical.png"
                 className="img-fluid"
                 style={{
                   borderTopRightRadius: "5px",
@@ -127,7 +127,7 @@ const Instance = () => {
               }
             >
               <img
-                src="https://www.mylottohub.com/images/instantgame_game/dynamite-riches.png"
+                src="/images/dynamite-riches.png"
                 className="img-fluid"
                 style={{
                   borderTopRightRadius: "5px",
@@ -159,7 +159,7 @@ const Instance = () => {
               }
             >
               <img
-                src="https://www.mylottohub.com/images/instantgame_game/candy-burst.png"
+                src="/images/candy-burst.png"
                 className="img-fluid"
                 style={{
                   borderTopRightRadius: "5px",

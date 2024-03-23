@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { useState } from "react";
+import { HTTP } from "../../utils";
 
 const schema = yup.object().shape({
   amount: yup.string().required("This is a required field"),
@@ -54,24 +55,28 @@ const Deposit = () => {
           posting: "paystack",
         };
 
-        const paystackResponse = await fetch(
-          "https://sandbox.mylottohub.com/v1/payment-initialize",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-            body: JSON.stringify(paymentData),
-          }
-        );
+        try {
+          const paystackResponse = await HTTP.post(
+            "/payment-initialize",
+            paymentData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+              },
+            }
+          );
 
-        if (paystackResponse.ok) {
-          const paystackData = await paystackResponse.json();
-          // Redirect the user to the Paystack checkout page
-          window.location.href = paystackData.redirect_url;
-        } else {
+          if (paystackResponse.status === 200) {
+            const paystackData = paystackResponse.data;
+            // Redirect the user to the Paystack checkout page
+            window.location.href = paystackData.redirect_url;
+          } else {
+            toast.error("An error occurred.");
+          }
+        } catch (error) {
+          console.error("Error initializing Paystack payment:", error);
           toast.error("An error occurred.");
         }
       } else if (selectedPaymentOption === "flutterwave") {
@@ -82,25 +87,28 @@ const Deposit = () => {
           posting: "flutterwave",
         };
 
-        // Send the payment request to flutterwave with the Bearer token in the headers
-        const paystackResponse = await fetch(
-          "https://sandbox.mylottohub.com/v1/payment-initialize",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-            body: JSON.stringify(paymentData),
-          }
-        );
+        try {
+          const flutterwaveResponse = await HTTP.post(
+            "/payment-initialize",
+            paymentData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+              },
+            }
+          );
 
-        if (paystackResponse.ok) {
-          const paystackData = await paystackResponse.json();
-          // Redirect the user to the flutterwave checkout page
-          window.location.href = paystackData.redirect_url;
-        } else {
+          if (flutterwaveResponse.status === 200) {
+            const flutterwaveData = flutterwaveResponse.data;
+            // Redirect the user to the flutterwave checkout page
+            window.location.href = flutterwaveData.redirect_url;
+          } else {
+            toast.error("An error occurred.");
+          }
+        } catch (error) {
+          console.error("Error initializing Flutterwave payment:", error);
           toast.error("An error occurred.");
         }
       } else if (selectedPaymentOption === "monnify") {
@@ -111,25 +119,28 @@ const Deposit = () => {
           posting: "monnify",
         };
 
-        // Send the payment request to monnify with the Bearer token in the headers
-        const paystackResponse = await fetch(
-          "https://sandbox.mylottohub.com/v1/payment-initialize",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-            body: JSON.stringify(paymentData),
-          }
-        );
+        try {
+          const monnifyResponse = await HTTP.post(
+            "/payment-initialize",
+            paymentData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+              },
+            }
+          );
 
-        if (paystackResponse.ok) {
-          const monnifyData = await paystackResponse.json();
-          setMonnifyInfo(monnifyData);
-          setShowMonnifyModal(true);
-        } else {
+          if (monnifyResponse.status === 200) {
+            const monnifyData = monnifyResponse.data;
+            setMonnifyInfo(monnifyData);
+            setShowMonnifyModal(true);
+          } else {
+            toast.error("An error occurred.");
+          }
+        } catch (error) {
+          console.error("Error initializing Monnify payment:", error);
           toast.error("An error occurred.");
         }
       }

@@ -8,6 +8,7 @@ import moment from "moment";
 import Countdown from "react-countdown";
 import { useSelector } from "react-redux";
 import { Button, Spinner } from "react-bootstrap";
+import { HTTP } from "../../utils";
 
 const PlayGames = () => {
   const [selectedBetType, setSelectedBetType] = useState("");
@@ -27,25 +28,19 @@ const PlayGames = () => {
       setIsLoading(true);
       const requestData = { operator_type: id };
       try {
-        const response = await fetch(
-          "https://sandbox.mylottohub.com/v1/get-games",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify(requestData),
-          }
-        );
+        const response = await HTTP.post("/get-games", requestData, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
 
-        if (!response.ok) {
+        if (response.status === 200) {
+          const data = response.data;
+          setPerOperator(data.result);
+        } else {
           throw new Error("Network response was not ok");
         }
-
-        const data = await response.json();
-
-        setPerOperator(data.result);
       } catch (error) {
         console.error(`Error fetching ${id} games:`, error);
       } finally {
@@ -55,6 +50,7 @@ const PlayGames = () => {
 
     fetchData(); // Call the async function
   }, []);
+
   useEffect(() => {
     // console.log("count", perOperator);
   }, [perOperator]);
@@ -365,31 +361,30 @@ const PlayGames = () => {
   const calculatePermLines = async (gameType, selectedNumbers) => {
     setIsLoadingConfirmBet(true);
     try {
-      const response = await fetch(
-        "https://sandbox.mylottohub.com/v1/line-calculator",
+      const response = await HTTP.post(
+        "/line-calculator",
         {
-          method: "POST",
+          gameType: gameType,
+          num: selectedNumbers,
+        },
+        {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify({
-            gameType: gameType,
-            num: selectedNumbers,
-          }),
         }
       );
 
-      if (!response.ok) {
+      if (response.status === 200) {
+        const data = response.data;
+        if (data) {
+          toast.success("Bet Slip Updated successfully");
+        }
+        return data;
+      } else {
         throw new Error("Network response was not ok");
       }
-
-      const data = await response.json();
-      if (data) {
-        toast.success("Bet Slip Updated successfully");
-      }
-      return data;
     } catch (error) {
       console.error("Error calculating lines:", error);
       return 0;
@@ -569,27 +564,21 @@ const PlayGames = () => {
     const payload = mapToOperatorPayload(id, confirmedBet, selectedWallet);
 
     try {
-      const response = await fetch(
-        "https://sandbox.mylottohub.com/v1/play-games",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-      const responseError = await response.json();
-      // const data = await response.json();
-      if (!response.ok) {
-        toast.error(responseError.msg);
-      } else {
+      const response = await HTTP.post("/play-games", payload, {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+
+      if (response.status === 200) {
         sessionStorage.removeItem(localStorageKey);
         toast.success("Your selected game has been submitted successfully");
-        // window.location.reload();
         navigate(`/`);
+      } else {
+        const responseError = response.data;
+        toast.error(responseError.msg);
       }
     } catch (error) {
       console.log(error);
@@ -597,7 +586,6 @@ const PlayGames = () => {
       setIsLoadingPlayBet(false);
     }
   };
-
   const imageSrc = `/images/${id}.png`;
 
   return (

@@ -25,7 +25,7 @@ const Referral = () => {
         await navigator.share({
           title: "Check out MyLottoHub",
           text: "Join MyLottoHub and explore the exciting world of lotteries!",
-          url: `https://agency.mylottohub.com/${userProfileResponse?.id}`,
+          url: `https://www.mylottohub.com?${userProfileResponse?.id}`,
         });
       } catch (error) {
         console.error("Error sharing:", error);
@@ -58,7 +58,7 @@ const Referral = () => {
               <input
                 id="foo"
                 type="text"
-                value={`https://agency.mylottohub.com/${userProfileResponse?.id}`}
+                value={`https://www.mylottohub.com?${userProfileResponse?.id}`}
                 className="form-control p-2"
                 readOnly=""
                 disabled
@@ -72,7 +72,7 @@ const Referral = () => {
                 data-clipboard-target="#foo"
                 onClick={() =>
                   notify(
-                    `https://agency.mylottohub.com/${userProfileResponse?.id}`
+                    `https://www.mylottohub.com?${userProfileResponse?.id}`
                   )
                 }
               >
