@@ -7,18 +7,13 @@ import * as yup from "yup";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/register.css";
-// import { useEffect } from "react";
 import { useRegistersMutation } from "../pages/slices/userApiSlice";
 import ReCaptchaV2 from "react-google-recaptcha";
-
-// import 'react-phone-number-input/style.css'
-// import PhoneInputWithCountryFlag from "../components/PhoneInput/PhoneInputWithCountryFlag";
 
 const schema = yup.object().shape({
   name: yup.string().required("This is a required field"),
   email: yup.string().email().required(),
   username: yup.string().required("This is a required field"),
-  // last_name: yup.string().required("This is a required field"),
   phone: yup.string().min(11).max(11).required(),
 });
 
@@ -41,13 +36,17 @@ const Register = () => {
     try {
       sessionStorage.setItem("email", data.email);
       const res = await registers(data).unwrap();
-      toast.success("Registration successful");
-      window.location.href = res.data.verificationURL;
+      if (res) {
+        toast.success(
+          "Registration successful, check your email address for verification link."
+        );
+      }
+      // window.location.href = res.data.verificationURL;
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);
       } else {
-        toast.error("An error occurred during Login.");
+        toast.error("An error occurred during Registration.");
       }
     }
   };

@@ -24,9 +24,9 @@ const Homepage = () => {
       try {
         const payload = {
           code,
-          type: "user", // Add type:user to the payload
+          type: "user",
         };
-        const response = await HTTP.post("/miracl-hook", payload); // Adjust the endpoint accordingly
+        const response = await HTTP.post("/miracl-hook", payload);
 
         const data = response?.data;
         if (data?.token) {

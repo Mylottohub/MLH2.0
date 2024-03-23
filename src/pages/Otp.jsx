@@ -41,7 +41,6 @@ const Otp = () => {
       const accessId = getAccessIdFromURL();
       const payload = {
         accessId: accessId,
-        redirect_url: "https://mlh2.netlify.app/",
         user_details: email,
       };
       const response = await HTTP.post("/user-verification", payload);
@@ -77,7 +76,7 @@ const Otp = () => {
             <form onSubmit={handleSubmit(submitForm)}>
               <div className="mb-3">
                 <input
-                  type="tel"
+                  type="email"
                   className="form-control p-3 mb-2"
                   required
                   name="email"

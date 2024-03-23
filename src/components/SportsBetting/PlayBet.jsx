@@ -1,15 +1,12 @@
 import React from "react";
 import Navbar from "../Navbar";
 import "../../assets/css/table.css";
-// import HTTP from "../../utils/httpClient";
 import { useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
 import { Button, Spinner } from "react-bootstrap";
 import { images } from "../../constant";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import moment from "moment";
 import { HTTP } from "../../utils";
 const PlayBet = () => {
   const navigate = useNavigate();

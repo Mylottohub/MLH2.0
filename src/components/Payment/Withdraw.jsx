@@ -45,9 +45,8 @@ const WithdrawModal = () => {
   });
 
   const onSubmit = () => {
-    toast.error("Account Successfuly Submitted");
+    toast.success("Account Successfuly Submitted");
   };
-  // console.log(userProfileResponse);
 
   const onSubmitWithdraw = async (e) => {
     e.preventDefault();
@@ -229,8 +228,8 @@ const WithdrawModal = () => {
                       <form onSubmit={handleSubmit(onSubmit)}>
                         <p>
                           To initiate a withdrawal, choose your bank and input
-                          your account number to automatically fill in your
-                          account name.
+                          your account number to automatically fill and save
+                          your account details.
                         </p>
                         <div>
                           <select
@@ -287,13 +286,13 @@ const WithdrawModal = () => {
                             <Spinner animation="border" variant="primary" />
                           )}
                         </div>
-                        <button
+                        {/* <button
                           type="submit"
                           className="btn btn-trans2_border btn-block btn-lg text-white border-0 mt-3"
                           style={{ background: "#27AAE1" }}
                         >
                           Submit
-                        </button>
+                        </button> */}
                       </form>
                     </>
                   )}
