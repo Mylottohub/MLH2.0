@@ -7,7 +7,7 @@ const NotFound = () => {
       <div className="notFound">
         <img className="img-fluid imageNotFound" src="./404.jpg" />
         <p style={{ textAlign: "center" }}>
-          <Link className="text-dark mt-4" to="/">
+          <Link className="text-dark" to="/">
             Go to Home{" "}
           </Link>
         </p>

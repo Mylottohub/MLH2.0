@@ -38,6 +38,7 @@ const Result = () => {
         setIsLoading(false);
       });
   };
+  // console.log(result[0]?.id);
 
   useEffect(() => {
     fetchData();
@@ -80,11 +81,12 @@ const Result = () => {
                 {result
                   .sort(
                     (a, b) =>
-                      new Date(b.results[0]?.date) -
-                      new Date(a.results[0]?.date)
+                      new Date(b?.results[0]?.date) -
+                      new Date(a?.results[0]?.date)
                   )
                   .map((record, index) => {
-                    const latestResult = record.results[0];
+                    const latestResult = record?.results[0];
+                    const operatorId = record?.id;
 
                     return (
                       <>
@@ -129,9 +131,7 @@ const Result = () => {
                               <div className="pull-right mt-4 mb-3">
                                 <a
                                   onClick={() =>
-                                    navigate(
-                                      `/view-more/${latestResult?.operator}`
-                                    )
+                                    navigate(`/view-more/${operatorId}`)
                                   }
                                   className="text-decoration-none"
                                 >
@@ -196,9 +196,7 @@ const Result = () => {
                                 <div className="pull-right">
                                   <a
                                     onClick={() =>
-                                      navigate(
-                                        `/view-more/${latestResult?.operator}`
-                                      )
+                                      navigate(`/view-more/${operatorId}`)
                                     }
                                     className="text-decoration-none"
                                   >

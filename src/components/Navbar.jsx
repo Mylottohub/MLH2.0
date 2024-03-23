@@ -501,10 +501,8 @@ const Navbar = () => {
                     <li>
                       <a
                         className="dropdown-item p-2"
-                        // href="https://www.mylottohub.com/play/plotto"
                         onClick={() => navigate("/")}
                       >
-                        {/* <img src={images.lotto_icon} alt={images.lotto_icon} />{" "} */}
                         Lotto
                       </a>
                     </li>
@@ -512,9 +510,7 @@ const Navbar = () => {
                       <a
                         className="dropdown-item p-2"
                         onClick={() => navigate("/betting")}
-                        // href="https://www.mylottohub.com/welcome/home_sport"
                       >
-                        {/* <img src={images.bet} alt={images.bet} />  */}
                         Sport Betting
                       </a>
                     </li>

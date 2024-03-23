@@ -11,26 +11,7 @@ const Footer = () => {
       <div>
         <div className="footer-area mt-5">
           <img src={images.payment_gate} className="img-fluid" alt="" />
-          {/* <table align="center" width="90%">
-            <tbody>
-              <tr>
-                <td>
-                  <img
-                    src="https://www.mylottohub.com/images/payment_icons.png"
-                    className="img-fluid"
-                  />
-                </td>
-                <td>
-                  <a href="https://www.begambleaware.org">
-                    <img
-                      src="https://www.mylottohub.com/images/begambleaware.png"
-                      className="img-fluid"
-                    />
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table> */}
+
           <br />
           <div className="footer-area_overview footer-top-area black-opacity bg-img-4 hidden-xs">
             <div className="container">

@@ -291,7 +291,7 @@ const Operator = () => {
               <div className="col-md-4">
                 <p>
                   <img
-                    src="https://www.mylottohub.com/images/w1.png"
+                    src="images/w1.png"
                     className="img-responsive"
                     width="135"
                   />
@@ -317,7 +317,7 @@ const Operator = () => {
               <div className="col-md-4">
                 <p>
                   <img
-                    src="https://www.mylottohub.com/images/w2.png"
+                    src="images/w2.png"
                     className="img-responsive"
                     width="135"
                   />
@@ -340,7 +340,7 @@ const Operator = () => {
               <div className="col-md-4">
                 <p>
                   <img
-                    src="https://www.mylottohub.com/images/w3.png"
+                    src="images/w3.png"
                     className="img-responsive"
                     width="135"
                   />
@@ -369,7 +369,7 @@ const Operator = () => {
                   style={{ paddingBottom: "0px!important" }}
                 >
                   <img
-                    src="https://www.mylottohub.com/images/meg_parallax.png"
+                    src="images/meg_parallax.png"
                     className="img-responsive img-fluid"
                     width="581"
                   />
@@ -453,7 +453,7 @@ const Operator = () => {
                   <td valign="middle" width="40%">
                     <p>
                       <img
-                        src="https://www.mylottohub.com/images/lotto_games_icon.png"
+                        src="/images/lotto_games_icon.png"
                         className="img-responsive"
                         height="70"
                         width="70"
@@ -481,7 +481,7 @@ const Operator = () => {
                   <td valign="middle" width="40%">
                     <p>
                       <img
-                        src="https://www.mylottohub.com/images/sports_betting_icon.png"
+                        src="images/sports_betting_icon.png"
                         className="img-responsive"
                         height="70"
                         width="70"
@@ -498,18 +498,13 @@ const Operator = () => {
                   <td valign="top" width="60%">
                     <p style={{ color: "#FFF !important" }}>INSTANT GAMES</p>
                     <p>
-                      <a
-                        // href="https://www.mylottohub.com/welcome/home_instant"
-                        className="btn btn-yellow btn-block"
-                      >
-                        Play Now
-                      </a>
+                      <a className="btn btn-yellow btn-block">Play Now</a>
                     </p>
                   </td>
                   <td valign="middle" width="40%">
                     <p>
                       <img
-                        src="https://www.mylottohub.com/images/instant_games_icon.png"
+                        src="/images/instant_games_icon.png"
                         className="img-responsive"
                         height="70"
                         width="90"
