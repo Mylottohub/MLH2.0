@@ -31,7 +31,7 @@ const Homepage = () => {
         const data = response?.data;
         if (data?.token) {
           dispatch(setCredentials(data));
-          toast.success("User has been confirmed Successfully");
+          toast.success("Verification Successful");
         } else {
           throw new Error("Token not found in response data");
         }
