@@ -10,7 +10,7 @@ import { HTTP } from "../utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { clearEmailAddress } from "./slices/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const schema = yup.object().shape({
   email: yup.string(),
@@ -22,8 +22,7 @@ const Otp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const email = sessionStorage.getItem("email");
-  const { email } = useSelector((state) => state.auth);
+  const email = localStorage.getItem("email");
 
   const {
     register,
@@ -55,9 +54,9 @@ const Otp = () => {
       const verificationURL = response?.data?.data?.verificationURL;
       if (verificationURL) {
         toast.success("Verification Successful");
-        clearPhoneNumberHandler();
         window.location.href = verificationURL;
       }
+      clearPhoneNumberHandler();
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);
@@ -77,7 +76,7 @@ const Otp = () => {
       <div className="container mb-5">
         <div className="row">
           <div className="col-lg-6 mx-auto app__register">
-            <h1 className="mb-4">VERIFY YOUR EMAIL ADDRESS</h1>
+            <h1 className="mb-4 text-capitalize">VERIFY YOUR EMAIL ADDRESS</h1>
 
             <form onSubmit={handleSubmit(submitForm)}>
               <div className="mb-3">

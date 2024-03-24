@@ -33,6 +33,7 @@ const Login = () => {
     try {
       const res = await login(data).unwrap();
       dispatch(setEmailAddress(data.email));
+      // localStorage.setItem("email", data.email);
       window.location.href = res.data;
     } catch (err) {
       if (err?.data?.error) {
