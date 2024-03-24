@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { HTTP } from "../utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { clearEmailAddress } from "./slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const schema = yup.object().shape({
   email: yup.string(),
@@ -18,8 +20,10 @@ const Otp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const email = sessionStorage.getItem("email");
+  // const email = sessionStorage.getItem("email");
+  const { email } = useSelector((state) => state.auth);
 
   const {
     register,
@@ -28,6 +32,9 @@ const Otp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const clearPhoneNumberHandler = () => {
+    dispatch(clearEmailAddress());
+  };
 
   const submitForm = async () => {
     setIsLoading(true);
@@ -48,10 +55,9 @@ const Otp = () => {
       const verificationURL = response?.data?.data?.verificationURL;
       if (verificationURL) {
         toast.success("Verification Successful");
+        clearPhoneNumberHandler();
         window.location.href = verificationURL;
       }
-
-      sessionStorage.removeItem("email");
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);

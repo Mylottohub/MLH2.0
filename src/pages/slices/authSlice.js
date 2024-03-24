@@ -4,6 +4,7 @@ const initialState = {
   userInfo: sessionStorage.getItem("userInfo")
     ? JSON.parse(sessionStorage.getItem("userInfo"))
     : null,
+  email: null,
   tokenExpiration: null,
 };
 
@@ -14,6 +15,12 @@ export const authSlice = createSlice({
     setCredentials: (state, action) => {
       state.userInfo = action.payload;
       state.tokenExpiration = action.payload ? action.payload.expires : null;
+    },
+    setEmailAddress: (state, action) => {
+      state.email = action.payload;
+    },
+    clearEmailAddress: (state) => {
+      state.email = null;
     },
 
     logout: (state) => {
@@ -26,6 +33,12 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout, clearStore } = authSlice.actions;
+export const {
+  setCredentials,
+  logout,
+  clearStore,
+  setEmailAddress,
+  clearEmailAddress,
+} = authSlice.actions;
 
 export default authSlice.reducer;
