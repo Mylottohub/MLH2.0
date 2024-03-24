@@ -30,7 +30,7 @@ const LatestGame = () => {
     fetchData();
   }, []);
 
-  const currentDay = new Date().getDay();
+  const currentDay = new Date().getDay() + 1;
 
   const getOperatorName = (operator) => {
     switch (operator) {
@@ -56,7 +56,7 @@ const LatestGame = () => {
       (game) =>
         moment().isBefore(
           moment(`${moment().format("YYYY-MM-DD")} ${game.start_time}`)
-        ) && game.day_no === currentDay
+        ) && game?.day_no === currentDay
     )
     .sort((a, b) =>
       moment(a.start_time, "HH:mm:ss").diff(moment(b.start_time, "HH:mm:ss"))

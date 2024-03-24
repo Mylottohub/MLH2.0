@@ -22,7 +22,9 @@ function Slider() {
     <Carousel fade>
       {adverts.map((advert) => (
         <Carousel.Item key={advert.id}>
-          <img src={advert.banner} alt={advert.name} className="img-fluid" />
+          <a href={advert.link} target="_blank" rel="noopener noreferrer">
+            <img src={advert.banner} alt={advert.name} className="img-fluid" />
+          </a>
         </Carousel.Item>
       ))}
     </Carousel>
