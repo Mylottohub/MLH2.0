@@ -577,11 +577,10 @@ const PlayGames = () => {
         toast.success("Your selected game has been submitted successfully");
         navigate(`/`);
       } else {
-        // const responseError = response.data;
         toast.error(response.msg);
       }
     } catch (error) {
-      console.log(error);
+      console.log("Insufficient Fund");
     } finally {
       setIsLoadingPlayBet(false);
     }

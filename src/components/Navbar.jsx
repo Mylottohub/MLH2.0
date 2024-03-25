@@ -117,14 +117,14 @@ const Navbar = () => {
                                 &nbsp;&nbsp;Deposit
                               </a>
                             </li>
-                            <li>
+                            {/* <li>
                               <a
                                 className="dropdown-item p-2"
                                 onClick={() => handleWithdraw()}
                               >
                                 &nbsp;&nbsp;Withdraw
                               </a>
-                            </li>
+                            </li> */}
                             {/* <li>
                               <a className="dropdown-item p-2">
                                 &nbsp;&nbsp;Subscription
@@ -368,15 +368,14 @@ const Navbar = () => {
                               &nbsp;&nbsp;Deposit
                             </a>
                           </li>
-                          <li>
+                          {/* <li>
                             <a
                               className="dropdown-item p-2"
                               onClick={() => handleWithdraw()}
                             >
-                              {/* <BiSolidDashboard /> */}
                               &nbsp;&nbsp;Withdraw
                             </a>
-                          </li>
+                          </li> */}
                           {/* <li>
                             <a className="dropdown-item p-2">
                              
@@ -445,14 +444,14 @@ const Navbar = () => {
                     </small>
                     <br />
                     <br />
-                    <a
+                    {/* <a
                       onClick={() => handleWithdraw()}
                       className="btn btn-trans2"
                       data-toggle="modal"
                       data-target="#withdraw_modal"
                     >
                       <small>Withdraw</small>
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               </>
