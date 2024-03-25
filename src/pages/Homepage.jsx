@@ -31,12 +31,11 @@ const Homepage = () => {
         const data = response?.data;
         if (data?.token) {
           dispatch(setCredentials(data));
-          toast.success("Verification Successful");
+          toast.success("Login Successful");
         } else {
           throw new Error("Token not found in response data");
         }
       } catch (error) {
-        console.error("Error exchanging code for token:", error);
         toast.error("An error occurred during authentication.");
       }
     };

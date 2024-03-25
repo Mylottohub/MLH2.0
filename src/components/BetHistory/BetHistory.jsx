@@ -222,6 +222,8 @@ const BetHistory = () => {
                               {" "}
                               {id === "green_lotto" ? (
                                 <td>{record?.drawname}</td>
+                              ) : id === "wesco" ? (
+                                <td>{record?.drawname}</td>
                               ) : id === "lotto_nigeria" ? (
                                 <td>{record?.drawAlias}</td>
                               ) : (
@@ -463,6 +465,14 @@ const BetHistory = () => {
                 <span className="fw-bolder">DRAW DATE: </span>{" "}
                 <span>
                   {id === "green_lotto" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
+                  ) : id === "wesco" ? (
                     <span>
                       {" "}
                       {moment

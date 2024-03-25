@@ -113,7 +113,10 @@ const Chart = () => {
     if (selections.length > 0) {
       // Check if the selected operator matches the operator of existing selections
       if (selectedOperator !== selections[0].operator) {
-        toast.error("You can only add games from the same operator");
+        // toast.error("You can only add games from the same operator");
+        toast.error(
+          "You can only create chart from the same game and operator"
+        );
         return;
       }
     }

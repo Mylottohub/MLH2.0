@@ -110,7 +110,7 @@ const Footer = () => {
 
                     <p className="text-center">
                       <a
-                        href="/mobile_app/MLH.apk"
+                        href="#"
                         className="btn btn-trans btn-lg text-center"
                         style={{ border: "1px solid #fff" }}
                       >

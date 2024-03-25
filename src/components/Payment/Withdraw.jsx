@@ -51,9 +51,8 @@ const WithdrawModal = () => {
 
   const onSubmitWithdraw = async (e) => {
     e.preventDefault();
-    // Check if winning wallet balance is less than 1000
     if (userProfileResponse?.wwallet < 1000) {
-      toast.error("Winning Amount must be greater than 1000.");
+      toast.error("Insufficient Balance.");
       return;
     }
     const amount = e.target.amount.value;
