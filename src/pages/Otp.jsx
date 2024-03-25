@@ -10,7 +10,7 @@ import { HTTP } from "../utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { clearEmailAddress } from "./slices/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const schema = yup.object().shape({
   email: yup.string(),
@@ -21,8 +21,7 @@ const Otp = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const email = localStorage.getItem("email");
+  const { email } = useSelector((state) => state.auth);
 
   const {
     register,
@@ -31,7 +30,7 @@ const Otp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const clearPhoneNumberHandler = () => {
+  const clearEmailAddressHandler = () => {
     dispatch(clearEmailAddress());
   };
 
@@ -55,11 +54,11 @@ const Otp = () => {
       if (verificationURL) {
         toast.success("Verification Successful");
         window.location.href = verificationURL;
+        clearEmailAddressHandler();
       }
-      clearPhoneNumberHandler();
     } catch (err) {
-      if (err?.data?.error) {
-        toast.error(err.data.error);
+      if (err?.error) {
+        toast.error(err?.error);
       } else {
         toast.error("An error occurred during Verification.");
       }
@@ -76,7 +75,7 @@ const Otp = () => {
       <div className="container mb-5">
         <div className="row">
           <div className="col-lg-6 mx-auto app__register">
-            <h1 className="mb-4 text-capitalize">VERIFY YOUR EMAIL ADDRESS</h1>
+            <h1 className="mb-4 text-capitalize">Verify your email address</h1>
 
             <form onSubmit={handleSubmit(submitForm)}>
               <div className="mb-3">

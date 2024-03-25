@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 
 const WithdrawModal = () => {
   // Define the validation schema using yup
+  // const { loading, isLoading } = useState(false);
   const { userProfileResponse } = useGetProfileUser([]);
   const [showForm, setShowForm] = useState(false);
   const [showWallet, setShowWallet] = useState(false);
@@ -53,9 +54,13 @@ const WithdrawModal = () => {
     // Check if winning wallet balance is less than 1000
     if (userProfileResponse?.wwallet < 1000) {
       toast.error("Winning Amount must be greater than 1000.");
-      return; // Stop further execution
+      return;
     }
     const amount = e.target.amount.value;
+    if (amount < 1000) {
+      toast.error("Amount must be greater than 1000.");
+      return;
+    }
     try {
       const response = await HTTP.post(
         "/payments/withdraw-request",
@@ -71,10 +76,8 @@ const WithdrawModal = () => {
           },
         }
       );
-      if (response.data.status === "Success") {
-        toast.success("Withdrawal request submitted successfully");
-      } else {
-        toast.error(response.data.message);
+      if (response) {
+        toast.success(response.data.message);
       }
     } catch (error) {
       toast.error("Failed to submit withdrawal request");
@@ -204,9 +207,6 @@ const WithdrawModal = () => {
                             min="1"
                             name="amount"
                             required
-                            // onInput={(e) =>
-                            //   (e.target.value = e.target.value.slice(0, 10))
-                            // }
                           />
                           {/* {withdrawErrors.amount && (
                             <p className="text-danger text-capitalize">

@@ -32,9 +32,8 @@ const Login = () => {
   const submitForm = async (data) => {
     try {
       const res = await login(data).unwrap();
-      dispatch(setEmailAddress(data.email));
-      // localStorage.setItem("email", data.email);
       window.location.href = res.data;
+      dispatch(setEmailAddress(data.email));
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);

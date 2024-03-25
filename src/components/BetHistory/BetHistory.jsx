@@ -211,6 +211,8 @@ const BetHistory = () => {
                                 <td>{record?.TikcetId}</td>
                               ) : id === "lotto_nigeria" ? (
                                 <td>{record?.wagerID}</td>
+                              ) : id === "wesco" ? (
+                                <td>{record?.TikcetId}</td>
                               ) : (
                                 <td>{record?.TSN}</td>
                               )}
@@ -290,6 +292,8 @@ const BetHistory = () => {
                             <span>
                               {id === "green_lotto" ? (
                                 <td>{record?.TikcetId}</td>
+                              ) : id === "wesco" ? (
+                                <td>{record?.TikcetId}</td>
                               ) : (
                                 <td>{record?.TSN}</td>
                               )}
@@ -314,6 +318,8 @@ const BetHistory = () => {
                             <span>
                               {" "}
                               {id === "green_lotto" ? (
+                                <td>{record?.drawname}</td>
+                              ) : id === "wesco" ? (
                                 <td>{record?.drawname}</td>
                               ) : (
                                 <td>{record?.GameName}</td>
@@ -440,6 +446,8 @@ const BetHistory = () => {
                   {" "}
                   {id === "green_lotto" ? (
                     <span> {selectedBet?.TikcetId}</span>
+                  ) : id === "wesco" ? (
+                    <span> {selectedBet?.TikcetId}</span>
                   ) : id === "lotto_nigeria" ? (
                     <span> {selectedBet?.wagerID}</span>
                   ) : (
@@ -529,6 +537,8 @@ const BetHistory = () => {
                 <span>
                   {id === "green_lotto" ? (
                     <td>{selectedBet?.drawname}</td>
+                  ) : id === "wesco" ? (
+                    <p> {selectedBet?.drawname}</p>
                   ) : id === "lotto_nigeria" ? (
                     <p> {selectedBet?.drawAlias}</p>
                   ) : (

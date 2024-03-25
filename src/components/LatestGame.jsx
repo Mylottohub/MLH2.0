@@ -30,7 +30,7 @@ const LatestGame = () => {
     fetchData();
   }, []);
 
-  const currentDay = new Date().getDay() + 1;
+  const currentDay = new Date().getDay() + 0;
 
   const getOperatorName = (operator) => {
     switch (operator) {
