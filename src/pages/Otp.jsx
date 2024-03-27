@@ -63,9 +63,9 @@ const Otp = () => {
       // }
       // clearEmailAddressHandler();
       if (err?.data?.error) {
-        toast.error(err.data.error);
+        toast.error(err.response.data.error);
       } else {
-        toast.error("An error occurred during Verification.");
+        toast.error("User not found");
       }
     } finally {
       setIsLoading(false);
