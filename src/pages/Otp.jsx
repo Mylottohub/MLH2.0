@@ -9,23 +9,19 @@ import { toast } from "react-toastify";
 import { HTTP } from "../utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { clearEmailAddress } from "./slices/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+// import { clearEmailAddress } from "./slices/authSlice";
+// import { useDispatch } from "react-redux";
 
 const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email is required"),
+  email: yup.string().email().required(),
 });
 
 const Otp = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [userInputEmail, setUserInputEmail] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { email } = useSelector((state) => state.auth);
+  // const dispatch = useDispatch();
+  // const { email } = useSelector((state) => state.auth);
 
   const {
     register,
@@ -34,18 +30,14 @@ const Otp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const clearEmailAddressHandler = () => {
-    dispatch(clearEmailAddress());
-  };
+  // const clearEmailAddressHandler = () => {
+  //   dispatch(clearEmailAddress());
+  // };
 
-  const submitForm = async () => {
+  const submitForm = async (data) => {
     setIsLoading(true);
 
     try {
-      // Check if user input email matches the email from state
-      if (userInputEmail !== email) {
-        throw new Error("Email does not match");
-      }
       const getAccessIdFromURL = () => {
         const searchParams = new URLSearchParams(location.search);
         return searchParams.get("accessId");
@@ -54,7 +46,7 @@ const Otp = () => {
       const accessId = getAccessIdFromURL();
       const payload = {
         accessId: accessId,
-        user_details: userInputEmail,
+        user_details: data?.email,
       };
       const response = await HTTP.post("/user-verification", payload);
 
@@ -62,11 +54,16 @@ const Otp = () => {
       if (verificationURL) {
         toast.success("Verification Successful");
         window.location.href = verificationURL;
-        clearEmailAddressHandler();
       }
     } catch (err) {
-      if (err?.error) {
-        toast.error(err?.error);
+      // if (err?.error) {
+      //   toast.error(err?.error);
+      // } else {
+      //   toast.error("An error occurred during Verification.");
+      // }
+      // clearEmailAddressHandler();
+      if (err?.data?.error) {
+        toast.error(err.data.error);
       } else {
         toast.error("An error occurred during Verification.");
       }
@@ -90,25 +87,19 @@ const Otp = () => {
                 <div className="mb-3">
                   <input
                     type="email"
-                    className="form-control p-3 mb-2"
-                    required
+                    className="form-control mb-4 p-3"
+                    placeholder="Email Address"
                     name="email"
-                    placeholder="Enter your email"
-                    value={userInputEmail}
-                    onChange={(e) => setUserInputEmail(e.target.value)}
-                    {...register("email")}
+                    {...register("email", {
+                      required: "Required",
+                    })}
                   />
                   {errors.email && (
                     <p className="text-danger text-capitalize">
-                      {errors.email.message}
+                      Email must be a valid email address
                     </p>
                   )}
                 </div>
-                {errors.email && (
-                  <p className="text-danger text-capitalize">
-                    Email must be a valid email address
-                  </p>
-                )}
               </div>
 
               <Button type="submit" className="w-100 p-3" disabled={isLoading}>

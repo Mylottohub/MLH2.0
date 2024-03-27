@@ -4,7 +4,7 @@ const initialState = {
   userInfo: sessionStorage.getItem("userInfo")
     ? JSON.parse(sessionStorage.getItem("userInfo"))
     : null,
-  email: null,
+  // email: null,
   tokenExpiration: null,
 };
 
@@ -16,12 +16,12 @@ export const authSlice = createSlice({
       state.userInfo = action.payload;
       state.tokenExpiration = action.payload ? action.payload.expires : null;
     },
-    setEmailAddress: (state, action) => {
-      state.email = action.payload;
-    },
-    clearEmailAddress: (state) => {
-      state.email = null;
-    },
+    // setEmailAddress: (state, action) => {
+    //   state.email = action.payload;
+    // },
+    // clearEmailAddress: (state) => {
+    //   state.email = null;
+    // },
 
     logout: (state) => {
       state.userInfo = null;
@@ -37,8 +37,8 @@ export const {
   setCredentials,
   logout,
   clearStore,
-  setEmailAddress,
-  clearEmailAddress,
+  // setEmailAddress,
+  // clearEmailAddress,
 } = authSlice.actions;
 
 export default authSlice.reducer;

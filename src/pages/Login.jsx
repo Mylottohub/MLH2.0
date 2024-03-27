@@ -8,8 +8,8 @@ import { Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../pages/slices/userApiSlice";
 import "../assets/css/register.css";
-import { useDispatch } from "react-redux";
-import { setEmailAddress } from "./slices/authSlice";
+// import { useDispatch } from "react-redux";
+// import { setEmailAddress } from "./slices/authSlice";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -17,7 +17,7 @@ const schema = yup.object().shape({
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [login, { isLoading }] = useLoginMutation();
 
@@ -33,7 +33,7 @@ const Login = () => {
     try {
       const res = await login(data).unwrap();
       window.location.href = res.data;
-      dispatch(setEmailAddress(data.email));
+      // dispatch(setEmailAddress(data.email));
     } catch (err) {
       if (err?.data?.error) {
         toast.error(err.data.error);
