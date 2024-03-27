@@ -1,5 +1,4 @@
 import { Button, Modal, Spinner } from "react-bootstrap";
-import { images } from "../../constant";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -242,18 +241,13 @@ const Deposit = () => {
                     onChange={handlePaymentOptionChange}
                   >
                     <option value="">Choose Payment Options</option>
-                    <option value="flutterwave">
-                      <img src={images.rave} />
+                    {/* <option value="flutterwave">
                       Flutterwave
                     </option>
                     <option value="paystack">
-                      <img src={images.paystack} />
                       Paystack
-                    </option>
-                    <option value="monnify">
-                      {/* <img src={images.paystack} /> */}
-                      Bank Transfer (Monnify)
-                    </option>
+                    </option> */}
+                    <option value="monnify">Bank Transfer (Monnify)</option>
                   </select>
                 </div>
               </div>

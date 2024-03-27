@@ -580,7 +580,7 @@ const PlayGames = () => {
         toast.error(response.msg);
       }
     } catch (error) {
-      console.log("Insufficient Fund");
+      toast.error("Insufficient Fund");
     } finally {
       setIsLoadingPlayBet(false);
     }

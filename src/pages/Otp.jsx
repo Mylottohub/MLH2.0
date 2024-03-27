@@ -13,11 +13,15 @@ import { clearEmailAddress } from "./slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const schema = yup.object().shape({
-  email: yup.string(),
+  email: yup
+    .string()
+    .email("Invalid email format")
+    .required("Email is required"),
 });
 
 const Otp = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [userInputEmail, setUserInputEmail] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -38,6 +42,10 @@ const Otp = () => {
     setIsLoading(true);
 
     try {
+      // Check if user input email matches the email from state
+      if (userInputEmail !== email) {
+        throw new Error("Email does not match");
+      }
       const getAccessIdFromURL = () => {
         const searchParams = new URLSearchParams(location.search);
         return searchParams.get("accessId");
@@ -46,7 +54,7 @@ const Otp = () => {
       const accessId = getAccessIdFromURL();
       const payload = {
         accessId: accessId,
-        user_details: email,
+        user_details: userInputEmail,
       };
       const response = await HTTP.post("/user-verification", payload);
 
@@ -79,17 +87,23 @@ const Otp = () => {
 
             <form onSubmit={handleSubmit(submitForm)}>
               <div className="mb-3">
-                <input
-                  type="email"
-                  className="form-control p-3 mb-2"
-                  required
-                  name="email"
-                  readOnly
-                  defaultValue={email}
-                  {...register("email", {
-                    required: "Required",
-                  })}
-                />
+                <div className="mb-3">
+                  <input
+                    type="email"
+                    className="form-control p-3 mb-2"
+                    required
+                    name="email"
+                    placeholder="Enter your email"
+                    value={userInputEmail}
+                    onChange={(e) => setUserInputEmail(e.target.value)}
+                    {...register("email")}
+                  />
+                  {errors.email && (
+                    <p className="text-danger text-capitalize">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
                 {errors.email && (
                   <p className="text-danger text-capitalize">
                     Email must be a valid email address
