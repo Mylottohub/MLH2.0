@@ -80,14 +80,14 @@ const Header = () => {
                         <small>Deposit</small>
                       </a>{" "}
                       &nbsp;&nbsp;
-                      {/* <button
+                      <button
                         onClick={() => handleWithdraw()}
                         className="btn btn-trans2_withraw"
                         data-toggle="modal"
                         data-target="#withdraw_modal"
                       >
                         <small>Withdraw</small>
-                      </button> */}
+                      </button>
                     </div>
                   </div>
                 </div>

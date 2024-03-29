@@ -5,12 +5,11 @@ import { useGetAllBank, useGetProfileUser } from "../../react-query";
 import { useState, useEffect } from "react";
 import { HTTP } from "../../utils";
 import { useSelector } from "react-redux";
-import { Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 const WithdrawModal = () => {
   // Define the validation schema using yup
-  // const { loading, isLoading } = useState(false);
   const { userProfileResponse } = useGetProfileUser([]);
   const [showForm, setShowForm] = useState(false);
   const [showWallet, setShowWallet] = useState(false);
@@ -19,6 +18,7 @@ const WithdrawModal = () => {
   const [fetchingAccountName, setFetchingAccountName] = useState(false);
   const [schema, setSchema] = useState(null);
   const { allBanks, isLoadingBank } = useGetAllBank();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (userProfileResponse) {
@@ -57,7 +57,7 @@ const WithdrawModal = () => {
     }
     const amount = e.target.amount.value;
     if (amount < 1000) {
-      toast.error("Amount must be greater than 1000.");
+      toast.error("Amount must be greater than ₦1000.");
       return;
     }
     try {
@@ -80,6 +80,37 @@ const WithdrawModal = () => {
       }
     } catch (error) {
       toast.error("Failed to submit withdrawal request");
+    }
+  };
+
+  const onSubmitTransfer = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+
+    const amountTransfer = e.target.amountTransfer.value;
+
+    try {
+      const response = await HTTP.post(
+        "/transfer-wallet",
+        {
+          amount: amountTransfer,
+          id: userProfileResponse?.id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      if (response) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -285,13 +316,6 @@ const WithdrawModal = () => {
                             <Spinner animation="border" variant="primary" />
                           )}
                         </div>
-                        {/* <button
-                          type="submit"
-                          className="btn btn-trans2_border btn-block btn-lg text-white border-0 mt-3"
-                          style={{ background: "#27AAE1" }}
-                        >
-                          Submit
-                        </button> */}
                       </form>
                     </>
                   )}
@@ -299,7 +323,7 @@ const WithdrawModal = () => {
               )}
             </div>
           ) : showWallet ? (
-            <form>
+            <form onSubmit={onSubmitTransfer}>
               <span>
                 <strong>Transfer to Wallet</strong>
               </span>
@@ -310,7 +334,7 @@ const WithdrawModal = () => {
               </small>
               <hr />
               <p>
-                Please click the buttons below to transfer funds back to your
+                Please click the button below to transfer funds back to your
                 deposit wallet
               </p>
 
@@ -319,18 +343,37 @@ const WithdrawModal = () => {
                   type="tel"
                   className="form-control  mb-2 p-2"
                   placeholder="₦0.00"
-                  id="wallet"
-                  name="wallet"
+                  id="amountTransfer"
+                  name="amountTransfer"
+                  min="1"
                 />
               </div>
 
-              <button
+              {/* <button
                 type="submit"
                 className="btn btn-trans2_border btn-block btn-lg text-white border-0"
                 style={{ background: "#27AAE1" }}
               >
                 Submit
-              </button>
+              </button> */}
+              <Button
+                type="submit"
+                className="w-100 p-3"
+                style={{ background: "#27AAE1" }}
+                disabled={loading}
+              >
+                {loading ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  " Submit"
+                )}
+              </Button>
             </form>
           ) : (
             <>
@@ -344,7 +387,7 @@ const WithdrawModal = () => {
               </small>
               <hr />
               <p>
-                Please click the buttons below to either withdraw funds to your
+                Please click the button below to either withdraw funds to your
                 bank account or transfer back to your lotto wallet.
               </p>
               <br />

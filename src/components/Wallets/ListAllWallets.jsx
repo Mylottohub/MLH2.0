@@ -4,14 +4,18 @@ import BModal from "../BModal/BModal";
 import WithdrawModal from "../Payment/Withdraw";
 import Deposit from "../Payment/Deposit";
 import { useNavigate } from "react-router-dom";
-import { Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { useGetProfileUser } from "../../react-query";
 import Footer from "../Footer";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { HTTP } from "../../utils";
 
 const ListAllWallets = () => {
   const navigate = useNavigate();
-
+  const { userInfo } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
 
@@ -27,6 +31,37 @@ const ListAllWallets = () => {
     handleOpenDeposit();
   };
   const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
+
+  const onSubmitTransfer = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+
+    const amountTransfer = e.target.amountTransfer.value;
+
+    try {
+      const response = await HTTP.post(
+        "/transfer-wallet",
+        {
+          amount: amountTransfer,
+          id: userProfileResponse?.id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      if (response) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.msg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -255,24 +290,43 @@ const ListAllWallets = () => {
                                 Transfer winnings to deposit wallet:
                               </strong>
                             </p>
-                            <form>
+                            <form onSubmit={onSubmitTransfer}>
                               <div>
                                 <input
                                   type="number"
                                   className="form-control"
                                   placeholder="Amount"
                                   required
-                                  name="amount"
+                                  id="amountTransfer"
+                                  name="amountTransfer"
                                   min="1"
                                 />
                               </div>
 
-                              <input
+                              {/* <input
                                 type="submit"
                                 className="btn btn-blue mt-3"
                                 name="transfer"
                                 value="Transfer"
-                              />
+                              /> */}
+                              <Button
+                                type="submit"
+                                className="btn btn-blue mt-3"
+                                style={{ background: "#27AAE1" }}
+                                disabled={loading}
+                              >
+                                {loading ? (
+                                  <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  "Transfer"
+                                )}
+                              </Button>
                             </form>
                           </td>
                         </tr>

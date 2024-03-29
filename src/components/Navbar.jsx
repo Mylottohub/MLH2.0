@@ -117,14 +117,14 @@ const Navbar = () => {
                                 &nbsp;&nbsp;Deposit
                               </a>
                             </li>
-                            <li>
+                            {/* <li>
                               <a
                                 className="dropdown-item p-2"
                                 onClick={() => handleWithdraw()}
                               >
                                 &nbsp;&nbsp;Withdraw
                               </a>
-                            </li>
+                            </li> */}
                             {/* <li>
                               <a className="dropdown-item p-2">
                                 &nbsp;&nbsp;Subscription
