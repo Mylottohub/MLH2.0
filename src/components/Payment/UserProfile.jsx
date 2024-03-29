@@ -47,7 +47,7 @@ const UserProfile = () => {
                   <b>DATE REGISTERED:</b>{" "}
                   {moment
                     .utc(
-                      userProfileResponse && userProfileResponse?.created_at,
+                      userProfileResponse && userProfileResponse?.date,
                       "YYYY-MM-DD HH:mm:ss"
                     )
                     .local()

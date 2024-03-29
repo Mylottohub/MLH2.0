@@ -76,14 +76,14 @@ const ListAllWallets = () => {
                         ₦{userProfileResponse &&
                           userProfileResponse?.wwallet}{" "}
                       </strong>
-                      <p>
+                      {/* <p>
                         <a
                           className="btn btn-blue btn-block w-100 mt-4"
                           onClick={() => handleWithdraw()}
                         >
                           Cash Out
                         </a>
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                   <div className="col-md-4 meg_col">

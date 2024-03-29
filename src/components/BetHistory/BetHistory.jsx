@@ -246,9 +246,9 @@ const BetHistory = () => {
               </table>
             )}
           </div>
-          <div className="app__transaction-mobile">
+          <div className="app__transaction-mobile ">
             {isLoading ? (
-              <div className="spinner text-dark text-center mt-5 ">
+              <div className="spinner text-dark text-center mt-5">
                 <Spinner
                   as="span"
                   animation="border"
@@ -370,7 +370,7 @@ const BetHistory = () => {
             )}
           </div>
 
-          <nav aria-label="Page navigation example">
+          <nav aria-label="Page navigation example mb-5">
             <ul className="pagination">
               {betHistory?.links?.map((link, index) => (
                 <div key={index}>

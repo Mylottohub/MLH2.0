@@ -26,6 +26,13 @@ const LatestWinner = () => {
         // console.log(err);
       });
   };
+  const formatDate = (dateString) => {
+    // Convert the date string to a valid format
+    const formattedDate = moment(dateString, "YYYYMMDDHHmmss").format(
+      "Do MMM YYYY (hh:mm:ss a)"
+    );
+    return formattedDate;
+  };
 
   useEffect(() => {
     fetchData();
@@ -40,8 +47,8 @@ const LatestWinner = () => {
             {winners.map((results, index) => (
               <>
                 <span key={index}>
-                  {results?.username} &nbsp; - ₦{results.amount} &nbsp; -{" "}
-                  {moment(results.date).format("Do MMM YYYY (hh:mm:ss a)")} |{" "}
+                  {results?.username} &nbsp; - ₦{results?.amount} &nbsp; -{" "}
+                  {formatDate(results?.date)} |{" "}
                 </span>
               </>
             ))}
