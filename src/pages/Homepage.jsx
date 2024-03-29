@@ -11,40 +11,40 @@ import { toast } from "react-toastify";
 import { HTTP } from "../utils";
 
 const Homepage = () => {
-  const location = useLocation();
-  const dispatch = useDispatch();
+  // const location = useLocation();
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    const getCodeFromURL = () => {
-      const searchParams = new URLSearchParams(location.search);
-      return searchParams.get("code");
-    };
+  // useEffect(() => {
+  //   const getCodeFromURL = () => {
+  //     const searchParams = new URLSearchParams(location.search);
+  //     return searchParams.get("code");
+  //   };
 
-    const exchangeCodeForToken = async (code) => {
-      try {
-        const payload = {
-          code,
-          type: "user",
-        };
-        const response = await HTTP.post("/miracl-hook", payload);
+  //   const exchangeCodeForToken = async (code) => {
+  //     try {
+  //       const payload = {
+  //         code,
+  //         type: "user",
+  //       };
+  //       const response = await HTTP.post("/miracl-hook", payload);
 
-        const data = response?.data;
-        if (data?.token) {
-          dispatch(setCredentials(data));
-          toast.success("Login Successfully");
-        } else {
-          throw new Error("Token not found in response data");
-        }
-      } catch (error) {
-        toast.error("An error occurred during authentication.");
-      }
-    };
+  //       const data = response?.data;
+  //       if (data?.token) {
+  //         dispatch(setCredentials(data));
+  //         toast.success("Login Successfully");
+  //       } else {
+  //         throw new Error("Token not found in response data");
+  //       }
+  //     } catch (error) {
+  //       toast.error("An error occurred during authentication.");
+  //     }
+  //   };
 
-    const code = getCodeFromURL();
-    if (code) {
-      exchangeCodeForToken(code);
-    }
-  }, [location, dispatch]);
+  //   const code = getCodeFromURL();
+  //   if (code) {
+  //     exchangeCodeForToken(code);
+  //   }
+  // }, [location, dispatch]);
   return (
     <React.Fragment>
       <div>
