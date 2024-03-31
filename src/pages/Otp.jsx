@@ -20,7 +20,7 @@ const schema = yup.object().shape({
 const Otp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showOTPInput, setShowOTPInput] = useState(false);
-  const [emailOtop, setEmailOtp] = useState("");
+  const [emailOtp, setEmailOtp] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const Otp = () => {
 
   const generateOTP = async () => {
     try {
-      await HTTP.post("/generate-agent-otp", { user_details: emailOtop });
+      await HTTP.post("/generate-user-otp", { user_details: emailOtp });
       toast.success("OTP sent successfully");
       setShowOTPInput(true);
     } catch (error) {
