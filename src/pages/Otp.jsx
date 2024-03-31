@@ -14,14 +14,15 @@ import { useState } from "react";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
+  otp: yup.string().required(),
 });
 
 const Otp = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [showOTPInput, setShowOTPInput] = useState(false);
+  const [emailOtop, setEmailOtp] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
-  // const { email } = useSelector((state) => state.auth);
 
   const {
     register,
@@ -30,9 +31,16 @@ const Otp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  // const clearEmailAddressHandler = () => {
-  //   dispatch(clearEmailAddress());
-  // };
+
+  const generateOTP = async () => {
+    try {
+      await HTTP.post("/generate-agent-otp", { user_details: emailOtop });
+      toast.success("OTP sent successfully");
+      setShowOTPInput(true);
+    } catch (error) {
+      toast.error("Failed to send OTP");
+    }
+  };
 
   const submitForm = async (data) => {
     setIsLoading(true);
@@ -46,26 +54,31 @@ const Otp = () => {
       const accessId = getAccessIdFromURL();
       const payload = {
         accessId: accessId,
-        user_details: data?.email,
+        user_details: data.email,
       };
-      const response = await HTTP.post("/user-verification", payload);
-
-      const verificationURL = response?.data?.data?.verificationURL;
-      if (verificationURL) {
-        toast.success("Verification Successful");
-        window.location.href = verificationURL;
+      const payloadOtp = {
+        token: data.otp,
+      };
+      const otpResponse = await HTTP.post("/otp", payloadOtp);
+      if (otpResponse) {
+        toast.success("OTP has been confirmed Successfully");
+        const verificationResponse = await HTTP.post(
+          "/user-verification",
+          payload
+        );
+        const verificationURL =
+          verificationResponse?.data?.data?.verificationURL;
+        if (verificationURL) {
+          window.location.href = verificationURL;
+        }
+      } else {
+        toast.success("OTP is wrongly inputted");
       }
     } catch (err) {
-      // if (err?.error) {
-      //   toast.error(err?.error);
-      // } else {
-      //   toast.error("An error occurred during Verification.");
-      // }
-      // clearEmailAddressHandler();
-      if (err?.data?.error) {
-        toast.error(err.response.data.error);
+      if (err?.message) {
+        toast.error(err?.response?.data?.message);
       } else {
-        toast.error("User not found");
+        toast.error("Wrong Otp.");
       }
     } finally {
       setIsLoading(false);
@@ -93,6 +106,7 @@ const Otp = () => {
                     {...register("email", {
                       required: "Required",
                     })}
+                    onChange={(e) => setEmailOtp(e.target.value)}
                   />
                   {errors.email && (
                     <p className="text-danger text-capitalize">
@@ -102,19 +116,65 @@ const Otp = () => {
                 </div>
               </div>
 
-              <Button type="submit" className="w-100 p-3" disabled={isLoading}>
-                {isLoading ? (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
+              {showOTPInput && (
+                <div className="mb-3">
+                  <input
+                    type="number"
+                    min="1"
+                    className="form-control p-3 mb-2"
+                    name="otp"
+                    placeholder="Enter OTP"
+                    {...register("otp", {
+                      required: "Required",
+                    })}
                   />
-                ) : (
-                  " Verify"
-                )}
-              </Button>
+                  {errors.otp && (
+                    <p className="text-danger text-capitalize">
+                      Please enter OTP
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {!showOTPInput && (
+                <Button
+                  type="button"
+                  className="w-100 p-3"
+                  onClick={generateOTP}
+                >
+                  {isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "Send OTP"
+                  )}
+                </Button>
+              )}
+
+              {showOTPInput && (
+                <Button
+                  type="submit"
+                  className="w-100 p-3"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "Verify"
+                  )}
+                </Button>
+              )}
             </form>
           </div>
         </div>

@@ -30,7 +30,9 @@ const LatestGame = () => {
     fetchData();
   }, []);
 
-  const currentDay = new Date().getDay() + 0;
+  const currentDay = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+  });
 
   const getOperatorName = (operator) => {
     switch (operator) {
@@ -55,8 +57,8 @@ const LatestGame = () => {
     .filter(
       (game) =>
         moment().isBefore(
-          moment(`${moment().format("YYYY-MM-DD")} ${game.start_time}`)
-        ) && game?.day_no === currentDay
+          moment(`${moment().format("YYYY-MM-DD")} ${game?.start_time}`)
+        ) && game?.day === currentDay
     )
     .sort((a, b) =>
       moment(a.start_time, "HH:mm:ss").diff(moment(b.start_time, "HH:mm:ss"))

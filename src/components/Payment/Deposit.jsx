@@ -243,10 +243,8 @@ const Deposit = () => {
                     <option value="">Choose Payment Options</option>
                     {/* <option value="flutterwave">
                       Flutterwave
-                    </option>
-                    <option value="paystack">
-                      Paystack
                     </option> */}
+                    <option value="paystack">Paystack</option>
                     <option value="monnify">Bank Transfer (Monnify)</option>
                   </select>
                 </div>

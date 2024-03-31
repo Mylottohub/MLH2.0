@@ -333,8 +333,8 @@ const PlayBet = () => {
                           justifyContent: "space-between",
                         }}
                       >
-                        <span>
-                          {`${record.homeName} vs ${record.awayName}`}}
+                        <span className="fw-bolder">
+                          {`${record.homeName} vs ${record.awayName}`}
                         </span>
                       </p>
                     </div>

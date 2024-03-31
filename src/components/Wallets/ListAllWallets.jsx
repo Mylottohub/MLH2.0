@@ -54,7 +54,7 @@ const ListAllWallets = () => {
         }
       );
       if (response) {
-        toast.success(response.data.message);
+        toast.success("Funds transferred successfully");
       }
     } catch (error) {
       toast.error(error.response.data.msg);
