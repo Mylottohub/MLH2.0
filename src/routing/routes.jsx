@@ -7,7 +7,7 @@ import Contact from "../pages/Contact";
 import Faq from "../pages/Faq";
 import ForgetPassword from "../pages/ForgetPassword";
 import ResetPassword from "../pages/ResetPassword";
-import Login from "../pages/Login";
+// import Login from "../pages/Login";
 import Otp from "../pages/Otp";
 import Register from "../pages/Register";
 import Result from "../pages/Result";
@@ -25,6 +25,9 @@ import PlayBet from "../components/SportsBetting/PlayBet";
 import Forecast from "../pages/Forecast";
 import Instance from "../pages/Instance";
 import Chart from "../pages/Chart";
+import BettingTomorrow from "../components/SportsBetting/bettingTomorrow";
+import SportHistory from "../components/Transactions/SportHistory";
+import BettingYesterday from "../components/SportsBetting/BettingYesterday";
 
 export const routes = [
   {
@@ -63,12 +66,12 @@ export const routes = [
     element: <Terms />,
     protected: false,
   },
-  {
-    id: 7,
-    path: "/login",
-    element: <Login />,
-    protected: false,
-  },
+  // {
+  //   id: 7,
+  //   path: "/login",
+  //   element: <Login />,
+  //   protected: false,
+  // },
   {
     id: 8,
     path: "/verify",
@@ -115,7 +118,7 @@ export const routes = [
     id: 14,
     path: "/play-lotto",
     element: <OperatorMobile />,
-    protected: true,
+    protected: false,
   },
   {
     id: 15,
@@ -187,6 +190,24 @@ export const routes = [
     id: 26,
     path: "/create-chart",
     element: <Chart />,
+    protected: true,
+  },
+  {
+    id: 27,
+    path: "/bettingTomorrow",
+    element: <BettingTomorrow />,
+    protected: true,
+  },
+  {
+    id: 28,
+    path: "/sport-transaction",
+    element: <SportHistory />,
+    protected: true,
+  },
+  {
+    id: 29,
+    path: "/betting-yesterday",
+    element: <BettingYesterday />,
     protected: true,
   },
 ];

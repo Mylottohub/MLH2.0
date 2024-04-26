@@ -36,7 +36,7 @@ const Homepage = () => {
           throw new Error("Token not found in response data");
         }
       } catch (error) {
-        toast.error("An error occurred during authentication.");
+        // toast.error("An error occurred during authentication.");
       }
     };
 

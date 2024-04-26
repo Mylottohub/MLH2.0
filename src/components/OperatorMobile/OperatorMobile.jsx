@@ -58,6 +58,52 @@ const OperatorMobile = () => {
       }
     });
   }, [userInfo]);
+
+  const [timetable, setTimetable] = useState([]);
+
+  const fetchData = () => {
+    HTTP.get(`/mylotto_get_timetable`)
+      .then((response) => {
+        setTimetable(response.data.data);
+      })
+      .catch((err) => {
+        // console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const currentDay = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+  });
+
+  const filteredTimetable = timetable
+    .filter(
+      (game) =>
+        moment().isBefore(
+          moment(`${moment().format("YYYY-MM-DD")} ${game?.start_time}`)
+        ) && game?.day === currentDay
+    )
+    .sort((a, b) =>
+      moment(a.start_time, "HH:mm:ss").diff(moment(b.start_time, "HH:mm:ss"))
+    );
+
+  const goldenChanceGames = filteredTimetable
+    .filter((game) => game.operator === 42)
+    .sort((a, b) =>
+      moment(a.start_time, "HH:mm:ss").diff(moment(b.start_time, "HH:mm:ss"))
+    );
+
+  const latestGame = goldenChanceGames.length > 0 ? goldenChanceGames[0] : null;
+
+  const currentTime = moment();
+  const gameStartTime = latestGame
+    ? moment(`${moment().format("YYYY-MM-DD")} ${latestGame.start_time}`)
+    : null;
+  const timeRemaining = gameStartTime ? gameStartTime.diff(currentTime) : null;
+
   return (
     <div>
       <section>
@@ -104,14 +150,14 @@ const OperatorMobile = () => {
                   let drawTime;
 
                   if (operatorType === "lotto_nigeria") {
-                    drawTime = game.drawDate
-                      ? moment(game.drawDate, "DD/MM/YYYY HH:mm")
+                    drawTime = game?.drawDate
+                      ? moment(game?.drawDate, "DD/MM/YYYY HH:mm")
                       : null;
                   } else if (operatorType === "wesco") {
-                    const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
+                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   } else if (operatorType === "lottomania") {
-                    drawTime = moment(game.sdt);
+                    drawTime = moment(game?.sdt);
                   } else if (operatorType === "ghana_game") {
                     drawTime = moment(game?.sdt);
                   } else if (operatorType === "green_lotto") {
@@ -119,7 +165,7 @@ const OperatorMobile = () => {
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   }
 
-                  return drawTime && drawTime.isAfter(currentTime);
+                  return drawTime && drawTime?.isAfter(currentTime);
                 });
 
                 upcomingGames.sort(
@@ -146,7 +192,7 @@ const OperatorMobile = () => {
                     return parsedTime.toDate();
                   } else if (operatorType === "wesco") {
                     // For "wesco," combine "drawdate" and "drawtime" in the correct format
-                    const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
+                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                     const parsedTime = moment(
                       drawDateTimeString,
                       "YYYYMMDD HH:mm:ss"
@@ -162,7 +208,7 @@ const OperatorMobile = () => {
                       return null;
                     }
                   } else if (operatorType === "green_lotto") {
-                    const drawDateTimeString = `${game.drawdate} ${game.drawtime}`;
+                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                     const parsedTime = moment(
                       drawDateTimeString,
                       "YYYYMMDD HH:mm:ss"
@@ -185,7 +231,8 @@ const OperatorMobile = () => {
                     return parsedTime.toDate();
                   }
                 };
-                return nextGame ? (
+
+                return (
                   <div key={index}>
                     <div className="hidden-md hidden-lg div_vlgrey">
                       <table width="100%" cellPadding="3">
@@ -194,80 +241,187 @@ const OperatorMobile = () => {
                             <td width="41%">
                               <img src={imageSrc} className="img-fluid" />
                             </td>
-                            <td style={{ lineHeight: "19px!important;" }}>
-                              <small>
-                                <strong>NEXT DRAW</strong>
-                              </small>
-                              <br />
-                              <small>
-                                {" "}
-                                {nextGame[propertyMapping[operatorType].name]}
-                              </small>
-                              <br />
-                              <br />
-
-                              <small>
-                                <span>
-                                  <Countdown
-                                    date={
-                                      new Date(
-                                        renderGameTime(operatorType, nextGame)
-                                      )
-                                    }
-                                    renderer={({
-                                      days,
-                                      hours,
-                                      minutes,
-                                      seconds,
-                                    }) => (
-                                      <div className="mb-2">
-                                        <span className="countdown_box">
-                                          {days}days
-                                        </span>{" "}
-                                        <span className="countdown_box">
-                                          {hours}hrs
-                                        </span>{" "}
-                                        <span className="countdown_box">
-                                          {minutes}mins
-                                        </span>{" "}
-                                        <br />
-                                        <span style={{ width: "38%" }}>
-                                          <p
-                                            className="countdown_box mt-3"
-                                            style={{ width: "38%" }}
-                                          >
+                            <td style={{ lineHeight: "19px!important" }}>
+                              {nextGame ? (
+                                <>
+                                  <table width="100%" cellPadding="3">
+                                    <tbody>
+                                      <tr valign="top">
+                                        <td
+                                          style={{
+                                            lineHeight: "19px!important",
+                                          }}
+                                        >
+                                          <small>
+                                            <strong>NEXT DRAW</strong>
+                                          </small>
+                                          <br />
+                                          <small>
                                             {" "}
-                                            {seconds}secs
-                                          </p>
-                                        </span>{" "}
-                                      </div>
-                                    )}
-                                  />
-                                </span>
-                              </small>
+                                            {
+                                              nextGame[
+                                                propertyMapping[operatorType]
+                                                  .name
+                                              ]
+                                            }
+                                          </small>
+                                          <br />
+                                          <br />
 
-                              <p>
-                                <a
-                                  onClick={() => {
-                                    navigate(`/play-game/${operatorType}`);
-                                  }}
-                                  className="btn btn-blue btn-sm btn-block"
-                                >
-                                  Play Now
-                                </a>
-                              </p>
+                                          <small>
+                                            <span>
+                                              <Countdown
+                                                date={
+                                                  new Date(
+                                                    renderGameTime(
+                                                      operatorType,
+                                                      nextGame
+                                                    )
+                                                  )
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <div className="mb-2">
+                                                    <span className="countdown_box">
+                                                      {days}days
+                                                    </span>{" "}
+                                                    <span className="countdown_box">
+                                                      {hours}hrs
+                                                    </span>{" "}
+                                                    <span className="countdown_box">
+                                                      {minutes}mins
+                                                    </span>{" "}
+                                                    <br />
+                                                    <span
+                                                      style={{ width: "38%" }}
+                                                    >
+                                                      <p
+                                                        className="countdown_box mt-3"
+                                                        style={{ width: "38%" }}
+                                                      >
+                                                        {" "}
+                                                        {seconds}secs
+                                                      </p>
+                                                    </span>{" "}
+                                                  </div>
+                                                )}
+                                              />
+                                            </span>
+                                          </small>
+
+                                          <p>
+                                            <a
+                                              onClick={() => {
+                                                navigate(
+                                                  `/play-game/${operatorType}`
+                                                );
+                                              }}
+                                              className="btn btn-blue btn-sm btn-block"
+                                            >
+                                              Play Now
+                                            </a>
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </>
+                              ) : (
+                                <>
+                                  <p>No game available yet</p>
+                                  {/* <p>
+                                    <a
+                                      onClick={() => {
+                                        navigate(`/play-game/${operatorType}`);
+                                      }}
+                                      className="btn btn-blue btn-sm btn-block"
+                                    >
+                                      Play Now
+                                    </a>
+                                  </p> */}
+                                </>
+                              )}
                             </td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
                   </div>
-                ) : null;
+                );
               } else {
                 return null;
               }
             })
           )}
+
+          <div className="hidden-md hidden-lg div_vlgrey">
+            <table width="100%" cellPadding="3">
+              <tbody>
+                <tr valign="top">
+                  <td width="41%">
+                    <img
+                      src="/images/golden_chance.png"
+                      className="img-fluid"
+                    />
+                  </td>
+                  <td style={{ lineHeight: "19px!important" }}>
+                    <small>
+                      <strong>NEXT DRAW</strong>
+                    </small>
+                    <br />
+                    <small>
+                      {" "}
+                      {latestGame ? latestGame.name : "No game available yet"}
+                    </small>
+                    <br />
+                    <br />
+
+                    <small>
+                      <span>
+                        <Countdown
+                          date={moment().add(timeRemaining).toDate()}
+                          renderer={({ days, hours, minutes, seconds }) => (
+                            <div className="mb-2">
+                              <span className="countdown_box">{days}days</span>{" "}
+                              <span className="countdown_box">{hours}hrs</span>{" "}
+                              <span className="countdown_box">
+                                {minutes}mins
+                              </span>{" "}
+                              <br />
+                              <span style={{ width: "38%" }}>
+                                <p
+                                  className="countdown_box mt-3"
+                                  style={{ width: "38%" }}
+                                >
+                                  {" "}
+                                  {seconds}secs
+                                </p>
+                              </span>{" "}
+                            </div>
+                          )}
+                        />
+                      </span>
+                    </small>
+
+                    <p>
+                      <a
+                        href="https://goldenchancelotto.com/?RefferalCode=0q6ua5wm"
+                        className="btn btn-blue btn-sm btn-block mt-3"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Play Now
+                      </a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

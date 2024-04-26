@@ -63,6 +63,13 @@ const ListAllWallets = () => {
     }
   };
 
+  const formatAmount = (amount) => {
+    if (amount !== 0 && Math.abs(amount) > 0.001) {
+      return amount.toFixed(2);
+    }
+    return amount;
+  };
+
   return (
     <React.Fragment>
       {" "}
@@ -108,17 +115,19 @@ const ListAllWallets = () => {
                       </p>
                       <strong className="lead text-success">
                         {" "}
-                        ₦{userProfileResponse &&
-                          userProfileResponse?.wwallet}{" "}
+                        ₦
+                        {formatAmount(
+                          userProfileResponse && userProfileResponse?.wwallet
+                        )}{" "}
                       </strong>
-                      {/* <p>
+                      <p>
                         <a
                           className="btn btn-blue btn-block w-100 mt-4"
                           onClick={() => handleWithdraw()}
                         >
                           Cash Out
                         </a>
-                      </p> */}
+                      </p>
                     </div>
                   </div>
                   <div className="col-md-4 meg_col">
@@ -275,6 +284,75 @@ const ListAllWallets = () => {
                       </table>
                     </div>
                   </div>
+                  <div className="col-md-4 meg_col">
+                    <div className="well wallet_col">
+                      <table width="100%" height="100%">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p>
+                                <strong>Wesco Bonus Wallet</strong>
+                              </p>
+                              <p className="lead text-success">
+                                {" "}
+                                ₦
+                                {userProfileResponse &&
+                                  userProfileResponse?.we_bwallet}{" "}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td valign="bottom">
+                              <p>
+                                <a
+                                  onClick={() => navigate("/play-game/wesco")}
+                                  className="btn btn-blue btn-block  w-100 mt-4"
+                                >
+                                  Play now
+                                </a>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* <div className="col-md-4 meg_col">
+                    <div className="well wallet_col">
+                      <table width="100%" height="100%">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p>
+                                <strong>Bonus Wallet</strong>
+                              </p>
+                              <p className="lead text-success">
+                                {" "}
+                                ₦
+                                {userProfileResponse &&
+                                  userProfileResponse?.bwallet}{" "}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td valign="bottom">
+                              <p>
+                                <a
+                                  onClick={() =>
+                                    navigate("/play-game/ghana_game")
+                                  }
+                                  className="btn btn-blue btn-block  w-100 mt-4"
+                                >
+                                  Play now
+                                </a>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div> */}
                 </div>
               </div>
               <div className="col-md-3 col-xs-12 mb-5">

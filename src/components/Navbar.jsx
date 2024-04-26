@@ -50,11 +50,18 @@ const Navbar = () => {
       // console.log(error);
     }
   };
-  const { userProfileResponse, isLoadingUserProfile, token } =
+  const { userProfileResponse, isLoadingUserProfile, token, expires } =
     useGetProfileUser([]);
+
+  const formatAmount = (amount) => {
+    if (amount !== 0 && Math.abs(amount) > 0.001) {
+      return amount.toFixed(2);
+    }
+    return amount;
+  };
   return (
     <>
-      {token && token ? (
+      {token && expires && new Date(expires) > new Date() ? (
         <>
           <div className="mobile__header">
             <Header />
@@ -117,14 +124,14 @@ const Navbar = () => {
                                 &nbsp;&nbsp;Deposit
                               </a>
                             </li>
-                            {/* <li>
+                            <li>
                               <a
                                 className="dropdown-item p-2"
                                 onClick={() => handleWithdraw()}
                               >
                                 &nbsp;&nbsp;Withdraw
                               </a>
-                            </li> */}
+                            </li>
                             {/* <li>
                               <a className="dropdown-item p-2">
                                 &nbsp;&nbsp;Subscription
@@ -368,14 +375,14 @@ const Navbar = () => {
                               &nbsp;&nbsp;Deposit
                             </a>
                           </li>
-                          {/* <li>
+                          <li>
                             <a
                               className="dropdown-item p-2"
                               onClick={() => handleWithdraw()}
                             >
                               &nbsp;&nbsp;Withdraw
                             </a>
-                          </li> */}
+                          </li>
                           {/* <li>
                             <a className="dropdown-item p-2">
                              
@@ -438,20 +445,20 @@ const Navbar = () => {
                   </div>
                   <div className="col-2">
                     <small>
-                      ₦{userProfileResponse?.wwallet}
+                      ₦{formatAmount(userProfileResponse?.wwallet)}
                       <br />
                       Winnings
                     </small>
                     <br />
                     <br />
-                    {/* <a
+                    <a
                       onClick={() => handleWithdraw()}
                       className="btn btn-trans2"
                       data-toggle="modal"
                       data-target="#withdraw_modal"
                     >
                       <small>Withdraw</small>
-                    </a> */}
+                    </a>
                   </div>
                 </div>
               </>
@@ -631,10 +638,10 @@ const Navbar = () => {
                     </span>
                   </a>
 
-                  <a>
+                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com">
                     <span
                       className="btn btn-yellow  "
-                      onClick={() => navigate("/login")}
+                      // onClick={() => navigate("/login")}
                     >
                       Sign In
                     </span>

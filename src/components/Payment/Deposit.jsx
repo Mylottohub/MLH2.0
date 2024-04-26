@@ -1,4 +1,4 @@
-import { Button, Modal, Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,8 +14,8 @@ const schema = yup.object().shape({
 const Deposit = () => {
   const [showAmountInput, setShowAmountInput] = useState(false);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState("");
-  const [monnifyInfo, setMonnifyInfo] = useState(null);
-  const [showMonnifyModal, setShowMonnifyModal] = useState(false);
+  // const [monnifyInfo, setMonnifyInfo] = useState(null);
+  // const [showMonnifyModal, setShowMonnifyModal] = useState(false);
 
   const handlePaymentOptionChange = (e) => {
     const selectedOption = e.target.value;
@@ -39,9 +39,9 @@ const Deposit = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleCloseMonnifyModal = () => {
-    setShowMonnifyModal(false);
-  };
+  // const handleCloseMonnifyModal = () => {
+  //   setShowMonnifyModal(false);
+  // };
 
   const submitForm = async (data) => {
     setIsLoading(true);
@@ -111,7 +111,6 @@ const Deposit = () => {
           toast.error("An error occurred.");
         }
       } else if (selectedPaymentOption === "monnify") {
-        // Prepare the monnify payment data
         const paymentData = {
           id: userId,
           amount: data.amount,
@@ -132,9 +131,11 @@ const Deposit = () => {
           );
 
           if (monnifyResponse.status === 200) {
+            // const monnifyData = monnifyResponse.data;
+            // setMonnifyInfo(monnifyData);
+            // setShowMonnifyModal(true);
             const monnifyData = monnifyResponse.data;
-            setMonnifyInfo(monnifyData);
-            setShowMonnifyModal(true);
+            window.location.href = monnifyData.redirect_url;
           } else {
             toast.error("An error occurred.");
           }
@@ -241,11 +242,9 @@ const Deposit = () => {
                     onChange={handlePaymentOptionChange}
                   >
                     <option value="">Choose Payment Options</option>
-                    {/* <option value="flutterwave">
-                      Flutterwave
-                    </option> */}
                     <option value="paystack">Paystack</option>
                     <option value="monnify">Bank Transfer (Monnify)</option>
+                    <option value="flutterwave">Flutterwave</option>
                   </select>
                 </div>
               </div>
@@ -273,8 +272,7 @@ const Deposit = () => {
         </div>
       </div>
 
-      <div>
-        {/* Monnify Modal */}
+      {/* <div>
         <Modal
           show={showMonnifyModal}
           onHide={handleCloseMonnifyModal}
@@ -292,7 +290,7 @@ const Deposit = () => {
             <p>Account Number: {monnifyInfo?.account_number}</p>
           </Modal.Body>
         </Modal>
-      </div>
+      </div> */}
     </div>
   );
 };

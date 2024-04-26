@@ -8,6 +8,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { HTTP } from "../../utils";
+import moment from "moment";
+import { useGetProfileUser } from "../../react-query";
 const PlayBet = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -16,6 +18,9 @@ const PlayBet = () => {
   const [betting, setBetting] = useState([]);
   const [inputAmount, setInputAmount] = useState("");
   const [isLoadingPlayBet, setIsLoadingPlayBet] = useState(false);
+  const { userProfileResponse } = useGetProfileUser([]);
+
+  const userAmount = userProfileResponse?.wallet;
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -83,7 +88,11 @@ const PlayBet = () => {
       setIsLoadingPlayBet(false);
       return;
     }
-
+    if (userAmount < inputAmount) {
+      toast.error("Insufficient balance. Please top up your wallet.");
+      setIsLoadingPlayBet(false);
+      return;
+    }
     const payload = {
       userID: userInfo.data.id,
       amount: parseFloat(inputAmount),
@@ -108,9 +117,11 @@ const PlayBet = () => {
       } else {
         const responseError = await response.data;
         toast.error(responseError.msg);
+        navigate("/betting");
       }
     } catch (error) {
-      toast.error("Error placing bet. Please try again.", error);
+      toast.error(error?.response?.data?.msg);
+      navigate("/betting");
     } finally {
       setIsLoadingPlayBet(false);
     }
@@ -170,27 +181,80 @@ const PlayBet = () => {
                     <tbody>
                       <tr className="table-light">
                         <td scope="col"></td>
-                        <td scope="col">EVENT</td>
-                        <td scope="col">MARKET</td>
-                        <td scope="col">SELECTION</td>
-                        <td scope="col">STATUS</td>
+                        <td scope="col" style={{ color: "#406777" }}>
+                          EVENT
+                        </td>
+                        <td scope="col" style={{ color: "#406777" }}>
+                          MARKET
+                        </td>
+                        <td scope="col" style={{ color: "#406777" }}>
+                          SELECTION
+                        </td>
+                        {moment().isAfter(
+                          moment(betting?.content?.[0]?.matchTime),
+                          "day"
+                        ) ? (
+                          <td scope="col"></td>
+                        ) : (
+                          <td style={{ color: "#406777" }} scope="col">
+                            STATUS
+                          </td>
+                        )}
                       </tr>
                     </tbody>
 
                     <tbody>
                       <>
                         {betting?.content?.flatMap((record, index) => {
+                          let statusText;
+                          switch (record?.selectionList[0]?.status) {
+                            case 0:
+                              statusText = "No Result";
+                              break;
+                            case 1:
+                              statusText = "Pending";
+                              break;
+                            case 2:
+                              statusText = "Returned";
+                              break;
+                            case 3:
+                              statusText = "Lose";
+                              break;
+                            case 4:
+                              statusText = "Won";
+                              break;
+                            case 5:
+                              statusText = "Win Return";
+                              break;
+                            default:
+                              statusText = "Unknown";
+                          }
+
                           return (
                             <>
                               <tr key={index} className="table-light">
-                                <td>{index + 1}</td>
-                                <td>{`${record.homeName} vs ${record.awayName}`}</td>
-                                <td>{record?.selectionList[0]?.marketName}</td>
-                                <td>
+                                <td style={{ color: "#406777" }}>
+                                  {index + 1}
+                                </td>
+                                <td
+                                  style={{ color: "#406777" }}
+                                >{`${record.homeName} vs ${record.awayName}`}</td>
+                                <td style={{ color: "#406777" }}>
+                                  {record?.selectionList[0]?.marketName}
+                                </td>
+                                <td style={{ color: "#406777" }}>
                                   {record?.selectionList[0]?.selectionKind}
                                 </td>
-                                {/* <td>{formattedDate}</td> */}
-                                <td></td>
+                                {moment().isAfter(
+                                  moment(record?.matchTime),
+                                  "day"
+                                ) ? (
+                                  <td></td>
+                                ) : (
+                                  <td style={{ color: "#406777" }}>
+                                    {statusText}
+                                  </td>
+                                )}
                               </tr>
                             </>
                           );
@@ -199,66 +263,71 @@ const PlayBet = () => {
                     </tbody>
                   </table>
                 </div>
-                <div className="w-50 mx-auto">
-                  <input
-                    type="number"
-                    min={1}
-                    value={inputAmount}
-                    onChange={handleInputChange}
-                    className="form-control mt-5 mb-3"
-                    style={{
-                      background: "#fff",
-                      border: "1px solid #406777",
-                      borderRadius: "5px",
-                      margin: "auto",
-                    }}
-                  />
-                  <div>
-                    <div className="m-label fw-bold">
-                      Potential Win: ₦{calculatePotentialWinnings()}
+                {moment().isAfter(
+                  moment(betting?.content?.[0]?.matchTime),
+                  "day"
+                ) ? null : (
+                  <div className="w-50 mx-auto mb-5">
+                    <input
+                      type="number"
+                      min={1}
+                      value={inputAmount}
+                      onChange={handleInputChange}
+                      className="form-control mt-5 mb-3"
+                      style={{
+                        background: "#fff",
+                        border: "1px solid #406777",
+                        borderRadius: "5px",
+                        margin: "auto",
+                      }}
+                    />
+                    <div>
+                      <div className="m-label fw-bold">
+                        Potential Win: ₦{calculatePotentialWinnings()}
+                      </div>
                     </div>
-                  </div>
 
-                  <div
-                    className="d-flex justify-content-center p-3"
-                    id="sport__bet-num"
-                  >
-                    {[100, 200, 500, 1000].map((amount, index) => (
-                      <React.Fragment key={index}>
-                        <Button
-                          className="btn mt-2 p-2 text-white"
-                          style={{ background: "#406777", width: "9%" }}
-                          onClick={() => handleNumberButtonClick(amount)}
-                        >
-                          {amount}
-                        </Button>
-                        &nbsp;&nbsp; &nbsp;&nbsp;
-                      </React.Fragment>
-                    ))}
-                  </div>
+                    <div
+                      className="d-flex justify-content-center p-3"
+                      id="sport__bet-num"
+                    >
+                      {[100, 200, 500, 1000].map((amount, index) => (
+                        <React.Fragment key={index}>
+                          <Button
+                            className="btn mt-2 p-2 text-white"
+                            style={{ background: "#406777", width: "9%" }}
+                            onClick={() => handleNumberButtonClick(amount)}
+                          >
+                            {amount}
+                          </Button>
+                          &nbsp;&nbsp; &nbsp;&nbsp;
+                        </React.Fragment>
+                      ))}
+                    </div>
 
-                  <Button
-                    onClick={handlePlaceBet}
-                    className="btn form-control mt-5 mb-3 text-white"
-                    style={{
-                      background: "#406777",
-                    }}
-                  >
-                    {isLoadingPlayBet ? (
-                      <>
-                        <Spinner
-                          as="span"
-                          animation="border"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                      </>
-                    ) : (
-                      "Place Bet"
-                    )}
-                  </Button>
-                </div>
+                    <Button
+                      onClick={handlePlaceBet}
+                      className="btn form-control mt-5 mb-5 text-white"
+                      style={{
+                        background: "#406777",
+                      }}
+                    >
+                      {isLoadingPlayBet ? (
+                        <>
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                          />
+                        </>
+                      ) : (
+                        "Place Bet"
+                      )}
+                    </Button>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -315,10 +384,10 @@ const PlayBet = () => {
                         }}
                       >
                         <span className="fw-bolder">
-                          {" "}
-                          {record?.selectionList[0]?.selectionKind}
+                          {`${record.homeName} vs ${record.awayName}`}
                         </span>
                       </p>
+
                       <p
                         style={{
                           display: "flex",
@@ -334,74 +403,80 @@ const PlayBet = () => {
                         }}
                       >
                         <span className="fw-bolder">
-                          {`${record.homeName} vs ${record.awayName}`}
+                          {" "}
+                          {record?.selectionList[0]?.selectionKind}
                         </span>
                       </p>
                     </div>
                   </div>
                 );
               })}
-              <div className="w-50 mx-auto app__transaction-mobile">
-                <input
-                  type="number"
-                  min={1}
-                  value={inputAmount}
-                  onChange={handleInputChange}
-                  className="form-control mt-5 mb-3"
-                  style={{
-                    background: "#fff",
-                    border: "1px solid #406777",
-                    borderRadius: "5px",
-                    margin: "auto",
-                  }}
-                />
-                <div>
-                  <div className="m-label fw-bold">
-                    Potential Win: ₦{calculatePotentialWinnings()}
+              {moment().isAfter(
+                moment(betting?.content?.[0]?.matchTime),
+                "day"
+              ) ? null : (
+                <div className="w-50 mx-auto app__transaction-mobile">
+                  <input
+                    type="number"
+                    min={1}
+                    value={inputAmount}
+                    onChange={handleInputChange}
+                    className="form-control mt-5 mb-3"
+                    style={{
+                      background: "#fff",
+                      border: "1px solid #406777",
+                      borderRadius: "5px",
+                      margin: "auto",
+                    }}
+                  />
+                  <div>
+                    <div className="m-label fw-bold">
+                      Potential Win: ₦{calculatePotentialWinnings()}
+                    </div>
                   </div>
-                </div>
 
-                <div
-                  className="d-flex justify-content-center p-3"
-                  id="sport__bet-num"
-                >
-                  {[100, 200, 500, 1000].map((amount, index) => (
-                    <React.Fragment key={index}>
-                      <Button
-                        className="btn mt-2 p-2 text-white"
-                        style={{ background: "#406777", width: "9%" }}
-                        onClick={() => handleNumberButtonClick(amount)}
-                      >
-                        {amount}
-                      </Button>
-                      &nbsp;&nbsp; &nbsp;&nbsp;
-                    </React.Fragment>
-                  ))}
-                </div>
+                  <div
+                    className="d-flex justify-content-center p-3"
+                    id="sport__bet-num"
+                  >
+                    {[100, 200, 500, 1000].map((amount, index) => (
+                      <React.Fragment key={index}>
+                        <Button
+                          className="btn mt-2 p-2 text-white"
+                          style={{ background: "#406777", width: "9%" }}
+                          onClick={() => handleNumberButtonClick(amount)}
+                        >
+                          {amount}
+                        </Button>
+                        &nbsp;&nbsp; &nbsp;&nbsp;
+                      </React.Fragment>
+                    ))}
+                  </div>
 
-                <Button
-                  onClick={handlePlaceBet}
-                  className="btn form-control mt-5 mb-5 text-white"
-                  style={{
-                    background: "#406777",
-                  }}
-                >
-                  {isLoadingPlayBet ? (
-                    <>
-                      <Spinner
-                        as="span"
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                    </>
-                  ) : (
-                    "Place Bet"
-                  )}
-                </Button>
-                <br />
-              </div>
+                  <Button
+                    onClick={handlePlaceBet}
+                    className="btn form-control mt-5 mb-5 text-white"
+                    style={{
+                      background: "#406777",
+                    }}
+                  >
+                    {isLoadingPlayBet ? (
+                      <>
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                      </>
+                    ) : (
+                      "Place Bet"
+                    )}
+                  </Button>
+                  <br />
+                </div>
+              )}
             </div>
           )}
         </div>

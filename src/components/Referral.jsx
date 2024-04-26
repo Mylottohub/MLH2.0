@@ -25,7 +25,7 @@ const Referral = () => {
         await navigator.share({
           title: "Check out MyLottoHub",
           text: "Join MyLottoHub and explore the exciting world of lotteries!",
-          url: `https://www.mylottohub.com?${userProfileResponse?.id}`,
+          url: `https://www.mylottohub.com?user=${userProfileResponse?.id}`,
         });
       } catch (error) {
         console.error("Error sharing:", error);
@@ -40,7 +40,7 @@ const Referral = () => {
     <React.Fragment>
       <Navbar />
       <div className="container mt-5">
-        <h5 className="fw-bold mb-3">Referral</h5>
+        <h5 className="fw-bold mb-3"></h5>
         <p>Want to refer a friend? Please copy your referral link below.</p>
         {isLoadingUserProfile ? (
           <div className="spinner text-dark text-center mt-5">
@@ -58,7 +58,7 @@ const Referral = () => {
               <input
                 id="foo"
                 type="text"
-                value={`https://www.mylottohub.com?${userProfileResponse?.id}`}
+                value={`https://www.mylottohub.com?user=${userProfileResponse?.id}`}
                 className="form-control p-2"
                 readOnly=""
                 disabled
@@ -72,7 +72,7 @@ const Referral = () => {
                 data-clipboard-target="#foo"
                 onClick={() =>
                   notify(
-                    `https://www.mylottohub.com?${userProfileResponse?.id}`
+                    `https://www.mylottohub.com?user=${userProfileResponse?.id}`
                   )
                 }
               >

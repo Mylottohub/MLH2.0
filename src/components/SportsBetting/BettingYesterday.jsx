@@ -8,7 +8,7 @@ import { Spinner } from "react-bootstrap";
 import { images } from "../../constant";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-const Betting = () => {
+const BettingYesterday = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -58,27 +58,27 @@ const Betting = () => {
               <div className="bet__code">
                 <ul className="navbar-nav mx-auto">
                   <li
-                    className="nav-item"
                     onClick={() => {
                       navigate(`/BettingTomorrow`);
                     }}
+                    className="nav-item"
                   >
                     <a className="nav-link">Tomorrow</a>
                   </li>
 
-                  <li className="nav-item">
-                    <a className="nav-link active_sport" aria-current="page">
-                      Today
-                    </a>
+                  <li
+                    className="nav-item"
+                    onClick={() => {
+                      navigate(`/betting`);
+                    }}
+                  >
+                    <a className="nav-link">Today</a>
                   </li>
 
-                  <li
-                    onClick={() => {
-                      navigate(`/betting-yesterday`);
-                    }}
-                    className="nav-item"
-                  >
-                    <a className="nav-link">Yesterday</a>
+                  <li className="nav-item">
+                    <a className="nav-link active_sport" aria-current="page">
+                      Yesterday
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -92,7 +92,6 @@ const Betting = () => {
           >
             Sport Bet History
           </button>
-
           <div className="table-responsive app__transaction-web">
             {isLoading ? (
               <div className="spinner text-dark text-center mt-5">
@@ -104,7 +103,7 @@ const Betting = () => {
                   aria-hidden="true"
                 />
               </div>
-            ) : betting?.today?.length === 0 ? (
+            ) : betting?.yesterday?.length === 0 ? (
               <div className="d-flex justify-content-center text-center p-5">
                 <div className="hidden-xs hidden-sm mx-auto">
                   <div className="alert alert-danger text-center" role="alert">
@@ -120,17 +119,30 @@ const Betting = () => {
                     <th scope="col">BET CODE</th>
                     <th scope="col">STAKE</th>
                     <th scope="col">NO OF GAMES</th>
+                    <th scope="col">STATUS</th>
                     <th scope="col">ACTION</th>
                   </tr>
                 </tbody>
 
                 <tbody>
                   <>
-                    {betting?.today?.map((record, index) => {
+                    {betting?.yesterday?.map((record, index) => {
+                      let statusText;
+                      switch (record?.status) {
+                        case 0:
+                          statusText = "Lost";
+                          break;
+                        case 1:
+                          statusText = "Won";
+                          break;
+                        default:
+                          statusText = "";
+                      }
                       return (
                         <tr key={index} className="table-light">
                           <td style={{ color: "#406777" }}>{index + 1}</td>
-                          <td>
+                          <td style={{ color: "#406777" }}>
+                            {" "}
                             <button
                               style={{ background: "#406777" }}
                               type="submit"
@@ -144,6 +156,7 @@ const Betting = () => {
                           <td style={{ color: "#406777" }}>
                             {record?.noGames}
                           </td>
+                          <td style={{ color: "#406777" }}>{statusText}</td>
                           <td>
                             {" "}
                             <button
@@ -155,7 +168,8 @@ const Betting = () => {
                               className="btn w-100 text-white"
                               disabled={isLoading}
                             >
-                              Play Now
+                              {/* Play Now */}
+                              View Result
                             </button>
                           </td>
                         </tr>
@@ -178,7 +192,7 @@ const Betting = () => {
                   aria-hidden="true"
                 />
               </div>
-            ) : betting?.today?.length === 0 ? (
+            ) : betting?.yesterday?.length === 0 ? (
               <div className="d-flex justify-content-center text-center p-5">
                 <div className="hidden-xs hidden-sm mx-auto">
                   <div className="alert alert-danger text-center" role="alert">
@@ -188,11 +202,22 @@ const Betting = () => {
               </div>
             ) : (
               <>
-                {betting?.today?.map((record, index) => {
+                {betting?.yesterday?.map((record, index) => {
                   const formattedDate = moment
                     .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
                     .local()
                     .format("Do MMM YYYY | h:mm:ssA");
+                  let statusText;
+                  switch (record?.status) {
+                    case 0:
+                      statusText = "Lost";
+                      break;
+                    case 1:
+                      statusText = "Won";
+                      break;
+                    default:
+                      statusText = "";
+                  }
 
                   return (
                     <div
@@ -218,6 +243,7 @@ const Betting = () => {
                         >
                           <span className="fw-bolder">BET CODE:</span>
                           <span>
+                            {" "}
                             <button
                               style={{ background: "#406777" }}
                               type="submit"
@@ -244,21 +270,31 @@ const Betting = () => {
                             justifyContent: "space-between",
                           }}
                         >
+                          <span className="fw-bolder">STATUS: </span>
+                          <span>{statusText}</span>
+                        </p>
+
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
                           <span className="fw-bolder">DATE: </span>
                           <span>{formattedDate}</span>
                         </p>
                       </div>
-                      <span className="mb-5" style={{ cursor: "pointer" }}>
+                      <span style={{ cursor: "pointer" }}>
                         <button
                           onClick={() => {
                             navigate(`/play-bet/${record.code}`);
                           }}
                           style={{ background: "#406777" }}
                           type="submit"
-                          className="btn w-100 mb-3 text-white"
+                          className="btn w-100 text-white"
                           disabled={isLoading}
                         >
-                          Play Now
+                          View Result
                         </button>{" "}
                       </span>
                     </div>
@@ -273,4 +309,4 @@ const Betting = () => {
   );
 };
 
-export default Betting;
+export default BettingYesterday;

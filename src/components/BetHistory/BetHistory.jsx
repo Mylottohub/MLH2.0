@@ -204,7 +204,7 @@ const BetHistory = () => {
                         // console.log(record);
 
                         return (
-                          <tr key={index} className="table-light">
+                          <tr key={index} className="table-light transact">
                             <td>{index + 1}</td>
                             <td>
                               {id === "green_lotto" ? (

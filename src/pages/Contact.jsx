@@ -1,4 +1,4 @@
-// import React from 'react'
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import ReCaptchaV2 from "react-google-recaptcha";
 import { useDispatch } from "react-redux";
@@ -27,6 +27,7 @@ const Contact = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
   const [contact, { isLoading }] = useContactMutation();
 
@@ -37,6 +38,9 @@ const Contact = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const handleCaptchaVerification = () => {
+    setIsCaptchaVerified(true);
+  };
 
   const submitForm = async (data) => {
     try {
@@ -167,8 +171,11 @@ const Contact = () => {
                   <br />
                 </div> */}
 
-                <ReCaptchaV2 sitekey={siteKey} />
-                <Button
+                <ReCaptchaV2
+                  onChange={handleCaptchaVerification}
+                  sitekey={siteKey}
+                />
+                {/* <Button
                   type="submit"
                   className="w-100 p-3 mt-5 mb-4"
                   disabled={isLoading}
@@ -183,6 +190,23 @@ const Contact = () => {
                     />
                   ) : (
                     " Register"
+                  )}
+                </Button> */}
+                <Button
+                  type="submit"
+                  className="w-100 p-3 mt-3"
+                  disabled={!isCaptchaVerified || isLoading}
+                >
+                  {isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    " Submit"
                   )}
                 </Button>
               </div>

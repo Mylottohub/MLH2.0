@@ -22,6 +22,28 @@ const PlayGames = () => {
   const [perOperator, setPerOperator] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  let bonusWalletValue = "";
+
+  // Set bonusWalletValue based on id
+  switch (id) {
+    case "green_lotto":
+      bonusWalletValue = "gl_bwallet";
+      break;
+    case "lotto_nigeria":
+      bonusWalletValue = "sl_bwallet";
+      break;
+    case "lottomania":
+      bonusWalletValue = "lm_bwallet";
+      break;
+    case "ghana_game":
+      bonusWalletValue = "gl_bwallet";
+      break;
+    case "wesco":
+      bonusWalletValue = "we_bwallet";
+      break;
+    default:
+      bonusWalletValue = "";
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -877,11 +899,20 @@ const PlayGames = () => {
                               return null;
                             }
                           } else if (id === "lottomania") {
-                            const drawDateTime = moment(item.sdt);
+                            const drawDateTime = moment(item?.sdt);
 
                             const currentTime = moment();
                             const timeDifference =
                               drawDateTime.diff(currentTime);
+                            perOperator.sort((a, b) => {
+                              const drawDateTimeA = moment(b.sdt);
+                              const drawDateTimeB = moment(a.sdt);
+                              const timeDifferenceB =
+                                drawDateTimeB.diff(currentTime);
+                              const timeDifferenceA =
+                                drawDateTimeA.diff(currentTime);
+                              return timeDifferenceB - timeDifferenceA; // Sort in descending order
+                            });
 
                             if (timeDifference > 0) {
                               return (
@@ -925,11 +956,19 @@ const PlayGames = () => {
                               return null;
                             }
                           } else if (id === "ghana_game") {
-                            const drawDateTime = moment(item.sdt);
-
+                            const drawDateTime = moment(item?.sdt);
                             const currentTime = moment();
                             const timeDifference =
                               drawDateTime.diff(currentTime);
+                            perOperator.sort((a, b) => {
+                              const drawDateTimeA = moment(b.sdt);
+                              const drawDateTimeB = moment(a.sdt);
+                              const timeDifferenceB =
+                                drawDateTimeB.diff(currentTime);
+                              const timeDifferenceA =
+                                drawDateTimeA.diff(currentTime);
+                              return timeDifferenceB - timeDifferenceA; // Sort in descending order
+                            });
 
                             if (timeDifference > 0) {
                               return (
@@ -1122,7 +1161,7 @@ const PlayGames = () => {
                       >
                         <option value="wallet">Main Wallet</option>
 
-                        <option value="gl_bwallet">
+                        <option value={bonusWalletValue}>
                           Operator Bonus Wallet
                         </option>
                         <option value="ref_give">Referral Bonus Wallet</option>

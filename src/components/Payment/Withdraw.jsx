@@ -140,6 +140,7 @@ const WithdrawModal = () => {
         const resolvedAccountName = response?.data?.data?.data?.account_name;
         setAccountName(resolvedAccountName);
         setValue("account_name", resolvedAccountName);
+        toast.success("Account Details Saved Successfully.");
       }
     } catch (error) {
       // console.error("Error:", error);
@@ -149,6 +150,13 @@ const WithdrawModal = () => {
     } finally {
       setFetchingAccountName(false);
     }
+  };
+
+  const formatAmount = (amount) => {
+    if (amount !== 0 && Math.abs(amount) > 0.001) {
+      return amount.toFixed(2);
+    }
+    return amount;
   };
 
   useEffect(() => {
@@ -192,7 +200,10 @@ const WithdrawModal = () => {
                   <br />
                   <small className="mt-3">
                     Winning Wallet Balance -{" "}
-                    <strong>₦{userProfileResponse?.wwallet}</strong>
+                    <strong>
+                      {" "}
+                      ₦{formatAmount(userProfileResponse?.wwallet)}
+                    </strong>
                   </small>
                   <hr />
 
@@ -330,7 +341,7 @@ const WithdrawModal = () => {
               <br />
               <small className="mt-3">
                 Winning Wallet Balance -{" "}
-                <strong>₦{userProfileResponse?.wwallet}</strong>
+                <strong>₦{formatAmount(userProfileResponse?.wwallet)}</strong>
               </small>
               <hr />
               <p>
@@ -383,7 +394,7 @@ const WithdrawModal = () => {
               <br />
               <small className="mt-3">
                 Winning Wallet Balance -{" "}
-                <strong>₦{userProfileResponse?.wwallet}</strong>
+                <strong>₦{formatAmount(userProfileResponse?.wwallet)}</strong>
               </small>
               <hr />
               <p>

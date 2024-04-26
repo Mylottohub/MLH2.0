@@ -31,6 +31,8 @@ const ViewMoreResults = () => {
     operatorID = "lotto_nigeria";
   } else if (id == 43) {
     operatorID = "green_lotto";
+  } else if (id == 27) {
+    operatorID = "baba_ijebu";
   }
 
   const imageSrc = `/images/${operatorID}.png`;
@@ -932,6 +934,74 @@ const ViewMoreResults = () => {
                           </React.Fragment>
                         );
                       } else if (record.name === "Green lotto") {
+                        return (
+                          <React.Fragment key={record?.id}>
+                            {record?.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                return (
+                                  <div
+                                    key={`${record?.id}-${dataIndex}`}
+                                    className="col-md-4 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data?.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
+                                            )
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table cellPadding="3" align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                          <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  {digit !== "0" ? (
+                                                    <div className="numboxred">
+                                                      {digit}
+                                                    </div>
+                                                  ) : null}
+                                                </td>
+                                              ))}
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      } else if (record.name === "Baba Ijebu") {
                         return (
                           <React.Fragment key={record?.id}>
                             {record?.results

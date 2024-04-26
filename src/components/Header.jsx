@@ -25,6 +25,12 @@ const Header = () => {
     handleOpenDeposit();
   };
   const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
+  const formatAmount = (amount) => {
+    if (amount !== 0 && Math.abs(amount) > 0.001) {
+      return amount.toFixed(2);
+    }
+    return amount;
+  };
 
   return (
     <div>
@@ -65,7 +71,9 @@ const Header = () => {
                           Wallet Balance
                         </div>
                         <div className="col-md-3 col-xs-6">
-                          <small>₦{userProfileResponse?.wwallet}</small>
+                          <small>
+                            ₦{formatAmount(userProfileResponse?.wwallet)}
+                          </small>
                           <br />
                           Winnings
                         </div>
@@ -80,14 +88,14 @@ const Header = () => {
                         <small>Deposit</small>
                       </a>{" "}
                       &nbsp;&nbsp;
-                      {/* <button
+                      <button
                         onClick={() => handleWithdraw()}
                         className="btn btn-trans2_withraw"
                         data-toggle="modal"
                         data-target="#withdraw_modal"
                       >
                         <small>Withdraw</small>
-                      </button> */}
+                      </button>
                     </div>
                   </div>
                 </div>

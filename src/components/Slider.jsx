@@ -23,7 +23,11 @@ function Slider() {
       {adverts.map((advert) => (
         <Carousel.Item key={advert.id}>
           <a href={advert.link} target="_blank" rel="noopener noreferrer">
-            <img src={advert.banner} alt={advert.name} className="img-fluid" />
+            <img
+              src={advert.banner}
+              alt={advert.name}
+              className="w-100 h-100"
+            />
           </a>
         </Carousel.Item>
       ))}

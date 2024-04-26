@@ -62,15 +62,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
-      try {
-        const result = await queryFulfilled;
-        const expiration = result.data[1]?.expires;
-        setupLogoutTimer(expiration);
-      } catch (error) {
-        // Handle login error
-      }
-    },
+    // onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+    //   try {
+    //     const result = await queryFulfilled;
+    //     const expiration = result.data[1]?.expires;
+    //     setupLogoutTimer(expiration);
+    //   } catch (error) {
+    //     // Handle login error
+    //   }
+    // },
 
     operatorgames: builder.mutation({
       query: (data) => ({
@@ -97,12 +97,12 @@ export const {
   useContactMutation,
   // useTimetableMutation
 } = userApiSlice;
-const setupLogoutTimer = (expiration) => {
-  const now = Date.now();
-  const delay = expiration * 1000 - now;
-  if (delay > 0) {
-    setTimeout(() => {
-      store.dispatch(logout());
-    }, delay);
-  }
-};
+// const setupLogoutTimer = (expiration) => {
+//   const now = Date.now();
+//   const delay = expiration * 1000 - now;
+//   if (delay > 0) {
+//     setTimeout(() => {
+//       store.dispatch(logout());
+//     }, delay);
+//   }
+// };

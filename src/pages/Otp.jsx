@@ -7,7 +7,7 @@ import { Button, Spinner } from "react-bootstrap";
 import "../assets/css/register.css";
 import { toast } from "react-toastify";
 import { HTTP } from "../utils";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useState } from "react";
 // import { clearEmailAddress } from "./slices/authSlice";
 // import { useDispatch } from "react-redux";
@@ -22,7 +22,7 @@ const Otp = () => {
   const [showOTPInput, setShowOTPInput] = useState(false);
   const [emailOtp, setEmailOtp] = useState("");
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const {
     register,
@@ -32,13 +32,25 @@ const Otp = () => {
     resolver: yupResolver(schema),
   });
 
+  // const generateOTP = async () => {
+  //   try {
+  //     await HTTP.post("/generate-user-otp", { user_details: emailOtp });
+  //     toast.success("OTP sent successfully");
+  //     setShowOTPInput(true);
+  //   } catch (error) {
+  //     toast.error("Failed to send OTP");
+  //   }
+  // };
   const generateOTP = async () => {
+    setIsLoading(true);
     try {
       await HTTP.post("/generate-user-otp", { user_details: emailOtp });
       toast.success("OTP sent successfully");
       setShowOTPInput(true);
     } catch (error) {
-      toast.error("Failed to send OTP");
+      toast.error("Invalid Email Address");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -188,9 +200,10 @@ const Otp = () => {
         <div className="col-lg-6 mx-auto mt-5 app__register">
           <h1 className="mb-4">PROCEED TO LOGIN FOR VERIFICATION</h1>
           <a
-            onClick={() => {
-              navigate(`/login`);
-            }}
+            onClick={() =>
+              (window.location.href =
+                "https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com")
+            }
             className="w-100 p-3 btn btn-light"
           >
             Login

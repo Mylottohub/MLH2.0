@@ -157,7 +157,7 @@ const TimeTable = () => {
                 <div className="col-md-8">
                   <strong className="mb-5">Timetable</strong>
                   <div className="table-responsive">
-                    <table className="table table-express mt-5">
+                    <table className="table table-express mt-5 transact">
                       <tbody>
                         <tr>
                           <th>GAME</th>

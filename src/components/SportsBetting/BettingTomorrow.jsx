@@ -8,7 +8,7 @@ import { Spinner } from "react-bootstrap";
 import { images } from "../../constant";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-const Betting = () => {
+const BettingTomorrow = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -57,19 +57,19 @@ const Betting = () => {
 
               <div className="bet__code">
                 <ul className="navbar-nav mx-auto">
+                  <li className="nav-item">
+                    <a className="nav-link active_sport" aria-current="page">
+                      Tomorrow
+                    </a>
+                  </li>
+
                   <li
                     className="nav-item"
                     onClick={() => {
-                      navigate(`/BettingTomorrow`);
+                      navigate(`/betting`);
                     }}
                   >
-                    <a className="nav-link">Tomorrow</a>
-                  </li>
-
-                  <li className="nav-item">
-                    <a className="nav-link active_sport" aria-current="page">
-                      Today
-                    </a>
+                    <a className="nav-link">Today</a>
                   </li>
 
                   <li
@@ -92,7 +92,6 @@ const Betting = () => {
           >
             Sport Bet History
           </button>
-
           <div className="table-responsive app__transaction-web">
             {isLoading ? (
               <div className="spinner text-dark text-center mt-5">
@@ -104,7 +103,7 @@ const Betting = () => {
                   aria-hidden="true"
                 />
               </div>
-            ) : betting?.today?.length === 0 ? (
+            ) : betting?.tomorrow?.length === 0 ? (
               <div className="d-flex justify-content-center text-center p-5">
                 <div className="hidden-xs hidden-sm mx-auto">
                   <div className="alert alert-danger text-center" role="alert">
@@ -126,11 +125,17 @@ const Betting = () => {
 
                 <tbody>
                   <>
-                    {betting?.today?.map((record, index) => {
+                    {betting?.tomorrow?.map((record, index) => {
+                      //   const formattedDate = moment
+                      //     .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
+                      //     .local()
+                      //     .format("Do MMM YYYY | h:mm:ssA");
+
                       return (
                         <tr key={index} className="table-light">
-                          <td style={{ color: "#406777" }}>{index + 1}</td>
+                          <td>{index + 1}</td>
                           <td>
+                            {" "}
                             <button
                               style={{ background: "#406777" }}
                               type="submit"
@@ -140,10 +145,8 @@ const Betting = () => {
                               {record?.code}
                             </button>
                           </td>
-                          <td style={{ color: "#406777" }}>{record?.stake}</td>
-                          <td style={{ color: "#406777" }}>
-                            {record?.noGames}
-                          </td>
+                          <td>{record?.stake}</td>
+                          <td>{record?.noGames}</td>
                           <td>
                             {" "}
                             <button
@@ -178,7 +181,7 @@ const Betting = () => {
                   aria-hidden="true"
                 />
               </div>
-            ) : betting?.today?.length === 0 ? (
+            ) : betting?.tomorrow?.length === 0 ? (
               <div className="d-flex justify-content-center text-center p-5">
                 <div className="hidden-xs hidden-sm mx-auto">
                   <div className="alert alert-danger text-center" role="alert">
@@ -188,7 +191,7 @@ const Betting = () => {
               </div>
             ) : (
               <>
-                {betting?.today?.map((record, index) => {
+                {betting?.tomorrow?.map((record, index) => {
                   const formattedDate = moment
                     .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
                     .local()
@@ -218,6 +221,7 @@ const Betting = () => {
                         >
                           <span className="fw-bolder">BET CODE:</span>
                           <span>
+                            {" "}
                             <button
                               style={{ background: "#406777" }}
                               type="submit"
@@ -248,14 +252,14 @@ const Betting = () => {
                           <span>{formattedDate}</span>
                         </p>
                       </div>
-                      <span className="mb-5" style={{ cursor: "pointer" }}>
+                      <span style={{ cursor: "pointer" }}>
                         <button
                           onClick={() => {
                             navigate(`/play-bet/${record.code}`);
                           }}
                           style={{ background: "#406777" }}
                           type="submit"
-                          className="btn w-100 mb-3 text-white"
+                          className="btn w-100 text-white"
                           disabled={isLoading}
                         >
                           Play Now
@@ -273,4 +277,4 @@ const Betting = () => {
   );
 };
 
-export default Betting;
+export default BettingTomorrow;

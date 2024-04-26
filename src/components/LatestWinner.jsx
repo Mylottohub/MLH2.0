@@ -47,8 +47,8 @@ const LatestWinner = () => {
             {winners.map((results, index) => (
               <>
                 <span key={index}>
-                  {results?.username} &nbsp; - ₦{results?.amount} &nbsp; -{" "}
-                  {formatDate(results?.date)} |{" "}
+                  {results?.username.substring(0, 4)}***** &nbsp; - ₦
+                  {results?.amount} &nbsp; - {formatDate(results?.date)} |{" "}
                 </span>
               </>
             ))}

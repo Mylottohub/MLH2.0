@@ -47,7 +47,7 @@ const Register = () => {
         );
       }
       // window.location.href = res.data.verificationURL;
-      navigate(`/login`);
+      navigate(`/`);
     } catch (err) {
       if (err?.data?.details?.email && err?.data?.details?.email.length > 0) {
         const errorDetails = err?.data?.details?.email[0];
@@ -160,14 +160,15 @@ const Register = () => {
                 </label>
               </div>
 
-              <p style={{ cursor: "pointer", color: "#406777" }}>
+              <p
+                onClick={() =>
+                  (window.location.href =
+                    "https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com")
+                }
+                style={{ cursor: "pointer", color: "#406777" }}
+              >
                 Already have an account?
-                <span
-                  className="text-primary"
-                  onClick={() => navigate("/login")}
-                >
-                  Sign in
-                </span>
+                <span className="text-primary">Sign in</span>
               </p>
               <ReCaptchaV2
                 sitekey={siteKey}
