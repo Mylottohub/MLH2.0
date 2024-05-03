@@ -44,7 +44,7 @@ const SportHistory = () => {
 
   useEffect(() => {
     fetchData();
-  }, [userInfo.token]);
+  }, [userInfo.token, currentPage]);
   const fetchDataTransact = (page) => {
     setCurrentPage(page);
   };

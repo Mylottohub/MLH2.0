@@ -1,15 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { BsShareFill } from "react-icons/bs";
-import { useGetProfileUser, useGetReferral } from "../react-query";
+import { useGetProfileUser } from "../react-query";
+import { useSelector } from "react-redux";
+import { HTTP } from "../utils";
 
 const Referral = () => {
   const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
-  const { userReferred } = useGetReferral([]);
-  // console.log(userReferred);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [transaction, setTransaction] = useState([]);
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const configHeaders = {
+    headers: {
+      "content-type": "application/json",
+      accept: "application/json",
+      Authorization: `Bearer ${userInfo.token}`,
+    },
+  };
+
+  const fetchData = () => {
+    setIsLoading(true);
+    HTTP.get(`/user/referral/${userInfo.data.id}?page=${currentPage}`, {
+      ...configHeaders,
+    })
+      .then((response) => {
+        setTransaction(response.data.data);
+      })
+      .catch((error) => {
+        // console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [userInfo.token, currentPage]);
+  const fetchDataTransact = (page) => {
+    setCurrentPage(page);
+  };
+  const renderPaginationLabel = (label) => {
+    switch (label) {
+      case "&laquo; Previous":
+        return "Previous";
+      case "Next &raquo;":
+        return "Next";
+      default:
+        return label;
+    }
+  };
   const notify = async (copyMe) => {
     try {
       await navigator.clipboard.writeText(copyMe);
@@ -42,7 +87,7 @@ const Referral = () => {
       <div className="container mt-5">
         <h5 className="fw-bold mb-3"></h5>
         <p>Want to refer a friend? Please copy your referral link below.</p>
-        {isLoadingUserProfile ? (
+        {isLoading ? (
           <div className="spinner text-dark text-center mt-5">
             <Spinner
               as="span"
@@ -90,22 +135,21 @@ const Referral = () => {
 
             <div className="table-responsive">
               <table className="table table-express table-hover mt-4">
-                {userReferred ? (
-                  userReferred.map((record, index) => (
+                <tbody>
+                  <tr>
+                    <th>USERNAME</th>
+                    <th>SIGNUP DATE</th>
+                    <th>STATUS</th>
+                  </tr>
+                </tbody>
+                {transaction ? (
+                  transaction?.data?.map((record, index) => (
                     <>
                       <tbody>
-                        <tr>
-                          <th>USERNAME</th>
-                          <th>SIGNUP DATE</th>
-                          <th>STATUS</th>
-                        </tr>
-                      </tbody>
-
-                      <tbody>
-                        <tr key={index} className="table-light">
-                          <td>{record?.username}</td>
-                          <td>{record?.date}</td>
-                          <td>{record?.status}</td>
+                        <tr key={index} className="transact table-light">
+                          <td className="text-uppercase">{record?.username}</td>
+                          <td>{record?.created_at}</td>
+                          <td className="text-uppercase">{record?.funded}</td>
                         </tr>
                       </tbody>
                     </>
@@ -124,6 +168,26 @@ const Referral = () => {
                 )}
               </table>
             </div>
+            <nav aria-label="Page navigation example">
+              <ul className="pagination">
+                {transaction?.links?.map((link, index) => (
+                  <div key={index}>
+                    <li className={`page-item ${link?.active ? "active" : ""}`}>
+                      <a
+                        className="page-link"
+                        href={link?.url}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          fetchDataTransact(link?.label);
+                        }}
+                      >
+                        {renderPaginationLabel(link?.label)}
+                      </a>
+                    </li>
+                  </div>
+                ))}
+              </ul>
+            </nav>
           </div>
         )}
       </div>

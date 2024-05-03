@@ -80,7 +80,7 @@ const TransactionHistory = () => {
     fetchData();
     fetchDeposit();
     fetchWinnings();
-  }, [userInfo.token]);
+  }, [userInfo.token, currentPage]);
   const fetchDataTransact = (page) => {
     setCurrentPage(page);
   };
@@ -142,7 +142,7 @@ const TransactionHistory = () => {
               aria-controls="profile-tab-pane"
               aria-selected="false"
             >
-              Withdraw History
+              Winning History
             </button>
           </li>
         </ul>

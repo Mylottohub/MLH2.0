@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 const getUsersReferred = async (userId, token) => {
   try {
-    const res = await HTTP.get(`/agent/referral/${userId}`, {
+    const res = await HTTP.get(`/user/referral/${userId}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -27,7 +27,7 @@ const useGetReferral = () => {
     () => getUsersReferred(userId, token)
   );
   return {
-    userReferred: data?.data,
+    userReferred: data?.data?.data,
     token,
     isLoadingUserReferred: isLoading,
   };
