@@ -28,7 +28,13 @@ const Forecast = () => {
     setOperatorName(event.target.options[event.target.selectedIndex].text);
 
     const games = operatorTimetable?.data.filter(
-      (entry) => entry.operator.toString() === selectedOperatorValue
+      (entry, index, self) =>
+        index ===
+        self.findIndex(
+          (t) =>
+            t.operator.toString() === selectedOperatorValue &&
+            t.name === entry.name
+        )
     );
 
     setGamesForOperator(games || []);
@@ -298,20 +304,16 @@ const Forecast = () => {
                     value={selectedGame}
                   >
                     <option value="">Select Game</option>
-                    {gamesForOperator.map((game) => (
-                      <option key={game.id} value={game.game}>
-                        {game.name}
-                      </option>
-                    ))}
+                    {gamesForOperator.map((game) => {
+                      return (
+                        <option key={game.id} value={game.game}>
+                          {game.name}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
-                {/* <input
-                          type="submit"
-                          className="btn btn-blue btn-block w-100"
-                          name="submit"
-                          value={loading ? "Loading..." : "Submit"}
-                          disabled={loading}
-                        /> */}
+
                 <Button
                   type="submit"
                   className="btn btn-blue btn-block w-100"

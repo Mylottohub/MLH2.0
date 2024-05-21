@@ -49,7 +49,7 @@ const Footer = () => {
                     <ul>
                       <li>
                         <a onClick={() => navigate("/forecast")} href="#">
-                          Forecast
+                          Quick Forecast
                         </a>
                       </li>
 

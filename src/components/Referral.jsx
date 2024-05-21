@@ -7,9 +7,10 @@ import { BsShareFill } from "react-icons/bs";
 import { useGetProfileUser } from "../react-query";
 import { useSelector } from "react-redux";
 import { HTTP } from "../utils";
+import moment from "moment";
 
 const Referral = () => {
-  const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
+  const { userProfileResponse } = useGetProfileUser([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [transaction, setTransaction] = useState([]);
@@ -31,9 +32,7 @@ const Referral = () => {
       .then((response) => {
         setTransaction(response.data.data);
       })
-      .catch((error) => {
-        // console.log(error);
-      })
+      .catch((error) => {})
       .finally(() => {
         setIsLoading(false);
       });
@@ -70,7 +69,7 @@ const Referral = () => {
         await navigator.share({
           title: "Check out MyLottoHub",
           text: "Join MyLottoHub and explore the exciting world of lotteries!",
-          url: `https://www.mylottohub.com?user=${userProfileResponse?.id}`,
+          url: `https://www.mylottohub.com/register?user=${userProfileResponse?.id}`,
         });
       } catch (error) {
         console.error("Error sharing:", error);
@@ -103,7 +102,7 @@ const Referral = () => {
               <input
                 id="foo"
                 type="text"
-                value={`https://www.mylottohub.com?user=${userProfileResponse?.id}`}
+                value={`https://www.mylottohub.com/register?user=${userProfileResponse?.id}`}
                 className="form-control p-2"
                 readOnly=""
                 disabled
@@ -117,7 +116,7 @@ const Referral = () => {
                 data-clipboard-target="#foo"
                 onClick={() =>
                   notify(
-                    `https://www.mylottohub.com?user=${userProfileResponse?.id}`
+                    `https://www.mylottohub.com/register?user=${userProfileResponse?.id}`
                   )
                 }
               >
@@ -133,41 +132,44 @@ const Referral = () => {
               </i>
             </div>
 
-            <div className="table-responsive">
-              <table className="table table-express table-hover mt-4">
-                <tbody>
-                  <tr>
-                    <th>USERNAME</th>
-                    <th>SIGNUP DATE</th>
-                    <th>STATUS</th>
-                  </tr>
-                </tbody>
-                {transaction ? (
-                  transaction?.data?.map((record, index) => (
+            {transaction.total === 0 ? (
+              <div className="d-flex justify-content-center text-center p-5">
+                <div className="hidden-xs hidden-sm mx-auto">
+                  <div className="alert alert-danger text-center" role="alert">
+                    No Record Found
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="table-responsive">
+                <table className="table table-express table-hover mt-4">
+                  <tbody>
+                    <tr>
+                      <th>USERNAME</th>
+                      <th>SIGNUP DATE</th>
+                      <th>STATUS</th>
+                    </tr>
+                  </tbody>
+                  {transaction?.data?.map((record, index) => (
                     <>
                       <tbody>
                         <tr key={index} className="transact table-light">
-                          <td className="text-uppercase">{record?.username}</td>
-                          <td>{record?.created_at}</td>
-                          <td className="text-uppercase">{record?.funded}</td>
+                          <td className="text-capitalize">
+                            {record?.username}
+                          </td>
+                          <td>
+                            {moment(record?.created_at).format(
+                              "Do MMMM YYYY h:mmA"
+                            )}
+                          </td>
+                          <td className="text-capitalize">{record?.funded}</td>
                         </tr>
                       </tbody>
                     </>
-                  ))
-                ) : (
-                  <div className="d-flex justify-content-center text-center">
-                    <div className="hidden-xs hidden-sm mx-auto">
-                      <div
-                        className="alert alert-danger text-center"
-                        role="alert"
-                      >
-                        No Record Found
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </table>
-            </div>
+                  ))}
+                </table>
+              </div>
+            )}
             <nav aria-label="Page navigation example">
               <ul className="pagination">
                 {transaction?.links?.map((link, index) => (

@@ -7,7 +7,6 @@ import Contact from "../pages/Contact";
 import Faq from "../pages/Faq";
 import ForgetPassword from "../pages/ForgetPassword";
 import ResetPassword from "../pages/ResetPassword";
-// import Login from "../pages/Login";
 import Otp from "../pages/Otp";
 import Register from "../pages/Register";
 import Result from "../pages/Result";

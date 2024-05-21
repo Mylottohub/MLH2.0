@@ -434,9 +434,9 @@ const Operator = () => {
                     <br />
                     <p style={{ textAlign: "center", lineHeight: "25px" }}>
                       {" "}
-                      Register and join mylottohub to enjoy, play over 300 games
-                      across multiple operators from one single account. It is
-                      fast and seamless.
+                      Play any lotto operator games on mylottohub and get all
+                      your winnings paid into one account. Transfer winnings to
+                      your bank account and get paid instantly.
                     </p>
                   </small>
                 </p>

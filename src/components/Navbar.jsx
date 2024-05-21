@@ -115,7 +115,6 @@ const Navbar = () => {
                                 &nbsp;&nbsp;Wallet
                               </a>
                             </li>
-
                             <li>
                               <a
                                 className="dropdown-item p-2"
@@ -144,13 +143,22 @@ const Navbar = () => {
                               >
                                 &nbsp;&nbsp;Transactions
                               </a>
-                            </li>
+                            </li>{" "}
                             <li onClick={() => navigate("/referral")}>
                               <a className="dropdown-item p-2">
                                 &nbsp;&nbsp;Referral
                               </a>
                             </li>
-
+                            <li>
+                              <a
+                                href="https://agency.mylottohub.com/"
+                                target="_blank"
+                                className="dropdown-item p-2"
+                                rel="noreferrer"
+                              >
+                                &nbsp; Become an Agent
+                              </a>
+                            </li>
                             <li className="dropdown-item p-2">
                               <a onClick={() => handleLogout()}>
                                 {" "}
@@ -245,9 +253,11 @@ const Navbar = () => {
                       onClick={() => navigate("/forecast")}
                       className="nav-item"
                     >
-                      <a className="nav-link text-white me-3 ">Forecast</a>
+                      <a className="nav-link text-white me-3 app__quick-forecast">
+                        {" "}
+                        Quick Forecast
+                      </a>
                     </li>
-
                     <li
                       className="nav-item"
                       onClick={() => navigate("/tutorials")}
@@ -402,6 +412,16 @@ const Navbar = () => {
                             <a className="dropdown-item p-2">
                               {/* <BsShareFill /> */}
                               &nbsp;&nbsp;Referral
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="https://agency.mylottohub.com/"
+                              target="_blank"
+                              className="dropdown-item p-2"
+                              rel="noreferrer"
+                            >
+                              &nbsp; Become an Agent
                             </a>
                           </li>
                         </ul>
@@ -563,7 +583,7 @@ const Navbar = () => {
                   onClick={() => navigate("/forecast")}
                   className="nav-item  "
                 >
-                  <a className="nav-link text-white me-3">Forecast</a>
+                  <a className="nav-link text-white me-3"> Quick Forecast</a>
                 </li>
 
                 <li className="nav-item">

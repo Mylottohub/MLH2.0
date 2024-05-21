@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "../assets/css/register.css";
 import { useRegistersMutation } from "../pages/slices/userApiSlice";
 import ReCaptchaV2 from "react-google-recaptcha";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const schema = yup.object().shape({
   name: yup.string().required("This is a required field"),
@@ -36,17 +36,36 @@ const Register = () => {
   const handleCaptchaVerification = () => {
     setIsCaptchaVerified(true);
   };
+  const [referralNumber, setReferralNumber] = useState(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const referredUserId = urlParams.get("user");
+    if (referredUserId) {
+      // Set referral number in state and localStorage
+      setReferralNumber(referredUserId);
+      localStorage.setItem("referralNumber", referredUserId);
+    } else {
+      const storedReferralNumber = localStorage.getItem("referralNumber");
+      if (storedReferralNumber) {
+        setReferralNumber(storedReferralNumber);
+      }
+    }
+  }, []);
 
   const submitForm = async (data) => {
     try {
       sessionStorage.setItem("email", data.email);
+      if (referralNumber) {
+        data.user = referralNumber;
+      }
       const res = await registers(data).unwrap();
       if (res) {
         toast.success(
           "Registration successful, check your email address for verification link."
         );
+        localStorage.removeItem("referralNumber");
       }
-      // window.location.href = res.data.verificationURL;
       navigate(`/`);
     } catch (err) {
       if (err?.data?.details?.email && err?.data?.details?.email.length > 0) {
