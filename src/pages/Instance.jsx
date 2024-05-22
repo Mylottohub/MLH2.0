@@ -1,9 +1,9 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const Instance = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div>
@@ -48,7 +48,7 @@ const Instance = () => {
               </div>
             </div>
           </div>
-          <div className="col-6 col-lg-3">
+          {/* <div className="col-6 col-lg-3">
             <div
               style={{
                 cursor: "pointer",
@@ -175,7 +175,7 @@ const Instance = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <Footer />

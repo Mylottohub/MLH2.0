@@ -653,19 +653,23 @@ const PlayGames = () => {
                       <option value="">Select Game</option>
 
                       {perOperator.map((item, index) => {
+                        const isToday = moment(item.sdt).isSame(
+                          moment(),
+                          "day"
+                        );
                         if (id === "lotto_nigeria") {
                           return (
                             <option key={index} value={item.drawAlias}>
                               {item.drawAlias}
                             </option>
                           );
-                        } else if (id === "lottomania") {
+                        } else if (id === "lottomania" && isToday) {
                           return (
                             <option key={index} value={item.gn}>
                               {item.gn}
                             </option>
                           );
-                        } else if (id === "ghana_game") {
+                        } else if (id === "ghana_game" && isToday) {
                           return (
                             <option key={index} value={item.gn}>
                               {item.gn}

@@ -21,9 +21,8 @@ const Deposit = () => {
     const selectedOption = e.target.value;
     setSelectedPaymentOption(selectedOption);
     setShowAmountInput(
-      selectedOption === "flutterwave" ||
-        selectedOption === "paystack" ||
-        selectedOption === "monnify"
+      // selectedOption === "flutterwave" ||
+      selectedOption === "paystack" || selectedOption === "monnify"
     );
   };
 
@@ -78,39 +77,42 @@ const Deposit = () => {
           console.error("Error initializing Paystack payment:", error);
           toast.error("An error occurred.");
         }
-      } else if (selectedPaymentOption === "flutterwave") {
-        // Prepare the flutterwave payment data
-        const paymentData = {
-          id: userId,
-          amount: data.amount,
-          posting: "flutterwave",
-        };
+      }
+      // else if (selectedPaymentOption === "flutterwave") {
+      //   // Prepare the flutterwave payment data
+      //   const paymentData = {
+      //     id: userId,
+      //     amount: data.amount,
+      //     posting: "flutterwave",
+      //   };
 
-        try {
-          const flutterwaveResponse = await HTTP.post(
-            "/payment-initialize",
-            paymentData,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                Authorization: `Bearer ${userInfo.token}`,
-              },
-            }
-          );
+      //   try {
+      //     const flutterwaveResponse = await HTTP.post(
+      //       "/payment-initialize",
+      //       paymentData,
+      //       {
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //           Accept: "application/json",
+      //           Authorization: `Bearer ${userInfo.token}`,
+      //         },
+      //       }
+      //     );
 
-          if (flutterwaveResponse.status === 200) {
-            const flutterwaveData = flutterwaveResponse.data;
-            // Redirect the user to the flutterwave checkout page
-            window.location.href = flutterwaveData.redirect_url;
-          } else {
-            toast.error("An error occurred.");
-          }
-        } catch (error) {
-          console.error("Error initializing Flutterwave payment:", error);
-          toast.error("An error occurred.");
-        }
-      } else if (selectedPaymentOption === "monnify") {
+      //     if (flutterwaveResponse.status === 200) {
+      //       const flutterwaveData = flutterwaveResponse.data;
+      //       // Redirect the user to the flutterwave checkout page
+      //       window.location.href = flutterwaveData.redirect_url;
+      //     } else {
+      //       toast.error("An error occurred.");
+      //     }
+      //   } catch (error) {
+      //     console.error("Error initializing Flutterwave payment:", error);
+      //     toast.error("An error occurred.");
+      //   }
+
+      // }
+      else if (selectedPaymentOption === "monnify") {
         const paymentData = {
           id: userId,
           amount: data.amount,
@@ -184,56 +186,6 @@ const Deposit = () => {
                 )}
               </div>
 
-              {/* <div className="mb-3">
-                <div className="nav-item dropdown">
-                  <a
-                    className="dropdown-toggle form-select p-3 mb-2 text-dark"
-                    style={{textDecoration:'none'}}
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    type="button"
-                    data-toggle="dropdown"
-                  >
-                    Choose Payment Options
-                  </a>
-                  <ul className="dropdown-menu shadow card">
-                    <li data-value="1">
-                      <a className="dropdown-item">
-                        <div className="d-flex">
-                          <img src={images.rave} /> Flutterwave{" "}
-                          <div className="form-check text-left">
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              id="flexRadioDefault1"
-                              checked
-                            />
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-
-                    <li data-value="2">
-                      <a className="dropdown-item">
-                        <div className="d-flex">
-                          <img src={images.paystack} /> Paystack{" "}
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              id="flexRadioDefault1"
-                            />
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div> */}
               <div className="mb-3">
                 <div className="nav-item dropdown">
                   <select
@@ -244,7 +196,7 @@ const Deposit = () => {
                     <option value="">Choose Payment Options</option>
                     <option value="paystack">Paystack</option>
                     <option value="monnify">Bank Transfer (Monnify)</option>
-                    <option value="flutterwave">Flutterwave</option>
+                    {/* <option value="flutterwave">Flutterwave</option> */}
                   </select>
                 </div>
               </div>
