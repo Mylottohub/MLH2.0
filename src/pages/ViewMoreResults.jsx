@@ -297,7 +297,7 @@ const ViewMoreResults = () => {
                         }
                       })}
                     </div>
-                    <div className="col-md-4 col-xs-12 mb-3">
+                    <div className="col-lg-4 col-xs-12 mb-3">
                       <table cellPadding="10" width="100%">
                         <tbody>
                           <tr>
@@ -618,7 +618,7 @@ const ViewMoreResults = () => {
                                         </small>
                                       </p>
                                       <br />
-                                      <table cellPadding="3" align="center">
+                                      <table align="center">
                                         <tbody>
                                           <tr>
                                             {data?.winning_number
@@ -627,7 +627,7 @@ const ViewMoreResults = () => {
                                                 (digit, j) =>
                                                   digit && (
                                                     <td key={j}>
-                                                      <div className="numboxgreen">
+                                                      <div className="numboxgreen mb-2">
                                                         {digit}
                                                       </div>
                                                     </td>
@@ -686,7 +686,7 @@ const ViewMoreResults = () => {
                                         </small>
                                       </p>
                                       <br />
-                                      <table cellPadding="3" align="center">
+                                      <table align="center">
                                         <tbody>
                                           <tr>
                                             {data?.winning_number
@@ -695,7 +695,7 @@ const ViewMoreResults = () => {
                                                 (digit, j) =>
                                                   digit && (
                                                     <td key={j}>
-                                                      <div className="numboxgreen">
+                                                      <div className="numboxgreen mb-2">
                                                         {digit}
                                                       </div>
                                                     </td>
@@ -752,7 +752,7 @@ const ViewMoreResults = () => {
                                         </small>
                                       </p>
                                       <br />
-                                      <table cellPadding="3" align="center">
+                                      <table align="center">
                                         <tbody>
                                           <tr>
                                             {data?.winning_number
@@ -761,7 +761,7 @@ const ViewMoreResults = () => {
                                                 (digit, j) =>
                                                   digit && (
                                                     <td key={j}>
-                                                      <div className="numboxgreen">
+                                                      <div className="numboxgreen mb-2">
                                                         {digit}
                                                       </div>
                                                     </td>
@@ -821,7 +821,7 @@ const ViewMoreResults = () => {
                                         </small>
                                       </p>
                                       <br />
-                                      <table cellPadding="3" align="center">
+                                      <table align="center">
                                         <tbody>
                                           <tr>
                                             {data?.winning_number
@@ -830,7 +830,7 @@ const ViewMoreResults = () => {
                                                 (digit, j) =>
                                                   digit && (
                                                     <td key={j}>
-                                                      <div className="numboxgreen">
+                                                      <div className="numboxgreen mb-2">
                                                         {digit}
                                                       </div>
                                                     </td>
@@ -890,7 +890,7 @@ const ViewMoreResults = () => {
                                         </small>
                                       </p>
                                       <br />
-                                      <table cellPadding="3" align="center">
+                                      <table align="center">
                                         <tbody>
                                           <tr>
                                             {data?.winning_number
@@ -899,7 +899,7 @@ const ViewMoreResults = () => {
                                                 (digit, j) =>
                                                   digit && (
                                                     <td key={j}>
-                                                      <div className="numboxgreen">
+                                                      <div className="numboxgreen mb-2">
                                                         {digit}
                                                       </div>
                                                     </td>
@@ -964,7 +964,7 @@ const ViewMoreResults = () => {
                                         </small>
                                       </p>
                                       <br />
-                                      <table cellPadding="3" align="center">
+                                      <table cellPadding="" align="center">
                                         <tbody>
                                           <tr>
                                             {data?.winning_number
@@ -973,7 +973,7 @@ const ViewMoreResults = () => {
                                                 (digit, j) =>
                                                   digit && (
                                                     <td key={j}>
-                                                      <div className="numboxgreen">
+                                                      <div className="numboxgreen mb-2">
                                                         {digit}
                                                       </div>
                                                     </td>
@@ -1032,7 +1032,7 @@ const ViewMoreResults = () => {
                                         </small>
                                       </p>
                                       <br />
-                                      <table cellPadding="3" align="center">
+                                      <table align="center">
                                         <tbody>
                                           <tr>
                                             {data?.winning_number
@@ -1041,7 +1041,7 @@ const ViewMoreResults = () => {
                                                 (digit, j) =>
                                                   digit && (
                                                     <td key={j}>
-                                                      <div className="numboxgreen">
+                                                      <div className="numboxgreen mb-2">
                                                         {digit}
                                                       </div>
                                                     </td>

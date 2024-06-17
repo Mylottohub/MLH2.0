@@ -42,7 +42,7 @@ th {
     text-align: center;
     background: #406777;
     color: #FFF;
-    vertical-align: middle !important;
+    vertical-align: middlle !important;
     font-weight: 100;
 }
 
@@ -50,7 +50,7 @@ th {
     background: rgba(64, 103, 119, 0.05) !important;
     border-radius: 5px;
     color: #406777;
-    padding: 20px;
+    padding: 10px;
 }
 
 @media (max-width: 767px) {
@@ -75,6 +75,7 @@ th {
     }
 
     .countdown_box {
-        font-size: 17px;
+        font-size: 14px;
+        margin-left: -3px;
     }
 }

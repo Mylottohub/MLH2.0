@@ -13,6 +13,8 @@ const TransactionHistory = () => {
   const [deposit, setDeposit] = useState([]);
   const [withdraw, setWithdraw] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchDepositQuery, setSearchDepositQuery] = useState("");
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -26,9 +28,12 @@ const TransactionHistory = () => {
 
   const fetchData = () => {
     setIsLoading(true);
-    HTTP.get(`/user/transaction/${userInfo.data.id}?page=${currentPage}`, {
-      ...configHeaders,
-    })
+    HTTP.get(
+      `/user/transaction/${userInfo.data.id}?page=${currentPage}&search=${searchQuery}`,
+      {
+        ...configHeaders,
+      }
+    )
       .then((response) => {
         setTransaction(response.data.data);
       })
@@ -95,6 +100,29 @@ const TransactionHistory = () => {
         return label;
     }
   };
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredTransactions = transaction.data?.filter((record) =>
+    [record.ref, record.type, record.channel]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+
+  const filteredDepositTransactions = deposit.data?.filter((record) =>
+    [record.ref, record.type, record.channel]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+  const filteredWithdrawTransactions = withdraw.data?.filter((record) =>
+    [record.ref, record.type, record.channel]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
@@ -174,6 +202,15 @@ const TransactionHistory = () => {
               </div>
             ) : (
               <div className="table-responsive">
+                <div className="mb-2 mt-4 sports__code">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search by Ticket ID, Type or Channel"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                  />
+                </div>
                 <table className="table table-express app__transaction-web table-hover mt-4">
                   <tbody>
                     <tr>
@@ -190,7 +227,7 @@ const TransactionHistory = () => {
 
                   <tbody>
                     <>
-                      {transaction?.data
+                      {filteredTransactions
                         ?.sort(
                           (a, b) =>
                             new Date(b.created_at) - new Date(a.created_at)
@@ -242,7 +279,7 @@ const TransactionHistory = () => {
                     </div>
                   ) : (
                     <>
-                      {transaction?.data
+                      {filteredTransactions
                         ?.sort(
                           (a, b) =>
                             new Date(b.created_at) - new Date(a.created_at)
@@ -392,6 +429,15 @@ const TransactionHistory = () => {
               </div>
             ) : (
               <div className="table-responsive">
+                <div className="mb-2 mt-4 sports__code">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search by Ticket ID, Type or Channel"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                  />
+                </div>
                 <table className="table table-express app__transaction-web table-hover mt-4">
                   <tbody>
                     <tr>
@@ -408,7 +454,7 @@ const TransactionHistory = () => {
 
                   <tbody>
                     <>
-                      {deposit?.data
+                      {filteredDepositTransactions
                         ?.sort(
                           (a, b) =>
                             new Date(b.created_at) - new Date(a.created_at)
@@ -460,7 +506,7 @@ const TransactionHistory = () => {
                     </div>
                   ) : (
                     <>
-                      {deposit?.data
+                      {filteredDepositTransactions
                         ?.sort(
                           (a, b) =>
                             new Date(b.created_at) - new Date(a.created_at)
@@ -557,7 +603,7 @@ const TransactionHistory = () => {
 
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
-                    {transaction?.links?.map((link, index) => (
+                    {deposit?.links?.map((link, index) => (
                       <div key={index}>
                         <li
                           className={`page-item ${
@@ -610,6 +656,15 @@ const TransactionHistory = () => {
               </div>
             ) : (
               <div className="table-responsive">
+                <div className="mb-2 mt-4 sports__code">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search by Ticket ID, Type or Channel"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                  />
+                </div>
                 <table className="table table-express app__transaction-web table-hover mt-4">
                   <tbody>
                     <tr>
@@ -626,7 +681,7 @@ const TransactionHistory = () => {
 
                   <tbody>
                     <>
-                      {withdraw?.data
+                      {filteredWithdrawTransactions
                         ?.sort(
                           (a, b) =>
                             new Date(b.created_at) - new Date(a.created_at)
@@ -678,7 +733,7 @@ const TransactionHistory = () => {
                     </div>
                   ) : (
                     <>
-                      {withdraw?.data
+                      {filteredWithdrawTransactions
                         ?.sort(
                           (a, b) =>
                             new Date(b.created_at) - new Date(a.created_at)
@@ -777,7 +832,7 @@ const TransactionHistory = () => {
 
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
-                    {transaction?.links?.map((link, index) => (
+                    {withdraw?.links?.map((link, index) => (
                       <div key={index}>
                         <li
                           className={`page-item ${

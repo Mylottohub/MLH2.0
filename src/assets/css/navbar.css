@@ -161,6 +161,12 @@ a:focus {
     padding-right: 50px;
 }
 
+@media(min-width:751px) {
+    .sports__code {
+        width: 35% !important;
+    }
+}
+
 @media (max-width: 750px) {
     .nav-link {
         width: 90px;

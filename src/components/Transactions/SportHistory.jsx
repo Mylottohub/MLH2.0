@@ -1,16 +1,18 @@
-import Navbar from "../Navbar";
-import "../../assets/css/sport-table.css";
-import HTTP from "../../utils/httpClient";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
+import Navbar from "../Navbar";
 import Footer from "../Footer";
+import HTTP from "../../utils/httpClient";
+import "../../assets/css/sport-table.css";
+import { FaTimesCircle, FaCheckCircle, FaClock } from "react-icons/fa";
 
 const SportHistory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [transaction, setTransaction] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -45,10 +47,10 @@ const SportHistory = () => {
   useEffect(() => {
     fetchData();
   }, [userInfo.token, currentPage]);
+
   const fetchDataTransact = (page) => {
     setCurrentPage(page);
   };
-  // console.log(deposit);
 
   const renderPaginationLabel = (label) => {
     switch (label) {
@@ -61,11 +63,32 @@ const SportHistory = () => {
     }
   };
 
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 0:
+        return <FaTimesCircle title="Lost" style={{ color: "red" }} />;
+      case 1:
+        return <FaCheckCircle title="Won" style={{ color: "green" }} />;
+      default:
+        return <FaClock title="Pending" style={{ color: "grey" }} />;
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredTransactions = transaction.data?.filter((record) =>
+    [record.order_id, record.reference, record.code]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       <Navbar />
       <div className="container p-4 mt-5 app__transact-table mb-5">
-        {/* <h5 className="fw-bold">Transaction History</h5> */}
         <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
             <button
@@ -110,11 +133,21 @@ const SportHistory = () => {
               </div>
             ) : (
               <div className="table-responsive">
+                <div className="mb-2 mt-4 sports__code">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search by Reference ID, Ticket ID, or Code"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                  />
+                </div>
                 <table className="table table-express app__transaction-web table-hover mt-4">
                   <tbody>
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">REFERENCE ID</th>
+                      <th scope="col">TICKET ID</th>
                       <th scope="col">AMOUNT PLAYED</th>
                       <th scope="col">AMOUNT WON</th>
                       <th scope="col">CODE</th>
@@ -122,102 +155,58 @@ const SportHistory = () => {
                       <th scope="col">STATUS</th>
                     </tr>
                   </tbody>
-
-                  {/* <tbody>
-                    <>
-                      {transaction?.data
-                        ?.sort(
-                          (a, b) =>
-                            new Date(b.created_at) - new Date(a.created_at)
-                        )
-                        .map((record, index) => {
-                          const formattedDate = moment
-                            .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
-                            .local()
-                            .format("Do MMM YYYY | h:mm:ssA");
-                          let statusText;
-                          switch (record?.status) {
-                            case 0:
-                              statusText = "Lost";
-                              break;
-                            case 1:
-                              statusText = "Won";
-                              break;
-                            default:
-                              statusText = "Pending";
-                          }
-                          return (
-                            <tr key={index} className="table-light">
-                              <td>{index + 1}</td>
-                              <td>{record?.reference}</td>
-                              <td>₦{record?.amount}</td>
-                              <td>₦{record?.winmoney}</td>
-                              <td>{record?.code}</td>
-                              <td>{formattedDate}</td>
-                              <td>{statusText}</td>
-                            </tr>
-                          );
-                        })}
-                    </>
-                  </tbody> */}
                   <tbody>
-                    <>
-                      {transaction?.data
-                        ?.sort(
-                          (a, b) =>
-                            new Date(b.created_at) - new Date(a.created_at)
-                        )
-                        .map((record, index) => {
-                          const formattedDate = moment
-                            .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
-                            .local()
-                            .format("Do MMM YYYY | h:mm:ssA");
+                    {filteredTransactions
+                      ?.sort(
+                        (a, b) =>
+                          new Date(b.created_at) - new Date(a.created_at)
+                      )
+                      .map((record, index) => {
+                        const formattedDate = moment
+                          .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA");
+                        let winMoneyText, color;
 
-                          let statusText, winMoneyText, color;
+                        switch (record?.status) {
+                          case 0:
+                            winMoneyText = "₦0";
+                            color = "red";
+                            break;
+                          case 1:
+                            winMoneyText = `₦${record?.winmoney}`;
+                            color = "green";
+                            break;
+                          default:
+                            winMoneyText = "In Play";
+                            color = "grey";
+                        }
 
-                          switch (record?.status) {
-                            case 0:
-                              statusText = "Lost";
-                              winMoneyText = "₦0";
-                              // backgroundColor = "red";
-                              color = "red"; // Set text color to white for lost status
-                              break;
-                            case 1:
-                              statusText = "Won";
-                              winMoneyText = `₦${record?.winmoney}`;
-                              color = "green";
-                              break;
-                            default:
-                              statusText = "Pending";
-                              winMoneyText = "In Play";
-                              color = "grey";
-                          }
-
-                          return (
-                            <tr key={index} className="table-light sport-color">
-                              <td style={{ color: "#406777" }}>{index + 1}</td>
-                              <td style={{ color: "#406777" }}>
-                                {record?.reference}
-                              </td>
-                              <td style={{ color: "#406777" }}>
-                                ₦{record?.amount}
-                              </td>
-                              <td style={{ color, fontWeight: "bolder" }}>
-                                {winMoneyText}
-                              </td>
-                              <td style={{ color: "#406777" }}>
-                                {record?.code}
-                              </td>
-                              <td style={{ color: "#406777" }}>
-                                {formattedDate}
-                              </td>
-                              <td style={{ color, fontWeight: "bolder" }}>
-                                {statusText}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </>
+                        return (
+                          <tr key={index} className="table-light sport-color">
+                            <td style={{ color: "#406777" }}>{index + 1}</td>
+                            <td style={{ color: "#406777" }}>
+                              {record?.reference}
+                            </td>
+                            <td style={{ color: "#406777" }}>
+                              {record?.order_id}
+                            </td>
+                            <td style={{ color: "#406777" }}>
+                              ₦{record?.amount}
+                            </td>
+                            <td style={{ color, fontWeight: "bolder" }}>
+                              {winMoneyText}
+                            </td>
+                            <td style={{ color: "#406777" }}>{record?.code}</td>
+                            <td style={{ color: "#406777" }}>
+                              {formattedDate}
+                            </td>
+                            <td style={{ color, fontWeight: "bolder" }}>
+                              {getStatusIcon(record?.status)}
+                            </td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
 
@@ -245,7 +234,7 @@ const SportHistory = () => {
                     </div>
                   ) : (
                     <>
-                      {transaction?.data
+                      {filteredTransactions
                         ?.sort(
                           (a, b) =>
                             new Date(b.created_at) - new Date(a.created_at)
@@ -255,36 +244,22 @@ const SportHistory = () => {
                             .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
                             .local()
                             .format("Do MMM YYYY | h:mm:ssA");
-                          // let statusText;
-                          // switch (record?.status) {
-                          //   case 0:
-                          //     statusText = "Lost";
-                          //     break;
-                          //   case 1:
-                          //     statusText = "Won";
-                          //     break;
-                          //   default:
-                          //     statusText = "Pending";
-                          // }
-                          let statusText, winMoneyText, color;
+                          let winMoneyText, color;
 
                           switch (record?.status) {
                             case 0:
-                              statusText = "Lost";
                               winMoneyText = "₦0";
-                              // backgroundColor = "red";
-                              color = "red"; // Set text color to white for lost status
+                              color = "red";
                               break;
                             case 1:
-                              statusText = "Won";
                               winMoneyText = `₦${record?.winmoney}`;
-                              color = "green"; // Set text color to white for won status
+                              color = "green";
                               break;
                             default:
-                              statusText = "Pending";
                               winMoneyText = "In Play";
-                              color = "grey"; // Set text color to black for pending (default)
+                              color = "grey";
                           }
+
                           return (
                             <div
                               key={index}
@@ -298,8 +273,19 @@ const SportHistory = () => {
                                     justifyContent: "space-between",
                                   }}
                                 >
-                                  <span className="fw-bolder">Reference:</span>
+                                  <span className="fw-bolder">
+                                    Reference Id:
+                                  </span>
                                   <span>{record?.reference}</span>
+                                </p>
+                                <p
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <span className="fw-bolder">Ticket Id:</span>
+                                  <span>{record?.order_id}</span>
                                 </p>
                                 <p
                                   style={{
@@ -353,7 +339,7 @@ const SportHistory = () => {
                                 >
                                   <span className="fw-bolder">Status:</span>{" "}
                                   <span style={{ color, fontWeight: "bolder" }}>
-                                    {statusText}
+                                    {getStatusIcon(record?.status)}
                                   </span>
                                 </p>
                               </div>

@@ -88,7 +88,7 @@ const Betting = () => {
             onClick={() => {
               navigate(`/sport-transaction`);
             }}
-            className="mt-3 btn btn-light"
+            className="mt-3 btn btn-light fw-bold"
           >
             Sport Bet History
           </button>
@@ -190,9 +190,15 @@ const Betting = () => {
               <>
                 {betting?.today?.map((record, index) => {
                   const formattedDate = moment
-                    .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
+                    .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
                     .local()
                     .format("Do MMM YYYY | h:mm:ssA");
+
+                  const currentDate = moment();
+                  const recordDate = moment
+                    .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
+                    .local();
+                  const isPast = currentDate.isAfter(recordDate);
 
                   return (
                     <div
@@ -237,7 +243,6 @@ const Betting = () => {
                           <span className="fw-bolder">NO OF GAMES: </span>
                           <span>{record?.noGames}</span>
                         </p>
-
                         <p
                           style={{
                             display: "flex",
@@ -251,15 +256,19 @@ const Betting = () => {
                       <span className="mb-5" style={{ cursor: "pointer" }}>
                         <button
                           onClick={() => {
-                            navigate(`/play-bet/${record.code}`);
+                            navigate(
+                              isPast
+                                ? `/view-result/${record.code}`
+                                : `/play-bet/${record.code}`
+                            );
                           }}
                           style={{ background: "#406777" }}
                           type="submit"
                           className="btn w-100 mb-3 text-white"
                           disabled={isLoading}
                         >
-                          Play Now
-                        </button>{" "}
+                          {isPast ? "View Result" : "Play Now"}
+                        </button>
                       </span>
                     </div>
                   );

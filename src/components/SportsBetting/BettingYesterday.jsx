@@ -7,6 +7,14 @@ import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import { images } from "../../constant";
 import { useNavigate } from "react-router-dom";
+import {
+  FaQuestionCircle,
+  FaClock,
+  FaUndo,
+  FaTimesCircle,
+  FaCheckCircle,
+  FaReply,
+} from "react-icons/fa";
 import moment from "moment";
 const BettingYesterday = () => {
   const navigate = useNavigate();
@@ -40,6 +48,17 @@ const BettingYesterday = () => {
   useEffect(() => {
     fetchData();
   }, [userInfo.token]);
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 0:
+        return <FaTimesCircle title="Lose" style={{ color: "red" }} />;
+      case 1:
+        return <FaCheckCircle title="Won" style={{ color: "green" }} />;
+      default:
+        return <FaClock title="Pending" style={{ color: "#f1c40f" }} />;
+    }
+  };
 
   return (
     <React.Fragment>
@@ -127,17 +146,17 @@ const BettingYesterday = () => {
                 <tbody>
                   <>
                     {betting?.yesterday?.map((record, index) => {
-                      let statusText;
-                      switch (record?.status) {
-                        case 0:
-                          statusText = "Lost";
-                          break;
-                        case 1:
-                          statusText = "Won";
-                          break;
-                        default:
-                          statusText = "";
-                      }
+                      // let statusText;
+                      // switch (record?.status) {
+                      //   case 0:
+                      //     statusText = "Lost";
+                      //     break;
+                      //   case 1:
+                      //     statusText = "Won";
+                      //     break;
+                      //   default:
+                      //     statusText = "";
+                      // }
                       return (
                         <tr key={index} className="table-light">
                           <td style={{ color: "#406777" }}>{index + 1}</td>
@@ -156,7 +175,9 @@ const BettingYesterday = () => {
                           <td style={{ color: "#406777" }}>
                             {record?.noGames}
                           </td>
-                          <td style={{ color: "#406777" }}>{statusText}</td>
+                          <td style={{ color: "#406777" }}>
+                            {getStatusIcon(record?.status)}
+                          </td>
                           <td>
                             {" "}
                             <button
@@ -207,17 +228,17 @@ const BettingYesterday = () => {
                     .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
                     .local()
                     .format("Do MMM YYYY | h:mm:ssA");
-                  let statusText;
-                  switch (record?.status) {
-                    case 0:
-                      statusText = "Lost";
-                      break;
-                    case 1:
-                      statusText = "Won";
-                      break;
-                    default:
-                      statusText = "";
-                  }
+                  // let statusText;
+                  // switch (record?.status) {
+                  //   case 0:
+                  //     statusText = "Lost";
+                  //     break;
+                  //   case 1:
+                  //     statusText = "Won";
+                  //     break;
+                  //   default:
+                  //     statusText = "";
+                  // }
 
                   return (
                     <div
@@ -271,7 +292,7 @@ const BettingYesterday = () => {
                           }}
                         >
                           <span className="fw-bolder">STATUS: </span>
-                          <span>{statusText}</span>
+                          <span>{getStatusIcon(record?.status)}</span>
                         </p>
 
                         <p

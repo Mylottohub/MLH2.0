@@ -1168,7 +1168,7 @@ const PlayGames = () => {
                         <option value={bonusWalletValue}>
                           Operator Bonus Wallet
                         </option>
-                        <option value="ref_give">Referral Bonus Wallet</option>
+                        <option value="bwallet">Referral Bonus Wallet</option>
                       </select>
                       <br />
                       <br />

@@ -10,6 +10,15 @@ import { useSelector } from "react-redux";
 import { HTTP } from "../../utils";
 import moment from "moment";
 import { useGetProfileUser } from "../../react-query";
+import {
+  FaQuestionCircle,
+  FaClock,
+  FaUndo,
+  FaTimesCircle,
+  FaCheckCircle,
+  FaReply,
+} from "react-icons/fa";
+
 const PlayBet = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -37,7 +46,7 @@ const PlayBet = () => {
         });
 
         if (response.status === 200) {
-          setBetting(response.data.data.bookingInfo);
+          setBetting(response.data.data);
         } else {
           throw new Error("Network response was not ok");
         }
@@ -59,26 +68,28 @@ const PlayBet = () => {
   };
 
   const calculatePotentialWinnings = () => {
-    const totalOdds = calculateTotalOdds(
-      betting?.content?.flatMap((item) => item.selectionList)
-    );
+    const totalOdds = calculateTotalOdds(betting);
     return (inputAmount * totalOdds).toFixed(2);
   };
 
   const handleNumberButtonClick = (amount) => {
     setInputAmount(amount);
   };
-  const calculateTotalOdds = (selections) => {
-    if (!selections || selections.length === 0) {
+
+  const calculateTotalOdds = (bettingData) => {
+    if (!bettingData || bettingData.length === 0) {
       return 1;
     }
 
-    const totalOdds = selections.reduce((totalOdds, selection) => {
-      return totalOdds * parseFloat(selection.odds);
+    const totalOdds = bettingData.reduce((totalOdds, bet) => {
+      return totalOdds * parseFloat(bet.odds);
     }, 1);
 
     // Round to two decimal places
     return parseFloat(totalOdds.toFixed(2));
+  };
+  const formatMatchTime = (matchTime) => {
+    return moment(matchTime).format("DD/MM HH:mm");
   };
 
   const handlePlaceBet = async () => {
@@ -126,6 +137,25 @@ const PlayBet = () => {
       setIsLoadingPlayBet(false);
     }
   };
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 0:
+        return <FaQuestionCircle title="No Result" style={{ color: "gray" }} />;
+      case 1:
+        return <FaClock title="Pending" style={{ color: "#f1c40f" }} />;
+      case 2:
+        return <FaUndo title="Returned" style={{ color: "blue" }} />;
+      case 3:
+        return <FaTimesCircle title="Lose" style={{ color: "red" }} />;
+      case 4:
+        return <FaCheckCircle title="Won" style={{ color: "green" }} />;
+      case 5:
+        return <FaReply title="Win Return" style={{ color: "purple" }} />;
+      default:
+        return <FaQuestionCircle title="Unknown" style={{ color: "gray" }} />;
+    }
+  };
+
   return (
     <React.Fragment>
       <>
@@ -164,11 +194,7 @@ const PlayBet = () => {
                         <th scope="col">#</th>
                         <th scope="col">
                           BET CODE: {id} &nbsp;&nbsp; &nbsp;&nbsp;TOTAL ODDS:{" "}
-                          {calculateTotalOdds(
-                            betting?.content?.flatMap(
-                              (item) => item.selectionList
-                            )
-                          )}
+                          {calculateTotalOdds(betting)}
                         </th>
                         <th scope="col"></th>
                         <th scope="col"></th>
@@ -190,46 +216,22 @@ const PlayBet = () => {
                         <td scope="col" style={{ color: "#406777" }}>
                           SELECTION
                         </td>
-                        {moment().isAfter(
+                        {/* {moment().isAfter(
                           moment(betting?.content?.[0]?.matchTime),
                           "day"
                         ) ? (
                           <td scope="col"></td>
-                        ) : (
-                          <td style={{ color: "#406777" }} scope="col">
-                            STATUS
-                          </td>
-                        )}
+                        ) : ( */}
+                        <td style={{ color: "#406777" }} scope="col">
+                          STATUS
+                        </td>
+                        {/* )} */}
                       </tr>
                     </tbody>
 
                     <tbody>
                       <>
-                        {betting?.content?.flatMap((record, index) => {
-                          let statusText;
-                          switch (record?.selectionList[0]?.status) {
-                            case 0:
-                              statusText = "No Result";
-                              break;
-                            case 1:
-                              statusText = "Pending";
-                              break;
-                            case 2:
-                              statusText = "Returned";
-                              break;
-                            case 3:
-                              statusText = "Lose";
-                              break;
-                            case 4:
-                              statusText = "Won";
-                              break;
-                            case 5:
-                              statusText = "Win Return";
-                              break;
-                            default:
-                              statusText = "Unknown";
-                          }
-
+                        {betting?.map((record, index) => {
                           return (
                             <>
                               <tr key={index} className="table-light">
@@ -240,21 +242,13 @@ const PlayBet = () => {
                                   style={{ color: "#406777" }}
                                 >{`${record.homeName} vs ${record.awayName}`}</td>
                                 <td style={{ color: "#406777" }}>
-                                  {record?.selectionList[0]?.marketName}
+                                  {record?.marketName}
                                 </td>
                                 <td style={{ color: "#406777" }}>
-                                  {record?.selectionList[0]?.selectionKind}
+                                  {record?.selectionKind}
                                 </td>
-                                {moment().isAfter(
-                                  moment(record?.matchTime),
-                                  "day"
-                                ) ? (
-                                  <td></td>
-                                ) : (
-                                  <td style={{ color: "#406777" }}>
-                                    {statusText}
-                                  </td>
-                                )}
+
+                                <td> {getStatusIcon(record?.status)}</td>
                               </tr>
                             </>
                           );
@@ -263,11 +257,205 @@ const PlayBet = () => {
                     </tbody>
                   </table>
                 </div>
-                {moment().isAfter(
-                  moment(betting?.content?.[0]?.matchTime),
-                  "day"
-                ) ? null : (
-                  <div className="w-50 mx-auto mb-5">
+
+                {betting.some((bet) =>
+                  moment().isSame(moment(bet.matchTime), "day")
+                ) &&
+                  !betting.some((bet) =>
+                    moment().isAfter(moment(bet.matchTime))
+                  ) && (
+                    <div className="w-50 mx-auto mb-5">
+                      <input
+                        type="number"
+                        min={1}
+                        value={inputAmount}
+                        onChange={handleInputChange}
+                        className="form-control mt-5 mb-3"
+                        style={{
+                          background: "#fff",
+                          border: "1px solid #406777",
+                          borderRadius: "5px",
+                          margin: "auto",
+                        }}
+                      />
+                      <div>
+                        <div className="m-label fw-bold">
+                          Potential Win: ₦{calculatePotentialWinnings()}
+                        </div>
+                      </div>
+
+                      <div
+                        className="d-flex justify-content-center p-3"
+                        id="sport__bet-num"
+                      >
+                        {[100, 200, 500, 1000].map((amount, index) => (
+                          <React.Fragment key={index}>
+                            <Button
+                              className="btn mt-2 p-2 text-white"
+                              style={{ background: "#406777", width: "9%" }}
+                              onClick={() => handleNumberButtonClick(amount)}
+                            >
+                              {amount}
+                            </Button>
+                            {index < 3 && <>&nbsp;&nbsp;</>}
+                          </React.Fragment>
+                        ))}
+                      </div>
+
+                      <div className="d-flex justify-content-center align-items-center">
+                        <Button
+                          disabled={isLoadingPlayBet}
+                          className="btn mt-2 text-white fw-bold w-50"
+                          style={{ background: "#406777" }}
+                          onClick={handlePlaceBet}
+                        >
+                          {isLoadingPlayBet ? (
+                            <>
+                              <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                              />{" "}
+                              Loading...
+                            </>
+                          ) : (
+                            "Place Bet"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+              </>
+            )}
+          </div>
+
+          {isLoading ? (
+            <div className="spinner text-dark text-center mt-5 app__transaction-mobile">
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            </div>
+          ) : betting?.today?.length === 0 ? (
+            <tr>
+              <td
+                colSpan="8"
+                className="d-flex justify-content-center text-center p-5 app__transaction-mobile"
+              >
+                <div className="hidden-xs hidden-sm">
+                  <div className="alert alert-danger" role="alert">
+                    No Record Found
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ) : (
+            <div className="app__transaction-mobile">
+              BET CODE: {id} &nbsp;&nbsp; &nbsp;&nbsp;
+              <br />
+              <br />
+              <p className="fw-bolder">
+                {" "}
+                TOTAL ODDS: {calculateTotalOdds(betting)}
+              </p>
+              {betting?.map((record, index) => {
+                // let statusText;
+                // switch (record?.status) {
+                //   case 0:
+                //     statusText = "No Result";
+                //     break;
+                //   case 1:
+                //     statusText = "Pending";
+                //     break;
+                //   case 2:
+                //     statusText = "Returned";
+                //     break;
+                //   case 3:
+                //     statusText = "Lose";
+                //     break;
+                //   case 4:
+                //     statusText = "Won";
+                //     break;
+                //   case 5:
+                //     statusText = "Win Return";
+                //     break;
+                //   default:
+                //     statusText = "";
+                // }
+
+                return (
+                  <div key={index} className="app__transaction-mobile">
+                    <br /> <br />
+                    <div className="p-3" style={{ background: "#f5f7f8" }}>
+                      <p
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span className="fw-bolder">
+                          {`${record.homeName} vs ${record.awayName}`}
+                        </span>
+                      </p>
+                      <p
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span> {record?.marketName}</span>
+                      </p>
+                      <p
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span className="fw-bolder">
+                          {" "}
+                          {record?.selectionKind}
+                        </span>
+                      </p>
+                      <p
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span className="fw-bolder">
+                          {" "}
+                          {getStatusIcon(record?.status)}
+                        </span>
+                      </p>
+
+                      <p
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        {/* <span className="fw-bolder"> {record?.matchTime}</span> */}
+                        <span className="fw-bolder text-success">
+                          {" "}
+                          {formatMatchTime(record?.matchTime)}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+              {betting.some((bet) =>
+                moment().isSame(moment(bet.matchTime), "day")
+              ) &&
+                !betting.some((bet) =>
+                  moment().isAfter(moment(bet.matchTime))
+                ) && (
+                  <div className="w-50 mx-auto app__transaction-mobile">
                     <input
                       type="number"
                       min={1}
@@ -326,157 +514,9 @@ const PlayBet = () => {
                         "Place Bet"
                       )}
                     </Button>
+                    <br />
                   </div>
                 )}
-              </>
-            )}
-          </div>
-
-          {isLoading ? (
-            <div className="spinner text-dark text-center mt-5 app__transaction-mobile">
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            </div>
-          ) : betting?.today?.length === 0 ? (
-            <tr>
-              <td
-                colSpan="8"
-                className="d-flex justify-content-center text-center p-5 app__transaction-mobile"
-              >
-                <div className="hidden-xs hidden-sm">
-                  <div className="alert alert-danger" role="alert">
-                    No Record Found
-                  </div>
-                </div>
-              </td>
-            </tr>
-          ) : (
-            <div className="app__transaction-mobile">
-              BET CODE: {id} &nbsp;&nbsp; &nbsp;&nbsp;
-              <br />
-              <br />
-              <p className="fw-bolder">
-                {" "}
-                TOTAL ODDS:{" "}
-                {calculateTotalOdds(
-                  betting?.content?.flatMap((item) => item.selectionList)
-                )}
-              </p>
-              {betting?.content?.map((record, index) => {
-                // const formattedDate = moment
-                //   .utc(record?.matchTime, "YYYY-MM-DD HH:mm:ss")
-                //   .local()
-                //   .format("Do MMM YYYY | h:mm:ssA");
-
-                return (
-                  <div key={index} className="app__transaction-mobile">
-                    <br /> <br />
-                    <div className="p-3" style={{ background: "#f5f7f8" }}>
-                      <p
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span className="fw-bolder">
-                          {`${record.homeName} vs ${record.awayName}`}
-                        </span>
-                      </p>
-
-                      <p
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span> {record?.selectionList[0]?.marketName}</span>
-                      </p>
-                      <p
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span className="fw-bolder">
-                          {" "}
-                          {record?.selectionList[0]?.selectionKind}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-              {moment().isAfter(
-                moment(betting?.content?.[0]?.matchTime),
-                "day"
-              ) ? null : (
-                <div className="w-50 mx-auto app__transaction-mobile">
-                  <input
-                    type="number"
-                    min={1}
-                    value={inputAmount}
-                    onChange={handleInputChange}
-                    className="form-control mt-5 mb-3"
-                    style={{
-                      background: "#fff",
-                      border: "1px solid #406777",
-                      borderRadius: "5px",
-                      margin: "auto",
-                    }}
-                  />
-                  <div>
-                    <div className="m-label fw-bold">
-                      Potential Win: ₦{calculatePotentialWinnings()}
-                    </div>
-                  </div>
-
-                  <div
-                    className="d-flex justify-content-center p-3"
-                    id="sport__bet-num"
-                  >
-                    {[100, 200, 500, 1000].map((amount, index) => (
-                      <React.Fragment key={index}>
-                        <Button
-                          className="btn mt-2 p-2 text-white"
-                          style={{ background: "#406777", width: "9%" }}
-                          onClick={() => handleNumberButtonClick(amount)}
-                        >
-                          {amount}
-                        </Button>
-                        &nbsp;&nbsp; &nbsp;&nbsp;
-                      </React.Fragment>
-                    ))}
-                  </div>
-
-                  <Button
-                    onClick={handlePlaceBet}
-                    className="btn form-control mt-5 mb-5 text-white"
-                    style={{
-                      background: "#406777",
-                    }}
-                  >
-                    {isLoadingPlayBet ? (
-                      <>
-                        <Spinner
-                          as="span"
-                          animation="border"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                      </>
-                    ) : (
-                      "Place Bet"
-                    )}
-                  </Button>
-                  <br />
-                </div>
-              )}
             </div>
           )}
         </div>
