@@ -332,7 +332,7 @@ const OperatorMobile = () => {
                                 </>
                               ) : (
                                 <>
-                                  <p>No game available yet</p>
+                                  <p> Next Game Display at 12:00am</p>
                                   {/* <p>
                                     <a
                                       onClick={() => {
@@ -375,7 +375,9 @@ const OperatorMobile = () => {
                     <br />
                     <small>
                       {" "}
-                      {latestGame ? latestGame.name : "No game available yet"}
+                      {latestGame
+                        ? latestGame.name
+                        : "Next Game Display at 12:00am"}
                     </small>
                     <br />
                     <br />

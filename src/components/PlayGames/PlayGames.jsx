@@ -36,13 +36,35 @@ const PlayGames = () => {
       bonusWalletValue = "lm_bwallet";
       break;
     case "ghana_game":
-      bonusWalletValue = "gl_bwallet";
+      bonusWalletValue = "gh_bwallet";
       break;
     case "wesco":
       bonusWalletValue = "we_bwallet";
       break;
     default:
       bonusWalletValue = "";
+  }
+
+  let displayText;
+
+  switch (bonusWalletValue) {
+    case "gl_bwallet":
+      displayText = "Green Lotto Bonus Wallet";
+      break;
+    case "gh_bwallet":
+      displayText = "5/90 Bonus Wallet";
+      break;
+    case "sl_bwallet":
+      displayText = "Set Lotto Bonus Wallet";
+      break;
+    case "lm_bwallet":
+      displayText = "Lottomania Bonus Wallet";
+      break;
+    case "we_bwallet":
+      displayText = "Wesco Bonus Wallet";
+      break;
+    default:
+      displayText = "";
   }
 
   useEffect(() => {
@@ -1165,10 +1187,8 @@ const PlayGames = () => {
                       >
                         <option value="wallet">Main Wallet</option>
 
-                        <option value={bonusWalletValue}>
-                          Operator Bonus Wallet
-                        </option>
-                        <option value="bwallet">Referral Bonus Wallet</option>
+                        <option value={bonusWalletValue}>{displayText}</option>
+                        <option value="ref_give">Referral Bonus Wallet</option>
                       </select>
                       <br />
                       <br />

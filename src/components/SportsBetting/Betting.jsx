@@ -88,7 +88,8 @@ const Betting = () => {
             onClick={() => {
               navigate(`/sport-transaction`);
             }}
-            className="mt-3 btn btn-light fw-bold"
+            className="mt-3 btn fw-bold"
+            style={{ color: "#40678C" }}
           >
             Sport Bet History
           </button>
@@ -127,6 +128,11 @@ const Betting = () => {
                 <tbody>
                   <>
                     {betting?.today?.map((record, index) => {
+                      const currentDate = moment();
+                      const recordDate = moment
+                        .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
+                        .local();
+                      const isPast = currentDate.isAfter(recordDate);
                       return (
                         <tr key={index} className="table-light">
                           <td style={{ color: "#406777" }}>{index + 1}</td>
@@ -155,7 +161,7 @@ const Betting = () => {
                               className="btn w-100 text-white"
                               disabled={isLoading}
                             >
-                              Play Now
+                              {isPast ? "View Result" : "Play Now"}
                             </button>
                           </td>
                         </tr>
@@ -258,7 +264,7 @@ const Betting = () => {
                           onClick={() => {
                             navigate(
                               isPast
-                                ? `/view-result/${record.code}`
+                                ? `/play-bet/${record.code}`
                                 : `/play-bet/${record.code}`
                             );
                           }}

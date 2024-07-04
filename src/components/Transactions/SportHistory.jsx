@@ -7,7 +7,7 @@ import Footer from "../Footer";
 import HTTP from "../../utils/httpClient";
 import "../../assets/css/sport-table.css";
 import { FaTimesCircle, FaCheckCircle, FaClock } from "react-icons/fa";
-
+import { useNavigate } from "react-router-dom";
 const SportHistory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [transaction, setTransaction] = useState([]);
@@ -15,6 +15,7 @@ const SportHistory = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const configHeaders = {
     headers: {
@@ -197,7 +198,14 @@ const SportHistory = () => {
                             <td style={{ color, fontWeight: "bolder" }}>
                               {winMoneyText}
                             </td>
-                            <td style={{ color: "#406777" }}>{record?.code}</td>
+                            <td
+                              onClick={() => {
+                                navigate(`/betting-yesterday`);
+                              }}
+                              style={{ color: "#406777", cursor: "pointer" }}
+                            >
+                              {record?.code}
+                            </td>
                             <td style={{ color: "#406777" }}>
                               {formattedDate}
                             </td>
@@ -316,6 +324,10 @@ const SportHistory = () => {
                                   style={{
                                     display: "flex",
                                     justifyContent: "space-between",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    navigate(`/betting-yesterday`);
                                   }}
                                 >
                                   <span className="fw-bolder">Code:</span>{" "}

@@ -21,6 +21,27 @@ const Operator = () => {
     ghana_game: [],
   });
 
+  const [operatorLogos, setOperatorLogos] = useState({});
+
+  useEffect(() => {
+    // Fetch operator logos from the endpoint
+    const fetchOperatorLogos = async () => {
+      try {
+        const response = await HTTP.get("/display-operators");
+        const data = response.data.data;
+        const logos = {};
+        data.forEach((operator) => {
+          logos[operator.name.replace(" ", "_").toLowerCase()] = operator.logo;
+        });
+        setOperatorLogos(logos);
+      } catch (error) {
+        console.error("Error fetching operator logos:", error);
+      }
+    };
+
+    fetchOperatorLogos();
+  }, []);
+
   const operatorTypes = [
     "ghana_game",
     "wesco",
@@ -133,7 +154,8 @@ const Operator = () => {
               const operatorDataArray = operatorData[operatorType];
               // console.log(operatorDataArray);
               if (operatorDataArray && operatorDataArray.length > 0) {
-                const imageSrc = `/images/${operatorType}.png`;
+                const imageSrc =
+                  operatorLogos[operatorType] || `/images/${operatorType}.png`;
 
                 const propertyMapping = {
                   ghana_game: { name: "gn", time: "sdt" },
@@ -301,7 +323,7 @@ const Operator = () => {
                             </p>
                           </>
                         ) : (
-                          <p>No game available yet</p>
+                          <p> Next Game Display at 12:00am</p>
                         )}
                       </div>
                     </div>
@@ -327,7 +349,9 @@ const Operator = () => {
                 <p>
                   <strong>NEXT GAME:</strong>
                   <br />
-                  {latestGame ? latestGame.name : "No game available yet"}
+                  {latestGame
+                    ? latestGame.name
+                    : " Next Game Display at 12:00am"}
                   <br />
                   <br />
 

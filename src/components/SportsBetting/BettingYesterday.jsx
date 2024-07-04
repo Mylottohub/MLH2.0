@@ -7,14 +7,14 @@ import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import { images } from "../../constant";
 import { useNavigate } from "react-router-dom";
-import {
-  FaQuestionCircle,
-  FaClock,
-  FaUndo,
-  FaTimesCircle,
-  FaCheckCircle,
-  FaReply,
-} from "react-icons/fa";
+// import {
+//   FaQuestionCircle,
+//   FaClock,
+//   FaUndo,
+//   FaTimesCircle,
+//   FaCheckCircle,
+//   FaReply,
+// } from "react-icons/fa";
 import moment from "moment";
 const BettingYesterday = () => {
   const navigate = useNavigate();
@@ -49,16 +49,16 @@ const BettingYesterday = () => {
     fetchData();
   }, [userInfo.token]);
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 0:
-        return <FaTimesCircle title="Lose" style={{ color: "red" }} />;
-      case 1:
-        return <FaCheckCircle title="Won" style={{ color: "green" }} />;
-      default:
-        return <FaClock title="Pending" style={{ color: "#f1c40f" }} />;
-    }
-  };
+  // const getStatusIcon = (status) => {
+  //   switch (status) {
+  //     case 0:
+  //       return <FaTimesCircle title="Lose" style={{ color: "red" }} />;
+  //     case 1:
+  //       return <FaCheckCircle title="Won" style={{ color: "green" }} />;
+  //     default:
+  //       return <FaClock title="Pending" style={{ color: "#f1c40f" }} />;
+  //   }
+  // };
 
   return (
     <React.Fragment>
@@ -107,7 +107,8 @@ const BettingYesterday = () => {
             onClick={() => {
               navigate(`/sport-transaction`);
             }}
-            className="mt-3 btn btn-light"
+            className="mt-3 btn fw-bold"
+            style={{ color: "#40678C" }}
           >
             Sport Bet History
           </button>
@@ -138,7 +139,7 @@ const BettingYesterday = () => {
                     <th scope="col">BET CODE</th>
                     <th scope="col">STAKE</th>
                     <th scope="col">NO OF GAMES</th>
-                    <th scope="col">STATUS</th>
+                    {/* <th scope="col">STATUS</th> */}
                     <th scope="col">ACTION</th>
                   </tr>
                 </tbody>
@@ -175,9 +176,9 @@ const BettingYesterday = () => {
                           <td style={{ color: "#406777" }}>
                             {record?.noGames}
                           </td>
-                          <td style={{ color: "#406777" }}>
+                          {/* <td style={{ color: "#406777" }}>
                             {getStatusIcon(record?.status)}
-                          </td>
+                          </td> */}
                           <td>
                             {" "}
                             <button
@@ -285,7 +286,7 @@ const BettingYesterday = () => {
                           <span>{record?.noGames}</span>
                         </p>
 
-                        <p
+                        {/* <p
                           style={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -293,7 +294,7 @@ const BettingYesterday = () => {
                         >
                           <span className="fw-bolder">STATUS: </span>
                           <span>{getStatusIcon(record?.status)}</span>
-                        </p>
+                        </p> */}
 
                         <p
                           style={{

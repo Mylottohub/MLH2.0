@@ -122,12 +122,13 @@ const PlayBet = () => {
         },
       });
 
-      if (response.status === 200) {
+      if (response) {
         toast.success("Your selected game has been submitted successfully");
         navigate("/betting");
       } else {
-        const responseError = await response.data;
-        toast.error(responseError.msg);
+        toast.error(
+          "Your selected game cannot been successfully. Pls try again"
+        );
         navigate("/betting");
       }
     } catch (error) {
@@ -258,75 +259,78 @@ const PlayBet = () => {
                   </table>
                 </div>
 
-                {betting.some((bet) =>
-                  moment().isSame(moment(bet.matchTime), "day")
-                ) &&
-                  !betting.some((bet) =>
-                    moment().isAfter(moment(bet.matchTime))
-                  ) && (
-                    <div className="w-50 mx-auto mb-5">
-                      <input
-                        type="number"
-                        min={1}
-                        value={inputAmount}
-                        onChange={handleInputChange}
-                        className="form-control mt-5 mb-3"
-                        style={{
-                          background: "#fff",
-                          border: "1px solid #406777",
-                          borderRadius: "5px",
-                          margin: "auto",
-                        }}
-                      />
-                      <div>
-                        <div className="m-label fw-bold">
-                          Potential Win: ₦{calculatePotentialWinnings()}
-                        </div>
-                      </div>
-
-                      <div
-                        className="d-flex justify-content-center p-3"
-                        id="sport__bet-num"
-                      >
-                        {[100, 200, 500, 1000].map((amount, index) => (
-                          <React.Fragment key={index}>
-                            <Button
-                              className="btn mt-2 p-2 text-white"
-                              style={{ background: "#406777", width: "9%" }}
-                              onClick={() => handleNumberButtonClick(amount)}
-                            >
-                              {amount}
-                            </Button>
-                            {index < 3 && <>&nbsp;&nbsp;</>}
-                          </React.Fragment>
-                        ))}
-                      </div>
-
-                      <div className="d-flex justify-content-center align-items-center">
-                        <Button
-                          disabled={isLoadingPlayBet}
-                          className="btn mt-2 text-white fw-bold w-50"
-                          style={{ background: "#406777" }}
-                          onClick={handlePlaceBet}
-                        >
-                          {isLoadingPlayBet ? (
-                            <>
-                              <Spinner
-                                as="span"
-                                animation="border"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                              />{" "}
-                              Loading...
-                            </>
-                          ) : (
-                            "Place Bet"
-                          )}
-                        </Button>
+                {(betting.some((bet) =>
+                  moment(bet.matchTime).isSame(moment().add(1, "days"), "day")
+                ) ||
+                  (betting.some((bet) =>
+                    moment().isSame(moment(bet.matchTime), "day")
+                  ) &&
+                    !betting.some((bet) =>
+                      moment().isAfter(moment(bet.matchTime))
+                    ))) && (
+                  <div className="w-50 mx-auto mb-5">
+                    <input
+                      type="number"
+                      min={1}
+                      value={inputAmount}
+                      onChange={handleInputChange}
+                      className="form-control mt-5 mb-3"
+                      style={{
+                        background: "#fff",
+                        border: "1px solid #406777",
+                        borderRadius: "5px",
+                        margin: "auto",
+                      }}
+                    />
+                    <div>
+                      <div className="m-label fw-bold">
+                        Potential Win: ₦{calculatePotentialWinnings()}
                       </div>
                     </div>
-                  )}
+
+                    <div
+                      className="d-flex justify-content-center p-3"
+                      id="sport__bet-num"
+                    >
+                      {[100, 200, 500, 1000].map((amount, index) => (
+                        <React.Fragment key={index}>
+                          <Button
+                            className="btn mt-2 p-2 text-white"
+                            style={{ background: "#406777", width: "9%" }}
+                            onClick={() => handleNumberButtonClick(amount)}
+                          >
+                            {amount}
+                          </Button>
+                          {index < 3 && <>&nbsp;&nbsp;</>}
+                        </React.Fragment>
+                      ))}
+                    </div>
+
+                    <div className="d-flex justify-content-center align-items-center">
+                      <Button
+                        disabled={isLoadingPlayBet}
+                        className="btn mt-2 text-white fw-bold w-50"
+                        style={{ background: "#406777" }}
+                        onClick={handlePlaceBet}
+                      >
+                        {isLoadingPlayBet ? (
+                          <>
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                            />{" "}
+                            Loading...
+                          </>
+                        ) : (
+                          "Place Bet"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -449,56 +453,59 @@ const PlayBet = () => {
                   </div>
                 );
               })}
-              {betting.some((bet) =>
-                moment().isSame(moment(bet.matchTime), "day")
-              ) &&
-                !betting.some((bet) =>
-                  moment().isAfter(moment(bet.matchTime))
-                ) && (
-                  <div className="w-50 mx-auto app__transaction-mobile">
-                    <input
-                      type="number"
-                      min={1}
-                      value={inputAmount}
-                      onChange={handleInputChange}
-                      className="form-control mt-5 mb-3"
-                      style={{
-                        background: "#fff",
-                        border: "1px solid #406777",
-                        borderRadius: "5px",
-                        margin: "auto",
-                      }}
-                    />
-                    <div>
-                      <div className="m-label fw-bold">
-                        Potential Win: ₦{calculatePotentialWinnings()}
-                      </div>
+              {(betting.some((bet) =>
+                moment(bet.matchTime).isSame(moment().add(1, "days"), "day")
+              ) ||
+                (betting.some((bet) =>
+                  moment().isSame(moment(bet.matchTime), "day")
+                ) &&
+                  !betting.some((bet) =>
+                    moment().isAfter(moment(bet.matchTime))
+                  ))) && (
+                <div className="w-50 mx-auto mb-5">
+                  <input
+                    type="number"
+                    min={1}
+                    value={inputAmount}
+                    onChange={handleInputChange}
+                    className="form-control mt-5 mb-3"
+                    style={{
+                      background: "#fff",
+                      border: "1px solid #406777",
+                      borderRadius: "5px",
+                      margin: "auto",
+                    }}
+                  />
+                  <div>
+                    <div className="m-label fw-bold">
+                      Potential Win: ₦{calculatePotentialWinnings()}
                     </div>
+                  </div>
 
-                    <div
-                      className="d-flex justify-content-center p-3"
-                      id="sport__bet-num"
-                    >
-                      {[100, 200, 500, 1000].map((amount, index) => (
-                        <React.Fragment key={index}>
-                          <Button
-                            className="btn mt-2 p-2 text-white"
-                            style={{ background: "#406777", width: "9%" }}
-                            onClick={() => handleNumberButtonClick(amount)}
-                          >
-                            {amount}
-                          </Button>
-                          &nbsp;&nbsp; &nbsp;&nbsp;
-                        </React.Fragment>
-                      ))}
-                    </div>
+                  <div
+                    className="d-flex justify-content-center p-3"
+                    id="sport__bet-num"
+                  >
+                    {[100, 200, 500, 1000].map((amount, index) => (
+                      <React.Fragment key={index}>
+                        <Button
+                          className="btn mt-2 p-2 text-white"
+                          style={{ background: "#406777", width: "9%" }}
+                          onClick={() => handleNumberButtonClick(amount)}
+                        >
+                          {amount}
+                        </Button>
+                        {index < 3 && <>&nbsp;&nbsp;</>}
+                      </React.Fragment>
+                    ))}
+                  </div>
 
+                  <div className="d-flex justify-content-center align-items-center">
                     <Button
+                      disabled={isLoadingPlayBet}
+                      className="btn mt-2 text-white fw-bold w-50"
+                      style={{ background: "#406777" }}
                       onClick={handlePlaceBet}
-                      className="btn form-control mt-5 mb-5 text-white"
-                      style={{
-                        background: "#406777",
-                      }}
                     >
                       {isLoadingPlayBet ? (
                         <>
@@ -508,15 +515,16 @@ const PlayBet = () => {
                             size="sm"
                             role="status"
                             aria-hidden="true"
-                          />
+                          />{" "}
+                          Loading...
                         </>
                       ) : (
                         "Place Bet"
                       )}
                     </Button>
-                    <br />
                   </div>
-                )}
+                </div>
+              )}
             </div>
           )}
         </div>

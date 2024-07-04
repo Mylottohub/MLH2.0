@@ -88,7 +88,8 @@ const BettingTomorrow = () => {
             onClick={() => {
               navigate(`/sport-transaction`);
             }}
-            className="mt-3 btn btn-light"
+            className="mt-3 btn fw-bold"
+            style={{ color: "#40678C" }}
           >
             Sport Bet History
           </button>

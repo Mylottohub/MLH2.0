@@ -142,6 +142,10 @@ const Referral = () => {
               </div>
             ) : (
               <div className="table-responsive">
+                <p className="fw-bold">
+                  Total Number of Referrals: {transaction?.total}
+                </p>
+
                 <table className="table table-express table-hover mt-4">
                   <tbody>
                     <tr>

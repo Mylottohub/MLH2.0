@@ -138,7 +138,7 @@ const ListAllWallets = () => {
                       <strong className="lead text-success">
                         {" "}
                         ₦{userProfileResponse &&
-                          userProfileResponse?.bwallet}{" "}
+                          userProfileResponse?.ref_give}{" "}
                       </strong>
                     </div>
                   </div>
@@ -156,7 +156,7 @@ const ListAllWallets = () => {
                                 {" "}
                                 ₦
                                 {userProfileResponse &&
-                                  userProfileResponse?.sl_bwallet}{" "}
+                                  userProfileResponse?.gl_bwallet}{" "}
                               </strong>
                             </td>
                           </tr>
