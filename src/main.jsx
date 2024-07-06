@@ -8,7 +8,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import App from "./App.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import WhatsAppWidget from "./components/WhatsAppWidget.jsx";
+// import WhatsAppWidget from "./components/WhatsAppWidget.jsx";
 // import { logout } from "./pages/slices/authSlice.js";
 
 const queryClient = new QueryClient();
@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <React.StrictMode>
           <div>
             <App />
-            <WhatsAppWidget />
+            {/* <WhatsAppWidget /> */}
             <ToastContainer />
             <ReactQueryDevtools initialIsOpen={false} />
           </div>

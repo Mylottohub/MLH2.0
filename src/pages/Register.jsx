@@ -13,9 +13,23 @@ import { useEffect, useState } from "react";
 
 const schema = yup.object().shape({
   name: yup.string().required("This is a required field"),
-  email: yup.string().email().required(),
   username: yup.string().required("This is a required field"),
-  phone: yup.string().min(11).max(11).required(),
+  useEmail: yup.boolean().required(),
+  email: yup
+    .string()
+    .email()
+    .when("useEmail", {
+      is: true,
+      then: (schema) => schema.required("This is a required field"),
+    }),
+  phone: yup
+    .string()
+    .min(11)
+    .max(11)
+    .when("useEmail", {
+      is: false,
+      then: (schema) => schema.required("This is a required field"),
+    }),
 });
 
 const siteKey = import.meta.env.VITE_SITE_KEY;
@@ -23,6 +37,7 @@ const siteKey = import.meta.env.VITE_SITE_KEY;
 const Register = () => {
   const navigate = useNavigate();
   const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
+  const [useEmail, setUseEmail] = useState(false); // Default to phone number
 
   const [registers, { isLoading }] = useRegistersMutation();
 
@@ -30,12 +45,23 @@ const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    resetField,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      useEmail: false, // Default to phone number
+    },
   });
+
+  useEffect(() => {
+    setValue("useEmail", useEmail);
+  }, [useEmail, setValue]);
+
   const handleCaptchaVerification = () => {
     setIsCaptchaVerified(true);
   };
+
   const [referralNumber, setReferralNumber] = useState(null);
 
   useEffect(() => {
@@ -53,16 +79,29 @@ const Register = () => {
     }
   }, []);
 
+  const switchRegistrationMethod = () => {
+    if (useEmail) {
+      resetField("email");
+    } else {
+      resetField("phone");
+    }
+    setUseEmail(!useEmail);
+  };
+
   const submitForm = async (data) => {
     try {
-      sessionStorage.setItem("email", data.email);
+      if (useEmail) {
+        sessionStorage.setItem("email", data.email);
+      }
       if (referralNumber) {
         data.user = referralNumber;
       }
       const res = await registers(data).unwrap();
       if (res) {
         toast.success(
-          "Registration successful, check your email address for verification link."
+          `Registration successful, check your ${
+            useEmail ? "email address" : "phone number"
+          } for the verification link.`
         );
         localStorage.removeItem("referralNumber");
       }
@@ -73,7 +112,7 @@ const Register = () => {
         toast.error(errorDetails);
       } else {
         // Handle generic error
-        toast.error("An error occurred during registration.");
+        toast.error(err?.data?.messgae);
       }
     }
   };
@@ -84,7 +123,9 @@ const Register = () => {
       <div className="container mb-5">
         <div className="row">
           <div className="col-lg-6 mx-auto mb-5 app__register">
-            <h1 className="mb-4">Register</h1>
+            <h1 className="mb-4">
+              Register {useEmail ? "with Email Address" : "with Phone Number"}
+            </h1>
             <p className="mb-4 text-center">
               Play all your favorite Nigerian lotto games from one account on
               mylottohub and get your winnings paid instantly to your bank
@@ -113,7 +154,7 @@ const Register = () => {
                 <input
                   type="text"
                   className="form-control mb-2 p-3"
-                  placeholder=" Username"
+                  placeholder="Username"
                   name="username"
                   {...register("username", {
                     required: "Required",
@@ -126,42 +167,51 @@ const Register = () => {
                 )}
               </div>
 
-              <div className="mb-3">
-                <input
-                  type="email"
-                  className="form-control mb-2 p-3"
-                  placeholder=" Email Address"
-                  name="email"
-                  {...register("email", {
-                    required: "Required",
-                  })}
-                />
-                {errors.email && (
-                  <p className="text-danger text-capitalize">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-              <div className="mb-3">
-                <input
-                  type="number"
-                  min={1}
-                  className="form-control mb-2 p-3"
-                  placeholder="Phone Number"
-                  name="phone"
-                  {...register("phone", {
-                    required: "Required",
-                  })}
-                  onInput={(e) =>
-                    (e.target.value = e.target.value.slice(0, 11))
-                  }
-                />
-                {errors.phone && (
-                  <p className="text-danger text-capitalize">
-                    Phone number is field is required
-                  </p>
-                )}
-              </div>
+              {useEmail ? (
+                <div className="mb-3">
+                  <input
+                    type="email"
+                    className="form-control mb-2 p-3"
+                    placeholder="Email Address"
+                    name="email"
+                    {...register("email")}
+                  />
+                  {errors.email && (
+                    <p className="text-danger text-capitalize">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="mb-3">
+                  <input
+                    type="number"
+                    min={1}
+                    className="form-control mb-2 p-3"
+                    placeholder="Phone Number"
+                    name="phone"
+                    {...register("phone")}
+                    onInput={(e) =>
+                      (e.target.value = e.target.value.slice(0, 11))
+                    }
+                  />
+                  {errors.phone && (
+                    <p className="text-danger text-capitalize">
+                      {errors.phone.message}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              <Button
+                variant="primary"
+                onClick={switchRegistrationMethod}
+                className="mb-3"
+              >
+                {useEmail
+                  ? "Use Phone Number for Registration"
+                  : "Use Email for Registration"}
+              </Button>
 
               <div className="mb-3 form-check mt-4">
                 <input type="checkbox" className="form-check-input" required />
@@ -207,7 +257,7 @@ const Register = () => {
                     aria-hidden="true"
                   />
                 ) : (
-                  " Register"
+                  "Register"
                 )}
               </Button>
             </form>
