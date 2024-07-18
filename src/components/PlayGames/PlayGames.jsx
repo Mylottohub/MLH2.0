@@ -471,6 +471,8 @@ const PlayGames = () => {
         return game.drawname === gname;
       } else if (operatorType === "green_lotto") {
         return game.drawname === gname;
+      } else if (operatorType === "green_ghana_game") {
+        return game.drawname === gname;
       } else if (operatorType === "lottomania") {
         return game.gn === gname;
       } else if (operatorType === "ghana_game") {
@@ -525,6 +527,25 @@ const PlayGames = () => {
           closetime: selectedGame.closetime,
         };
       case "green_lotto":
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          max_win: parseFloat(max_win.replace("₦", "")),
+          ball: bets,
+          wallet: selectedWallet,
+          operator_type: operatorType,
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          sdt: selectedGame.drawtime,
+          drawID: selectedGame.drawid,
+          drawDate: selectedGame.drawdate,
+          drawTime: selectedGame.drawtime,
+          closetime: selectedGame.closetime,
+        };
+      case "green_ghana_game":
         return {
           userID: userInfo.data.id,
           line,
@@ -650,6 +671,8 @@ const PlayGames = () => {
                 <strong> Select Operator &gt;&gt; 5/90 Games</strong>
               ) : id === "green_lotto" ? (
                 <strong> Select Operator &gt;&gt; Green Lotto</strong>
+              ) : id === "green_ghana_game" ? (
+                <strong> Select Operator &gt;&gt; Green Ghana Games</strong>
               ) : (
                 <strong>Select Operator &gt;&gt; {id}</strong>
               )}
@@ -708,6 +731,16 @@ const PlayGames = () => {
                             </option>
                           );
                         } else if (id === "green_lotto") {
+                          return (
+                            <option
+                              className="text-uppercase"
+                              key={index}
+                              value={item.drawname}
+                            >
+                              {item.drawname}
+                            </option>
+                          );
+                        } else if (id === "green_ghana_game") {
                           return (
                             <option
                               className="text-uppercase"
@@ -874,6 +907,57 @@ const PlayGames = () => {
                               return null;
                             }
                           } else if (id === "green_lotto") {
+                            const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
+                            const drawDateTime = moment(
+                              drawDateTimeString,
+                              "YYYYMMDD HH:mm:ss"
+                            );
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
+
+                            if (timeDifference > 0) {
+                              return (
+                                <>
+                                  <tr key={index}>
+                                    <td>
+                                      <small>
+                                        <strong>{item.drawname}:</strong>
+                                      </small>
+                                    </td>
+                                    <td>
+                                      <small>
+                                        <span>
+                                          <small>
+                                            <Countdown
+                                              date={
+                                                currentTime.valueOf() +
+                                                timeDifference
+                                              }
+                                              renderer={({
+                                                days,
+                                                hours,
+                                                minutes,
+                                                seconds,
+                                              }) => (
+                                                <>
+                                                  {days}days {hours}hrs{" "}
+                                                  {minutes}
+                                                  mins {seconds}secs
+                                                </>
+                                              )}
+                                            />
+                                          </small>
+                                        </span>
+                                      </small>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            } else {
+                              return null;
+                            }
+                          } else if (id === "green_ghana_game") {
                             const drawDateTimeString = `${item.drawdate} ${item.drawtime}`;
                             const drawDateTime = moment(
                               drawDateTimeString,

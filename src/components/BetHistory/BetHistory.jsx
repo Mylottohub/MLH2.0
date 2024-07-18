@@ -109,6 +109,8 @@ const BetHistory = () => {
                 ? "Set Lotto"
                 : id === "green_lotto"
                 ? "Green Lotto"
+                : id === "green_ghana_game"
+                ? "Green Ghana Game"
                 : `${id}`}{" "}
               Bet History
             </strong>
@@ -209,6 +211,8 @@ const BetHistory = () => {
                             <td>
                               {id === "green_lotto" ? (
                                 <td>{record?.TikcetId}</td>
+                              ) : id === "green_ghana_game" ? (
+                                <td>{record?.TikcetId}</td>
                               ) : id === "lotto_nigeria" ? (
                                 <td>{record?.wagerID}</td>
                               ) : id === "wesco" ? (
@@ -221,6 +225,8 @@ const BetHistory = () => {
                             <td>
                               {" "}
                               {id === "green_lotto" ? (
+                                <td>{record?.drawname}</td>
+                              ) : id === "green_ghana_game" ? (
                                 <td>{record?.drawname}</td>
                               ) : id === "wesco" ? (
                                 <td>{record?.drawname}</td>
@@ -294,6 +300,8 @@ const BetHistory = () => {
                             <span>
                               {id === "green_lotto" ? (
                                 <td>{record?.TikcetId}</td>
+                              ) : id === "green_ghana_game" ? (
+                                <td>{record?.TikcetId}</td>
                               ) : id === "wesco" ? (
                                 <td>{record?.TikcetId}</td>
                               ) : (
@@ -320,6 +328,8 @@ const BetHistory = () => {
                             <span>
                               {" "}
                               {id === "green_lotto" ? (
+                                <td>{record?.drawname}</td>
+                              ) : id === "green_ghana_game" ? (
                                 <td>{record?.drawname}</td>
                               ) : id === "wesco" ? (
                                 <td>{record?.drawname}</td>
@@ -429,6 +439,13 @@ const BetHistory = () => {
                   {selectedBet?.mgametype}
                 </span>
               </>
+            ) : id === "green_ghana_game" ? (
+              <>
+                <div>Green Ghana Game</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             ) : (
               <>
                 <div>{id}</div>
@@ -447,6 +464,8 @@ const BetHistory = () => {
                 <span>
                   {" "}
                   {id === "green_lotto" ? (
+                    <span> {selectedBet?.TikcetId}</span>
+                  ) : id === "green_ghana_game" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : id === "wesco" ? (
                     <span> {selectedBet?.TikcetId}</span>
@@ -472,6 +491,14 @@ const BetHistory = () => {
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA")}
                     </span>
+                  ) : id === "green_ghana_game" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
                   ) : id === "wesco" ? (
                     <span>
                       {" "}
@@ -484,7 +511,7 @@ const BetHistory = () => {
                     <span>
                       {" "}
                       {moment
-                        .utc(selectedBet?.drawDate, "YYYY-MM-DD HH:mm:ss")
+                        .utc(selectedBet?.drawDate, "DD-MM-YYYY HH:mm:ss")
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA")}
                     </span>
@@ -520,6 +547,8 @@ const BetHistory = () => {
                   {" "}
                   {id === "green_lotto" ? (
                     <span>Green Lotto</span>
+                  ) : id === "green_ghana_game" ? (
+                    <span>Green Ghana Game</span>
                   ) : id === "lotto_nigeria" ? (
                     <span> Set Lotto</span>
                   ) : id === "lottomania" ? (
@@ -546,6 +575,8 @@ const BetHistory = () => {
                 <span className="fw-bolder">GAME NAME:</span>{" "}
                 <span>
                   {id === "green_lotto" ? (
+                    <td>{selectedBet?.drawname}</td>
+                  ) : id === "green_ghana_game" ? (
                     <td>{selectedBet?.drawname}</td>
                   ) : id === "wesco" ? (
                     <p> {selectedBet?.drawname}</p>

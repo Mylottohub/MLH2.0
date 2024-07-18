@@ -21,10 +21,12 @@ const OperatorMobile = () => {
     lotto_nigeria: [],
     lottomania: [],
     ghana_game: [],
+    green_ghana_game: [],
   });
 
   const operatorTypes = [
     "ghana_game",
+    "green_ghana_game",
     "wesco",
     "green_lotto",
     "lottomania",
@@ -136,6 +138,7 @@ const OperatorMobile = () => {
                   ghana_game: { name: "gn", time: "sdt" },
                   wesco: { name: "drawname", time: "drawtime" },
                   green_lotto: { name: "drawname", time: "drawtime" },
+                  green_ghana_game: { name: "drawname", time: "drawtime" },
                   lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
                 };
@@ -161,6 +164,9 @@ const OperatorMobile = () => {
                   } else if (operatorType === "ghana_game") {
                     drawTime = moment(game?.sdt);
                   } else if (operatorType === "green_lotto") {
+                    const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
+                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                  } else if (operatorType === "green_ghana_game") {
                     const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   }
@@ -208,6 +214,22 @@ const OperatorMobile = () => {
                       return null;
                     }
                   } else if (operatorType === "green_lotto") {
+                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
+                    const parsedTime = moment(
+                      drawDateTimeString,
+                      "YYYYMMDD HH:mm:ss"
+                    )
+                      .utcOffset("+00:00")
+                      .utc();
+
+                    // Check if parsedTime is valid
+                    if (parsedTime.isValid()) {
+                      return parsedTime.toDate();
+                    } else {
+                      console.error("Invalid date format:", drawDateTimeString);
+                      return null;
+                    }
+                  } else if (operatorType === "green_ghana_game") {
                     const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                     const parsedTime = moment(
                       drawDateTimeString,
@@ -332,17 +354,16 @@ const OperatorMobile = () => {
                                 </>
                               ) : (
                                 <>
-                                  <p> Next Game Display at 12:00am</p>
-                                  {/* <p>
-                                    <a
-                                      onClick={() => {
-                                        navigate(`/play-game/${operatorType}`);
-                                      }}
-                                      className="btn btn-blue btn-sm btn-block"
-                                    >
-                                      Play Now
-                                    </a>
-                                  </p> */}
+                                  <>
+                                    <div className="service-img">
+                                      <img
+                                        src={imageSrc}
+                                        alt=""
+                                        className="img-fluid mb-3"
+                                      />
+                                    </div>
+                                    <p>Next Game Display at 12:00am</p>
+                                  </>
                                 </>
                               )}
                             </td>

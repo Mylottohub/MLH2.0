@@ -3,7 +3,7 @@ import "../assets/css/WhatsAppWidget.css";
 
 const WhatsAppWidget = () => {
   const phoneNumber = "2347026091702"; // Corrected phone number format (without + and spaces)
-  const message = "Hello! How may I help you?"; // Message to send
+  const message = "Hi, My name is [Name], I’d love to know more about MyLottoHub."; // Message to send
 
   const handleClick = () => {
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
