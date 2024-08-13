@@ -124,7 +124,15 @@ const Operator = () => {
     ? moment(`${moment().format("YYYY-MM-DD")} ${latestGame.start_time}`)
     : null;
   const timeRemaining = gameStartTime ? gameStartTime.diff(currentTime) : null;
-
+  // Operator name to logo key mapping
+  const operatorNameMapping = {
+    ghana_game: "5/90_games",
+    green_ghana_game: "green_lotto ghana",
+    wesco: "wesco",
+    green_lotto: "green_lotto",
+    lottomania: "lottomania",
+    lotto_nigeria: "set_lotto",
+  };
   return (
     <>
       <div className="container">
@@ -153,8 +161,11 @@ const Operator = () => {
             operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];
               if (operatorDataArray && operatorDataArray.length > 0) {
+                // const imageSrc =
+                //   operatorLogos[operatorType] || `/images/${operatorType}.png`;
                 const imageSrc =
-                  operatorLogos[operatorType] || `/images/${operatorType}.png`;
+                  operatorLogos[operatorNameMapping[operatorType]] ||
+                  `/images/${operatorType}.png`;
 
                 const propertyMapping = {
                   ghana_game: { name: "gn", time: "sdt" },
@@ -343,13 +354,7 @@ const Operator = () => {
                         ) : (
                           // <p> Next Game Display at 12:00am</p>
                           <>
-                            <div className="service-img">
-                              <img
-                                src={imageSrc}
-                                alt=""
-                                className="img-fluid mb-3"
-                              />
-                            </div>
+                            <div className="service-img"></div>
                             <p>Next Game Display at 12:00am</p>
                           </>
                         )}

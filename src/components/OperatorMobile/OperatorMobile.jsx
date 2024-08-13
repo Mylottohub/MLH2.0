@@ -23,6 +23,26 @@ const OperatorMobile = () => {
     ghana_game: [],
     green_ghana_game: [],
   });
+  const [operatorLogos, setOperatorLogos] = useState({});
+
+  useEffect(() => {
+    // Fetch operator logos from the endpoint
+    const fetchOperatorLogos = async () => {
+      try {
+        const response = await HTTP.get("/display-operators");
+        const data = response.data.data;
+        const logos = {};
+        data.forEach((operator) => {
+          logos[operator.name.replace(" ", "_").toLowerCase()] = operator.logo;
+        });
+        setOperatorLogos(logos);
+      } catch (error) {
+        console.error("Error fetching operator logos:", error);
+      }
+    };
+
+    fetchOperatorLogos();
+  }, []);
 
   const operatorTypes = [
     "ghana_game",
@@ -105,6 +125,14 @@ const OperatorMobile = () => {
     ? moment(`${moment().format("YYYY-MM-DD")} ${latestGame.start_time}`)
     : null;
   const timeRemaining = gameStartTime ? gameStartTime.diff(currentTime) : null;
+  const operatorNameMapping = {
+    ghana_game: "5/90_games",
+    green_ghana_game: "green_lotto ghana",
+    wesco: "wesco",
+    green_lotto: "green_lotto",
+    lottomania: "lottomania",
+    lotto_nigeria: "set_lotto",
+  };
 
   return (
     <div>
@@ -132,7 +160,10 @@ const OperatorMobile = () => {
               const operatorDataArray = operatorData[operatorType];
 
               if (operatorDataArray && operatorDataArray.length > 0) {
-                const imageSrc = `/images/${operatorType}.png`;
+                // const imageSrc = `/images/${operatorType}.png`;
+                const imageSrc =
+                  operatorLogos[operatorNameMapping[operatorType]] ||
+                  `/images/${operatorType}.png`;
 
                 const propertyMapping = {
                   ghana_game: { name: "gn", time: "sdt" },
@@ -355,13 +386,7 @@ const OperatorMobile = () => {
                               ) : (
                                 <>
                                   <>
-                                    <div className="service-img">
-                                      <img
-                                        src={imageSrc}
-                                        alt=""
-                                        className="img-fluid mb-3"
-                                      />
-                                    </div>
+                                    <div className="service-img"></div>
                                     <p>Next Game Display at 12:00am</p>
                                   </>
                                 </>

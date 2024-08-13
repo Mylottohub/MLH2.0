@@ -10,11 +10,13 @@ import Footer from "../Footer";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { HTTP } from "../../utils";
+import WithdrawReferralModal from "../Payment/WithdrawReferralModal";
 
 const ListAllWallets = () => {
   const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenRefer, setIsOpenRefer] = useState(false);
   const [loading, setLoading] = useState(false);
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
@@ -23,12 +25,19 @@ const ListAllWallets = () => {
   const handleCloseDeposit = () => setIsOpenDeposit(false);
   const handleOpenDeposit = () => setIsOpenDeposit(true);
 
+  const handleCloseRefer = () => setIsOpenRefer(false);
+  const handleOpenRefer = () => setIsOpenRefer(true);
+
   const handleWithdraw = () => {
     handleOpen();
   };
 
   const handleDeposit = () => {
     handleOpenDeposit();
+  };
+
+  const handleReferral = () => {
+    handleOpenRefer();
   };
   const { userProfileResponse, isLoadingUserProfile } = useGetProfileUser([]);
 
@@ -140,6 +149,14 @@ const ListAllWallets = () => {
                         ₦{userProfileResponse &&
                           userProfileResponse?.ref_give}{" "}
                       </strong>
+                      <p>
+                        <a
+                          className="btn btn-blue btn-block w-100 mt-4"
+                          onClick={() => handleReferral()}
+                        >
+                          Cash Out
+                        </a>
+                      </p>
                     </div>
                   </div>
 
@@ -435,6 +452,15 @@ const ListAllWallets = () => {
         size="md"
       >
         <Deposit />
+      </BModal>
+      <BModal
+        backdrop="static"
+        keyboard={false}
+        show={isOpenRefer}
+        onHide={handleCloseRefer}
+        size="md"
+      >
+        <WithdrawReferralModal />
       </BModal>
     </React.Fragment>
   );

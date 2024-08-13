@@ -1272,7 +1272,7 @@ const PlayGames = () => {
                         <option value="wallet">Main Wallet</option>
 
                         <option value={bonusWalletValue}>{displayText}</option>
-                        <option value="ref_give">Referral Bonus Wallet</option>
+                        {/* <option value="ref_give">Referral Bonus Wallet</option> */}
                       </select>
                       <br />
                       <br />
