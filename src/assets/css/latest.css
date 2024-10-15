@@ -1,32 +1,30 @@
-.latest-game-container {
-    position: relative;
-}
-
-.meg_next_game_scroll {
-    position: fixed;
-    height: 30px;
-    width: 100%;
-    z-index: 2000;
-    color: #34282c;
-    padding-top: 5px;
-    bottom: 0;
-    font-size: 15px;
-    background-color: #ffd801;
-}
-
-.scrolling-marquee {
-    white-space: nowrap;
+.meg_latest_winners_scroll {
     overflow: hidden;
-    animation: scroll 70s linear infinite;
-    /* Adjust the duration (20s) as needed */
-}
+    white-space: nowrap;
+    position: relative;
+  }
 
-@keyframes scroll {
-    0% {
-        transform: translateX(100%);
+  .meg_next_game_scroll {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+  }
+  
+  
+  .scroll-content {
+    display: inline-block;
+    animation: scroll 280s linear infinite; /* Adjusted time for appropriate scrolling speed */
+  }
+  
+  @keyframes scroll {
+    from {
+      transform: translateX(0); /* Start immediately from the right edge of the viewport */
     }
+    to {
+      transform: translateX(-100%); /* Scroll the entire width out of view */
+    }
+  }
 
-    100% {
-        transform: translateX(-100%);
-    }
-}
+
+  
+  

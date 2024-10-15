@@ -9,6 +9,7 @@ import Countdown from "react-countdown";
 import { useSelector } from "react-redux";
 import { Button, Spinner } from "react-bootstrap";
 import { HTTP } from "../../utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PlayGames = () => {
   const [selectedBetType, setSelectedBetType] = useState("");
@@ -22,6 +23,7 @@ const PlayGames = () => {
   const [perOperator, setPerOperator] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   let bonusWalletValue = "";
 
   // Set bonusWalletValue based on id
@@ -636,11 +638,22 @@ const PlayGames = () => {
           Accept: "application/json",
         },
       });
-
       if (response.status === 200) {
-        sessionStorage.removeItem(localStorageKey);
         toast.success("Your selected game has been submitted successfully");
-        navigate(`/`);
+        navigate(`/play-game/${id}`);
+        sessionStorage.removeItem(localStorageKey);
+
+        setConfirmedBet(null);
+        clearSelectedNumbers();
+        clearRandomize();
+        setSelectedGameType("");
+        setSelectedBetType("");
+        const checkboxes = document.querySelectorAll(".chk-btn");
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+        document.getElementById("stakeAmount").value = "";
+        queryClient.invalidateQueries("GET_USER_PROFILE");
       } else {
         toast.error(response.msg);
       }
@@ -1266,7 +1279,7 @@ const PlayGames = () => {
                       <br />
                       <select
                         name="account"
-                        className="form-control"
+                        className="form-select"
                         id="account"
                       >
                         <option value="wallet">Main Wallet</option>

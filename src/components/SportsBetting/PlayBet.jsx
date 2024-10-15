@@ -21,7 +21,7 @@ import {
 
 const PlayBet = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { code, userId } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
   const [betting, setBetting] = useState([]);
@@ -36,7 +36,7 @@ const PlayBet = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const requestData = { code: id };
+      const requestData = { code: code };
       try {
         const response = await HTTP.post("/get-sports-details", requestData, {
           headers: {
@@ -107,7 +107,7 @@ const PlayBet = () => {
     const payload = {
       userID: userInfo.data.id,
       amount: parseFloat(inputAmount),
-      code: id,
+      code: code,
       operator_type: "easywin",
       wallet: "wallet",
     };
@@ -124,16 +124,16 @@ const PlayBet = () => {
 
       if (response) {
         toast.success("Your selected game has been submitted successfully");
-        navigate("/betting");
+        navigate(`/betting/${userId}`);
       } else {
         toast.error(
           "Your selected game cannot been successfully. Pls try again"
         );
-        navigate("/betting");
+        navigate(`/play-bet/${code}`);
       }
     } catch (error) {
       toast.error(error?.response?.data?.msg);
-      navigate("/betting");
+      navigate(`/play-bet/${code}`);
     } finally {
       setIsLoadingPlayBet(false);
     }
@@ -194,7 +194,7 @@ const PlayBet = () => {
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">
-                          BET CODE: {id} &nbsp;&nbsp; &nbsp;&nbsp;TOTAL ODDS:{" "}
+                          BET CODE: {code} &nbsp;&nbsp; &nbsp;&nbsp;TOTAL ODDS:{" "}
                           {calculateTotalOdds(betting)}
                         </th>
                         <th scope="col"></th>
@@ -309,7 +309,7 @@ const PlayBet = () => {
                     <div className="d-flex justify-content-center align-items-center">
                       <Button
                         disabled={isLoadingPlayBet}
-                        className="btn mt-2 text-white fw-bold w-50"
+                        className="btn mt-2 mb-5 text-white fw-bold w-50"
                         style={{ background: "#406777" }}
                         onClick={handlePlaceBet}
                       >
@@ -360,7 +360,7 @@ const PlayBet = () => {
             </tr>
           ) : (
             <div className="app__transaction-mobile">
-              BET CODE: {id} &nbsp;&nbsp; &nbsp;&nbsp;
+              BET CODE: {code} &nbsp;&nbsp; &nbsp;&nbsp;
               <br />
               <br />
               <p className="fw-bolder">

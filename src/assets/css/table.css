@@ -27,12 +27,32 @@ thead {
         display: none;
     }
 
+    .sport__mobile_select {
+        margin-bottom: 40px;
+    }
+
+    .sport__mobile {
+        margin-bottom: 70px;
+    }
+
 }
 
 
 @media (max-width: 767px) {
     .app__transaction-web {
         display: none !important;
+    }
+
+    .sport__mobile {
+        padding: 20px;
+        width: 80%;
+        margin: auto;
+        margin-top: 30px;
+    }
+
+    .sport__mobile_select{
+        margin-top: 40px!important;
+        margin-left: 13px;
     }
 
     .app__transaction-mobile span {

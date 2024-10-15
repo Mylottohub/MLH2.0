@@ -60,8 +60,8 @@ const Chart = () => {
   ];
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: currentYear - 1980 + 1 },
-    (_, index) => 1980 + index
+    { length: currentYear - 1999 + 1 },
+    (_, index) => 1999 + index
   );
 
   const handleMonthChange = (event) => {
@@ -72,30 +72,8 @@ const Chart = () => {
     setSelectedYear(event.target.value);
   };
 
-  // const handleAddToSelection = (event) => {
-  //   event.preventDefault(); // Prevent form submission and page reload
-
-  //   if (!selectedOperator || !selectedGame || !selectedMonth || !selectedYear) {
-  //     toast.error("Please select all options before adding to selection");
-  //     return;
-  //   }
-
-  //   const newSelection = {
-  //     operator: selectedOperator,
-  //     game: selectedGame,
-  //     month: selectedMonth,
-  //     year: selectedYear,
-  //   };
-
-  //   setSelections([...selections, newSelection]);
-  //   setSelectedOperator("");
-  //   setSelectedGame("");
-  //   setSelectedMonth("");
-  //   setSelectedYear("");
-  // };
-
   const handleAddToSelection = (event) => {
-    event.preventDefault(); // Prevent form submission and page reload
+    event.preventDefault();
 
     if (!selectedOperator || !selectedGame || !selectedMonth || !selectedYear) {
       toast.error("Please select all options before adding to selection");
@@ -157,52 +135,148 @@ const Chart = () => {
     },
   };
 
-  const fetchData = () => {
-    setIsLoading(true);
-    HTTP.get(`/mylotto_get_results`, { ...configHeaders })
-      .then((response) => {
-        setResults(response.data.data);
-      })
-      .catch((error) => {
-        // console.log(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+  const fetchData = async (operator, endDate, startDate) => {
+    const requestBody = {
+      start_date: startDate,
+      end_date: endDate,
+    };
+
+    try {
+      setIsLoading(true);
+
+      const response = await HTTP.get(
+        `/mylotto_get_results_games/${operator}`,
+        { params: requestBody },
+        configHeaders
+      );
+
+      const lottoResults = response.data.data;
+      setResults(lottoResults);
+
+      return lottoResults;
+    } catch (error) {
+      toast.error("Failed to fetch lotto results.");
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, [userInfo.token]);
+  }, []);
 
-  const handleCreateCharts = () => {
+  const handleCreateCharts = async () => {
     const results = [];
-    selections.forEach((selection) => {
-      // Iterate over each selection
-      result.forEach((operator) => {
-        operator.results.forEach((result) => {
-          const monthIndex = months.indexOf(selection.month); // Use the month from the current selection
-          const numericMonth = monthIndex !== -1 ? monthIndex + 1 : null;
-          if (
-            result.operator === operatorNames[selection.operator] &&
-            result.game.toString() === selection.game &&
-            result.month === numericMonth &&
-            result.year.toString() === selection.year
-          ) {
-            results.push(result);
-          }
+
+    for (const selection of selections) {
+      const startDate = `${selection.year}-01-01`;
+      const endDate = `${selection.year}-${(
+        "0" +
+        (months.indexOf(selection.month) + 1)
+      ).slice(-2)}-01`;
+
+      const data = await fetchData(selection.operator, endDate, startDate);
+
+      if (data) {
+        data?.data?.forEach((result) => {
+          results.push(result);
         });
-      });
-    });
+      } else {
+        // console.log("Data is not an array:", data);
+      }
+    }
 
     if (results.length === 0) {
       toast.error("No charts found for the selected criteria");
       return;
     }
-
+    console.log(selectedGame);
     setFilteredResults(results);
     setShowCreateCharts(true);
-    console.log(results);
+  };
+  const renderResultsTable = () => {
+    if (!filteredResults || filteredResults.length === 0) {
+      return null;
+    }
+
+    return (
+      <div>
+        <p className="lead mt-50">
+          My selection for <strong>{operatorName} </strong> |{" "}
+          <strong> {selections.length > 0 ? selections[0].game : ""}</strong>
+        </p>
+        <div className="table-responsive">
+          <table width="100%" className="table table-express mt-3">
+            <tbody>
+              <tr>
+                <th>Game</th>
+                <th>Winning Number</th>
+                <th>Machine Number</th>
+                <th>Date</th>
+                <th>Year</th>
+              </tr>
+            </tbody>
+            <tbody>
+              {filteredResults.map((result, index) => {
+                // const operatorName =
+                //   operatorNames[result.operator] || result.operator;
+                // const operatorGame = selectedGame || result.game;
+
+                return (
+                  <tr key={index}>
+                    {/* <td bgColor="#f9fafa">{operatorName}</td> */}
+                    <td bgColor="#f9fafa" className="fw-bolder">
+                      {selections.length > 0 ? selections[0].game : ""}
+                    </td>
+                    <td bgColor="#f9fafa">
+                      <ul className="wnums">
+                        <table>
+                          <td>
+                            {result?.winning_number?.split("-").map(
+                              (digit, j) =>
+                                digit && (
+                                  <td key={j}>
+                                    <div className="numboxgreen">{digit}</div>
+                                  </td>
+                                )
+                            )}
+                          </td>
+                        </table>
+                      </ul>
+                    </td>
+                    <td bgColor="#f9fafa">
+                      <ul className="mnums">
+                        <table>
+                          <td>
+                            {result?.machine_number?.split("-").map(
+                              (digit, j) =>
+                                digit && (
+                                  <td key={j}>
+                                    <div className="numboxred">{digit}</div>
+                                  </td>
+                                )
+                            )}
+                          </td>
+                        </table>
+                      </ul>
+                    </td>
+                    <td bgColor="#f9fafa">
+                      {" "}
+                      {moment
+                        .utc(result?.date, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("MMM DD, YYYY h:mm:ss a")}
+                    </td>
+                    <td bgColor="#f9fafa">{result?.year}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -364,7 +438,7 @@ const Chart = () => {
                   </td>
                 </tr>
               </table>
-              {filteredResults.map((result, index) => (
+              {/* {filteredResults.map((result, index) => (
                 <div key={index} className="table-responsive">
                   <table
                     width="100%"
@@ -422,7 +496,8 @@ const Chart = () => {
                     </tr>
                   </table>
                 </div>
-              ))}
+              ))} */}
+              {renderResultsTable()}
             </div>
           </div>
         )}

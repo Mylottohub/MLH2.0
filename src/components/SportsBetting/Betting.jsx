@@ -6,39 +6,62 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import { images } from "../../constant";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 const Betting = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [betting, setBetting] = useState([]);
-  //   const [currentPage, setCurrentPage] = useState(1);
+  // const [betting, setBetting] = useState([]);
+  const { id } = useParams();
+
+  const [forecasterData, setForecasterData] = useState({});
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const fetchData = async () => {
+  const fetchForecast = async () => {
     setIsLoading(true);
-    const requestData = { operator_type: "easywin" };
-
     try {
-      const response = await HTTP.post("/get-sports", requestData, {
+      const response = await HTTP.get(`/user/proforcasters/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
         },
       });
 
-      setBetting(response.data);
+      setForecasterData(response.data.data);
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+  // console.log(forecasterData.length);
+
+  // const fetchData = async () => {
+  //   setIsLoading(true);
+  //   const requestData = { operator_type: "easywin" };
+
+  //   try {
+  //     const response = await HTTP.post("/get-sports", requestData, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //       },
+  //     });
+
+  //     setBetting(response.data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
+    fetchForecast();
   }, [userInfo.token]);
 
   return (
@@ -60,7 +83,7 @@ const Betting = () => {
                   <li
                     className="nav-item"
                     onClick={() => {
-                      navigate(`/BettingTomorrow`);
+                      navigate(`/BettingTomorrow/${id}`);
                     }}
                   >
                     <a className="nav-link">Tomorrow</a>
@@ -74,11 +97,19 @@ const Betting = () => {
 
                   <li
                     onClick={() => {
-                      navigate(`/betting-yesterday`);
+                      navigate(`/betting-yesterday/${id}`);
                     }}
                     className="nav-item"
                   >
                     <a className="nav-link">Yesterday</a>
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate(`/all-bettings/${id}`);
+                    }}
+                    className="nav-item"
+                  >
+                    <a className="nav-link">All</a>
                   </li>
                 </ul>
               </div>
@@ -105,7 +136,11 @@ const Betting = () => {
                   aria-hidden="true"
                 />
               </div>
-            ) : betting?.today?.length === 0 ? (
+            ) : !forecasterData ||
+              Object.keys(forecasterData).length === 0 ||
+              !("easywinToday" in forecasterData) ||
+              forecasterData?.length === 0 ||
+              forecasterData?.easywinToday.length === 0 ? (
               <div className="d-flex justify-content-center text-center p-5">
                 <div className="hidden-xs hidden-sm mx-auto">
                   <div className="alert alert-danger text-center" role="alert">
@@ -114,6 +149,14 @@ const Betting = () => {
                 </div>
               </div>
             ) : (
+              // isDataEmpty ? (
+              //   <div className="d-flex justify-content-center text-center p-5">
+              //     <div className="hidden-xs hidden-sm mx-auto">
+              //       <div className="alert alert-danger text-center" role="alert">
+              //         No Record Found
+              //       </div>
+              //     </div>
+              //   </div>
               <table className="table table-express table-hover  mt-4">
                 <tbody>
                   <tr>
@@ -127,7 +170,7 @@ const Betting = () => {
 
                 <tbody>
                   <>
-                    {betting?.today?.map((record, index) => {
+                    {forecasterData?.easywinToday?.map((record, index) => {
                       const currentDate = moment();
                       const recordDate = moment
                         .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
@@ -154,7 +197,7 @@ const Betting = () => {
                             {" "}
                             <button
                               onClick={() => {
-                                navigate(`/play-bet/${record.code}`);
+                                navigate(`/play-bet/${record.code}/${id}`);
                               }}
                               style={{ background: "#406777" }}
                               type="submit"
@@ -184,7 +227,7 @@ const Betting = () => {
                   aria-hidden="true"
                 />
               </div>
-            ) : betting?.today?.length === 0 ? (
+            ) : forecasterData?.easywinToday?.length === 0 ? (
               <div className="d-flex justify-content-center text-center p-5">
                 <div className="hidden-xs hidden-sm mx-auto">
                   <div className="alert alert-danger text-center" role="alert">
@@ -194,7 +237,7 @@ const Betting = () => {
               </div>
             ) : (
               <>
-                {betting?.today?.map((record, index) => {
+                {forecasterData?.easywinToday?.map((record, index) => {
                   const formattedDate = moment
                     .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
                     .local()
@@ -264,8 +307,8 @@ const Betting = () => {
                           onClick={() => {
                             navigate(
                               isPast
-                                ? `/play-bet/${record.code}`
-                                : `/play-bet/${record.code}`
+                                ? `/play-bet/${record.code}/${id}`
+                                : `/play-bet/${record.code}/${id}`
                             );
                           }}
                           style={{ background: "#406777" }}

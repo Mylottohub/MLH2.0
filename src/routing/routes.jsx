@@ -28,6 +28,7 @@ import BettingTomorrow from "../components/SportsBetting/bettingTomorrow";
 import SportHistory from "../components/Transactions/SportHistory";
 import BettingYesterday from "../components/SportsBetting/BettingYesterday";
 import SportForecaster from "../components/SportsBetting/SportForecaster";
+import BettingAll from "../components/SportsBetting/BettingAll";
 
 export const routes = [
   {
@@ -158,10 +159,16 @@ export const routes = [
   },
   {
     id: 21,
-    path: "/betting",
+    path: "/betting/:id",
     element: <Betting />,
     protected: true,
   },
+  // {
+  //   id: 210,
+  //   path: "/betting",
+  //   element: <Betting />,
+  //   protected: true,
+  // },
   {
     id: 22,
     path: "/wallet",
@@ -170,7 +177,7 @@ export const routes = [
   },
   {
     id: 23,
-    path: "/play-bet/:id",
+    path: "/play-bet/:code/:userId",
     element: <PlayBet />,
     protected: true,
   },
@@ -194,10 +201,11 @@ export const routes = [
   },
   {
     id: 27,
-    path: "/bettingTomorrow",
+    path: "/bettingTomorrow/:id",
     element: <BettingTomorrow />,
     protected: true,
   },
+
   {
     id: 28,
     path: "/sport-transaction",
@@ -206,7 +214,7 @@ export const routes = [
   },
   {
     id: 29,
-    path: "/betting-yesterday",
+    path: "/betting-yesterday/:id",
     element: <BettingYesterday />,
     protected: true,
   },
@@ -214,6 +222,12 @@ export const routes = [
     id: 30,
     path: "/sport-forecast",
     element: <SportForecaster />,
+    protected: false,
+  },
+  {
+    id: 31,
+    path: "/all-bettings/:id",
+    element: <BettingAll />,
     protected: true,
   },
 ];

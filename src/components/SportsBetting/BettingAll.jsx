@@ -8,12 +8,10 @@ import { Spinner } from "react-bootstrap";
 import { images } from "../../constant";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-const BettingYesterday = () => {
+const BettingAll = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
-  // const [betting, setBetting] = useState([]);
-  //   const [currentPage, setCurrentPage] = useState(1);
 
   const { userInfo } = useSelector((state) => state.auth);
   const { id } = useParams();
@@ -98,7 +96,7 @@ const BettingYesterday = () => {
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link active_sport" aria-current="page">
+                    <a className="nav-link" aria-current="page">
                       Yesterday
                     </a>
                   </li>
@@ -108,7 +106,7 @@ const BettingYesterday = () => {
                     }}
                     className="nav-item"
                   >
-                    <a className="nav-link">All</a>
+                    <a className="nav-link active_sport">All</a>
                   </li>
                 </ul>
               </div>
@@ -136,8 +134,8 @@ const BettingYesterday = () => {
               </div>
             ) : !forecasterData ||
               Object.keys(forecasterData).length === 0 ||
-              !("easywinYesterday" in forecasterData) ||
-              forecasterData.easywinYesterday.length === 0 ? (
+              !("easywinAll" in forecasterData) ||
+              forecasterData.easywinAll.length === 0 ? (
               <div className="d-flex justify-content-center text-center p-5">
                 <div className="hidden-xs hidden-sm mx-auto">
                   <div className="alert alert-danger text-center" role="alert">
@@ -146,7 +144,7 @@ const BettingYesterday = () => {
                 </div>
               </div>
             ) : (
-              // forecasterData?.easywinYesterday?.length == 0 ? (
+              // forecasterData?.easywinAll?.length == 0 ? (
               //   <div className="d-flex justify-content-center text-center p-5">
               //     <div className="hidden-xs hidden-sm mx-auto">
               //       <div className="alert alert-danger text-center" role="alert">
@@ -168,7 +166,7 @@ const BettingYesterday = () => {
 
                 <tbody>
                   <>
-                    {forecasterData?.easywinYesterday?.map((record, index) => {
+                    {forecasterData?.easywinAll?.map((record, index) => {
                       // let statusText;
                       // switch (record?.status) {
                       //   case 0:
@@ -236,7 +234,7 @@ const BettingYesterday = () => {
                   aria-hidden="true"
                 />
               </div>
-            ) : forecasterData?.easywinYesterday?.length === 0 ? (
+            ) : forecasterData?.easywinAll?.length === 0 ? (
               <div className="d-flex justify-content-center text-center p-5">
                 <div className="hidden-xs hidden-sm mx-auto">
                   <div className="alert alert-danger text-center" role="alert">
@@ -246,7 +244,7 @@ const BettingYesterday = () => {
               </div>
             ) : (
               <>
-                {forecasterData?.easywinYesterday?.map((record, index) => {
+                {forecasterData?.easywinAll?.map((record, index) => {
                   const formattedDate = moment
                     .utc(record?.created_at, "YYYY-MM-DD HH:mm:ss")
                     .local()
@@ -332,4 +330,4 @@ const BettingYesterday = () => {
   );
 };
 
-export default BettingYesterday;
+export default BettingAll;

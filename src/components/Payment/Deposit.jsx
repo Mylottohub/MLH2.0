@@ -21,8 +21,10 @@ const Deposit = () => {
     const selectedOption = e.target.value;
     setSelectedPaymentOption(selectedOption);
     setShowAmountInput(
-      // selectedOption === "flutterwave" ||
-      selectedOption === "paystack" || selectedOption === "monnify"
+      selectedOption === "flutterwave" ||
+        selectedOption === "paystack" ||
+        selectedOption === "opay" ||
+        selectedOption === "monnify"
     );
   };
 
@@ -74,45 +76,68 @@ const Deposit = () => {
             toast.error("An error occurred.");
           }
         } catch (error) {
-          console.error("Error initializing Paystack payment:", error);
           toast.error("An error occurred.");
         }
-      }
-      // else if (selectedPaymentOption === "flutterwave") {
-      //   // Prepare the flutterwave payment data
-      //   const paymentData = {
-      //     id: userId,
-      //     amount: data.amount,
-      //     posting: "flutterwave",
-      //   };
+      } else if (selectedPaymentOption === "flutterwave") {
+        // Prepare the flutterwave payment data
+        const paymentData = {
+          id: userId,
+          amount: data.amount,
+          posting: "flutterwave",
+        };
 
-      //   try {
-      //     const flutterwaveResponse = await HTTP.post(
-      //       "/payment-initialize",
-      //       paymentData,
-      //       {
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //           Accept: "application/json",
-      //           Authorization: `Bearer ${userInfo.token}`,
-      //         },
-      //       }
-      //     );
+        try {
+          const flutterwaveResponse = await HTTP.post(
+            "/payment-initialize",
+            paymentData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+              },
+            }
+          );
 
-      //     if (flutterwaveResponse.status === 200) {
-      //       const flutterwaveData = flutterwaveResponse.data;
-      //       // Redirect the user to the flutterwave checkout page
-      //       window.location.href = flutterwaveData.redirect_url;
-      //     } else {
-      //       toast.error("An error occurred.");
-      //     }
-      //   } catch (error) {
-      //     console.error("Error initializing Flutterwave payment:", error);
-      //     toast.error("An error occurred.");
-      //   }
+          if (flutterwaveResponse.status === 200) {
+            const flutterwaveData = flutterwaveResponse.data;
+            window.location.href = flutterwaveData.redirect_url;
+          } else {
+            toast.error("An error occurred.");
+          }
+        } catch (error) {
+          toast.error("An error occurred.");
+        }
+      } else if (selectedPaymentOption === "opay") {
+        const paymentData = {
+          id: userId,
+          amount: data.amount,
+          posting: "opay",
+        };
 
-      // }
-      else if (selectedPaymentOption === "monnify") {
+        try {
+          const opayResponse = await HTTP.post(
+            "/payment-initialize",
+            paymentData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+              },
+            }
+          );
+
+          if (opayResponse.status === 200) {
+            const opayData = opayResponse.data;
+            window.location.href = opayData.redirect_url;
+          } else {
+            toast.error("An error occurred.");
+          }
+        } catch (error) {
+          toast.error("An error occurred.");
+        }
+      } else if (selectedPaymentOption === "monnify") {
         const paymentData = {
           id: userId,
           amount: data.amount,
@@ -142,7 +167,6 @@ const Deposit = () => {
             toast.error("An error occurred.");
           }
         } catch (error) {
-          console.error("Error initializing Monnify payment:", error);
           toast.error("An error occurred.");
         }
       }
@@ -195,8 +219,9 @@ const Deposit = () => {
                   >
                     <option value="">Choose Payment Options</option>
                     <option value="paystack">Paystack</option>
+                    <option value="opay">Opay</option>
                     <option value="monnify">Bank Transfer (Monnify)</option>
-                    {/* <option value="flutterwave">Flutterwave</option> */}
+                    <option value="flutterwave">Flutterwave</option>
                   </select>
                 </div>
               </div>

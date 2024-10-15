@@ -833,7 +833,7 @@ const Operator = () => {
                     <p style={{ color: "#FFF !important" }}>SPORTS BETTING</p>
                     <p>
                       <a
-                        onClick={() => navigate("/betting")}
+                        onClick={() => navigate("/sport-forecast")}
                         className="btn btn-yellow btn-block"
                       >
                         Play Now

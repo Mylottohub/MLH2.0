@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import HTTP from "../utils/httpClient";
 import moment from "moment";
 import "../assets/css/latest.css";
+
 const LatestGame = () => {
   const scrollStyle = {
     position: "fixed",
@@ -14,6 +15,7 @@ const LatestGame = () => {
     fontSize: "15px",
     backgroundColor: "#FFD801",
   };
+
   const [timetable, setTimetable] = useState([]);
 
   const fetchData = () => {
@@ -22,7 +24,7 @@ const LatestGame = () => {
         setTimetable(response.data.data);
       })
       .catch((err) => {
-        // console.log(err);
+        // Handle error
       });
   };
 
@@ -63,25 +65,21 @@ const LatestGame = () => {
     .sort((a, b) =>
       moment(a.start_time, "HH:mm:ss").diff(moment(b.start_time, "HH:mm:ss"))
     );
+
   return (
-    <>
-      <div>
-        <div style={scrollStyle} className="meg_next_game_scroll mt-5">
-          <div>
-            <marquee scrollAmount="3">
-              Next Games =&gt;
-              {filteredTimetable.map((game) => (
-                <span key={game.id}>
-                  {" "}
-                  {getOperatorName(game.operator)} - {game.name} -{" "}
-                  {moment().format("Do MMM YYYY")} ({game.start_time}) |
-                </span>
-              ))}
-            </marquee>
-          </div>
+    <div>
+      <div style={scrollStyle} className="meg_next_game_scroll mt-5">
+        <div className="scroll-content">
+          Next Games =&gt;
+          {filteredTimetable.map((game) => (
+            <span key={game.id}>
+              {getOperatorName(game.operator)} - {game.name} -{" "}
+              {moment().format("Do MMM YYYY")} ({game.start_time}) |{" "}
+            </span>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

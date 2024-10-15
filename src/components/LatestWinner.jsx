@@ -23,9 +23,10 @@ const LatestWinner = () => {
         setWinners(response.data.data);
       })
       .catch((err) => {
-        // console.log(err);
+        // Handle error
       });
   };
+
   const formatDate = (dateString) => {
     // Convert the date string to a valid format
     const formattedDate = moment(dateString, "YYYYMMDDHHmmss").format(
@@ -39,23 +40,19 @@ const LatestWinner = () => {
   }, []);
 
   return (
-    <>
-      <div>
-        <div style={scrollStyle} className="meg_latest_winners_scroll mt-5">
-          <marquee scrollAmount="3">
-            Latest Winners =&gt;
-            {winners.map((results, index) => (
-              <>
-                <span key={index}>
-                  {results?.username.substring(0, 4)}***** &nbsp; - ₦
-                  {results?.amount} &nbsp; - {formatDate(results?.date)} |{" "}
-                </span>
-              </>
-            ))}
-          </marquee>
+    <div>
+      <div style={scrollStyle} className="meg_latest_winners_scroll mt-5">
+        <div className="scroll-content">
+          Latest Winners =&gt;
+          {winners.map((results, index) => (
+            <span key={index}>
+              {results?.username.substring(0, 4)}***** &nbsp; - ₦
+              {results?.amount} &nbsp; - {formatDate(results?.date)} |{" "}
+            </span>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

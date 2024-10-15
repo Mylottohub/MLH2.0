@@ -79,8 +79,11 @@
     border-bottom: none !important;
 }
 
+
+
 #home-tab,
 #profile-tab,
+#bet-tab,
 #contact-tab {
     border-bottom: none !important;
     font-weight: bolder;
@@ -165,6 +168,9 @@ a:focus {
     .sports__code {
         width: 35% !important;
     }
+    .app__bet-history{
+        width: 25%;
+       }
 }
 
 @media (max-width: 750px) {
@@ -174,6 +180,7 @@ a:focus {
 
     #home-tab,
     #profile-tab,
+    #bet-tab,
     #contact-tab {
         font-size: 12px;
         width: 100%;

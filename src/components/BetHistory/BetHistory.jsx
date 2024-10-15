@@ -56,7 +56,7 @@ const BetHistory = () => {
 
       setBetHistory(response.data.data);
     } catch (error) {
-      console.error(`Error fetching ${id} games:`, error);
+      // console.error(`Error fetching ${id} games:`, error);
     } finally {
       setIsLoading(false);
     }
