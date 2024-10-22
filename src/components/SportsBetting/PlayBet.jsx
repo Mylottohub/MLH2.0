@@ -201,7 +201,10 @@ const PlayBet = () => {
                         <th scope="col"></th>
                         {/* <th scope="col">DATE</th> */}
                         <th scope="col">
-                          DATE: {betting?.content?.[0]?.matchTime}
+                          DATE:{" "}
+                          {moment(betting?.[0]?.matchTime).format(
+                            "YYYY/MM/DD HH:mm"
+                          )}
                         </th>
                       </tr>
                     </tbody>

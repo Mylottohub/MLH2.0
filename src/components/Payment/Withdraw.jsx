@@ -13,7 +13,9 @@ const WithdrawModal = () => {
   const { userProfileResponse } = useGetProfileUser([]);
   const [showForm, setShowForm] = useState(false);
   const [showWallet, setShowWallet] = useState(false);
-  const [accountName, setAccountName] = useState(""); // State to store account name
+  const [accountName, setAccountName] = useState("");
+  const [accountNameOpay, setAccountNameOpay] = useState("");
+  const [accountNameLastOpay, setAccountNameLastOpay] = useState("");
   const [typingTimeout, setTypingTimeout] = useState(null);
   const [fetchingAccountName, setFetchingAccountName] = useState(false);
   const [schema, setSchema] = useState(null);
@@ -117,14 +119,50 @@ const WithdrawModal = () => {
   const bankName = watch("bank_name");
   const accountNo = watch("account_no");
   const { userInfo } = useSelector((state) => state.auth);
+  // const fetchAccountName = async () => {
+  //   try {
+  //     setFetchingAccountName(true);
+  //     const response = await HTTP.post(
+  //       "/user/resolve-bank-account",
+  //       {
+  // bank_name: bankName,
+  // account_no: accountNo,
+  // email: userProfileResponse?.email,
+  //       },
+  // {
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Accept: "application/json",
+  //     Authorization: `Bearer ${userInfo.token}`,
+  //   },
+  // }
+  //     );
+
+  //     if (response.data.status === "Success") {
+  //       const resolvedAccountName = response?.data?.data?.data?.account_name;
+  //       setAccountName(resolvedAccountName);
+  //       setValue("account_name", resolvedAccountName);
+  //       toast.success("Account Details Saved Successfully.");
+  //     }
+  //   } catch (error) {
+  //     // console.error("Error:", error);
+  //     if (error.response && error.response.status === 500) {
+  //       toast.error("Account name not found.");
+  //     }
+  //   } finally {
+  //     setFetchingAccountName(false);
+  //   }
+  // };
+
   const fetchAccountName = async () => {
+    setFetchingAccountName(true);
     try {
-      setFetchingAccountName(true);
+      const selectedBank = watch("bank_name");
       const response = await HTTP.post(
         "/user/resolve-bank-account",
         {
-          bank_name: bankName,
-          account_no: accountNo,
+          bank_name: selectedBank,
+          account_no: watch("account_no"),
           email: userProfileResponse?.email,
         },
         {
@@ -136,22 +174,25 @@ const WithdrawModal = () => {
         }
       );
 
-      if (response.data.status === "Success") {
-        const resolvedAccountName = response?.data?.data?.data?.account_name;
-        setAccountName(resolvedAccountName);
-        setValue("account_name", resolvedAccountName);
-        toast.success("Account Details Saved Successfully.");
+      if (
+        response?.data?.data?.status === true ||
+        response?.data?.data?.message === "SUCCESSFUL"
+      ) {
+        const { account_name, firstName, lastName } = response.data.data.data;
+        setAccountName(account_name || "");
+        setAccountNameOpay(firstName || "");
+        setAccountNameLastOpay(lastName || "");
+        setValue("account_name", `${firstName} ${lastName}`);
+        toast.success(response?.data?.data?.message);
+      } else {
+        toast.error(response?.data?.data?.message);
       }
     } catch (error) {
-      // console.error("Error:", error);
-      if (error.response && error.response.status === 500) {
-        toast.error("Account name not found.");
-      }
+      toast.error(error?.response?.data?.error);
     } finally {
       setFetchingAccountName(false);
     }
   };
-
   const formatAmount = (amount) => {
     if (amount !== 0 && Math.abs(amount) > 0.001) {
       return amount.toFixed(2);
@@ -162,6 +203,8 @@ const WithdrawModal = () => {
   useEffect(() => {
     if (!accountNo) {
       setAccountName("");
+      setAccountNameOpay("");
+      setAccountNameLastOpay("");
       setValue("account_name", "");
     } else {
       if (bankName && accountNo && accountNo.length === 10) {
@@ -321,7 +364,11 @@ const WithdrawModal = () => {
                             placeholder="Account Name"
                             name="account_name"
                             disabled
-                            value={accountName}
+                            // value={accountName}
+                            value={
+                              accountName ||
+                              `${accountNameOpay} ${accountNameLastOpay}`.trim()
+                            }
                           />
                           {fetchingAccountName && (
                             <Spinner animation="border" variant="primary" />

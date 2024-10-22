@@ -102,7 +102,7 @@ const Register = () => {
       if (referralNumber) {
         data.user = referralNumber;
       }
-      data.g_recaptcha_response = captchaResponse; 
+      data.g_recaptcha_response = captchaResponse;
       const res = await registers(data).unwrap();
       if (res) {
         toast.success(
@@ -123,6 +123,28 @@ const Register = () => {
       }
     }
   };
+
+  // Add useEffect to load Google Ads (gtag.js)
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://www.googletagmanager.com/gtag/js?id=AW-761759567";
+    script.async = true;
+    document.body.appendChild(script);
+
+    const gtagScript = document.createElement("script");
+    gtagScript.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-761759567');
+    `;
+    document.body.appendChild(gtagScript);
+
+    return () => {
+      document.body.removeChild(script);
+      document.body.removeChild(gtagScript);
+    };
+  }, []);
 
   return (
     <>

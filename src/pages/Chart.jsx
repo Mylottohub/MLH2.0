@@ -60,8 +60,8 @@ const Chart = () => {
   ];
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: currentYear - 1999 + 1 },
-    (_, index) => 1999 + index
+    { length: currentYear - 2020 + 1 },
+    (_, index) => 2020 + index
   );
 
   const handleMonthChange = (event) => {
@@ -174,7 +174,7 @@ const Chart = () => {
       const endDate = `${selection.year}-${(
         "0" +
         (months.indexOf(selection.month) + 1)
-      ).slice(-2)}-01`;
+      ).slice(-2)}-31`;
 
       const data = await fetchData(selection.operator, endDate, startDate);
 
@@ -182,8 +182,6 @@ const Chart = () => {
         data?.data?.forEach((result) => {
           results.push(result);
         });
-      } else {
-        // console.log("Data is not an array:", data);
       }
     }
 
@@ -191,10 +189,45 @@ const Chart = () => {
       toast.error("No charts found for the selected criteria");
       return;
     }
-    console.log(selectedGame);
     setFilteredResults(results);
     setShowCreateCharts(true);
   };
+
+  // const handleCreateCharts = async () => {
+  //   const results = [];
+
+  //   for (const selection of selections) {
+  //     const startDate = `${selection.year}-01-01`;
+  //     const endDate = `${selection.year}-${(
+  //       "0" +
+  //       (months.indexOf(selection.month) + 1)
+  //     ).slice(-2)}-31`;
+
+  //     const data = await fetchData(selection.operator, endDate, startDate);
+
+  //     if (data) {
+  //       const filteredData = data?.data?.filter((result) => {
+  //         const resultYearMonth = moment.utc(result.date).format("YYYY-MM");
+  //         const endYearMonth = moment(endDate).format("YYYY-MM");
+
+  //         return resultYearMonth === endYearMonth;
+  //       });
+
+  //       filteredData?.forEach((result) => {
+  //         results.push(result);
+  //       });
+  //     }
+  //   }
+
+  //   if (results.length === 0) {
+  //     toast.error("No charts found for the selected end date");
+  //     return;
+  //   }
+
+  //   setFilteredResults(results);
+  //   setShowCreateCharts(true);
+  // };
+
   const renderResultsTable = () => {
     if (!filteredResults || filteredResults.length === 0) {
       return null;
@@ -219,10 +252,6 @@ const Chart = () => {
             </tbody>
             <tbody>
               {filteredResults.map((result, index) => {
-                // const operatorName =
-                //   operatorNames[result.operator] || result.operator;
-                // const operatorGame = selectedGame || result.game;
-
                 return (
                   <tr key={index}>
                     {/* <td bgColor="#f9fafa">{operatorName}</td> */}
@@ -438,65 +467,7 @@ const Chart = () => {
                   </td>
                 </tr>
               </table>
-              {/* {filteredResults.map((result, index) => (
-                <div key={index} className="table-responsive">
-                  <table
-                    width="100%"
-                    cellPadding="20"
-                    className="table table-express mt-5"
-                  >
-                    <p className="lead mt-50">
-                      My selection for <strong>{result?.operator} </strong> |{" "}
-                      <strong>{result?.game}</strong>
-                    </p>
-                    <tr bgColor="#27AAE1" className="meg_white">
-                      <th>DATE</th>
-                      <th>Numbers</th>
-                      <th>&nbsp;</th>
-                    </tr>
-                    <tr>
-                      <td bgColor="#f9fafa">
-                        {moment
-                          .utc(result?.date, "YYYY-MM-DD HH:mm:ss")
-                          .local()
-                          .format("MMM DD, YYYY h:mm:ss a")}
-                      </td>
-                      <td bgColor="#f9fafa">
-                        <ul className="wnums">
-                          <table>
-                            <td>
-                              {result?.winning_number?.split("-").map(
-                                (digit, j) =>
-                                  digit && (
-                                    <td key={j}>
-                                      <div className="numboxgreen">{digit}</div>
-                                    </td>
-                                  )
-                              )}
-                            </td>
-                          </table>
-                        </ul>
-                      </td>
-                      <td bgColor="#f9fafa">
-                        <ul className="mnums">
-                          <table>
-                            <td>
-                              {result?.machine_number?.split("-").map(
-                                (digit, j) =>
-                                  digit && (
-                                    <td key={j}>
-                                      <div className="numboxred">{digit}</div>
-                                    </td>
-                                  )
-                              )}
-                            </td>
-                          </table>
-                        </ul>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              ))} */}
+
               {renderResultsTable()}
             </div>
           </div>
