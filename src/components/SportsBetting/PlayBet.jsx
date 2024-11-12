@@ -465,7 +465,7 @@ const PlayBet = () => {
                   !betting.some((bet) =>
                     moment().isAfter(moment(bet.matchTime))
                   ))) && (
-                <div className="w-50 mx-auto mb-5">
+                <div className="w-100 mb-5 mx-auto mb-5">
                   <input
                     type="number"
                     min={1}

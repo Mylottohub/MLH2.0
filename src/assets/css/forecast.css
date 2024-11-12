@@ -1,12 +1,162 @@
 .div_yellow2 {
     background: #FFF200;
     border-radius: 5px;
-}
-
+} 
+.about-area {
+    padding-top: 120px;
+    padding-bottom: 120px;
+    background-color: #f5f5f5;
+  }
+  
+  .meg_container {
+    margin-top: 5rem;
+  }
+  
+  /* .results-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  } */
+  
+  .result-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  .div_lgrey {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .result-field {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .result-field strong {
+    font-weight: bold;
+    margin-right: 5px;
+    color: #555;
+  }
+  
+  .number-list {
+    display: flex;
+    gap: 5px;
+  }
+  
+  /* .numboxwhite {
+    background-color: #e9ecef;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+  } */
+  
+  .pull-right {
+    text-align: right;
+  }
+  
+  .spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+  }
+  
+  .spinner-container .spinner {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .text-decoration-none {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .text-decoration-none:hover {
+    color: #0056b3;
+  }
+  
+  .clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  
 .div_blue {
     background: #406777 !important;
     color: #FFF;
 }
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .card-item {
+    background-color: #f9fafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 1 1 300px;
+    min-width: 250px;
+  }
+  
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .card-row:last-child {
+    border-bottom: none;
+  }
+  
+  .card-label {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .card-value {
+    color: #333;
+  }
+  
+  .text-danger {
+    cursor: pointer;
+    color: #d9534f;
+  }
+  
+  @media (max-width: 576px) {
+    .card-row {
+      flex-direction: column;
+      padding: 10px 0;
+    }
+    
+    .card-label,
+    .card-value {
+      display: block;
+    }
+    .app__mobile-chart {
+        font-size: 12px !important;
+        width: 42px;
+        height: 42px;
+        
+    }
+  }
+  
 
 .numboxtranswhite {
     behavior: url(PIE.htc);
