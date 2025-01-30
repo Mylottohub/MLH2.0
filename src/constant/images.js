@@ -18,6 +18,8 @@ import rave from "../assets/images/rave.png";
 import paystack from "../assets/images/paystack.png";
 import payment_gate from "../assets/images/payment_gate.png";
 import easywin from "../assets/images/easywin.png";
+import apksure from "../assets/images/apkpure.jpg";
+import upto from "../assets/images/upto.png";
 
 const allImages = {
   easywin,
@@ -40,6 +42,8 @@ const allImages = {
   rave,
   paystack,
   payment_gate,
+  apksure,
+  upto
 };
 
 export default allImages;

@@ -331,6 +331,20 @@ const Chart = () => {
                         {selections.length > 0 ? selections[0].game : ""}
                       </p>
                     </div>
+                    <div className="result-field d-flex">
+                      <h6 className="card-title">Date:</h6>
+                      &nbsp;&nbsp;
+                      <p className="card-text">
+                        {moment
+                          .utc(result?.date, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("MMM DD, YYYY h:mm:ss a")}
+                      </p>
+                    </div>
+                    <div className="result-field d-flex">
+                      <h6 className="card-title">Year:</h6>&nbsp;&nbsp;
+                      <p className="card-text">{result?.year}</p>
+                    </div>
                     <div className="result-field mt-3 mb-3">
                       <h6 className="card-title">Winning Number:</h6>
                       <div className="number-list d-flex flex-wrap">
@@ -376,20 +390,6 @@ const Chart = () => {
                           </span>
                         ))}
                       </div>
-                    </div>
-                    <div className="result-field d-flex">
-                      <h6 className="card-title">Date:</h6>
-                      &nbsp;&nbsp;
-                      <p className="card-text">
-                        {moment
-                          .utc(result?.date, "YYYY-MM-DD HH:mm:ss")
-                          .local()
-                          .format("MMM DD, YYYY h:mm:ss a")}
-                      </p>
-                    </div>
-                    <div className="result-field d-flex">
-                      <h6 className="card-title">Year:</h6>&nbsp;&nbsp;
-                      <p className="card-text">{result?.year}</p>
                     </div>
                   </div>
                 </div>

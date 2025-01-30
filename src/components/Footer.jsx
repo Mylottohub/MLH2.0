@@ -17,7 +17,7 @@ const Footer = () => {
             <div className="container">
               <div className="row">
                 <div
-                  className="col-md-4 col-sm-6 col-xs-12 col-2"
+                  className="col-md-3 col-sm-6 col-xs-12"
                   style={{ paddingTop: "60px" }}
                 >
                   <div className="footer-widget footer-logo">
@@ -43,7 +43,7 @@ const Footer = () => {
                   </div>
                 </div>
 
-                <div className="col-md-2 col-sm-6 col-xs-12 col-2">
+                <div className="col-md-3 col-sm-6 col-xs-12">
                   <div className="footer-widget footer-menu">
                     <h2>Quick Links</h2>
                     <ul>
@@ -65,7 +65,7 @@ const Footer = () => {
                     </ul>
                   </div>
                 </div>
-                <div className="col-md-3 col-sm-6 col-xs-12 col-2">
+                <div className="col-md-3 col-sm-6 col-xs-12">
                   <div className="footer-widget footer-menu">
                     <h2>Company</h2>
                     <ul>
@@ -104,22 +104,28 @@ const Footer = () => {
                     </ul>
                   </div>
                 </div>
-                <div className="col-md-3 col-sm-6 col-xs-12 col-2">
-                  <div className="footer-widget footer-contact">
-                    <h2>Download App</h2>
 
-                    <p className="text-center">
+                <div className="col-md-3 col-sm-6 col-xs-12">
+                  <div className="footer-widget footer-contact">
+                    <h2>
                       <a
-                        href="#"
-                        className="btn btn-trans btn-lg text-center"
-                        style={{ border: "1px solid #fff" }}
+                        href="https://apkpure.net/mylottohub/com.mylottohub_app/downloading"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn text-white"
+                        style={{ fontSize: "20px", marginTop: "-10px" }}
                       >
-                        <i className="fa fa-download text-white">
-                          {" "}
-                          Download APK
-                        </i>
+                        Download App
                       </a>
-                    </p>
+                    </h2>
+                    <p
+                      className="text-center"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "10px",
+                      }}
+                    ></p>
                   </div>
                 </div>
               </div>

@@ -598,7 +598,7 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-md-4 mb-5"
+                                    className="col-lg-4 col-md-6 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
@@ -666,7 +666,7 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-md-4 mb-5"
+                                    className="col-lg-4 col-md-6 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
@@ -732,7 +732,7 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-md-4 mb-5"
+                                    className="col-lg-4 col-md-6 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
@@ -801,7 +801,7 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-md-4 mb-5"
+                                    className="col-lg-4 col-md-6 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
@@ -870,7 +870,7 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-md-4 mb-5"
+                                    className="col-lg-4 col-md-6 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
@@ -944,7 +944,7 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-md-4 mb-5"
+                                    className="col-lg-4 col-md-6 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
@@ -1012,7 +1012,7 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-md-4 mb-5"
+                                    className="col-lg-4 col-md-6 mb-5"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">

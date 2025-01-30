@@ -11,6 +11,7 @@ import UserProfile from "./Payment/UserProfile";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { useGetProfileUser } from "../react-query";
+import Download from "./Download";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -60,7 +61,9 @@ const Navbar = () => {
     return amount;
   };
   return (
-    <>
+    <div>
+      <Download />
+
       {token && expires && new Date(expires) > new Date() ? (
         <>
           <div className="mobile__header">
@@ -552,7 +555,7 @@ const Navbar = () => {
                   </ul>
                 </li>
 
-                <li className="nav-item  ">
+                <li className="nav-item">
                   <a
                     className="nav-link text-white me-3"
                     onClick={() => navigate("/result")}
@@ -561,7 +564,7 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li className="nav-item   ">
+                <li className="nav-item">
                   <a
                     className="nav-link text-white app__proforecast"
                     onClick={() => navigate("/create-chart")}
@@ -570,7 +573,7 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li className="nav-item  ">
+                <li className="nav-item">
                   <a
                     className="nav-link text-white me-3"
                     onClick={() => navigate("/timetable")}
@@ -594,6 +597,15 @@ const Navbar = () => {
                     Tutorials
                   </a>
                 </li>
+                {/* <li className="nav-item">
+                  <a
+                    className="nav-link text-white me-3"
+                    href="/mlh.apk"
+                    download
+                  >
+                    Download App
+                  </a>
+                </li> */}
 
                 <li className="nav-item dropdown  ">
                   <a
@@ -695,7 +707,7 @@ const Navbar = () => {
       <BModal show={isOpenUser} onHide={handleUserClose} size="md">
         <UserProfile />
       </BModal>
-    </>
+    </div>
   );
 };
 

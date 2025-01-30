@@ -549,7 +549,14 @@ const Terms = () => {
           <a href="mailto:customercare@mylottohub.com">
             customercare@mylottohub.com
           </a>{" "}
-          for additional assistance <br />
+          for additional assistance. <br /> <b>Notes:</b> All Players are
+          informed that mylotto hub’s payment gate way partners, or its back end
+          platform, may inadvertently credit a wallet with amounts higher than
+          what the customer has transferred from their bank. In such cases the
+          customer is obligated to inform mylottohub immediately. All stakes,
+          winnings and bonuses resulting from artificial deposits will be null
+          and void and will not pay out.
+          <br />
           <br />
           7.
           <span className="fw-bold">

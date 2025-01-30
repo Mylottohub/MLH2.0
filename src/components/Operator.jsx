@@ -6,6 +6,7 @@ import { Spinner } from "react-bootstrap";
 import Countdown from "react-countdown";
 import moment from "moment";
 import { HTTP } from "../utils";
+import { images } from "../constant";
 
 const Operator = () => {
   const navigate = useNavigate();
@@ -772,7 +773,7 @@ const Operator = () => {
           </section>
         </div>
 
-        <div className="app__mobile-sm mb-5">
+        <div className="app__mobile-sm" style={{ marginBottom: "70px" }}>
           <div className="container">
             {!userInfo || !userInfo.data ? (
               <div className="d-flex mt-5">
