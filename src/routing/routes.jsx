@@ -24,7 +24,7 @@ import PlayBet from "../components/SportsBetting/PlayBet";
 import Forecast from "../pages/Forecast";
 import Instance from "../pages/Instance";
 import Chart from "../pages/Chart";
-import BettingTomorrow from "../components/SportsBetting/bettingTomorrow";
+import BettingTomorrow from "../components/SportsBetting/BettingTomorrow";
 import SportHistory from "../components/Transactions/SportHistory";
 import BettingYesterday from "../components/SportsBetting/BettingYesterday";
 import SportForecaster from "../components/SportsBetting/SportForecaster";
