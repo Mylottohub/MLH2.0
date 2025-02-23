@@ -6,7 +6,6 @@ import { Spinner } from "react-bootstrap";
 import Countdown from "react-countdown";
 import moment from "moment";
 import { HTTP } from "../utils";
-import { images } from "../constant";
 
 const Operator = () => {
   const navigate = useNavigate();
@@ -51,6 +50,7 @@ const Operator = () => {
     "green_lotto",
     "lottomania",
     "lotto_nigeria",
+    "gd_lotto",
   ];
 
   useEffect(() => {
@@ -67,7 +67,6 @@ const Operator = () => {
         });
 
         const data = response.data;
-        // Update the specific operator's data using the operatorType
         setOperatorData((prevData) => ({
           ...prevData,
           [operatorType]: Array.isArray(data.result)
@@ -162,8 +161,6 @@ const Operator = () => {
             operatorTypes.map((operatorType, index) => {
               const operatorDataArray = operatorData[operatorType];
               if (operatorDataArray && operatorDataArray.length > 0) {
-                // const imageSrc =
-                //   operatorLogos[operatorType] || `/images/${operatorType}.png`;
                 const imageSrc =
                   operatorLogos[operatorNameMapping[operatorType]] ||
                   `/images/${operatorType}.png`;
@@ -238,7 +235,6 @@ const Operator = () => {
                       .utcOffset("+00:00")
                       .utc();
 
-                    // Check if parsedTime is valid
                     if (parsedTime.isValid()) {
                       return parsedTime.toDate();
                     } else {
@@ -272,11 +268,9 @@ const Operator = () => {
                     if (parsedTime.isValid()) {
                       return parsedTime.toDate();
                     } else {
-                      console.error("Invalid date format:", drawDateTimeString);
                       return null;
                     }
                   } else {
-                    // Handle other operator types by parsing the time string
                     const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                       .utcOffset("+00:00")
                       .utc();
@@ -324,16 +318,16 @@ const Operator = () => {
                                       }) => (
                                         <>
                                           <span className="countdown_box me-2">
-                                            {days}days
+                                            {days} days
                                           </span>
                                           <span className="countdown_box me-2">
-                                            {hours}hrs
+                                            {hours} hrs
                                           </span>
                                           <span className="countdown_box me-2">
-                                            {minutes}mins
+                                            {minutes} mins
                                           </span>
                                           <span className="countdown_box me-2">
-                                            {seconds}secs
+                                            {seconds} secs
                                           </span>
                                         </>
                                       )}
@@ -353,10 +347,22 @@ const Operator = () => {
                             </p>
                           </>
                         ) : (
-                          // <p> Next Game Display at 12:00am</p>
                           <>
-                            <div className="service-img"></div>
-                            <p>Next Game Display at 12:00am</p>
+                            {operatorType === "gd_lotto" ? (
+                              <a
+                                onClick={() => {
+                                  navigate(`/gd-lotto`);
+                                }}
+                                className="btn btn-blue btn-sm btn-block w-100"
+                              >
+                                Play Now
+                              </a>
+                            ) : (
+                              <>
+                                <div className="service-img"></div>
+                                <p>Next Game Display at 12:00am</p>
+                              </>
+                            )}
                           </>
                         )}
                       </div>
@@ -367,206 +373,6 @@ const Operator = () => {
                 return null;
               }
             })
-            // operatorTypes.map((operatorType, index) => {
-            //   const operatorDataArray = operatorData[operatorType];
-            //   const imageSrc =
-            //     operatorLogos[operatorType] || `/images/${operatorType}.png`;
-
-            //   const propertyMapping = {
-            //     ghana_game: { name: "gn", time: "sdt" },
-            //     wesco: { name: "drawname", time: "drawtime" },
-            //     green_lotto: { name: "drawname", time: "drawtime" },
-            //     green_ghana_game: { name: "drawname", time: "drawtime" },
-            //     lottomania: { name: "gn", time: "sdt" },
-            //     lotto_nigeria: { name: "drawAlias", time: "drawDate" },
-            //   };
-
-            //   const dataArray = Array.isArray(operatorDataArray)
-            //     ? operatorDataArray
-            //     : Object.values(operatorDataArray);
-
-            //   const upcomingGames = dataArray.filter((game) => {
-            //     const currentTime = moment();
-
-            //     let drawTime;
-
-            //     if (operatorType === "lotto_nigeria") {
-            //       drawTime = game?.drawDate
-            //         ? moment(game?.drawDate, "DD/MM/YYYY HH:mm")
-            //         : null;
-            //     } else if (operatorType === "wesco") {
-            //       const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-            //       drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-            //     } else if (operatorType === "lottomania") {
-            //       drawTime = moment(game?.sdt);
-            //     } else if (operatorType === "ghana_game") {
-            //       drawTime = moment(game?.sdt);
-            //     } else if (operatorType === "green_lotto") {
-            //       const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-            //       drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-            //     } else if (operatorType === "green_ghana_game") {
-            //       const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-            //       drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-            //     }
-
-            //     return drawTime && drawTime.isAfter(currentTime);
-            //   });
-
-            //   upcomingGames.sort(
-            //     (a, b) =>
-            //       new Date(a[propertyMapping[operatorType].time]) -
-            //       new Date(b[propertyMapping[operatorType].time])
-            //   );
-
-            //   const nextGame =
-            //     upcomingGames.length > 0 ? upcomingGames[0] : null;
-
-            //   const renderGameTime = (operatorType, game) => {
-            //     const time = game[propertyMapping[operatorType].time];
-
-            //     if (operatorType === "lottomania") {
-            //       return new Date(time);
-            //     } else if (operatorType === "ghana_game") {
-            //       return new Date(time);
-            //     } else if (operatorType === "lotto_nigeria") {
-            //       const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
-            //         .utcOffset("+00:00")
-            //         .utc();
-            //       return parsedTime.toDate();
-            //     } else if (operatorType === "wesco") {
-            //       const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
-            //       const parsedTime = moment(
-            //         drawDateTimeString,
-            //         "YYYYMMDD HH:mm:ss"
-            //       )
-            //         .utcOffset("+00:00")
-            //         .utc();
-
-            //       // Check if parsedTime is valid
-            //       if (parsedTime.isValid()) {
-            //         return parsedTime.toDate();
-            //       } else {
-            //         console.error("Invalid date format:", drawDateTimeString);
-            //         return null;
-            //       }
-            //     } else if (operatorType === "green_lotto") {
-            //       const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
-            //       const parsedTime = moment(
-            //         drawDateTimeString,
-            //         "YYYYMMDD HH:mm:ss"
-            //       )
-            //         .utcOffset("+00:00")
-            //         .utc();
-
-            //       if (parsedTime.isValid()) {
-            //         return parsedTime.toDate();
-            //       } else {
-            //         console.error("Invalid date format:", drawDateTimeString);
-            //         return null;
-            //       }
-            //     } else if (operatorType === "green_ghana_game") {
-            //       const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
-            //       const parsedTime = moment(
-            //         drawDateTimeString,
-            //         "YYYYMMDD HH:mm:ss"
-            //       )
-            //         .utcOffset("+00:00")
-            //         .utc();
-
-            //       if (parsedTime.isValid()) {
-            //         return parsedTime.toDate();
-            //       } else {
-            //         console.error("Invalid date format:", drawDateTimeString);
-            //         return null;
-            //       }
-            //     } else {
-            //       // Handle other operator types by parsing the time string
-            //       const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
-            //         .utcOffset("+00:00")
-            //         .utc();
-            //       return parsedTime.toDate();
-            //     }
-            //   };
-
-            //   return (
-            //     <div key={index} className="col-md-3 col-sm-6 col-xs-12 col-2">
-            //       <div className="service-wrap mb-5">
-            //         <a>
-            //           <div className="service-img">
-            //             <img src={imageSrc} alt="" className="img-fluid mb-3" />
-            //           </div>
-            //         </a>
-            //         <div className="service-content text-center">
-            //           {nextGame ? (
-            //             <>
-            //               <p>
-            //                 <strong>NEXT GAME:</strong>
-            //                 <br />
-            //                 {nextGame[propertyMapping[operatorType].name]}
-            //                 <br />
-            //                 <br />
-            //                 <span>
-            //                   <small>
-            //                     <span>
-            //                       <Countdown
-            //                         date={
-            //                           new Date(
-            //                             renderGameTime(operatorType, nextGame)
-            //                           )
-            //                         }
-            //                         renderer={({
-            //                           days,
-            //                           hours,
-            //                           minutes,
-            //                           seconds,
-            //                         }) => (
-            //                           <>
-            //                             <span className="countdown_box me-2">
-            //                               {days}days
-            //                             </span>
-            //                             <span className="countdown_box me-2">
-            //                               {hours}hrs
-            //                             </span>
-            //                             <span className="countdown_box me-2">
-            //                               {minutes}mins
-            //                             </span>
-            //                             <span className="countdown_box me-2">
-            //                               {seconds}secs
-            //                             </span>
-            //                           </>
-            //                         )}
-            //                       />
-            //                     </span>
-            //                   </small>
-            //                 </span>
-            //               </p>
-            //               <p
-            //                 onClick={() => {
-            //                   navigate(`/play-game/${operatorType}`);
-            //                 }}
-            //               >
-            //                 <a className="btn btn-blue btn-sm btn-block w-100 p-2">
-            //                   Play Now
-            //                 </a>
-            //               </p>
-            //             </>
-            //           ) : (
-            //             <>
-            //               <div className="service-img">
-            //                 <img
-            //                   src={imageSrc}
-            //                   alt=""
-            //                   className="img-fluid mb-3"
-            //                 />
-            //               </div>
-            //               <p>Next Game Display at 12:00am</p>
-            //             </>
-            //           )}
-            //         </div>
-            //       </div>
-            //     </div>
-            //   );
-            // })
           )}
           <div className="col-md-3 col-sm-6 col-xs-12 col-2">
             <div className="service-wrap mb-5">

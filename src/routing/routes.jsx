@@ -29,6 +29,7 @@ import SportHistory from "../components/Transactions/SportHistory";
 import BettingYesterday from "../components/SportsBetting/BettingYesterday";
 import SportForecaster from "../components/SportsBetting/SportForecaster";
 import BettingAll from "../components/SportsBetting/BettingAll";
+import { GdLotto } from "../pages/GdLotto";
 
 export const routes = [
   {
@@ -229,5 +230,11 @@ export const routes = [
     path: "/all-bettings/:id",
     element: <BettingAll />,
     protected: true,
+  },
+  {
+    id: 32,
+    path: "/gd-lotto",
+    element: <GdLotto />,
+    protected: false,
   },
 ];

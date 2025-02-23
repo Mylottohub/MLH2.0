@@ -1,5 +1,6 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import Slider from "../components/Slider";
 // import { useNavigate } from "react-router-dom";
 
 const Instance = () => {
@@ -8,6 +9,7 @@ const Instance = () => {
   return (
     <div>
       <Navbar />
+      <Slider />
       <div className="container mt-5">
         <span className="hidden-xs hidden-sm">
           <h4>

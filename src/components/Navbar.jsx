@@ -670,7 +670,8 @@ const Navbar = () => {
                     </span>
                   </a>
 
-                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com">
+                  {/* <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com"> */}
+                  <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app">
                     <span
                       className="btn btn-yellow  "
                       // onClick={() => navigate("/login")}

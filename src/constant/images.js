@@ -18,6 +18,7 @@ import rave from "../assets/images/rave.png";
 import paystack from "../assets/images/paystack.png";
 import payment_gate from "../assets/images/payment_gate.png";
 import easywin from "../assets/images/easywin.png";
+import gdlogo from "../assets/images/gd_lotto.png";
 import apksure from "../assets/images/apkpure.jpg";
 import upto from "../assets/images/upto.png";
 
@@ -38,6 +39,7 @@ const allImages = {
   golden_chance,
   lottomania,
   wesco,
+  gdlogo,
   green_lotto,
   rave,
   paystack,

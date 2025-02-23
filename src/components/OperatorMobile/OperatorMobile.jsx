@@ -8,6 +8,7 @@ import { Spinner } from "react-bootstrap";
 import Countdown from "react-countdown";
 import moment from "moment";
 import { HTTP } from "../../utils";
+import Slider from "../Slider";
 
 const OperatorMobile = () => {
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ const OperatorMobile = () => {
     "green_lotto",
     "lottomania",
     "lotto_nigeria",
+    "gd_lotto",
   ];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
@@ -138,6 +140,7 @@ const OperatorMobile = () => {
     <div>
       <section>
         <Navbar />
+        <Slider />
       </section>
       <div className="container mb-5">
         <div className="row">
@@ -160,7 +163,6 @@ const OperatorMobile = () => {
               const operatorDataArray = operatorData[operatorType];
 
               if (operatorDataArray && operatorDataArray.length > 0) {
-                // const imageSrc = `/images/${operatorType}.png`;
                 const imageSrc =
                   operatorLogos[operatorNameMapping[operatorType]] ||
                   `/images/${operatorType}.png`;
@@ -385,10 +387,21 @@ const OperatorMobile = () => {
                                 </>
                               ) : (
                                 <>
-                                  <>
-                                    <div className="service-img"></div>
-                                    <p>Next Game Display at 12:00am</p>
-                                  </>
+                                  {operatorType === "gd_lotto" ? (
+                                    <a
+                                      onClick={() => {
+                                        navigate(`/gd-lotto`);
+                                      }}
+                                      className="btn btn-blue btn-sm btn-block w-100 mt-5"
+                                    >
+                                      Play Now
+                                    </a>
+                                  ) : (
+                                    <>
+                                      <div className="service-img"></div>
+                                      <p>Next Game Display at 12:00am</p>
+                                    </>
+                                  )}
                                 </>
                               )}
                             </td>

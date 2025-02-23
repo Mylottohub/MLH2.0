@@ -4,6 +4,7 @@ import "../../assets/css/table.css";
 import { useGetSportsForecast } from "../../react-query";
 import { Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Slider from "../Slider";
 
 const SportForecaster = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const SportForecaster = () => {
     <React.Fragment>
       <>
         <Navbar />
+        <Slider />
         <div className="container mt-5 mb-5">
           <h3
             className="mt-5 fw-bold me-3 sport__mobile_select"
