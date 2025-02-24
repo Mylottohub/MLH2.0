@@ -72,7 +72,15 @@ const PlayGames = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const requestData = { operator_type: id };
+      let requestData = { operator_type: id };
+      // Convert "gd_70" back to "5/70"
+      if (id.startsWith("gd_")) {
+        requestData = {
+          operator_type: "gd_lotto",
+          gd_operator_type: id.replace("gd_", "5/"),
+        };
+      }
+
       try {
         const response = await HTTP.post("/get-games", requestData, {
           headers: {
@@ -208,13 +216,11 @@ const PlayGames = () => {
         parseInt(checkboxes[index].value)
       );
 
-      setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
-
+      setSelectedNumbers(randomizedNumbers);
       checkboxes.forEach((checkbox, index) => {
         checkbox.checked = randomIndices.includes(index);
       });
     } else {
-      // Handle other bet types here
       const mustCheck = maxSelectableNumbers[gtype];
 
       if (mustCheck >= checkboxes.length) {
@@ -235,7 +241,7 @@ const PlayGames = () => {
         parseInt(checkboxes[index].value)
       );
 
-      setSelectedNumbers(randomizedNumbers); // Update selectedNumbers with the randomized numbers
+      setSelectedNumbers(randomizedNumbers);
 
       checkboxes.forEach((checkbox, index) => {
         checkbox.checked = randomIndices.includes(index);
@@ -247,7 +253,6 @@ const PlayGames = () => {
         gtype === "4 DIRECT" ||
         gtype === "5 DIRECT"
       ) {
-        // Disable further selection for "DIRECT" bet types after randomization
         checkboxes.forEach((checkbox) => {
           checkbox.disabled = true;
         });
@@ -259,13 +264,21 @@ const PlayGames = () => {
     const checkboxes = document.querySelectorAll(".chk-btn");
     checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
-      checkbox.disabled = false; // Enable the checkboxes
+      checkbox.disabled = false;
     });
     setSelectedNumbers([]);
     setSelectedCount(0);
   };
 
-  for (let x = 1; x <= 90; x++) {
+  let maxNumber = 90; // Default max number for all operators
+
+  if (id === "gd_70") {
+    maxNumber = 70;
+  } else if (id === "gd_80") {
+    maxNumber = 80;
+  }
+
+  for (let x = 1; x <= maxNumber; x++) {
     const id = `c${x}`;
     checkboxes.push(
       <React.Fragment key={id}>
@@ -287,8 +300,95 @@ const PlayGames = () => {
     );
   }
 
+  // const handleConfirmBet = async (e) => {
+  //   e.preventDefault();
+  //   if (!selectedGameType) {
+  //     toast.error("Select a Game Name");
+  //     return;
+  //   }
+  //   if (!selectedBetType) {
+  //     toast.error("Select Bet Type");
+  //     return;
+  //   }
+
+  //   const stakeAmount = parseFloat(
+  //     document.getElementById("stakeAmount").value
+  //   );
+
+  //   if (isNaN(stakeAmount) || stakeAmount < 10) {
+  //     toast.error("Minimum stake amount is ₦10");
+  //     return;
+  //   }
+
+  //   const validDirectTypes = ["2 DIRECT", "3 DIRECT", "4 DIRECT", "5 DIRECT"];
+
+  //   if (validDirectTypes.includes(selectedBetType)) {
+  //     const requiredNumbers = maxSelectableNumbers[selectedBetType];
+
+  //     if (selectedNumbers.length !== requiredNumbers) {
+  //       toast.error(
+  //         `Select exactly ${requiredNumbers} numbers for ${selectedBetType}`
+  //       );
+  //       return;
+  //     }
+
+  //     const multiplier = calculateDirectMultiplier(requiredNumbers);
+  //     const maxWin = stakeAmount * multiplier;
+
+  //     const newConfirmedBet = {
+  //       gname: selectedGameType,
+  //       line: "1",
+  //       gtype: selectedBetType,
+  //       bets: selectedNumbers,
+  //       max_win: `₦${maxWin.toFixed(2)}`,
+  //       total_stake: `₦${stakeAmount.toFixed(2)}`,
+  //     };
+
+  //     setConfirmedBet(newConfirmedBet);
+  //     toast.success("Bet Slip Updated successfully");
+  //   } else if (selectedBetType.startsWith("PERM")) {
+  //     const requiredNumbers = selectedBetType.includes("PERM 2")
+  //       ? 3 // Minimum of 3 numbers for PERM 2
+  //       : selectedBetType.includes("PERM 3")
+  //       ? 4 // Minimum of 4 numbers for PERM 3
+  //       : selectedBetType.includes("PERM 4")
+  //       ? 5 // Minimum of 5 numbers for PERM 4
+  //       : selectedBetType.includes("PERM 5")
+  //       ? 6 // Minimum of 6 numbers for PERM 5
+  //       : 0;
+
+  //     if (requiredNumbers === 0) {
+  //       toast.error("Invalid Bet Type");
+  //       return;
+  //     }
+
+  //     if (selectedNumbers.length < requiredNumbers) {
+  //       toast.error(
+  //         `Select at least ${requiredNumbers} numbers for ${selectedBetType}`
+  //       );
+  //       return;
+  //     }
+
+  //     const lines = await calculatePermLines(selectedBetType, selectedNumbers);
+  //     const multiplier = calculatePermMultiplier(selectedBetType);
+  //     const maxWin = stakeAmount * lines * multiplier;
+  //     const totalStakeAmount = stakeAmount * lines;
+
+  //     const newConfirmedBet = {
+  //       gname: selectedGameType,
+  //       line: lines.toString(),
+  //       gtype: selectedBetType,
+  //       bets: selectedNumbers,
+  //       max_win: `₦${maxWin.toFixed(2)}`,
+  //       total_stake: `₦${totalStakeAmount.toFixed(2)}`,
+  //     };
+
+  //     setConfirmedBet(newConfirmedBet);
+  //   }
+  // };
   const handleConfirmBet = async (e) => {
     e.preventDefault();
+
     if (!selectedGameType) {
       toast.error("Select a Game Name");
       return;
@@ -307,8 +407,9 @@ const PlayGames = () => {
       return;
     }
 
-    // Define an array of valid "DIRECT" bet types
     const validDirectTypes = ["2 DIRECT", "3 DIRECT", "4 DIRECT", "5 DIRECT"];
+
+    const gameTypeKey = ["gd_70", "gd_80", "gd_90"].includes(id) ? id : null;
 
     if (validDirectTypes.includes(selectedBetType)) {
       const requiredNumbers = maxSelectableNumbers[selectedBetType];
@@ -320,7 +421,10 @@ const PlayGames = () => {
         return;
       }
 
-      const multiplier = calculateDirectMultiplier(requiredNumbers);
+      const multiplier = gameTypeKey
+        ? calculateDirectMultiplier(requiredNumbers, gameTypeKey)
+        : calculateDirectMultiplier(requiredNumbers);
+
       const maxWin = stakeAmount * multiplier;
 
       const newConfirmedBet = {
@@ -336,13 +440,13 @@ const PlayGames = () => {
       toast.success("Bet Slip Updated successfully");
     } else if (selectedBetType.startsWith("PERM")) {
       const requiredNumbers = selectedBetType.includes("PERM 2")
-        ? 3 // Minimum of 3 numbers for PERM 2
+        ? 3
         : selectedBetType.includes("PERM 3")
-        ? 4 // Minimum of 4 numbers for PERM 3
+        ? 4
         : selectedBetType.includes("PERM 4")
-        ? 5 // Minimum of 5 numbers for PERM 4
+        ? 5
         : selectedBetType.includes("PERM 5")
-        ? 6 // Minimum of 6 numbers for PERM 5
+        ? 6
         : 0;
 
       if (requiredNumbers === 0) {
@@ -358,7 +462,10 @@ const PlayGames = () => {
       }
 
       const lines = await calculatePermLines(selectedBetType, selectedNumbers);
-      const multiplier = calculatePermMultiplier(selectedBetType);
+      const multiplier = gameTypeKey
+        ? calculatePermMultiplier(selectedBetType, gameTypeKey)
+        : calculatePermMultiplier(selectedBetType);
+
       const maxWin = stakeAmount * lines * multiplier;
       const totalStakeAmount = stakeAmount * lines;
 
@@ -375,7 +482,17 @@ const PlayGames = () => {
     }
   };
 
-  const calculateDirectMultiplier = (requiredNumbers) => {
+  const calculateDirectMultiplier = (requiredNumbers, gameType) => {
+    const gdMultipliers = {
+      gd_70: { 2: 140, 3: 1300, 4: 4000, 5: 30000 },
+      gd_80: { 2: 180, 3: 1600, 4: 4600, 5: 35000 },
+      gd_90: { 2: 250, 3: 2200, 4: 6200, 5: 46000 },
+    };
+
+    if (gameType in gdMultipliers) {
+      return gdMultipliers[gameType]?.[requiredNumbers] || 0;
+    }
+
     switch (requiredNumbers) {
       case 2:
         return 240;
@@ -390,7 +507,17 @@ const PlayGames = () => {
     }
   };
 
-  const calculatePermMultiplier = (permType) => {
+  const calculatePermMultiplier = (permType, gameType) => {
+    const gdMultipliers = {
+      gd_70: { "PERM 2": 140, "PERM 3": 1300, "PERM 4": 4000, "PERM 5": 30000 },
+      gd_80: { "PERM 2": 180, "PERM 3": 1600, "PERM 4": 4600, "PERM 5": 35000 },
+      gd_90: { "PERM 2": 250, "PERM 3": 2200, "PERM 4": 6200, "PERM 5": 46000 },
+    };
+
+    if (gameType in gdMultipliers) {
+      return gdMultipliers[gameType]?.[permType] || 0;
+    }
+
     switch (permType) {
       case "PERM 2":
         return 240;
@@ -404,6 +531,7 @@ const PlayGames = () => {
         return 0;
     }
   };
+
   const calculatePermLines = async (gameType, selectedNumbers) => {
     setIsLoadingConfirmBet(true);
     try {
@@ -464,8 +592,6 @@ const PlayGames = () => {
 
   const mapToOperatorPayload = (operatorType, betInfo, selectedWallet) => {
     const { gname, line, gtype, bets, max_win, total_stake } = betInfo;
-
-    // Assuming operatorData is an array of games
     const selectedGame = perOperator.find((game) => {
       if (operatorType === "lotto_nigeria") {
         return game.drawAlias === gname;
@@ -479,15 +605,14 @@ const PlayGames = () => {
         return game.gn === gname;
       } else if (operatorType === "ghana_game") {
         return game.gn === gname;
+      } else if (["gd_70", "gd_80", "gd_90"].includes(operatorType)) {
+        return game.gameName === gname;
       }
-      // Add other cases as needed
-
       return false;
     });
 
     if (!selectedGame) {
-      console.error(`Game not found: ${gname}`);
-      return {};
+      return {}; // Prevent empty payload issues
     }
 
     switch (operatorType) {
@@ -613,8 +738,34 @@ const PlayGames = () => {
           closetime: selectedGame.sdt,
         };
       }
+      case "gd_70":
+      case "gd_80":
+      case "gd_90": {
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          max_win: parseFloat(max_win.replace("₦", "")),
+          ball: bets,
+          operator_type: "gd_lotto",
+          gd_operator_type:
+            operatorType === "gd_70"
+              ? "5/70"
+              : operatorType === "gd_80"
+              ? "5/80"
+              : "5/90",
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          drawID: selectedGame.drawTypeId,
+          drawTime: selectedGame.drawTime,
+          closetime: selectedGame.drawTime,
+          double_chance: 0,
+          wallet: selectedWallet,
+        };
+      }
       default:
-        // Handle other operators as needed
         return {};
     }
   };
@@ -629,7 +780,6 @@ const PlayGames = () => {
     const selectedWallet = document.getElementById("account").value;
 
     const payload = mapToOperatorPayload(id, confirmedBet, selectedWallet);
-
     try {
       const response = await HTTP.post("/play-games", payload, {
         headers: {
@@ -663,7 +813,12 @@ const PlayGames = () => {
       setIsLoadingPlayBet(false);
     }
   };
-  const imageSrc = `/images/${id}.png`;
+  const gameImageMap = {
+    gd_70: "GD570",
+    gd_80: "GD580",
+    gd_90: "GD590",
+  };
+  const imageSrc = `/images/${gameImageMap[id] || id}.png`;
 
   return (
     <>
@@ -686,6 +841,12 @@ const PlayGames = () => {
                 <strong> Select Operator &gt;&gt; Green Lotto</strong>
               ) : id === "green_ghana_game" ? (
                 <strong> Select Operator &gt;&gt; Green Ghana Games</strong>
+              ) : id === "gd_70" ? (
+                <strong> Select Operator &gt;&gt; Gd Lotto 70</strong>
+              ) : id === "gd_80" ? (
+                <strong> Select Operator &gt;&gt; Gd Lotto 80</strong>
+              ) : id === "gd_90" ? (
+                <strong> Select Operator &gt;&gt; Gd Lotto 90</strong>
               ) : (
                 <strong>Select Operator &gt;&gt; {id}</strong>
               )}
@@ -763,6 +924,20 @@ const PlayGames = () => {
                               {item.drawname}
                             </option>
                           );
+                        } else if (
+                          id === "gd_70" ||
+                          id === "gd_80" ||
+                          id === "gd_90"
+                        ) {
+                          return (
+                            <option
+                              className="text-uppercase"
+                              key={index}
+                              value={item.gameName}
+                            >
+                              {item.gameName}
+                            </option>
+                          );
                         }
 
                         return null;
@@ -796,7 +971,7 @@ const PlayGames = () => {
                   <table cellPadding="10" width="100%">
                     <tbody>
                       <tr>
-                        <th colSpan="2">
+                        <th colSpan="3">
                           <p
                             style={{ background: "#406777" }}
                             className="text-white  text-center"
@@ -1090,7 +1265,7 @@ const PlayGames = () => {
                                 drawDateTimeB.diff(currentTime);
                               const timeDifferenceA =
                                 drawDateTimeA.diff(currentTime);
-                              return timeDifferenceB - timeDifferenceA; // Sort in descending order
+                              return timeDifferenceB - timeDifferenceA;
                             });
 
                             if (timeDifference > 0) {
@@ -1132,7 +1307,64 @@ const PlayGames = () => {
                                 </>
                               );
                             } else {
-                              return null;
+                              ("No Active Game Available");
+                            }
+                          } else if (
+                            id === "gd_70" ||
+                            id === "gd_80" ||
+                            id === "gd_90"
+                          ) {
+                            const drawDateTime = moment(item?.drawTime);
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
+
+                            perOperator.sort((a, b) => {
+                              const drawDateTimeA = moment(b.drawTime);
+                              const drawDateTimeB = moment(a.drawTime);
+                              return (
+                                drawDateTimeB.diff(currentTime) -
+                                drawDateTimeA.diff(currentTime)
+                              );
+                            });
+
+                            if (timeDifference > 0) {
+                              return (
+                                <tr key={index}>
+                                  <td>
+                                    <small>
+                                      <strong>{item.gameName}</strong>
+                                    </small>
+                                  </td>
+                                  <td>
+                                    <img
+                                      src={item.gameIconUrl}
+                                      alt={item.gameTitle}
+                                      width="100"
+                                    />
+                                  </td>
+                                  <td>
+                                    <small>
+                                      <Countdown
+                                        date={
+                                          currentTime.valueOf() + timeDifference
+                                        }
+                                        renderer={({
+                                          days,
+                                          hours,
+                                          minutes,
+                                          seconds,
+                                        }) => (
+                                          <>
+                                            {days}days {hours}hrs {minutes}
+                                            mins {seconds}secs
+                                          </>
+                                        )}
+                                      />
+                                    </small>
+                                  </td>
+                                </tr>
+                              );
                             }
                           }
 

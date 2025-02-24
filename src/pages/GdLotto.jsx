@@ -22,9 +22,9 @@ export const GdLotto = () => {
   });
 
   const gameTypes = [
-    { type: "5/70", image: Gd570Image },
-    { type: "5/80", image: Gd580Image },
-    { type: "5/90", image: Gd590Image },
+    { type: "5/70", image: Gd570Image, game_logo: "gd_70" },
+    { type: "5/80", image: Gd580Image, game_logo: "gd_80" },
+    { type: "5/90", image: Gd590Image, game_logo: "gd_90" },
   ];
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export const GdLotto = () => {
           </div>
         ) : (
           <div className="row">
-            {gameTypes.map(({ type, image }) => {
+            {gameTypes.map(({ type, image, game_logo }) => {
               const nextGame = gdLottoGames[type];
 
               return (
@@ -111,11 +111,7 @@ export const GdLotto = () => {
                             </p>
                           )}
                         />
-                        <p
-                          onClick={() =>
-                            navigate(`/play-game/${nextGame.drawTypeId}`)
-                          }
-                        >
+                        <p onClick={() => navigate(`/play-game/${game_logo}`)}>
                           <a className="btn btn-blue btn-sm btn-block w-100 p-2">
                             Play Now
                           </a>
@@ -188,7 +184,7 @@ export const GdLotto = () => {
                                           <a
                                             onClick={() =>
                                               navigate(
-                                                `/play-game/${nextGame.drawTypeId}`
+                                                `/play-game/${game_logo}`
                                               )
                                             }
                                             className="btn btn-blue btn-sm btn-block mt-3"
