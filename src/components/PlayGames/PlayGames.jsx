@@ -73,7 +73,10 @@ const PlayGames = () => {
     const fetchData = async () => {
       setIsLoading(true);
       let requestData = { operator_type: id };
-      // Convert "gd_70" back to "5/70"
+      if (id === "GH_5_90") {
+        requestData = { operator_type: "GH 5/90" };
+      }
+
       if (id.startsWith("gd_")) {
         requestData = {
           operator_type: "gd_lotto",
@@ -300,92 +303,6 @@ const PlayGames = () => {
     );
   }
 
-  // const handleConfirmBet = async (e) => {
-  //   e.preventDefault();
-  //   if (!selectedGameType) {
-  //     toast.error("Select a Game Name");
-  //     return;
-  //   }
-  //   if (!selectedBetType) {
-  //     toast.error("Select Bet Type");
-  //     return;
-  //   }
-
-  //   const stakeAmount = parseFloat(
-  //     document.getElementById("stakeAmount").value
-  //   );
-
-  //   if (isNaN(stakeAmount) || stakeAmount < 10) {
-  //     toast.error("Minimum stake amount is ₦10");
-  //     return;
-  //   }
-
-  //   const validDirectTypes = ["2 DIRECT", "3 DIRECT", "4 DIRECT", "5 DIRECT"];
-
-  //   if (validDirectTypes.includes(selectedBetType)) {
-  //     const requiredNumbers = maxSelectableNumbers[selectedBetType];
-
-  //     if (selectedNumbers.length !== requiredNumbers) {
-  //       toast.error(
-  //         `Select exactly ${requiredNumbers} numbers for ${selectedBetType}`
-  //       );
-  //       return;
-  //     }
-
-  //     const multiplier = calculateDirectMultiplier(requiredNumbers);
-  //     const maxWin = stakeAmount * multiplier;
-
-  //     const newConfirmedBet = {
-  //       gname: selectedGameType,
-  //       line: "1",
-  //       gtype: selectedBetType,
-  //       bets: selectedNumbers,
-  //       max_win: `₦${maxWin.toFixed(2)}`,
-  //       total_stake: `₦${stakeAmount.toFixed(2)}`,
-  //     };
-
-  //     setConfirmedBet(newConfirmedBet);
-  //     toast.success("Bet Slip Updated successfully");
-  //   } else if (selectedBetType.startsWith("PERM")) {
-  //     const requiredNumbers = selectedBetType.includes("PERM 2")
-  //       ? 3 // Minimum of 3 numbers for PERM 2
-  //       : selectedBetType.includes("PERM 3")
-  //       ? 4 // Minimum of 4 numbers for PERM 3
-  //       : selectedBetType.includes("PERM 4")
-  //       ? 5 // Minimum of 5 numbers for PERM 4
-  //       : selectedBetType.includes("PERM 5")
-  //       ? 6 // Minimum of 6 numbers for PERM 5
-  //       : 0;
-
-  //     if (requiredNumbers === 0) {
-  //       toast.error("Invalid Bet Type");
-  //       return;
-  //     }
-
-  //     if (selectedNumbers.length < requiredNumbers) {
-  //       toast.error(
-  //         `Select at least ${requiredNumbers} numbers for ${selectedBetType}`
-  //       );
-  //       return;
-  //     }
-
-  //     const lines = await calculatePermLines(selectedBetType, selectedNumbers);
-  //     const multiplier = calculatePermMultiplier(selectedBetType);
-  //     const maxWin = stakeAmount * lines * multiplier;
-  //     const totalStakeAmount = stakeAmount * lines;
-
-  //     const newConfirmedBet = {
-  //       gname: selectedGameType,
-  //       line: lines.toString(),
-  //       gtype: selectedBetType,
-  //       bets: selectedNumbers,
-  //       max_win: `₦${maxWin.toFixed(2)}`,
-  //       total_stake: `₦${totalStakeAmount.toFixed(2)}`,
-  //     };
-
-  //     setConfirmedBet(newConfirmedBet);
-  //   }
-  // };
   const handleConfirmBet = async (e) => {
     e.preventDefault();
 
@@ -477,7 +394,6 @@ const PlayGames = () => {
         max_win: `₦${maxWin.toFixed(2)}`,
         total_stake: `₦${totalStakeAmount.toFixed(2)}`,
       };
-
       setConfirmedBet(newConfirmedBet);
     }
   };
@@ -487,6 +403,7 @@ const PlayGames = () => {
       gd_70: { 2: 140, 3: 1300, 4: 4000, 5: 30000 },
       gd_80: { 2: 180, 3: 1600, 4: 4600, 5: 35000 },
       gd_90: { 2: 250, 3: 2200, 4: 6200, 5: 46000 },
+      GH_5_90: { 2: 250, 3: 2200, 4: 6200, 5: 46000 },
     };
 
     if (gameType in gdMultipliers) {
@@ -512,6 +429,12 @@ const PlayGames = () => {
       gd_70: { "PERM 2": 140, "PERM 3": 1300, "PERM 4": 4000, "PERM 5": 30000 },
       gd_80: { "PERM 2": 180, "PERM 3": 1600, "PERM 4": 4600, "PERM 5": 35000 },
       gd_90: { "PERM 2": 250, "PERM 3": 2200, "PERM 4": 6200, "PERM 5": 46000 },
+      GH_5_90: {
+        "PERM 2": 250,
+        "PERM 3": 2200,
+        "PERM 4": 6200,
+        "PERM 5": 46000,
+      },
     };
 
     if (gameType in gdMultipliers) {
@@ -592,6 +515,8 @@ const PlayGames = () => {
 
   const mapToOperatorPayload = (operatorType, betInfo, selectedWallet) => {
     const { gname, line, gtype, bets, max_win, total_stake } = betInfo;
+    console.log(operatorType);
+
     const selectedGame = perOperator.find((game) => {
       if (operatorType === "lotto_nigeria") {
         return game.drawAlias === gname;
@@ -606,6 +531,8 @@ const PlayGames = () => {
       } else if (operatorType === "ghana_game") {
         return game.gn === gname;
       } else if (["gd_70", "gd_80", "gd_90"].includes(operatorType)) {
+        return game.gameName === gname;
+      } else if (operatorType === "GH_5_90") {
         return game.gameName === gname;
       }
       return false;
@@ -765,6 +692,26 @@ const PlayGames = () => {
           wallet: selectedWallet,
         };
       }
+      case "GH_5_90": {
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          max_win: parseFloat(max_win.replace("₦", "")),
+          ball: bets,
+          operator_type: "gd_lotto",
+          gd_operator_type: operatorType === "GH_5_90" ? "GH 5/90" : "GH 5/90",
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          drawID: selectedGame.drawTypeId,
+          drawTime: selectedGame.drawTime,
+          closetime: selectedGame.drawTime,
+          double_chance: 0,
+          wallet: selectedWallet,
+        };
+      }
       default:
         return {};
     }
@@ -847,6 +794,8 @@ const PlayGames = () => {
                 <strong> Select Operator &gt;&gt; Gd Lotto 80</strong>
               ) : id === "gd_90" ? (
                 <strong> Select Operator &gt;&gt; Gd Lotto 90</strong>
+              ) : id === "GH_5_90" ? (
+                <strong> Select Operator &gt;&gt; Gd GH 90</strong>
               ) : (
                 <strong>Select Operator &gt;&gt; {id}</strong>
               )}
@@ -929,6 +878,16 @@ const PlayGames = () => {
                           id === "gd_80" ||
                           id === "gd_90"
                         ) {
+                          return (
+                            <option
+                              className="text-uppercase"
+                              key={index}
+                              value={item.gameName}
+                            >
+                              {item.gameName}
+                            </option>
+                          );
+                        } else if (id === "GH_5_90") {
                           return (
                             <option
                               className="text-uppercase"
@@ -1366,9 +1325,62 @@ const PlayGames = () => {
                                 </tr>
                               );
                             }
+                          } else if (id === "GH_5_90") {
+                            const drawDateTime = moment(item?.drawTime);
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
+
+                            perOperator.sort((a, b) => {
+                              const drawDateTimeA = moment(b.drawTime);
+                              const drawDateTimeB = moment(a.drawTime);
+                              return (
+                                drawDateTimeB.diff(currentTime) -
+                                drawDateTimeA.diff(currentTime)
+                              );
+                            });
+
+                            if (timeDifference > 0) {
+                              return (
+                                <tr key={index}>
+                                  <td>
+                                    <small>
+                                      <strong>{item.gameName}</strong>
+                                    </small>
+                                  </td>
+                                  <td>
+                                    <img
+                                      src={item.gameIconUrl}
+                                      alt={item.gameTitle}
+                                      width="100"
+                                    />
+                                  </td>
+                                  <td>
+                                    <small>
+                                      <Countdown
+                                        date={
+                                          currentTime.valueOf() + timeDifference
+                                        }
+                                        renderer={({
+                                          days,
+                                          hours,
+                                          minutes,
+                                          seconds,
+                                        }) => (
+                                          <>
+                                            {days}days {hours}hrs {minutes}
+                                            mins {seconds}secs
+                                          </>
+                                        )}
+                                      />
+                                    </small>
+                                  </td>
+                                </tr>
+                              );
+                            }
                           }
 
-                          return null; // For other operators, you can add similar checks
+                          return null;
                         })
                       )}
                     </tbody>
@@ -1399,7 +1411,15 @@ const PlayGames = () => {
                   </div>
                   <div
                     onClick={() => {
-                      navigate(`/bet-history/${id}`);
+                      const adjustedId = [
+                        "GH_5_90",
+                        "gd_70",
+                        "gd_80",
+                        "gd_90",
+                      ].includes(id)
+                        ? "gd_lotto"
+                        : id;
+                      navigate(`/bet-history/${adjustedId}`);
                     }}
                     className="col-md-4"
                     style={{ cursor: "pointer" }}

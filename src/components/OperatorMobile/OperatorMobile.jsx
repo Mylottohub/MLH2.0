@@ -53,6 +53,7 @@ const OperatorMobile = () => {
     "lottomania",
     "lotto_nigeria",
     "gd_lotto",
+    "GH 5/90",
   ];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
@@ -134,6 +135,8 @@ const OperatorMobile = () => {
     green_lotto: "green_lotto",
     lottomania: "lottomania",
     lotto_nigeria: "set_lotto",
+    gd_lotto: "gd_lotto",
+    "GH 5/90": "gd_ghana",
   };
 
   return (
@@ -174,6 +177,7 @@ const OperatorMobile = () => {
                   green_ghana_game: { name: "drawname", time: "drawtime" },
                   lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
+                  "GH 5/90": { name: "gameName", time: "drawTime" },
                 };
 
                 const dataArray = Array.isArray(operatorDataArray)
@@ -201,6 +205,9 @@ const OperatorMobile = () => {
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   } else if (operatorType === "green_ghana_game") {
                     const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
+                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                  } else if (operatorType === "GH 5/90") {
+                    const drawDateTimeString = `${game?.drawTime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   }
 
@@ -276,6 +283,20 @@ const OperatorMobile = () => {
                       return parsedTime.toDate();
                     } else {
                       console.error("Invalid date format:", drawDateTimeString);
+                      return null;
+                    }
+                  } else if (operatorType === "GH 5/90") {
+                    const drawDateTimeString = `${game?.drawTime}`;
+                    const parsedTime = moment(
+                      drawDateTimeString,
+                      "YYYYMMDD HH:mm:ss"
+                    )
+                      .utcOffset("+00:00")
+                      .utc();
+
+                    if (parsedTime.isValid()) {
+                      return parsedTime.toDate();
+                    } else {
                       return null;
                     }
                   } else {
@@ -368,15 +389,22 @@ const OperatorMobile = () => {
                                             </span>
                                           </small>
 
-                                          <p>
-                                            <a
-                                              onClick={() => {
-                                                navigate(
-                                                  `/play-game/${operatorType}`
-                                                );
-                                              }}
-                                              className="btn btn-blue btn-sm btn-block"
-                                            >
+                                          <p
+                                            onClick={() => {
+                                              const sanitizedOperatorType =
+                                                operatorType === "GH 5/90"
+                                                  ? operatorType.replace(
+                                                      /\s|\/+/g,
+                                                      "_"
+                                                    )
+                                                  : operatorType;
+
+                                              navigate(
+                                                `/play-game/${sanitizedOperatorType}`
+                                              );
+                                            }}
+                                          >
+                                            <a className="btn btn-blue btn-sm btn-block w-100">
                                               Play Now
                                             </a>
                                           </p>

@@ -51,8 +51,8 @@ const Operator = () => {
     "lottomania",
     "lotto_nigeria",
     "gd_lotto",
+    "GH 5/90",
   ];
-
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
       const requestData = { operator_type: operatorType };
@@ -132,6 +132,8 @@ const Operator = () => {
     green_lotto: "green_lotto",
     lottomania: "lottomania",
     lotto_nigeria: "set_lotto",
+    gd_lotto: "gd_lotto",
+    "GH 5/90": "gd_ghana",
   };
   return (
     <>
@@ -172,8 +174,8 @@ const Operator = () => {
                   green_ghana_game: { name: "drawname", time: "drawtime" },
                   lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
+                  "GH 5/90": { name: "gameName", time: "drawTime" },
                 };
-
                 const dataArray = Array.isArray(operatorDataArray)
                   ? operatorDataArray
                   : Object.values(operatorDataArray);
@@ -199,6 +201,9 @@ const Operator = () => {
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   } else if (operatorType === "green_ghana_game") {
                     const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
+                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                  } else if (operatorType === "GH 5/90") {
+                    const drawDateTimeString = `${game?.drawTime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   }
 
@@ -258,6 +263,20 @@ const Operator = () => {
                     }
                   } else if (operatorType === "green_ghana_game") {
                     const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
+                    const parsedTime = moment(
+                      drawDateTimeString,
+                      "YYYYMMDD HH:mm:ss"
+                    )
+                      .utcOffset("+00:00")
+                      .utc();
+
+                    if (parsedTime.isValid()) {
+                      return parsedTime.toDate();
+                    } else {
+                      return null;
+                    }
+                  } else if (operatorType === "GH 5/90") {
+                    const drawDateTimeString = `${game?.drawTime}`;
                     const parsedTime = moment(
                       drawDateTimeString,
                       "YYYYMMDD HH:mm:ss"
@@ -338,7 +357,12 @@ const Operator = () => {
                             </p>
                             <p
                               onClick={() => {
-                                navigate(`/play-game/${operatorType}`);
+                                const sanitizedOperatorType =
+                                  operatorType === "GH 5/90"
+                                    ? operatorType.replace(/\s|\/+/g, "_")
+                                    : operatorType;
+
+                                navigate(`/play-game/${sanitizedOperatorType}`);
                               }}
                             >
                               <a className="btn btn-blue btn-sm btn-block w-100 p-2">

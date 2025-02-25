@@ -174,6 +174,7 @@ const TransactionHistory = () => {
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
   );
+  // console.log(betHistory);
 
   return (
     <>
@@ -944,6 +945,7 @@ const TransactionHistory = () => {
                 <option value="lottomania">Lottomania</option>
                 <option value="lotto_nigeria">Set Lotto</option>
                 <option value="green_ghana_game">Green Ghana Games</option>
+                <option value="gd_lotto">Gd Lotto</option>
               </select>
               <i
                 className="bi bi-chevron-down position-absolute"
@@ -994,7 +996,7 @@ const TransactionHistory = () => {
 
                   <tbody>
                     <>
-                      {betHistory?.data
+                      {betHistory
                         ?.sort(
                           (a, b) =>
                             new Date(b.created_at) - new Date(a.created_at)
@@ -1004,7 +1006,7 @@ const TransactionHistory = () => {
                             .utc(record?.date, "YYYY-MM-DD HH:mm:ss")
                             .local()
                             .format("Do MMM YYYY | h:mm:ssA");
-                          // console.log(record);
+                          // console.log("ddf", record);
 
                           return (
                             <tr key={index} className="table-light transact">
@@ -1018,6 +1020,8 @@ const TransactionHistory = () => {
                                   <td>{record?.wagerID}</td>
                                 ) : selectedOperator === "wesco" ? (
                                   <td>{record?.TikcetId}</td>
+                                ) : selectedOperator === "gd_lotto" ? (
+                                  <td>{record?.TikcetId}</td>
                                 ) : (
                                   <td>{record?.TSN}</td>
                                 )}
@@ -1030,6 +1034,8 @@ const TransactionHistory = () => {
                                 ) : selectedOperator === "green_ghana_game" ? (
                                   <td>{record?.drawname}</td>
                                 ) : selectedOperator === "wesco" ? (
+                                  <td>{record?.drawname}</td>
+                                ) : selectedOperator === "gd_lotto" ? (
                                   <td>{record?.drawname}</td>
                                 ) : selectedOperator === "lotto_nigeria" ? (
                                   <td>{record?.drawAlias}</td>
@@ -1265,6 +1271,13 @@ const TransactionHistory = () => {
                   {selectedBet?.mgametype}
                 </span>
               </>
+            ) : selectedOperator === "gd_lotto" ? (
+              <>
+                <div>Gd Lotto</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             ) : (
               <>
                 <div>{selectedOperator}</div>
@@ -1287,6 +1300,8 @@ const TransactionHistory = () => {
                   ) : selectedOperator === "green_ghana_game" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "wesco" ? (
+                    <span> {selectedBet?.TikcetId}</span>
+                  ) : selectedOperator === "gd_lotto" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "lotto_nigeria" ? (
                     <span> {selectedBet?.wagerID}</span>
@@ -1311,6 +1326,14 @@ const TransactionHistory = () => {
                         .format("Do MMM YYYY | h:mm:ssA")}
                     </span>
                   ) : selectedOperator === "green_ghana_game" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
+                  ) : selectedOperator === "gd_lotto" ? (
                     <span>
                       {" "}
                       {moment
@@ -1374,6 +1397,8 @@ const TransactionHistory = () => {
                     <span className="text-capitalize">Lottomania</span>
                   ) : selectedOperator === "ghana_game" ? (
                     <span className="text-capitalize">5/90 Games</span>
+                  ) : selectedOperator === "gd_lotto" ? (
+                    <span className="text-capitalize">Gd Lotto</span>
                   ) : (
                     <span> {selectedOperator}</span>
                   )}
@@ -1398,6 +1423,8 @@ const TransactionHistory = () => {
                   ) : selectedOperator === "green_ghana_game" ? (
                     <td>{selectedBet?.drawname}</td>
                   ) : selectedOperator === "wesco" ? (
+                    <p> {selectedBet?.drawname}</p>
+                  ) : selectedOperator === "gd_lotto" ? (
                     <p> {selectedBet?.drawname}</p>
                   ) : selectedOperator === "lotto_nigeria" ? (
                     <p> {selectedBet?.drawAlias}</p>
