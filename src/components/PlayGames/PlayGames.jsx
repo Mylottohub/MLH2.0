@@ -10,12 +10,16 @@ import { useSelector } from "react-redux";
 import { Button, Spinner } from "react-bootstrap";
 import { HTTP } from "../../utils";
 import { useQueryClient } from "@tanstack/react-query";
+import Gd570Image from "/images/GD570.png";
+import Gd580Image from "/images/GD580.png";
+import Gd590Image from "/images/GD590.png";
 
 const PlayGames = () => {
   const [selectedBetType, setSelectedBetType] = useState("");
   const [selectedGameType, setSelectedGameType] = useState("");
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [selectedCount, setSelectedCount] = useState(0);
+  const [selectedJackpotGame, setSelectedJackpotGame] = useState("gd_70");
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingConfrimBet, setIsLoadingConfirmBet] = useState(false);
@@ -68,20 +72,27 @@ const PlayGames = () => {
     default:
       displayText = "";
   }
-
+  const handleJackpotSelection = (gameLogo) => {
+    setSelectedJackpotGame(gameLogo);
+  };
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       let requestData = { operator_type: id };
       if (id === "GH_5_90") {
         requestData = { operator_type: "GH 5/90" };
-      }
-
-      if (id.startsWith("gd_")) {
-        requestData = {
-          operator_type: "gd_lotto",
-          gd_operator_type: id.replace("gd_", "5/"),
-        };
+      } else if (id.startsWith("gd_")) {
+        if (id === "gd_jackpot") {
+          requestData = {
+            operator_type: "gd_lotto",
+            gd_operator_type: "5/70",
+          };
+        } else {
+          requestData = {
+            operator_type: "gd_lotto",
+            gd_operator_type: id.replace("gd_", "5/"),
+          };
+        }
       }
 
       try {
@@ -142,24 +153,45 @@ const PlayGames = () => {
       checkbox.checked = false;
     });
   };
+
   const handleCheckboxChange = (event) => {
-    const number = parseInt(event.target.value);
-    // Check if the number is already selected.
-    const isSelected = selectedNumbers.includes(number);
+    const value = event.target.value;
+    const isNumber = !isNaN(value); // Check if it's a number or an alphabet
+    const isSelected = selectedNumbers.includes(value);
+
+    // Separate numbers and alphabets
+    const selectedNumbersOnly = selectedNumbers.filter((item) => !isNaN(item));
+    const selectedAlphabetsOnly = selectedNumbers.filter((item) => isNaN(item));
 
     if (isSelected) {
-      // If it's already selected, remove it.
-      setSelectedNumbers(selectedNumbers.filter((num) => num !== number));
-      setSelectedCount(selectedCount - 1);
-    } else if (selectedCount < maxSelectableNumbers[selectedBetType]) {
-      // If it's not selected and we haven't reached the maximum allowed for the current bet type, add it.
-      setSelectedNumbers([...selectedNumbers, number]);
-      setSelectedCount(selectedCount + 1);
+      const updatedSelection = selectedNumbers.filter((item) => item !== value);
+      setSelectedNumbers(updatedSelection);
+      return;
+    }
+
+    if (id === "NNP") {
+      if (isNumber) {
+        if (selectedNumbersOnly.length >= 3) {
+          toast.error("You can only select up to 3 numbers (0-9) for NNP.");
+          return;
+        }
+        setSelectedNumbers([...selectedNumbers, value]);
+      } else {
+        if (selectedAlphabetsOnly.length >= 2) {
+          toast.error("You can only select up to 2 alphabets (A-Z) for NNP.");
+          return;
+        }
+        setSelectedNumbers([...selectedNumbers, value]);
+      }
     } else {
-      // If the maximum selection limit is reached, show an alert.
-      alert(
-        `You can not select more than ${maxSelectableNumbers[selectedBetType]} numbers for ${selectedBetType}`
-      );
+      if (selectedCount < maxSelectableNumbers[selectedBetType]) {
+        setSelectedNumbers([...selectedNumbers, value]);
+        setSelectedCount(selectedCount + 1);
+      } else {
+        alert(
+          `You cannot select more than ${maxSelectableNumbers[selectedBetType]} numbers for ${selectedBetType}`
+        );
+      }
     }
   };
 
@@ -179,6 +211,100 @@ const PlayGames = () => {
 
     const gtype = selectedBetType;
     const checkboxes = document.querySelectorAll(".chk-btn");
+
+    if (id === "NNP") {
+      const numToRandomize = 3;
+      const alphaToRandomize = 2;
+
+      const availableNumbers = [];
+      const availableAlphabets = [];
+
+      checkboxes.forEach((checkbox) => {
+        const value = checkbox.value;
+        if (!isNaN(value)) {
+          availableNumbers.push(value);
+        } else {
+          availableAlphabets.push(value);
+        }
+      });
+
+      if (
+        availableNumbers.length < numToRandomize ||
+        availableAlphabets.length < alphaToRandomize
+      ) {
+        toast.error(
+          "Not enough numbers or alphabets available for randomization."
+        );
+        return;
+      }
+
+      const getRandomElements = (array, count) => {
+        const result = [];
+        while (result.length < count) {
+          const randomIndex = Math.floor(Math.random() * array.length);
+          const selected = array[randomIndex];
+          if (!result.includes(selected)) {
+            result.push(selected);
+          }
+        }
+        return result;
+      };
+
+      const randomizedNumbers = getRandomElements(
+        availableNumbers,
+        numToRandomize
+      );
+      const randomizedAlphabets = getRandomElements(
+        availableAlphabets,
+        alphaToRandomize
+      );
+
+      const randomizedSelections = [
+        ...randomizedNumbers,
+        ...randomizedAlphabets,
+      ];
+
+      setSelectedNumbers(randomizedSelections);
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = randomizedSelections.includes(checkbox.value);
+      });
+
+      return;
+    }
+    if (id === "gd_jackpot") {
+      const mustCheck = maxSelectableNumbers[gtype];
+
+      if (mustCheck >= checkboxes.length) {
+        toast.error(`Not enough numbers available for this bet type: ${gtype}`);
+        return;
+      }
+
+      const randomIndices = [];
+
+      while (randomIndices.length < mustCheck) {
+        const randomIndex = Math.floor(Math.random() * checkboxes.length);
+        if (!randomIndices.includes(randomIndex)) {
+          randomIndices.push(randomIndex);
+        }
+      }
+
+      const randomizedNumbers = randomIndices.map((index) =>
+        parseInt(checkboxes[index].value)
+      );
+
+      setSelectedNumbers(randomizedNumbers);
+
+      checkboxes.forEach((checkbox, index) => {
+        checkbox.checked = randomIndices.includes(index);
+      });
+
+      if (gtype === "2 DIRECT" || gtype === "3 DIRECT") {
+        checkboxes.forEach((checkbox) => {
+          checkbox.disabled = true;
+        });
+      }
+    }
 
     if (gtype.startsWith("PERM")) {
       let numToRandomize;
@@ -273,34 +399,92 @@ const PlayGames = () => {
     setSelectedCount(0);
   };
 
-  let maxNumber = 90; // Default max number for all operators
+  let maxNumber = 90;
 
-  if (id === "gd_70") {
+  if (id === "gd_jackpot") {
+    if (selectedJackpotGame === "gd_70") {
+      maxNumber = 70;
+    } else if (selectedJackpotGame === "gd_80") {
+      maxNumber = 80;
+    } else if (selectedJackpotGame === "gd_90") {
+      maxNumber = 90;
+    }
+  } else if (id === "gd_70") {
     maxNumber = 70;
   } else if (id === "gd_80") {
     maxNumber = 80;
+  } else if (id === "gd_90") {
+    maxNumber = 90;
+  } else if (id === "NNP") {
+    maxNumber = 9;
   }
 
-  for (let x = 1; x <= maxNumber; x++) {
-    const id = `c${x}`;
-    checkboxes.push(
-      <React.Fragment key={id}>
-        <input
-          type="checkbox"
-          name="num[]"
-          className="chk-btn"
-          value={x}
-          id={id}
-          onChange={handleCheckboxChange}
-          disabled={
-            !selectedBetType ||
-            (selectedCount >= maxSelectableNumbers[selectedBetType] &&
-              !selectedNumbers.includes(x))
-          }
-        />
-        <label htmlFor={id}>{x}</label>
-      </React.Fragment>
-    );
+  const alphabetsCheckboxes = [];
+  if (id === "NNP") {
+    for (let x = 0; x <= 9; x++) {
+      const checkId = `c${x}`;
+      const isChecked = selectedNumbers.includes(x.toString());
+      checkboxes.push(
+        <React.Fragment key={checkId}>
+          <input
+            type="checkbox"
+            name="num[]"
+            className="chk-btn"
+            value={x}
+            id={checkId}
+            onChange={handleCheckboxChange}
+            disabled={
+              !isChecked &&
+              selectedNumbers.filter((num) => !isNaN(num)).length >= 3
+            }
+          />
+          <label htmlFor={checkId}>{x}</label>
+        </React.Fragment>
+      );
+    }
+
+    for (let i = 65; i <= 90; i++) {
+      const letter = String.fromCharCode(i);
+      const checkId = `c${letter}`;
+      alphabetsCheckboxes.push(
+        <React.Fragment key={checkId}>
+          <input
+            type="checkbox"
+            name="num[]"
+            className="chk-btn"
+            value={letter}
+            id={checkId}
+            onChange={handleCheckboxChange}
+            disabled={
+              selectedNumbers.filter((num) => isNaN(num)).length >= 2 &&
+              !selectedNumbers.includes(letter)
+            }
+          />
+          <label htmlFor={checkId}>{letter}</label>
+        </React.Fragment>
+      );
+    }
+  } else {
+    for (let x = id === "gd_70" ? 1 : 1; x <= maxNumber; x++) {
+      const checkId = `c${x}`;
+      checkboxes.push(
+        <React.Fragment key={checkId}>
+          <input
+            type="checkbox"
+            name="num[]"
+            className="chk-btn"
+            value={x}
+            id={checkId}
+            onChange={handleCheckboxChange}
+            disabled={
+              selectedCount >= maxSelectableNumbers[selectedBetType] &&
+              !selectedNumbers.includes(x)
+            }
+          />
+          <label htmlFor={checkId}>{x}</label>
+        </React.Fragment>
+      );
+    }
   }
 
   const handleConfirmBet = async (e) => {
@@ -319,8 +503,26 @@ const PlayGames = () => {
       document.getElementById("stakeAmount").value
     );
 
-    if (isNaN(stakeAmount) || stakeAmount < 10) {
-      toast.error("Minimum stake amount is ₦10");
+    if (isNaN(stakeAmount)) {
+      toast.error("Invalid stake amount");
+      return;
+    }
+
+    const minStake = id === "NNP" ? 100 : 10;
+
+    if (stakeAmount < minStake) {
+      toast.error(`Minimum stake amount is ₦${minStake}`);
+      return;
+    }
+    const maxStake = 100;
+
+    if (stakeAmount < minStake) {
+      toast.error(`Minimum stake amount is ₦${minStake}`);
+      return;
+    }
+
+    if (id === "NNP" && stakeAmount > maxStake) {
+      toast.error(`Maximum stake amount for NNP is ₦${maxStake}`);
       return;
     }
 
@@ -351,6 +553,43 @@ const PlayGames = () => {
         bets: selectedNumbers,
         max_win: `₦${maxWin.toFixed(2)}`,
         total_stake: `₦${stakeAmount.toFixed(2)}`,
+      };
+
+      setConfirmedBet(newConfirmedBet);
+
+      toast.success("Bet Slip Updated successfully");
+    } else if (id === "NNP") {
+      const selectedNumbersOnly = selectedNumbers.filter(
+        (item) => !isNaN(item)
+      );
+      const selectedAlphabetsOnly = selectedNumbers.filter((item) =>
+        isNaN(item)
+      );
+
+      if (
+        selectedNumbersOnly.length !== 3 ||
+        selectedAlphabetsOnly.length !== 2
+      ) {
+        toast.error(
+          "For NNP, select exactly 3 numbers (0-9) and 2 letters (A-Z)."
+        );
+        return;
+      }
+
+      const formattedBet = [
+        ...selectedNumbersOnly,
+        ...selectedAlphabetsOnly,
+      ].join("");
+
+      const lines = selectedBetType.startsWith("PERM") ? 12 : 1;
+      const totalStakeAmount = 100 * lines;
+
+      const newConfirmedBet = {
+        gname: selectedGameType,
+        line: lines.toString(),
+        gtype: selectedBetType,
+        bets: formattedBet,
+        total_stake: `₦${totalStakeAmount.toFixed(2)}`,
       };
 
       setConfirmedBet(newConfirmedBet);
@@ -515,7 +754,6 @@ const PlayGames = () => {
 
   const mapToOperatorPayload = (operatorType, betInfo, selectedWallet) => {
     const { gname, line, gtype, bets, max_win, total_stake } = betInfo;
-    console.log(operatorType);
 
     const selectedGame = perOperator.find((game) => {
       if (operatorType === "lotto_nigeria") {
@@ -534,12 +772,14 @@ const PlayGames = () => {
         return game.gameName === gname;
       } else if (operatorType === "GH_5_90") {
         return game.gameName === gname;
+      } else if (operatorType === "NNP") {
+        return game.gameName === gname;
       }
       return false;
     });
 
     if (!selectedGame) {
-      return {}; // Prevent empty payload issues
+      return {};
     }
 
     switch (operatorType) {
@@ -712,6 +952,32 @@ const PlayGames = () => {
           wallet: selectedWallet,
         };
       }
+      case "NNP": {
+        let formattedBets =
+          typeof bets === "string"
+            ? bets
+                .split("")
+                .map((item) =>
+                  !isNaN(item) ? Number(item) : item.toUpperCase()
+                )
+            : [];
+
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          ball: formattedBets,
+          operator_type: "NNP",
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          drawID: selectedGame.drawTypeId,
+          drawTime: selectedGame.drawTime,
+          closetime: selectedGame.drawTime,
+          double_chance: 0,
+          wallet: selectedWallet,
+        };
+      }
       default:
         return {};
     }
@@ -765,7 +1031,36 @@ const PlayGames = () => {
     gd_80: "GD580",
     gd_90: "GD590",
   };
+  const gameTypes = [
+    { image: Gd570Image, game_logo: "gd_70" },
+    { image: Gd580Image, game_logo: "gd_80" },
+    { image: Gd590Image, game_logo: "gd_90" },
+  ];
+
   const imageSrc = `/images/${gameImageMap[id] || id}.png`;
+  const allBetTypes = [
+    { value: "2 DIRECT", label: "2 DIRECT" },
+    { value: "PERM 2", label: "PERM 2" },
+    { value: "3 DIRECT", label: "3 DIRECT" },
+    { value: "PERM 3", label: "PERM 3" },
+    { value: "4 DIRECT", label: "4 DIRECT" },
+    { value: "PERM 4", label: "PERM 4" },
+    { value: "5 DIRECT", label: "5 DIRECT" },
+    { value: "PERM 5", label: "PERM 5" },
+  ];
+
+  const filteredBetTypes =
+    id === "NNP"
+      ? [
+          { value: "STRAIGHT", label: "Straight" },
+          { value: "PERM", label: "Perm" },
+        ]
+      : id === "gd_jackpot"
+      ? [
+          { value: "2 DIRECT", label: "Direct 2 Bundle" },
+          { value: "3 DIRECT", label: "Direct 3 Bundle" },
+        ]
+      : allBetTypes;
 
   return (
     <>
@@ -796,6 +1091,8 @@ const PlayGames = () => {
                 <strong> Select Operator &gt;&gt; Gd Lotto 90</strong>
               ) : id === "GH_5_90" ? (
                 <strong> Select Operator &gt;&gt; Gd GH 90</strong>
+              ) : id === "gd_jackpot" ? (
+                <strong> Select Operator &gt;&gt; Gd Jackpot</strong>
               ) : (
                 <strong>Select Operator &gt;&gt; {id}</strong>
               )}
@@ -820,8 +1117,8 @@ const PlayGames = () => {
                     >
                       <option value="">Select Game</option>
 
-                      {perOperator.map((item, index) => {
-                        const isToday = moment(item.sdt).isSame(
+                      {perOperator?.map((item, index) => {
+                        const isToday = moment(item?.sdt).isSame(
                           moment(),
                           "day"
                         );
@@ -897,9 +1194,31 @@ const PlayGames = () => {
                               {item.gameName}
                             </option>
                           );
+                        } else if (id === "NNP") {
+                          return (
+                            <option
+                              className="text-uppercase"
+                              key={index}
+                              value={item.gameName}
+                            >
+                              {item.gameName}
+                            </option>
+                          );
+                        } else if (id === "gd_jackpot") {
+                          if (index === 0) {
+                            return (
+                              <option
+                                className="text-uppercase"
+                                key={index}
+                                value={item.gameName}
+                              >
+                                {item.gameName}
+                              </option>
+                            );
+                          } else {
+                            return null;
+                          }
                         }
-
-                        return null;
                       })}
                     </select>
                     <br />
@@ -912,14 +1231,11 @@ const PlayGames = () => {
                       onChange={handleBetTypeChange}
                     >
                       <option value="">Bet type</option>
-                      <option value="2 DIRECT">2 DIRECT</option>
-                      <option value="PERM 2">PERM 2</option>
-                      <option value="3 DIRECT">3 DIRECT</option>
-                      <option value="PERM 3">PERM 3</option>
-                      <option value="4 DIRECT">4 DIRECT</option>
-                      <option value="PERM 4">PERM 4</option>
-                      <option value="5 DIRECT">5 DIRECT</option>
-                      <option value="PERM 5">PERM 5</option>
+                      {filteredBetTypes.map((bet) => (
+                        <option key={bet.value} value={bet.value}>
+                          {bet.label}
+                        </option>
+                      ))}
                     </select>
                     &nbsp; &nbsp; &nbsp; &nbsp;{" "}
                   </div>
@@ -951,7 +1267,7 @@ const PlayGames = () => {
                           />
                         </div>
                       ) : (
-                        perOperator.map((item, index) => {
+                        perOperator?.map((item, index) => {
                           if (id === "lotto_nigeria") {
                             const drawDateTime = moment(
                               item.drawDate,
@@ -1271,7 +1587,8 @@ const PlayGames = () => {
                           } else if (
                             id === "gd_70" ||
                             id === "gd_80" ||
-                            id === "gd_90"
+                            id === "gd_90" ||
+                            id === "gd_jackpot"
                           ) {
                             const drawDateTime = moment(item?.drawTime);
                             const currentTime = moment();
@@ -1378,6 +1695,59 @@ const PlayGames = () => {
                                 </tr>
                               );
                             }
+                          } else if (id === "NNP") {
+                            const drawDateTime = moment(item?.drawTime);
+                            const currentTime = moment();
+                            const timeDifference =
+                              drawDateTime.diff(currentTime);
+
+                            perOperator.sort((a, b) => {
+                              const drawDateTimeA = moment(b.drawTime);
+                              const drawDateTimeB = moment(a.drawTime);
+                              return (
+                                drawDateTimeB.diff(currentTime) -
+                                drawDateTimeA.diff(currentTime)
+                              );
+                            });
+
+                            if (timeDifference > 0) {
+                              return (
+                                <tr key={index}>
+                                  <td>
+                                    <small>
+                                      <strong>{item.gameName}</strong>
+                                    </small>
+                                  </td>
+                                  <td>
+                                    <img
+                                      src={item.gameIconUrl}
+                                      alt={item.gameTitle}
+                                      width="100"
+                                    />
+                                  </td>
+                                  <td>
+                                    <small>
+                                      <Countdown
+                                        date={
+                                          currentTime.valueOf() + timeDifference
+                                        }
+                                        renderer={({
+                                          days,
+                                          hours,
+                                          minutes,
+                                          seconds,
+                                        }) => (
+                                          <>
+                                            {days}days {hours}hrs {minutes}
+                                            mins {seconds}secs
+                                          </>
+                                        )}
+                                      />
+                                    </small>
+                                  </td>
+                                </tr>
+                              );
+                            }
                           }
 
                           return null;
@@ -1392,6 +1762,30 @@ const PlayGames = () => {
           <br />
           <div className="row mb-5">
             <div className="col-md-8">
+              <strong>Select Game Type</strong>
+              {id === "gd_jackpot" && (
+                <div className="row">
+                  {gameTypes.map(({ image, game_logo }, index) => (
+                    <div key={index} className="col-3 p-2 mx-auto">
+                      <img
+                        src={image}
+                        className={`img-fluid ${
+                          selectedJackpotGame === game_logo ? "selected" : ""
+                        }`}
+                        onClick={() => handleJackpotSelection(game_logo)}
+                        style={{
+                          cursor: "pointer",
+                          border:
+                            selectedJackpotGame === game_logo
+                              ? "2px solid #FDC718"
+                              : "none",
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <div className="div_lgrey">
                 <div className="row">
                   <div className="col-md-4 mb-3">
@@ -1431,10 +1825,30 @@ const PlayGames = () => {
                 </div>
                 <hr />
                 <p>
-                  <small>Select numbers manually or use randomizer</small>
+                  <small>
+                    Select{" "}
+                    {id === "NNP"
+                      ? "Numbers or Alphabets manually or use randomizer"
+                      : "numbers manually or use randomizer"}{" "}
+                  </small>
                 </p>
                 <br />
-                <div>{checkboxes}</div>
+                <div>
+                  {id === "NNP" && (
+                    <div>
+                      <h5>Select Exactly 3 Numbers</h5>
+                      <div className="numbers-container">{checkboxes}</div>
+                      <h5 className="mt-5">Select Exactly 2 Alphabets</h5>
+                      <div className="alphabets-container">
+                        {alphabetsCheckboxes}
+                      </div>
+                    </div>
+                  )}
+                  {id !== "NNP" && (
+                    <div className="numbers-container">{checkboxes}</div>
+                  )}
+                </div>
+
                 <br />
                 <br />
                 <input
@@ -1444,6 +1858,7 @@ const PlayGames = () => {
                   required
                   id="stakeAmount"
                 />
+
                 <br />
 
                 <Button
@@ -1478,47 +1893,29 @@ const PlayGames = () => {
                 </div>
                 {confirmedBet && (
                   <div className="div_lgrey" style={{ marginTop: "-20px" }}>
-                    <b>Game Name: {confirmedBet.gname}</b> <br />
+                    <b>Game Name: {confirmedBet?.gname}</b> <br />
                     <br />
                     <div id="bet_info">
-                      <strong>Lines: {confirmedBet.line}</strong>
+                      <strong>Lines: {confirmedBet?.line}</strong>
                       <span id="bline"></span>
                       <br />
                       <br />
-                      <strong>Type: {confirmedBet.gtype}</strong>
+                      <strong>Type: {confirmedBet?.gtype}</strong>
                       <br />
                       <br />
 
-                      <strong>My bets: {confirmedBet.bets.join(", ")} </strong>
+                      <strong>
+                        My bets:{" "}
+                        {id === "NNP"
+                          ? confirmedBet?.bets
+                          : confirmedBet?.bets.join(", ")}
+                      </strong>
 
-                      <span id="bbets"></span>
-
-                      {/* <div
-                        className="d-flex justify-content-between mt-3 mb-3"
-                        style={{
-                          background: "#fff",
-                          border: "1px solid #406777",
-                          borderRadius: "5px",
-                        }}
-                      >
-                        <p className="mt-2 p-1">0.0</p>
-                        <p className="mt-2 p-1">₦</p>
-                      </div>
-                      <div className="d-flex justify-content-around mt-3 mb-3">
-                        <a
-                          style={{ color: "#406777!important" }}
-                          className="btn mt-2 p-1 bg-light"
-                        >
-                          20
-                        </a>
-                        <a className="btn mt-2 p-1">50</a>
-                        <a className="btn mt-2 p-1">100</a>
-                        <a className="btn mt-2 p-1">200</a>
-                      </div> */}
-
-                      <p className="fw-bold mt-4">
-                        Maximum Win: {confirmedBet.max_win}
-                      </p>
+                      {id !== "NNP" && (
+                        <p className="fw-bold mt-4">
+                          Maximum Win: {confirmedBet?.max_win}
+                        </p>
+                      )}
 
                       <p className="fw-bold mt-4">
                         Total Stake: {confirmedBet.total_stake}

@@ -11,6 +11,18 @@
     overflow-x: hidden;
 }
 
+.numbers-container,
+.alphabets-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.numbers-container {
+  margin-bottom: 20px;
+}
+
+
 .blue_dropdown_select {
     background-color: #406777;
     color: #FFF;

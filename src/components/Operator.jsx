@@ -52,6 +52,7 @@ const Operator = () => {
     "lotto_nigeria",
     "gd_lotto",
     "GH 5/90",
+    "NNP",
   ];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
@@ -134,6 +135,7 @@ const Operator = () => {
     lotto_nigeria: "set_lotto",
     gd_lotto: "gd_lotto",
     "GH 5/90": "gd_ghana",
+    NNP: "nigerian_number plate",
   };
   return (
     <>
@@ -175,6 +177,7 @@ const Operator = () => {
                   lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
                   "GH 5/90": { name: "gameName", time: "drawTime" },
+                  NNP: { name: "gameName", time: "drawTime" },
                 };
                 const dataArray = Array.isArray(operatorDataArray)
                   ? operatorDataArray
@@ -203,6 +206,9 @@ const Operator = () => {
                     const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   } else if (operatorType === "GH 5/90") {
+                    const drawDateTimeString = `${game?.drawTime}`;
+                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                  } else if (operatorType === "NNP") {
                     const drawDateTimeString = `${game?.drawTime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
                   }
@@ -276,6 +282,20 @@ const Operator = () => {
                       return null;
                     }
                   } else if (operatorType === "GH 5/90") {
+                    const drawDateTimeString = `${game?.drawTime}`;
+                    const parsedTime = moment(
+                      drawDateTimeString,
+                      "YYYYMMDD HH:mm:ss"
+                    )
+                      .utcOffset("+00:00")
+                      .utc();
+
+                    if (parsedTime.isValid()) {
+                      return parsedTime.toDate();
+                    } else {
+                      return null;
+                    }
+                  } else if (operatorType === "NNP") {
                     const drawDateTimeString = `${game?.drawTime}`;
                     const parsedTime = moment(
                       drawDateTimeString,
@@ -398,6 +418,33 @@ const Operator = () => {
               }
             })
           )}
+          <div className="col-md-3 col-sm-6 col-xs-12 col-2">
+            <div className="service-wrap mb-5">
+              <a>
+                <div className="service-img">
+                  <img
+                    src="/images/gd_jackpot.png"
+                    alt=""
+                    className="img-fluid mb-3"
+                  />
+                </div>
+              </a>
+              <div className="service-content text-center">
+                <p>
+                  <p
+                    onClick={() => {
+                      navigate(`/play-game/gd_jackpot`);
+                    }}
+                    className="btn btn-blue btn-sm btn-block w-100 p-2"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Play Now
+                  </p>
+                </p>
+              </div>
+            </div>
+          </div>
           <div className="col-md-3 col-sm-6 col-xs-12 col-2">
             <div className="service-wrap mb-5">
               <a>
