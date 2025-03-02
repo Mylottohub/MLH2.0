@@ -54,7 +54,7 @@ const BetHistory = () => {
         }
       );
 
-      setBetHistory(response.data.data);
+      setBetHistory(response.data);
     } catch (error) {
       // console.error(`Error fetching ${id} games:`, error);
     } finally {
@@ -111,6 +111,8 @@ const BetHistory = () => {
                 ? "Green Lotto"
                 : id === "green_ghana_game"
                 ? "Green Ghana Game"
+                : id === "gd_lotto"
+                ? "Gd Lotto"
                 : `${id}`}{" "}
               Bet History
             </strong>
@@ -217,11 +219,21 @@ const BetHistory = () => {
                                 <td>{record?.wagerID}</td>
                               ) : id === "wesco" ? (
                                 <td>{record?.TikcetId}</td>
+                              ) : id === "gd_lotto" ? (
+                                <td>{record?.TikcetId}</td>
+                              ) : id === "NNP" ? (
+                                <td>{record?.TikcetId}</td>
                               ) : (
                                 <td>{record?.TSN}</td>
                               )}
                             </td>
-                            <td>{record?.mgametype}</td>
+                            <td>
+                              {id === "NNP" ? (
+                                <td>{record?.drawname}</td>
+                              ) : (
+                                <td> {record?.mgametype}</td>
+                              )}
+                            </td>
                             <td>
                               {" "}
                               {id === "green_lotto" ? (
@@ -232,6 +244,10 @@ const BetHistory = () => {
                                 <td>{record?.drawname}</td>
                               ) : id === "lotto_nigeria" ? (
                                 <td>{record?.drawAlias}</td>
+                              ) : id === "gd_lotto" ? (
+                                <td>{record?.drawname}</td>
+                              ) : id === "NNP" ? (
+                                <td>{record?.drawname}</td>
                               ) : (
                                 <td>{record?.GameName}</td>
                               )}
@@ -304,6 +320,10 @@ const BetHistory = () => {
                                 <td>{record?.TikcetId}</td>
                               ) : id === "wesco" ? (
                                 <td>{record?.TikcetId}</td>
+                              ) : id === "gd_lotto" ? (
+                                <td>{record?.TikcetId}</td>
+                              ) : id === "NNP" ? (
+                                <td>{record?.TikcetId}</td>
                               ) : (
                                 <td>{record?.TSN}</td>
                               )}
@@ -332,6 +352,10 @@ const BetHistory = () => {
                               ) : id === "green_ghana_game" ? (
                                 <td>{record?.drawname}</td>
                               ) : id === "wesco" ? (
+                                <td>{record?.drawname}</td>
+                              ) : id === "gd_lotto" ? (
+                                <td>{record?.drawname}</td>
+                              ) : id === "NNP" ? (
                                 <td>{record?.drawname}</td>
                               ) : (
                                 <td>{record?.GameName}</td>
@@ -446,6 +470,13 @@ const BetHistory = () => {
                   {selectedBet?.mgametype}
                 </span>
               </>
+            ) : id === "gd_lotto" ? (
+              <>
+                <div>Gd Lotto</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             ) : (
               <>
                 <div>{id}</div>
@@ -468,6 +499,10 @@ const BetHistory = () => {
                   ) : id === "green_ghana_game" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : id === "wesco" ? (
+                    <span> {selectedBet?.TikcetId}</span>
+                  ) : id === "gd_lotto" ? (
+                    <span> {selectedBet?.TikcetId}</span>
+                  ) : id === "NNP" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : id === "lotto_nigeria" ? (
                     <span> {selectedBet?.wagerID}</span>
@@ -515,6 +550,22 @@ const BetHistory = () => {
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA")}
                     </span>
+                  ) : id === "NNP" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "DD-MM-YYYY HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
+                  ) : id === "gd_lotto" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "DD-MM-YYYY HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
                   ) : (
                     <span>
                       {" "}
@@ -555,6 +606,8 @@ const BetHistory = () => {
                     <span className="text-capitalize">Lottomania</span>
                   ) : id === "ghana_game" ? (
                     <span className="text-capitalize">5/90 Games</span>
+                  ) : id === "gd_lotto" ? (
+                    <span className="text-capitalize">GD LOTTO</span>
                   ) : (
                     <span> {id}</span>
                   )}
@@ -579,6 +632,10 @@ const BetHistory = () => {
                   ) : id === "green_ghana_game" ? (
                     <td>{selectedBet?.drawname}</td>
                   ) : id === "wesco" ? (
+                    <p> {selectedBet?.drawname}</p>
+                  ) : id === "gd_lotto" ? (
+                    <p> {selectedBet?.drawname}</p>
+                  ) : id === "NNP" ? (
                     <p> {selectedBet?.drawname}</p>
                   ) : id === "lotto_nigeria" ? (
                     <p> {selectedBet?.drawAlias}</p>
