@@ -81,6 +81,7 @@ const Operator = () => {
       }
     });
   }, [userInfo]);
+
   const [timetable, setTimetable] = useState([]);
 
   const fetchData = () => {
@@ -96,6 +97,16 @@ const Operator = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const now = new Date();
+
+  const latestGame590 = Array.isArray(operatorData?.gd_lotto)
+    ? operatorData.gd_lotto
+        .filter(
+          (game) => game.gameType === "5/90" && new Date(game.drawTime) > now
+        )
+        .sort((a, b) => new Date(a.drawTime) - new Date(b.drawTime))[0]
+    : null;
 
   const currentDay = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -121,11 +132,13 @@ const Operator = () => {
   const latestGame = goldenChanceGames.length > 0 ? goldenChanceGames[0] : null;
 
   const currentTime = moment();
+
   const gameStartTime = latestGame
     ? moment(`${moment().format("YYYY-MM-DD")} ${latestGame.start_time}`)
     : null;
+
   const timeRemaining = gameStartTime ? gameStartTime.diff(currentTime) : null;
-  // Operator name to logo key mapping
+
   const operatorNameMapping = {
     ghana_game: "5/90_games",
     green_ghana_game: "green_lotto ghana",
@@ -137,6 +150,7 @@ const Operator = () => {
     "GH 5/90": "gd_ghana",
     NNP: "nigerian_number plate",
   };
+
   return (
     <>
       <div className="container">
@@ -176,6 +190,10 @@ const Operator = () => {
                   green_ghana_game: { name: "drawname", time: "drawtime" },
                   lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
+                  gd_lotto: {
+                    name: latestGame590.gameName,
+                    time: latestGame590.drawTime,
+                  },
                   "GH 5/90": { name: "gameName", time: "drawTime" },
                   NNP: { name: "gameName", time: "drawTime" },
                 };
@@ -208,6 +226,31 @@ const Operator = () => {
                   } else if (operatorType === "GH 5/90") {
                     const drawDateTimeString = `${game?.drawTime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                  } else if (operatorType === "gd_lotto") {
+                    if (Array.isArray(operatorData?.gd_lotto)) {
+                      const now = new Date();
+
+                      const latestGame590 = operatorData.gd_lotto
+                        .filter(
+                          (game) =>
+                            game.gameType === "5/90" &&
+                            new Date(game.drawTime) > now
+                        )
+                        .sort(
+                          (a, b) => new Date(a.drawTime) - new Date(b.drawTime)
+                        )[0];
+
+                      if (latestGame590) {
+                        game = {
+                          name: latestGame590.gameName,
+                          time: latestGame590.drawTime,
+                        };
+                        drawTime = moment(
+                          latestGame590.drawTime,
+                          "YYYY-MM-DDTHH:mm:ss"
+                        );
+                      }
+                    }
                   } else if (operatorType === "NNP") {
                     const drawDateTimeString = `${game?.drawTime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
@@ -309,6 +352,36 @@ const Operator = () => {
                     } else {
                       return null;
                     }
+                  } else if (operatorType === "gd_lotto") {
+                    if (Array.isArray(operatorData?.gd_lotto)) {
+                      const now = new Date();
+
+                      const latestGame590 = operatorData.gd_lotto
+                        .filter(
+                          (game) =>
+                            game.gameType === "5/90" &&
+                            new Date(game.drawTime) > now
+                        )
+                        .sort(
+                          (a, b) => new Date(a.drawTime) - new Date(b.drawTime)
+                        )[0];
+
+                      if (latestGame590) {
+                        const drawDateTimeString = latestGame590.drawTime;
+                        const parsedTime = moment(
+                          drawDateTimeString,
+                          "YYYY-MM-DDTHH:mm:ss"
+                        )
+                          .utcOffset("+00:00")
+                          .utc();
+
+                        if (parsedTime.isValid()) {
+                          return parsedTime.toDate();
+                        } else {
+                          return null;
+                        }
+                      }
+                    }
                   } else {
                     const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                       .utcOffset("+00:00")
@@ -337,7 +410,9 @@ const Operator = () => {
                             <p>
                               <strong>NEXT GAME:</strong>
                               <br />
-                              {nextGame[propertyMapping[operatorType].name]}
+                              {operatorType === "gd_lotto"
+                                ? latestGame590?.gameName
+                                : nextGame[propertyMapping[operatorType].name]}
                               <br />
                               <br />
                               <span>
@@ -377,12 +452,18 @@ const Operator = () => {
                             </p>
                             <p
                               onClick={() => {
-                                const sanitizedOperatorType =
-                                  operatorType === "GH 5/90"
-                                    ? operatorType.replace(/\s|\/+/g, "_")
-                                    : operatorType;
+                                if (operatorType === "gd_lotto") {
+                                  navigate(`/gd-lotto`);
+                                } else {
+                                  const sanitizedOperatorType =
+                                    operatorType === "GH 5/90"
+                                      ? operatorType.replace(/\s|\/+/g, "_")
+                                      : operatorType;
 
-                                navigate(`/play-game/${sanitizedOperatorType}`);
+                                  navigate(
+                                    `/play-game/${sanitizedOperatorType}`
+                                  );
+                                }
                               }}
                             >
                               <a className="btn btn-blue btn-sm btn-block w-100 p-2">
@@ -392,21 +473,8 @@ const Operator = () => {
                           </>
                         ) : (
                           <>
-                            {operatorType === "gd_lotto" ? (
-                              <a
-                                onClick={() => {
-                                  navigate(`/gd-lotto`);
-                                }}
-                                className="btn btn-blue btn-sm btn-block w-100"
-                              >
-                                Play Now
-                              </a>
-                            ) : (
-                              <>
-                                <div className="service-img"></div>
-                                <p>Next Game Display at 12:00am</p>
-                              </>
-                            )}
+                            <div className="service-img"></div>
+                            <p>Next Game Display at 12:00am</p>
                           </>
                         )}
                       </div>
@@ -431,16 +499,54 @@ const Operator = () => {
               </a>
               <div className="service-content text-center">
                 <p>
-                  <p
-                    onClick={() => {
-                      navigate(`/play-game/gd_jackpot`);
-                    }}
-                    className="btn btn-blue btn-sm btn-block w-100 p-2"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Play Now
-                  </p>
+                  <strong>NEXT GAME:</strong>
+                  <br />
+                  {latestGame590
+                    ? latestGame590.gameName
+                    : "Next Game Display at 12:00am"}
+                  <br />
+                  <br />
+
+                  <span>
+                    <small>
+                      <span>
+                        {latestGame590 ? (
+                          <Countdown
+                            date={new Date(latestGame590.drawTime)}
+                            renderer={({ days, hours, minutes, seconds }) => (
+                              <>
+                                <span className="countdown_box me-2">
+                                  {days}days
+                                </span>
+                                <span className="countdown_box me-2">
+                                  {hours}hrs
+                                </span>
+                                <span className="countdown_box me-2">
+                                  {minutes}mins
+                                </span>
+                                <span className="countdown_box me-2">
+                                  {seconds}secs
+                                </span>
+                              </>
+                            )}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    </small>
+                  </span>
+                </p>
+                ;
+                <p
+                  onClick={() => {
+                    navigate(`/play-game/gd_jackpot`);
+                  }}
+                  className="btn btn-blue btn-sm btn-block w-100 p-2"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Play Now
                 </p>
               </div>
             </div>
