@@ -191,8 +191,8 @@ const Operator = () => {
                   lottomania: { name: "gn", time: "sdt" },
                   lotto_nigeria: { name: "drawAlias", time: "drawDate" },
                   gd_lotto: {
-                    name: latestGame590.gameName,
-                    time: latestGame590.drawTime,
+                    name: latestGame590?.gameName,
+                    time: latestGame590?.drawTime,
                   },
                   "GH 5/90": { name: "gameName", time: "drawTime" },
                   NNP: { name: "gameName", time: "drawTime" },
@@ -537,7 +537,7 @@ const Operator = () => {
                     </small>
                   </span>
                 </p>
-                ;
+
                 <p
                   onClick={() => {
                     navigate(`/play-game/gd_jackpot`);
