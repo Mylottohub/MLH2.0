@@ -119,7 +119,7 @@ const TransactionHistory = () => {
           }
         );
 
-        setBetHistory(response.data.data);
+        setBetHistory(response?.data?.data?.data);
       } catch (error) {
         // console.error(`Error fetching ${selectedOperator} games:`, error);
       } finally {

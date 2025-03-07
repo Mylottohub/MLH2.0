@@ -16,6 +16,7 @@ import Gd590Image from "/images/GD590.png";
 
 const PlayGames = () => {
   const [selectedBetType, setSelectedBetType] = useState("");
+  const [selectedPlayMode, setSelectedPlayMode] = useState("");
   const [selectedGameType, setSelectedGameType] = useState("");
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [selectedCount, setSelectedCount] = useState(0);
@@ -25,6 +26,10 @@ const PlayGames = () => {
   const [isLoadingConfrimBet, setIsLoadingConfirmBet] = useState(false);
   const [isLoadingPlayBet, setIsLoadingPlayBet] = useState(false);
   const [perOperator, setPerOperator] = useState([]);
+  const [isSelectingTop, setIsSelectingTop] = useState(true);
+  const [topSelectedNumber, setTopSelectedNumber] = useState(null);
+  const [bottomSelectedNumber, setBottomSelectedNumber] = useState(null);
+
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -132,6 +137,8 @@ const PlayGames = () => {
     "PERM 3": 24,
     "PERM 4": 24,
     "PERM 5": 24,
+    "1 BANKER": 1,
+    AGAINST: 2,
   };
   const [confirmedBet, setConfirmedBet] = useState(null);
 
@@ -153,44 +160,99 @@ const PlayGames = () => {
       checkbox.checked = false;
     });
   };
+  const handlePlayModeChange = (event) => {
+    const newPlayMode = event.target.value;
+    setSelectedPlayMode(newPlayMode);
+
+    // Clear selected numbers
+    clearSelectedNumbers();
+
+    // Clear checkboxes
+    const checkboxes = document.querySelectorAll(".chk-btn");
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+  };
+
+  // const handleCheckboxChange = (event) => {
+  //   const value = event.target.value;
+  //   const isNumber = !isNaN(value); // Check if it's a number or an alphabet
+  //   const isSelected = selectedNumbers.includes(value);
+
+  //   // Separate numbers and alphabets
+  //   const selectedNumbersOnly = selectedNumbers.filter((item) => !isNaN(item));
+  //   const selectedAlphabetsOnly = selectedNumbers.filter((item) => isNaN(item));
+
+  //   if (isSelected) {
+  //     const updatedSelection = selectedNumbers.filter((item) => item !== value);
+  //     setSelectedNumbers(updatedSelection);
+  //     return;
+  //   }
+
+  //   if (id === "NNP") {
+  //     if (isNumber) {
+  //       if (selectedNumbersOnly.length >= 3) {
+  //         toast.error("You can only select up to 3 numbers (0-9) for NNP.");
+  //         return;
+  //       }
+  //       setSelectedNumbers([...selectedNumbers, value]);
+  //     } else {
+  //       if (selectedAlphabetsOnly.length >= 2) {
+  //         toast.error("You can only select up to 2 alphabets (A-Z) for NNP.");
+  //         return;
+  //       }
+  //       setSelectedNumbers([...selectedNumbers, value]);
+  //     }
+  //   } else {
+  //     if (selectedCount < maxSelectableNumbers[selectedBetType]) {
+  //       setSelectedNumbers([...selectedNumbers, value]);
+  //       setSelectedCount(selectedCount + 1);
+  //     } else {
+  //       alert(
+  //         `You cannot select more than ${maxSelectableNumbers[selectedBetType]} numbers for ${selectedBetType}`
+  //       );
+  //     }
+  //   }
+  // };
 
   const handleCheckboxChange = (event) => {
     const value = event.target.value;
-    const isNumber = !isNaN(value); // Check if it's a number or an alphabet
     const isSelected = selectedNumbers.includes(value);
+    const isNumber = !isNaN(value); // Check if it's a number or a letter
 
-    // Separate numbers and alphabets
+    // Separate numbers and alphabets for NNP validation
     const selectedNumbersOnly = selectedNumbers.filter((item) => !isNaN(item));
     const selectedAlphabetsOnly = selectedNumbers.filter((item) => isNaN(item));
 
     if (isSelected) {
+      // If already selected, remove it
       const updatedSelection = selectedNumbers.filter((item) => item !== value);
       setSelectedNumbers(updatedSelection);
       return;
     }
-
+    if (selectedBetType === "AGAINST") {
+      if (isSelectingTop) {
+        setTopSelectedNumber(value);
+      } else {
+        setBottomSelectedNumber(value);
+      }
+    }
     if (id === "NNP") {
       if (isNumber) {
         if (selectedNumbersOnly.length >= 3) {
           toast.error("You can only select up to 3 numbers (0-9) for NNP.");
           return;
         }
-        setSelectedNumbers([...selectedNumbers, value]);
       } else {
         if (selectedAlphabetsOnly.length >= 2) {
           toast.error("You can only select up to 2 alphabets (A-Z) for NNP.");
           return;
         }
-        setSelectedNumbers([...selectedNumbers, value]);
       }
+      setSelectedNumbers([...selectedNumbers, value]);
     } else {
-      if (selectedCount < maxSelectableNumbers[selectedBetType]) {
+      if (selectedNumbers.length < maxSelectableNumbers[selectedBetType]) {
         setSelectedNumbers([...selectedNumbers, value]);
-        setSelectedCount(selectedCount + 1);
-      } else {
-        alert(
-          `You cannot select more than ${maxSelectableNumbers[selectedBetType]} numbers for ${selectedBetType}`
-        );
       }
     }
   };
@@ -206,6 +268,15 @@ const PlayGames = () => {
   const randomizeCheckbox = () => {
     if (!selectedBetType) {
       toast.error("Select Bet Type");
+      return;
+    }
+
+    if (
+      !selectedPlayMode &&
+      !["1 BANKER", "AGAINST"].includes(selectedBetType) &&
+      playModes.some((mode) => mode.value === selectedPlayMode)
+    ) {
+      toast.error("Select Play Mode");
       return;
     }
 
@@ -306,6 +377,37 @@ const PlayGames = () => {
       }
     }
 
+    if (gtype.startsWith("AGAINST")) {
+      if (checkboxes.length < 2) {
+        toast.error("Not enough numbers available for AGAINST selection");
+        return;
+      }
+
+      let randomTop, randomBottom;
+
+      do {
+        randomTop = Math.floor(Math.random() * 90) + 1;
+        randomBottom = Math.floor(Math.random() * 90) + 1;
+      } while (randomTop === randomBottom);
+      setTopSelectedNumber(randomTop);
+      setBottomSelectedNumber(randomBottom);
+
+      setTimeout(() => {
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = false;
+
+          if (
+            parseInt(checkbox.value) === randomTop ||
+            parseInt(checkbox.value) === randomBottom
+          ) {
+            checkbox.checked = true;
+          }
+        });
+      }, 100);
+
+      toast.success(`Randomized: Top - ${randomTop}, Bottom - ${randomBottom}`);
+    }
+
     if (gtype.startsWith("PERM")) {
       let numToRandomize;
 
@@ -390,13 +492,16 @@ const PlayGames = () => {
   };
 
   const clearRandomize = () => {
-    const checkboxes = document.querySelectorAll(".chk-btn");
-    checkboxes.forEach((checkbox) => {
-      checkbox.checked = false;
-      checkbox.disabled = false;
-    });
     setSelectedNumbers([]);
     setSelectedCount(0);
+
+    setTimeout(() => {
+      const checkboxes = document.querySelectorAll(".chk-btn");
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+        checkbox.disabled = false;
+      });
+    }, 0);
   };
 
   let maxNumber = 90;
@@ -467,6 +572,13 @@ const PlayGames = () => {
   } else {
     for (let x = id === "gd_70" ? 1 : 1; x <= maxNumber; x++) {
       const checkId = `c${x}`;
+      const value = String(x);
+      const isChecked = selectedNumbers.includes(value);
+
+      const isDisabled =
+        selectedNumbers.length >= maxSelectableNumbers[selectedBetType] &&
+        !isChecked;
+
       checkboxes.push(
         <React.Fragment key={checkId}>
           <input
@@ -476,16 +588,60 @@ const PlayGames = () => {
             value={x}
             id={checkId}
             onChange={handleCheckboxChange}
-            disabled={
-              selectedCount >= maxSelectableNumbers[selectedBetType] &&
-              !selectedNumbers.includes(x)
-            }
+            disabled={isDisabled}
           />
           <label htmlFor={checkId}>{x}</label>
         </React.Fragment>
       );
     }
+    // for (let x = id === "gd_70" ? 1 : 1; x <= maxNumber; x++) {
+    //   const checkId = `c${x}`;
+    //   const value = String(x);
+    //   const isChecked = selectedNumbers.includes(value);
+
+    // const isDisabled =
+    //   selectedNumbers.length >= maxSelectableNumbers[selectedBetType] &&
+    //   !isChecked;
+
+    //   checkboxes.push(
+    //     <React.Fragment key={checkId}>
+    //       <input
+    //         type="checkbox"
+    //         name="num[]"
+    //         className="chk-btn"
+    //         value={value}
+    //         id={checkId}
+    //         onChange={handleCheckboxChange}
+    //         checked={isChecked}
+    //         disabled={isDisabled}
+    //       />
+    //       <label htmlFor={checkId}>{x}</label>
+    //     </React.Fragment>
+    //   );
+    // }
   }
+
+  <div className="number-grid">
+    {Array.from({ length: 90 }, (_, i) => i + 1).map((num) => (
+      <div key={num} className="number-item">
+        <input
+          type="checkbox"
+          id={`num-${num}`}
+          value={num}
+          onChange={handleCheckboxChange}
+          checked={
+            (isSelectingTop && topSelectedNumber === num) ||
+            (!isSelectingTop && bottomSelectedNumber === num)
+          }
+          disabled={
+            (isSelectingTop && bottomSelectedNumber === num) ||
+            (!isSelectingTop && topSelectedNumber === num)
+          }
+        />
+        <label htmlFor={`num-${num}`}>{num}</label>
+      </div>
+    ))}
+  </div>;
 
   const handleConfirmBet = async (e) => {
     e.preventDefault();
@@ -496,6 +652,15 @@ const PlayGames = () => {
     }
     if (!selectedBetType) {
       toast.error("Select Bet Type");
+      return;
+    }
+
+    if (
+      !selectedPlayMode &&
+      ["gd_70", "gd_80", "gd_90"].includes(id) &&
+      !["1 BANKER", "AGAINST"].includes(selectedBetType)
+    ) {
+      toast.error("Select Play Mode");
       return;
     }
 
@@ -550,8 +715,9 @@ const PlayGames = () => {
         gname: selectedGameType,
         line: "1",
         gtype: selectedBetType,
+        ptype: selectedPlayMode,
         bets: selectedNumbers,
-        max_win: `₦${maxWin.toFixed(2)}`,
+        max_win: `${maxWin.toFixed(2)}`,
         total_stake: `₦${stakeAmount.toFixed(2)}`,
       };
 
@@ -589,7 +755,7 @@ const PlayGames = () => {
         line: lines.toString(),
         gtype: selectedBetType,
         bets: formattedBet,
-        total_stake: `₦${totalStakeAmount.toFixed(2)}`,
+        total_stake: `${totalStakeAmount.toFixed(2)}`,
       };
 
       setConfirmedBet(newConfirmedBet);
@@ -629,12 +795,116 @@ const PlayGames = () => {
         gname: selectedGameType,
         line: lines.toString(),
         gtype: selectedBetType,
+        ptype: selectedPlayMode,
         bets: selectedNumbers,
-        max_win: `₦${maxWin.toFixed(2)}`,
+        max_win: `${maxWin.toFixed(2)}`,
         total_stake: `₦${totalStakeAmount.toFixed(2)}`,
       };
       setConfirmedBet(newConfirmedBet);
+    } else if (selectedBetType.startsWith("1 BANKER")) {
+      const requiredNumbers = maxSelectableNumbers[selectedBetType];
+
+      if (selectedNumbers.length !== requiredNumbers) {
+        toast.error(
+          `Select exactly ${requiredNumbers} numbers for ${selectedBetType}`
+        );
+        return;
+      }
+      const gameTypeKey = ["gd_70", "gd_80", "gd_90", "GH_5_90"].includes(id)
+        ? id
+        : null;
+      const multiplier = await calculateOneBankerMultiplier(
+        requiredNumbers,
+        gameTypeKey
+      );
+      let lines = 1;
+      if (["gd_70"].includes(id)) {
+        lines = 69;
+      } else if (["gd_80"].includes(id)) {
+        lines = 79;
+      } else if (["gd_90", "GH_5_90"].includes(id)) {
+        lines = 89;
+      }
+
+      const totalStake = stakeAmount * lines;
+      const maxWin = multiplier ? totalStake * multiplier : 0;
+
+      const newConfirmedBet = {
+        gname: selectedGameType,
+        line: lines.toString(),
+        gtype: selectedBetType,
+        ptype: selectedPlayMode,
+        bets: selectedNumbers,
+        max_win: `${maxWin.toFixed(2)}`,
+        total_stake: `₦${totalStake.toFixed(2)}`,
+      };
+
+      setConfirmedBet(newConfirmedBet);
+
+      toast.success("Bet Slip Updated successfully");
+    } else if (selectedBetType.startsWith("AGAINST")) {
+      const requiredNumbers = maxSelectableNumbers[selectedBetType];
+
+      if (!topSelectedNumber || !bottomSelectedNumber) {
+        toast.error("Select one number from the top and one from the bottom.");
+        return;
+      }
+      const gameTypeKey = ["gd_70", "gd_80", "gd_90", "GH_5_90"].includes(id)
+        ? id
+        : null;
+      const multiplier = await calculateAgainstMultiplier(
+        requiredNumbers,
+        gameTypeKey
+      );
+      const stakeAmount = parseFloat(
+        document.getElementById("stakeAmount").value
+      );
+      const maxWin = stakeAmount * multiplier;
+
+      const newConfirmedBet = {
+        gname: selectedGameType,
+        line: "1",
+        gtype: selectedBetType,
+        ptype: selectedPlayMode,
+        bets: selectedNumbers,
+        max_win: `${maxWin.toFixed(2)}`,
+        total_stake: `₦${stakeAmount.toFixed(2)}`,
+      };
+
+      setConfirmedBet(newConfirmedBet);
+
+      toast.success("Bet Slip Updated successfully");
     }
+  };
+
+  const calculateOneBankerMultiplier = (requiredNumbers, gameType) => {
+    const gdMultipliers = {
+      gd_70: { 1: 560 },
+      gd_80: { 1: 720 },
+      gd_90: { 1: 1000 },
+      GH_5_90: { 1: 1000 },
+    };
+
+    if (gdMultipliers[gameType] && gdMultipliers[gameType][requiredNumbers]) {
+      return gdMultipliers[gameType][requiredNumbers];
+    }
+
+    return 0;
+  };
+
+  const calculateAgainstMultiplier = (requiredNumbers, gameType) => {
+    const gdMultipliers = {
+      gd_70: { 2: 140 },
+      gd_80: { 2: 180 },
+      gd_90: { 2: 250 },
+      GH_5_90: { 2: 250 },
+    };
+
+    if (gdMultipliers[gameType] && gdMultipliers[gameType][requiredNumbers]) {
+      return gdMultipliers[gameType][requiredNumbers];
+    }
+
+    return 0;
   };
 
   const calculateDirectMultiplier = (requiredNumbers, gameType) => {
@@ -753,7 +1023,7 @@ const PlayGames = () => {
   };
 
   const mapToOperatorPayload = (operatorType, betInfo, selectedWallet) => {
-    const { gname, line, gtype, bets, max_win, total_stake } = betInfo;
+    const { gname, line, gtype, bets, max_win, total_stake, ptype } = betInfo;
 
     const selectedGame = perOperator.find((game) => {
       if (operatorType === "lotto_nigeria") {
@@ -913,6 +1183,8 @@ const PlayGames = () => {
           line,
           betname: gtype,
           isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          isBanker: gtype === "1 BANKER" ? 1 : 0,
+          isAgainst: gtype === "AGAINST" ? 1 : 0,
           max_win: parseFloat(max_win.replace("₦", "")),
           ball: bets,
           operator_type: "gd_lotto",
@@ -928,7 +1200,7 @@ const PlayGames = () => {
           drawID: selectedGame.drawTypeId,
           drawTime: selectedGame.drawTime,
           closetime: selectedGame.drawTime,
-          double_chance: 0,
+          double_chance: ptype === "Dual Chance" ? 1 : 0,
           wallet: selectedWallet,
         };
       }
@@ -938,6 +1210,8 @@ const PlayGames = () => {
           line,
           betname: gtype,
           isPerm: gtype.startsWith("PERM") ? 1 : 0,
+          isBanker: gtype === "1 BANKER" ? 1 : 0,
+          isAgainst: gtype === "AGAINST" ? 1 : 0,
           max_win: parseFloat(max_win.replace("₦", "")),
           ball: bets,
           operator_type: "gd_lotto",
@@ -1011,6 +1285,7 @@ const PlayGames = () => {
         clearRandomize();
         setSelectedGameType("");
         setSelectedBetType("");
+        setSelectedPlayMode("");
         const checkboxes = document.querySelectorAll(".chk-btn");
         checkboxes.forEach((checkbox) => {
           checkbox.checked = false;
@@ -1049,6 +1324,9 @@ const PlayGames = () => {
     { value: "PERM 5", label: "PERM 5" },
   ];
 
+  const specialIds = ["gd_70", "gd_80", "gd_90", "GH_5_90"];
+  const specialGh = ["gd_70", "gd_80", "gd_90"];
+
   const filteredBetTypes =
     id === "NNP"
       ? [
@@ -1060,8 +1338,18 @@ const PlayGames = () => {
           { value: "2 DIRECT", label: "Direct 2 Bundle" },
           { value: "3 DIRECT", label: "Direct 3 Bundle" },
         ]
+      : specialIds.includes(id)
+      ? [
+          ...allBetTypes,
+          { value: "1 BANKER", label: "1 BANKER" },
+          { value: "AGAINST", label: "AGAINST" },
+        ]
       : allBetTypes;
-
+  const playModes = [
+    { value: "Winning", label: "Winning" },
+    { value: "Machine", label: "Machine" },
+    { value: "Dual Chance", label: "Dual Chance" },
+  ];
   return (
     <>
       <Navbar />
@@ -1237,6 +1525,44 @@ const PlayGames = () => {
                         </option>
                       ))}
                     </select>
+                    {selectedBetType === "AGAINST" && (
+                      <div className="btn-group my-3">
+                        <p
+                          className={`btn ${
+                            isSelectingTop ? "btn-primary" : "btn-secondary"
+                          }`}
+                          onClick={() => setIsSelectingTop(true)}
+                        >
+                          Select Top
+                        </p>
+                        <p
+                          className={`btn ${
+                            !isSelectingTop ? "btn-primary" : "btn-secondary"
+                          }`}
+                          onClick={() => setIsSelectingTop(false)}
+                        >
+                          Select Bottom
+                        </p>
+                      </div>
+                    )}
+                    {!["1 BANKER", "AGAINST"].includes(selectedBetType) &&
+                      specialGh.includes(id) && (
+                        <select
+                          name="playMode"
+                          className="form-select p-2 mb-2 blue_dropdown_select w-100"
+                          required
+                          id="playMode"
+                          value={selectedPlayMode}
+                          onChange={handlePlayModeChange}
+                        >
+                          <option value="">Select Play Mode</option>
+                          {playModes.map((mode) => (
+                            <option key={mode.value} value={mode.value}>
+                              {mode.label}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                     &nbsp; &nbsp; &nbsp; &nbsp;{" "}
                   </div>
                 </div>
@@ -1762,9 +2088,10 @@ const PlayGames = () => {
           <br />
           <div className="row mb-5">
             <div className="col-md-8">
-              <strong>Select Game Type</strong>
               {id === "gd_jackpot" && (
                 <div className="row">
+                  <strong>Select Game Type</strong>
+
                   {gameTypes.map(({ image, game_logo }, index) => (
                     <div key={index} className="col-3 p-2 mx-auto">
                       <img
@@ -1845,7 +2172,48 @@ const PlayGames = () => {
                     </div>
                   )}
                   {id !== "NNP" && (
-                    <div className="numbers-container">{checkboxes}</div>
+                    <>
+                      {selectedBetType === "AGAINST" ? (
+                        <div className="numbers-container">
+                          {Array.from({ length: 90 }, (_, i) => i + 1).map(
+                            (num) => {
+                              const checkId = `num-${num}`;
+                              const value = String(num);
+
+                              const isChecked =
+                                (isSelectingTop &&
+                                  topSelectedNumber === value) ||
+                                (!isSelectingTop &&
+                                  bottomSelectedNumber === value);
+
+                              const isDisabled =
+                                (isSelectingTop &&
+                                  bottomSelectedNumber === value) ||
+                                (!isSelectingTop &&
+                                  topSelectedNumber === value);
+
+                              return (
+                                <React.Fragment key={checkId}>
+                                  <input
+                                    type="checkbox"
+                                    name="num[]"
+                                    className="chk-btn"
+                                    value={value}
+                                    id={checkId}
+                                    onChange={handleCheckboxChange}
+                                    checked={isChecked}
+                                    disabled={isDisabled}
+                                  />
+                                  <label htmlFor={checkId}>{num}</label>
+                                </React.Fragment>
+                              );
+                            }
+                          )}
+                        </div>
+                      ) : (
+                        <div className="numbers-container">{checkboxes}</div>
+                      )}
+                    </>
                   )}
                 </div>
 
@@ -1911,9 +2279,26 @@ const PlayGames = () => {
                           : confirmedBet?.bets.join(", ")}
                       </strong>
 
-                      {id !== "NNP" && (
+                      {["gd_70", "gd_80", "gd_90"].includes(id) &&
+                        confirmedBet?.ptype &&
+                        !["AGAINST", "1 BANKER"].includes(
+                          confirmedBet.ptype
+                        ) && (
+                          <p className="fw-bold mt-4">
+                            Play Mode: {confirmedBet.ptype}
+                          </p>
+                        )}
+
+                      {id !== "NNP" && confirmedBet?.max_win && (
                         <p className="fw-bold mt-4">
-                          Maximum Win: {confirmedBet?.max_win}
+                          Maximum Win: ₦
+                          {confirmedBet.ptype === "Dual Chance"
+                            ? (
+                                parseFloat(
+                                  confirmedBet.max_win.replace("₦", "")
+                                ) / 2
+                              ).toFixed(2)
+                            : confirmedBet.max_win}
                         </p>
                       )}
 
