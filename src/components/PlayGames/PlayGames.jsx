@@ -389,19 +389,17 @@ const PlayGames = () => {
         randomTop = Math.floor(Math.random() * 90) + 1;
         randomBottom = Math.floor(Math.random() * 90) + 1;
       } while (randomTop === randomBottom);
+
       setTopSelectedNumber(randomTop);
       setBottomSelectedNumber(randomBottom);
 
+      setSelectedNumbers([randomTop, randomBottom]);
+
       setTimeout(() => {
         checkboxes.forEach((checkbox) => {
-          checkbox.checked = false;
-
-          if (
+          checkbox.checked =
             parseInt(checkbox.value) === randomTop ||
-            parseInt(checkbox.value) === randomBottom
-          ) {
-            checkbox.checked = true;
-          }
+            parseInt(checkbox.value) === randomBottom;
         });
       }, 100);
 
@@ -620,28 +618,6 @@ const PlayGames = () => {
     //   );
     // }
   }
-
-  <div className="number-grid">
-    {Array.from({ length: 90 }, (_, i) => i + 1).map((num) => (
-      <div key={num} className="number-item">
-        <input
-          type="checkbox"
-          id={`num-${num}`}
-          value={num}
-          onChange={handleCheckboxChange}
-          checked={
-            (isSelectingTop && topSelectedNumber === num) ||
-            (!isSelectingTop && bottomSelectedNumber === num)
-          }
-          disabled={
-            (isSelectingTop && bottomSelectedNumber === num) ||
-            (!isSelectingTop && topSelectedNumber === num)
-          }
-        />
-        <label htmlFor={`num-${num}`}>{num}</label>
-      </div>
-    ))}
-  </div>;
 
   const handleConfirmBet = async (e) => {
     e.preventDefault();
@@ -866,7 +842,7 @@ const PlayGames = () => {
         line: "1",
         gtype: selectedBetType,
         ptype: selectedPlayMode,
-        bets: selectedNumbers,
+        bets: [topSelectedNumber, bottomSelectedNumber],
         max_win: `${maxWin.toFixed(2)}`,
         total_stake: `₦${stakeAmount.toFixed(2)}`,
       };
@@ -1002,6 +978,7 @@ const PlayGames = () => {
   const localStorageKey = "betSlip";
   useEffect(() => {
     const savedBetSlip = sessionStorage.getItem(localStorageKey);
+
     if (savedBetSlip) {
       setConfirmedBet(JSON.parse(savedBetSlip));
     }
@@ -1178,11 +1155,10 @@ const PlayGames = () => {
       case "gd_70":
       case "gd_80":
       case "gd_90": {
-        return {
+        let payload = {
           userID: userInfo.data.id,
           line,
           betname: gtype,
-          isPerm: gtype.startsWith("PERM") ? 1 : 0,
           isBanker: gtype === "1 BANKER" ? 1 : 0,
           isAgainst: gtype === "AGAINST" ? 1 : 0,
           max_win: parseFloat(max_win.replace("₦", "")),
@@ -1203,19 +1179,24 @@ const PlayGames = () => {
           double_chance: ptype === "Dual Chance" ? 1 : 0,
           wallet: selectedWallet,
         };
+
+        if (!payload.isBanker && !payload.isAgainst) {
+          payload.isPerm = gtype.startsWith("PERM") ? 1 : 0;
+        }
+
+        return payload;
       }
       case "GH_5_90": {
-        return {
+        let payload = {
           userID: userInfo.data.id,
           line,
           betname: gtype,
-          isPerm: gtype.startsWith("PERM") ? 1 : 0,
           isBanker: gtype === "1 BANKER" ? 1 : 0,
           isAgainst: gtype === "AGAINST" ? 1 : 0,
           max_win: parseFloat(max_win.replace("₦", "")),
           ball: bets,
           operator_type: "gd_lotto",
-          gd_operator_type: operatorType === "GH_5_90" ? "GH 5/90" : "GH 5/90",
+          gd_operator_type: "GH 5/90",
           game_name: gname,
           amount: total_stake.replace("₦", ""),
           total: total_stake.replace("₦", ""),
@@ -1225,7 +1206,14 @@ const PlayGames = () => {
           double_chance: 0,
           wallet: selectedWallet,
         };
+
+        if (!payload.isBanker && !payload.isAgainst) {
+          payload.isPerm = gtype.startsWith("PERM") ? 1 : 0;
+        }
+
+        return payload;
       }
+
       case "NNP": {
         let formattedBets =
           typeof bets === "string"
@@ -2224,9 +2212,10 @@ const PlayGames = () => {
                   className="form-control"
                   placeholder="Amount"
                   required
+                  value={id === "NNP" ? 100 : undefined}
                   id="stakeAmount"
+                  disabled={id === "NNP"}
                 />
-
                 <br />
 
                 <Button
