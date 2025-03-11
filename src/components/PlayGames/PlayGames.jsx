@@ -1,3 +1,4 @@
+import { flushSync } from "react-dom";
 import Navbar from "../Navbar";
 import { toast } from "react-toastify";
 import "../../assets/css/play.css";
@@ -21,6 +22,11 @@ const PlayGames = () => {
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [selectedCount, setSelectedCount] = useState(0);
   const [selectedJackpotGame, setSelectedJackpotGame] = useState("gd_70");
+  const [jackpotSelections, setJackpotSelections] = useState({
+    gd_70: [],
+    gd_80: [],
+    gd_90: [],
+  });
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingConfrimBet, setIsLoadingConfirmBet] = useState(false);
@@ -29,6 +35,7 @@ const PlayGames = () => {
   const [isSelectingTop, setIsSelectingTop] = useState(true);
   const [topSelectedNumber, setTopSelectedNumber] = useState(null);
   const [bottomSelectedNumber, setBottomSelectedNumber] = useState(null);
+  const [selectedJackpotBetMode, setSelectedJackpotBetMode] = useState("");
 
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -127,8 +134,22 @@ const PlayGames = () => {
   useEffect(() => {
     // console.log("count", perOperator);
   }, [perOperator]);
+  const handleJackpotBetModeChange = (event) => {
+    const newBetMode = event.target.value;
+
+    setSelectedJackpotBetMode(newBetMode);
+
+    if (selectedJackpotGame) {
+      setJackpotSelections((prev) => ({
+        ...prev,
+        [selectedJackpotGame]: [],
+      }));
+    }
+  };
 
   const maxSelectableNumbers = {
+    "DIRECT 3": 3,
+    "DIRECT 2": 2,
     "2 DIRECT": 2,
     "3 DIRECT": 3,
     "4 DIRECT": 4,
@@ -138,7 +159,7 @@ const PlayGames = () => {
     "PERM 4": 24,
     "PERM 5": 24,
     "1 BANKER": 1,
-    AGAINST: 2,
+    AGAINST: 40,
   };
   const [confirmedBet, setConfirmedBet] = useState(null);
 
@@ -204,14 +225,14 @@ const PlayGames = () => {
   //       setSelectedNumbers([...selectedNumbers, value]);
   //     }
   //   } else {
-  //     if (selectedCount < maxSelectableNumbers[selectedBetType]) {
-  //       setSelectedNumbers([...selectedNumbers, value]);
-  //       setSelectedCount(selectedCount + 1);
-  //     } else {
-  //       alert(
-  //         `You cannot select more than ${maxSelectableNumbers[selectedBetType]} numbers for ${selectedBetType}`
-  //       );
-  //     }
+  // if (selectedCount < maxSelectableNumbers[selectedBetType]) {
+  //   setSelectedNumbers([...selectedNumbers, value]);
+  //   setSelectedCount(selectedCount + 1);
+  // } else {
+  //   alert(
+  //     `You cannot select more than ${maxSelectableNumbers[selectedBetType]} numbers for ${selectedBetType}`
+  //   );
+  // }
   //   }
   // };
 
@@ -237,6 +258,63 @@ const PlayGames = () => {
         setBottomSelectedNumber(value);
       }
     }
+    if (id === "gd_jackpot") {
+      if (!selectedJackpotGame || !selectedBetType) {
+        toast.error("Please select a game and bet type.");
+        return;
+      }
+
+      if (!selectedJackpotBetMode) {
+        toast.error("Please select a bet mode.");
+        return;
+      }
+
+      setJackpotSelections((prev) => {
+        const existingSelection = prev[selectedJackpotGame] || [];
+
+        const isDirectMode = selectedJackpotBetMode === "Direct";
+
+        let minSelectable, maxSelectable;
+
+        if (selectedBetType === "DIRECT 2") {
+          minSelectable = 2;
+          maxSelectable = isDirectMode ? 2 : 5;
+        } else if (selectedBetType === "DIRECT 3") {
+          minSelectable = 3;
+          maxSelectable = isDirectMode ? 3 : 5;
+        } else {
+          minSelectable = 1;
+          maxSelectable = maxSelectableNumbers[selectedBetType] || 10;
+        }
+
+        let updatedNumbers;
+
+        if (event.target.checked) {
+          if (existingSelection.length < maxSelectable) {
+            updatedNumbers = [...existingSelection, value];
+          } else {
+            toast.error(`You can only select up to ${maxSelectable} numbers.`);
+            return prev;
+          }
+        } else {
+          updatedNumbers = existingSelection.filter(
+            (num) => String(num) !== String(value)
+          );
+        }
+
+        const newState = {
+          ...prev,
+          [selectedJackpotGame]: updatedNumbers,
+        };
+
+        return newState;
+      });
+
+      flushSync(() => {
+        setJackpotSelections((prev) => ({ ...prev }));
+      });
+    }
+
     if (id === "NNP") {
       if (isNumber) {
         if (selectedNumbersOnly.length >= 3) {
@@ -256,6 +334,10 @@ const PlayGames = () => {
       }
     }
   };
+
+  useEffect(() => {
+    setSelectedNumbers(jackpotSelections[selectedJackpotGame] || []);
+  }, [selectedJackpotGame, jackpotSelections]);
 
   const handleGameChange = (e) => {
     const game = e.target.value;
@@ -343,38 +425,82 @@ const PlayGames = () => {
 
       return;
     }
-    if (id === "gd_jackpot") {
-      const mustCheck = maxSelectableNumbers[gtype];
 
-      if (mustCheck >= checkboxes.length) {
+    if (id === "gd_jackpot") {
+      if (!selectedJackpotGame || !selectedBetType) {
+        toast.error("Please select a game and bet type.");
+        return;
+      }
+
+      if (!selectedJackpotBetMode) {
+        toast.error("Please select a bet mode.");
+        return;
+      }
+
+      const isDirectMode = selectedJackpotBetMode === "Direct";
+      const isPermMode = selectedJackpotBetMode === "Perm";
+
+      let minSelectable, maxSelectable;
+
+      if (gtype === "DIRECT 2") {
+        minSelectable = 2;
+        maxSelectable = isDirectMode ? 2 : 5;
+      } else if (gtype === "DIRECT 3") {
+        minSelectable = 3;
+        maxSelectable = isDirectMode ? 3 : 5;
+      } else {
+        minSelectable = 1;
+        maxSelectable = maxSelectableNumbers[gtype] || 10;
+      }
+
+      if (checkboxes.length < minSelectable) {
         toast.error(`Not enough numbers available for this bet type: ${gtype}`);
         return;
       }
 
-      const randomIndices = [];
+      const games = ["gd_70", "gd_80", "gd_90"];
+      let newSelections = {};
 
-      while (randomIndices.length < mustCheck) {
-        const randomIndex = Math.floor(Math.random() * checkboxes.length);
-        if (!randomIndices.includes(randomIndex)) {
-          randomIndices.push(randomIndex);
+      games.forEach((game) => {
+        const randomIndices = new Set();
+
+        while (randomIndices.size < minSelectable) {
+          const randomIndex = Math.floor(Math.random() * checkboxes.length);
+          randomIndices.add(randomIndex);
         }
-      }
 
-      const randomizedNumbers = randomIndices.map((index) =>
-        parseInt(checkboxes[index].value)
-      );
+        if (isPermMode) {
+          while (randomIndices.size < maxSelectable) {
+            const randomIndex = Math.floor(Math.random() * checkboxes.length);
+            randomIndices.add(randomIndex);
+          }
+        }
 
-      setSelectedNumbers(randomizedNumbers);
-
-      checkboxes.forEach((checkbox, index) => {
-        checkbox.checked = randomIndices.includes(index);
+        newSelections[game] = Array.from(randomIndices).map((index) =>
+          parseInt(checkboxes[index].value)
+        );
       });
 
-      if (gtype === "2 DIRECT" || gtype === "3 DIRECT") {
-        checkboxes.forEach((checkbox) => {
-          checkbox.disabled = true;
+      setJackpotSelections((prev) => ({
+        ...prev,
+        ...newSelections,
+      }));
+
+      setTimeout(() => {
+        checkboxes.forEach((checkbox, index) => {
+          checkbox.checked = Object.values(newSelections).some((numbers) =>
+            numbers.includes(parseInt(checkbox.value))
+          );
         });
-      }
+
+        checkboxes.forEach((checkbox) => {
+          checkbox.disabled = isDirectMode
+            ? Object.values(newSelections).some(
+                (numbers) => numbers.length === maxSelectable
+              )
+            : false;
+        });
+      }, 0);
     }
 
     if (gtype.startsWith("AGAINST")) {
@@ -492,6 +618,7 @@ const PlayGames = () => {
   const clearRandomize = () => {
     setSelectedNumbers([]);
     setSelectedCount(0);
+    setJackpotSelections({});
 
     setTimeout(() => {
       const checkboxes = document.querySelectorAll(".chk-btn");
@@ -592,31 +719,6 @@ const PlayGames = () => {
         </React.Fragment>
       );
     }
-    // for (let x = id === "gd_70" ? 1 : 1; x <= maxNumber; x++) {
-    //   const checkId = `c${x}`;
-    //   const value = String(x);
-    //   const isChecked = selectedNumbers.includes(value);
-
-    // const isDisabled =
-    //   selectedNumbers.length >= maxSelectableNumbers[selectedBetType] &&
-    //   !isChecked;
-
-    //   checkboxes.push(
-    //     <React.Fragment key={checkId}>
-    //       <input
-    //         type="checkbox"
-    //         name="num[]"
-    //         className="chk-btn"
-    //         value={value}
-    //         id={checkId}
-    //         onChange={handleCheckboxChange}
-    //         checked={isChecked}
-    //         disabled={isDisabled}
-    //       />
-    //       <label htmlFor={checkId}>{x}</label>
-    //     </React.Fragment>
-    //   );
-    // }
   }
 
   const handleConfirmBet = async (e) => {
@@ -850,8 +952,96 @@ const PlayGames = () => {
       setConfirmedBet(newConfirmedBet);
 
       toast.success("Bet Slip Updated successfully");
+    } else if (id === "gd_jackpot") {
+      const requiredGames = ["gd_70", "gd_80", "gd_90"];
+      const missingGames = requiredGames.filter(
+        (game) =>
+          !jackpotSelections[game] || jackpotSelections[game].length === 0
+      );
+
+      if (missingGames.length > 0) {
+        toast.error(`You must select numbers for every GD game to proceed.`);
+        return;
+      }
+
+      // Check bet mode
+      if (!selectedJackpotBetMode) {
+        toast.error("Please select a bet mode first.");
+        return;
+      }
+
+      const isPermMode = selectedJackpotBetMode === "Perm";
+
+      let totalLines = 0;
+      let totalStake = 0;
+      let betDetails = [];
+      const stakeAmount = parseFloat(
+        document.getElementById("stakeAmount").value
+      );
+
+      for (const game of requiredGames) {
+        const selectedNumbers = jackpotSelections[game] || [];
+
+        if (selectedBetType === "DIRECT 2" && selectedNumbers.length < 2) {
+          toast.error(
+            `Please select at least 2 numbers for ${game.toUpperCase()}.`
+          );
+          return;
+        }
+
+        if (selectedBetType === "DIRECT 3" && selectedNumbers.length < 3) {
+          toast.error(
+            `Please select at least 3 numbers for ${game.toUpperCase()}.`
+          );
+          return;
+        }
+
+        let lines = 1;
+        if (isPermMode) {
+          const permSize = selectedBetType === "DIRECT 2" ? 2 : 3;
+          lines = calculateCombinations(selectedNumbers.length, permSize);
+        }
+
+        const gameStakeAmount = lines * stakeAmount;
+
+        totalLines += lines;
+        totalStake += gameStakeAmount;
+
+        betDetails.push({
+          game,
+          type: selectedJackpotBetMode,
+          numbers: selectedNumbers.join(", "),
+          lines,
+          stakeAmount: `₦${gameStakeAmount}`,
+        });
+      }
+
+      const newConfirmedBet = {
+        line: totalLines,
+        gname: selectedGameType,
+        gtype:
+          selectedBetType === "DIRECT 2"
+            ? "2 DIRECT"
+            : selectedBetType === "DIRECT 3"
+            ? "3 DIRECT"
+            : selectedBetType,
+
+        ptype: selectedJackpotBetMode,
+        bets: betDetails,
+        total_lines: totalLines,
+        total_stake: `₦${totalStake}`,
+      };
+
+      setConfirmedBet(newConfirmedBet);
+      toast.success("Bet Slip Updated Successfully");
     }
   };
+  const calculateCombinations = (n, r) => {
+    if (n < r) return 0;
+    return factorial(n) / (factorial(r) * factorial(n - r));
+  };
+
+  const factorial = (num) => (num <= 1 ? 1 : num * factorial(num - 1));
 
   const calculateOneBankerMultiplier = (requiredNumbers, gameType) => {
     const gdMultipliers = {
@@ -1020,6 +1210,8 @@ const PlayGames = () => {
       } else if (operatorType === "GH_5_90") {
         return game.gameName === gname;
       } else if (operatorType === "NNP") {
+        return game.gameName === gname;
+      } else if (operatorType === "gd_jackpot") {
         return game.gameName === gname;
       }
       return false;
@@ -1240,6 +1432,41 @@ const PlayGames = () => {
           wallet: selectedWallet,
         };
       }
+      case "gd_jackpot": {
+        const ball_gh70 =
+          bets
+            .find((bet) => bet.game === "gd_70")
+            ?.numbers.split(", ")
+            .map(Number) || [];
+        const ball_gh80 =
+          bets
+            .find((bet) => bet.game === "gd_80")
+            ?.numbers.split(", ")
+            .map(Number) || [];
+        const ball_gh90 =
+          bets
+            .find((bet) => bet.game === "gd_90")
+            ?.numbers.split(", ")
+            .map(Number) || [];
+
+        return {
+          userID: userInfo.data.id,
+          line,
+          betname: gtype,
+          isPerm: ptype === "Perm" ? 1 : 0,
+          ball_gh70,
+          ball_gh80,
+          ball_gh90,
+          operator_type: "gd_jackpot",
+          game_name: gname,
+          amount: total_stake.replace("₦", ""),
+          total: total_stake.replace("₦", ""),
+          drawID: selectedGame.drawTypeId,
+          drawTime: selectedGame.drawTime,
+          closetime: selectedGame.drawTime,
+          wallet: selectedWallet,
+        };
+      }
       default:
         return {};
     }
@@ -1255,6 +1482,8 @@ const PlayGames = () => {
     const selectedWallet = document.getElementById("account").value;
 
     const payload = mapToOperatorPayload(id, confirmedBet, selectedWallet);
+    console.log(payload);
+
     try {
       const response = await HTTP.post("/play-games", payload, {
         headers: {
@@ -1323,8 +1552,8 @@ const PlayGames = () => {
         ]
       : id === "gd_jackpot"
       ? [
-          { value: "2 DIRECT", label: "Direct 2 Bundle" },
-          { value: "3 DIRECT", label: "Direct 3 Bundle" },
+          { value: "DIRECT 2", label: "Direct 2 Bundle" },
+          { value: "DIRECT 3", label: "Direct 3 Bundle" },
         ]
       : specialIds.includes(id)
       ? [
@@ -1513,6 +1742,20 @@ const PlayGames = () => {
                         </option>
                       ))}
                     </select>
+                    {(selectedBetType === "DIRECT 2" ||
+                      selectedBetType === "DIRECT 3") && (
+                      <div className="jackpot-bet-mode">
+                        <select
+                          value={selectedJackpotBetMode}
+                          onChange={handleJackpotBetModeChange}
+                          className="form-select p-2 mb-2 blue_dropdown_select w-100"
+                        >
+                          <option value="">Select Bet Mode</option>
+                          <option value="Direct">Direct</option>
+                          <option value="Perm">Permutation</option>
+                        </select>
+                      </div>
+                    )}
                     {selectedBetType === "AGAINST" && (
                       <div className="btn-group my-3">
                         <p
@@ -2125,6 +2368,7 @@ const PlayGames = () => {
                         "gd_70",
                         "gd_80",
                         "gd_90",
+                        "gd_jackpot",
                       ].includes(id)
                         ? "gd_lotto"
                         : id;
@@ -2163,42 +2407,89 @@ const PlayGames = () => {
                     <>
                       {selectedBetType === "AGAINST" ? (
                         <div className="numbers-container">
-                          {Array.from({ length: 90 }, (_, i) => i + 1).map(
-                            (num) => {
-                              const checkId = `num-${num}`;
-                              const value = String(num);
+                          {Array.from(
+                            {
+                              length:
+                                selectedJackpotGame === "gd_70"
+                                  ? 70
+                                  : selectedJackpotGame === "gd_80"
+                                  ? 80
+                                  : 90,
+                            },
+                            (_, i) => i + 1
+                          ).map((num) => {
+                            const checkId = `num-${num}`;
+                            const value = String(num);
 
-                              const isChecked =
-                                (isSelectingTop &&
-                                  topSelectedNumber === value) ||
-                                (!isSelectingTop &&
-                                  bottomSelectedNumber === value);
+                            const isChecked =
+                              (isSelectingTop && topSelectedNumber === value) ||
+                              (!isSelectingTop &&
+                                bottomSelectedNumber === value);
 
-                              const isDisabled =
-                                (isSelectingTop &&
-                                  bottomSelectedNumber === value) ||
-                                (!isSelectingTop &&
-                                  topSelectedNumber === value);
+                            const isDisabled =
+                              (isSelectingTop &&
+                                bottomSelectedNumber === value) ||
+                              (!isSelectingTop && topSelectedNumber === value);
 
-                              return (
-                                <React.Fragment key={checkId}>
-                                  <input
-                                    type="checkbox"
-                                    name="num[]"
-                                    className="chk-btn"
-                                    value={value}
-                                    id={checkId}
-                                    onChange={handleCheckboxChange}
-                                    checked={isChecked}
-                                    disabled={isDisabled}
-                                  />
-                                  <label htmlFor={checkId}>{num}</label>
-                                </React.Fragment>
-                              );
-                            }
-                          )}
+                            return (
+                              <React.Fragment key={checkId}>
+                                <input
+                                  type="checkbox"
+                                  name="num[]"
+                                  className="chk-btn"
+                                  value={value}
+                                  id={checkId}
+                                  onChange={handleCheckboxChange}
+                                  checked={isChecked}
+                                  disabled={isDisabled}
+                                />
+                                <label htmlFor={checkId}>{num}</label>
+                              </React.Fragment>
+                            );
+                          })}
                         </div>
-                      ) : (
+                      ) : null}
+
+                      {id === "gd_jackpot" && (
+                        <div className="numbers-container">
+                          {Array.from(
+                            {
+                              length:
+                                selectedJackpotGame === "gd_70"
+                                  ? 70
+                                  : selectedJackpotGame === "gd_80"
+                                  ? 80
+                                  : 90,
+                            },
+                            (_, i) => i + 1
+                          ).map((num) => {
+                            const checkId = `num-${num}`;
+                            const selectedNumbers =
+                              jackpotSelections[selectedJackpotGame] || [];
+
+                            const isChecked =
+                              selectedNumbers.includes(num) ||
+                              selectedNumbers.includes(String(num));
+
+                            return (
+                              <React.Fragment key={checkId}>
+                                <input
+                                  type="checkbox"
+                                  name="num[]"
+                                  className="chk-btn"
+                                  value={num}
+                                  id={checkId}
+                                  onChange={handleCheckboxChange}
+                                  checked={isChecked}
+                                />
+                                <label htmlFor={checkId}>{num}</label>
+                              </React.Fragment>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {selectedBetType !== "AGAINST" && id !== "gd_jackpot" && (
                         <div className="numbers-container">{checkboxes}</div>
                       )}
                     </>
@@ -2212,10 +2503,11 @@ const PlayGames = () => {
                   className="form-control"
                   placeholder="Amount"
                   required
-                  value={id === "NNP" ? 100 : undefined}
+                  value={id === "NNP" || id === "gd_jackpot" ? 100 : undefined}
                   id="stakeAmount"
                   disabled={id === "NNP"}
                 />
+
                 <br />
 
                 <Button
@@ -2250,10 +2542,10 @@ const PlayGames = () => {
                 </div>
                 {confirmedBet && (
                   <div className="div_lgrey" style={{ marginTop: "-20px" }}>
-                    <b>Game Name: {confirmedBet?.gname}</b> <br />
-                    <br />
+                    <b>Game Name: {confirmedBet?.gname}</b> <br /> <br />
                     <div id="bet_info">
                       <strong>Lines: {confirmedBet?.line}</strong>
+
                       <span id="bline"></span>
                       <br />
                       <br />
@@ -2262,8 +2554,24 @@ const PlayGames = () => {
                       <br />
 
                       <strong>
-                        My bets:{" "}
-                        {id === "NNP"
+                        My bets:
+                        {id === "gd_jackpot"
+                          ? confirmedBet?.bets.map((bet, index) => (
+                              <div className="fw-bolder" key={index}>
+                                {bet.numbers} <br />
+                                {bet.game
+                                  .replace("gd_", "5/")
+                                  .toUpperCase()}{" "}
+                                <br />
+                                {confirmedBet.gtype} Bundle ({bet.type}) <br />
+                                Stake: ({bet.game.replace("gd_", "5/")}){" "}
+                                {bet.stakeAmount} x {bet.lines}{" "}
+                                {bet.lines > 1 ? "lines" : "line"}
+                                <br />
+                                <br />
+                              </div>
+                            ))
+                          : id === "NNP"
                           ? confirmedBet?.bets
                           : confirmedBet?.bets.join(", ")}
                       </strong>

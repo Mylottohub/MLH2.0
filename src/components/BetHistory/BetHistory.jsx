@@ -111,6 +111,8 @@ const BetHistory = () => {
                 ? "Green Lotto"
                 : id === "green_ghana_game"
                 ? "Green Ghana Game"
+                : id === "gd_jackpot"
+                ? "Gd Jackpot"
                 : id === "gd_lotto"
                 ? "Gd Lotto"
                 : `${id}`}{" "}

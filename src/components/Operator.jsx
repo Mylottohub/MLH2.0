@@ -101,9 +101,9 @@ const Operator = () => {
   const now = new Date();
 
   const latestGame590 = Array.isArray(operatorData?.gd_lotto)
-    ? operatorData.gd_lotto
+    ? operatorData?.gd_lotto
         .filter(
-          (game) => game.gameType === "5/90" && new Date(game.drawTime) > now
+          (game) => game?.gameType === "5/90" && new Date(game?.drawTime) > now
         )
         .sort((a, b) => new Date(a.drawTime) - new Date(b.drawTime))[0]
     : null;
@@ -233,11 +233,12 @@ const Operator = () => {
                       const latestGame590 = operatorData.gd_lotto
                         .filter(
                           (game) =>
-                            game.gameType === "5/90" &&
-                            new Date(game.drawTime) > now
+                            game?.gameType === "5/90" &&
+                            new Date(game?.drawTime) > now
                         )
                         .sort(
-                          (a, b) => new Date(a.drawTime) - new Date(b.drawTime)
+                          (a, b) =>
+                            new Date(a?.drawTime) - new Date(b?.drawTime)
                         )[0];
 
                       if (latestGame590) {
