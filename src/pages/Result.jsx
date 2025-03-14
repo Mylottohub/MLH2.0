@@ -100,7 +100,12 @@ const Result = () => {
                               />
                             </div>
                             <div className="col-9 col-lg-10 div_lgrey">
-                              <strong>{latestResult?.game}</strong>
+                              <strong>
+                                {operatorId === 62
+                                  ? latestResult?.game_name
+                                  : latestResult?.game}
+                              </strong>
+
                               <br />
                               <small>
                                 <strong>Draw Time:</strong>
@@ -120,13 +125,91 @@ const Result = () => {
                               <br />
                               <br />
 
-                              {latestResult?.winning_number
-                                ?.split("-")
-                                .map((digit, j) => (
-                                  <td key={j}>
-                                    <div className="numboxwhite">{digit}</div>
-                                  </td>
-                                ))}
+                              {operatorId === 62 ? (
+                                <table className="winning-table table">
+                                  <tbody>
+                                    <tr>
+                                      <td>
+                                        <strong>First Prize</strong>
+                                      </td>
+                                      <td>
+                                        <strong>
+                                          {latestResult?.first_prize}
+                                        </strong>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>
+                                        <strong>Second Prize</strong>
+                                      </td>
+                                      <td>
+                                        <strong>
+                                          {latestResult?.second_prize}
+                                        </strong>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>
+                                        <strong>Third Prize</strong>
+                                      </td>
+                                      <td>
+                                        <strong>
+                                          {latestResult?.third_prize}
+                                        </strong>
+                                      </td>
+                                    </tr>
+
+                                    {latestResult?.fourth_prize_1 && (
+                                      <tr>
+                                        <td>
+                                          <strong>Fourth Prize</strong>
+                                        </td>
+                                        <td>
+                                          <strong>
+                                            {latestResult?.fourth_prize_1}
+                                          </strong>
+                                        </td>
+                                      </tr>
+                                    )}
+
+                                    {latestResult?.fifth_prize_1 && (
+                                      <tr>
+                                        <td>
+                                          <strong>Fifth Prize</strong>
+                                        </td>
+                                        <td>
+                                          <strong>
+                                            {latestResult?.fifth_prize_1}
+                                          </strong>
+                                        </td>
+                                      </tr>
+                                    )}
+
+                                    {latestResult?.sixth_prize_1 && (
+                                      <tr>
+                                        <td>
+                                          <strong>Sixth Prize</strong>
+                                        </td>
+                                        <td>
+                                          <strong>
+                                            {latestResult?.sixth_prize_1}
+                                          </strong>
+                                        </td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
+                              ) : (
+                                latestResult?.winning_number
+                                  ?.split("-")
+                                  .map((digit, j) => (
+                                    <td key={j}>
+                                      <div className="numboxwhite">{digit}</div>
+                                    </td>
+                                  ))
+                              )}
 
                               <div className="pull-right mt-4 mb-3">
                                 <a
@@ -159,7 +242,9 @@ const Result = () => {
                                         />
                                       </td>
                                       <td>
-                                        <strong>{latestResult?.game}</strong>
+                                        {operatorId === 62
+                                          ? latestResult?.game_name
+                                          : latestResult?.game}
                                         <br />
                                         <small>
                                           {latestResult?.date && (
@@ -182,7 +267,7 @@ const Result = () => {
                                 </table>
                                 <br />
 
-                                {latestResult?.winning_number
+                                {/* {latestResult?.winning_number
                                   ?.split("-")
                                   .map((digit, j) => (
                                     <td key={j}>
@@ -190,7 +275,94 @@ const Result = () => {
                                         {digit}
                                       </div>
                                     </td>
-                                  ))}
+                                  ))} */}
+                                {operatorId === 62 ? (
+                                  <table className="winning-table table">
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          <strong>First Prize</strong>
+                                        </td>
+                                        <td>
+                                          <strong>
+                                            {latestResult?.first_prize}
+                                          </strong>
+                                        </td>
+                                      </tr>
+
+                                      <tr>
+                                        <td>
+                                          <strong>Second Prize</strong>
+                                        </td>
+                                        <td>
+                                          <strong>
+                                            {latestResult?.second_prize}
+                                          </strong>
+                                        </td>
+                                      </tr>
+
+                                      <tr>
+                                        <td>
+                                          <strong>Third Prize</strong>
+                                        </td>
+                                        <td>
+                                          <strong>
+                                            {latestResult?.third_prize}
+                                          </strong>
+                                        </td>
+                                      </tr>
+
+                                      {latestResult?.fourth_prize_1 && (
+                                        <tr>
+                                          <td>
+                                            <strong>Fourth Prize</strong>
+                                          </td>
+                                          <td>
+                                            <strong>
+                                              {latestResult?.fourth_prize_1}
+                                            </strong>
+                                          </td>
+                                        </tr>
+                                      )}
+
+                                      {latestResult?.fifth_prize_1 && (
+                                        <tr>
+                                          <td>
+                                            <strong>Fifth Prize</strong>
+                                          </td>
+                                          <td>
+                                            <strong>
+                                              {latestResult?.fifth_prize_1}
+                                            </strong>
+                                          </td>
+                                        </tr>
+                                      )}
+
+                                      {latestResult?.sixth_prize_1 && (
+                                        <tr>
+                                          <td>
+                                            <strong>Sixth Prize</strong>
+                                          </td>
+                                          <td>
+                                            <strong>
+                                              {latestResult?.sixth_prize_1}
+                                            </strong>
+                                          </td>
+                                        </tr>
+                                      )}
+                                    </tbody>
+                                  </table>
+                                ) : (
+                                  latestResult?.winning_number
+                                    ?.split("-")
+                                    .map((digit, j) => (
+                                      <td key={j}>
+                                        <div className="numboxwhite">
+                                          {digit}
+                                        </div>
+                                      </td>
+                                    ))
+                                )}
 
                                 <br />
                                 <div className="pull-right">
