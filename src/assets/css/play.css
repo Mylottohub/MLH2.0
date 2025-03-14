@@ -11,6 +11,17 @@
     overflow-x: hidden;
 }
 
+.top-selected + label {
+    background-color: red!important;
+    color: white!important;
+  }
+  
+.bottom-selected + label {
+    background-color: green!important;
+    color: white!important;
+  }
+  
+
 .numbers-container,
 .alphabets-container {
   display: flex;
