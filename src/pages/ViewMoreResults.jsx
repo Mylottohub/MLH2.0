@@ -1447,86 +1447,153 @@ const ViewMoreResults = () => {
                                     key={`${record?.id}-${dataIndex}`}
                                     className="col-lg-4 col-md-6 mb-5"
                                   >
-                                    <div className="div_lgrey">
-                                      <p className="text-center">
-                                        <strong>
+                                    <div className="card border-0 shadow-sm">
+                                      <div className="card-body">
+                                        <h5 className="text-center text-primary mb-4">
                                           {data?.game_name || data?.game}
-                                        </strong>
-                                      </p>
-                                      <br />
-                                      <p className="text-center">
-                                        <small>
-                                          Draw Time:{" "}
-                                          {moment
-                                            .utc(
-                                              data?.date,
-                                              "YYYY-MM-DD HH:mm:ss"
-                                            )
-                                            .local()
-                                            .format("MMM DD, YYYY h:mm:ss a")}
-                                        </small>
-                                      </p>
-                                      <br />
-                                      <table
-                                        align="center"
-                                        className="winning-table table"
-                                      >
-                                        <tbody>
-                                          <tr>
-                                            <td>
-                                              <strong>First Prize</strong>
-                                            </td>
-                                            <td>
-                                              <div>{data?.first_prize}</div>
-                                            </td>
-                                          </tr>
+                                        </h5>
+                                        <p className="text-center text-muted mb-4">
+                                          <small>
+                                            Draw Time:{" "}
+                                            {moment
+                                              .utc(
+                                                data?.date,
+                                                "YYYY-MM-DD HH:mm:ss"
+                                              )
+                                              .local()
+                                              .format("MMM DD, YYYY h:mm:ss a")}
+                                          </small>
+                                        </p>
+                                        <table className="winning-table table table-striped table-bordered mb-0">
+                                          <tbody>
+                                            <tr>
+                                              <th
+                                                className="text-uppercase fw-bolder"
+                                                scope="row"
+                                              >
+                                                First Prize
+                                              </th>
+                                              <td className="text-uppercase fw-bolder">
+                                                {data?.first_prize}
+                                              </td>
+                                            </tr>
 
-                                          <tr>
-                                            <td>
-                                              <strong>Second Prize</strong>
-                                            </td>
-                                            <td>
-                                              <div>{data?.second_prize}</div>
-                                            </td>
-                                          </tr>
+                                            <tr>
+                                              <th
+                                                className="text-uppercase fw-bolder"
+                                                scope="row"
+                                              >
+                                                Second Prize
+                                              </th>
+                                              <td className="text-uppercase fw-bolder">
+                                                {data?.second_prize}
+                                              </td>
+                                            </tr>
 
-                                          <tr>
-                                            <td>
-                                              <strong>Third Prize</strong>
-                                            </td>
-                                            <td>
-                                              <div>{data?.third_prize}</div>
-                                            </td>
-                                          </tr>
+                                            <tr>
+                                              <th
+                                                className="text-uppercase fw-bolder"
+                                                scope="row"
+                                              >
+                                                Third Prize
+                                              </th>
+                                              <td className="text-uppercase fw-bolder">
+                                                {data?.third_prize}
+                                              </td>
+                                            </tr>
 
-                                          <tr>
-                                            <td>
-                                              <strong>Fourth Prize</strong>
-                                            </td>
-                                            <td>
-                                              <div>{data?.fourth_prize_1}</div>
-                                            </td>
-                                          </tr>
+                                            <tr>
+                                              <th
+                                                className="text-uppercase fw-bolder"
+                                                scope="row"
+                                              >
+                                                Fourth Prize
+                                              </th>
+                                              <td className="text-uppercase fw-bolder">
+                                                {data?.fourth_prize_1}
+                                                <br />
+                                                {data?.fourth_prize_2}
+                                                <br />
+                                                {data?.fourth_prize_3}
+                                                <br />
+                                                {data?.fourth_prize_4}
+                                                <br />
+                                                {data?.fourth_prize_5}
+                                              </td>
+                                            </tr>
 
-                                          <tr>
-                                            <td>
-                                              <strong>Fifth Prize</strong>
-                                            </td>
-                                            <td>
-                                              <div>{data?.fifth_prize_1}</div>
-                                            </td>
-                                          </tr>
+                                            <tr>
+                                              <th
+                                                className="text-uppercase fw-bolder"
+                                                scope="row"
+                                              >
+                                                Fifth Prize
+                                              </th>
+                                              <td className="text-uppercase fw-bolder">
+                                                {data?.fifth_prize_1}
+                                                <br />
+                                                {data?.fifth_prize_2}
+                                                <br />
+                                                {data?.fifth_prize_3}
+                                                <br />
+                                                {data?.fifth_prize_4}
+                                                <br />
+                                                {data?.fifth_prize_5}
+                                                <br />
+                                                {data?.fifth_prize_6}
+                                                <br />
+                                                {data?.fifth_prize_7}
+                                                <br />
+                                                {data?.fifth_prize_8}
+                                                <br />
+                                                {data?.fifth_prize_9}
+                                                <br />
+                                                {data?.fifth_prize_10}
+                                              </td>
+                                            </tr>
 
-                                          <tr>
-                                            <td>
-                                              <strong>Sixth Prize</strong>
-                                            </td>
-                                            <td>
-                                              <div>{data?.sixth_prize_1}</div>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
+                                            <tr>
+                                              <th
+                                                className="text-uppercase fw-bolder"
+                                                scope="row"
+                                              >
+                                                Sixth Prize
+                                              </th>
+                                              <td className="text-uppercase fw-bolder">
+                                                {data?.sixth_prize_1}
+                                                <br />
+                                                {data?.sixth_prize_2}
+                                                <br />
+                                                {data?.sixth_prize_3}
+                                                <br />
+                                                {data?.sixth_prize_4}
+                                                <br />
+                                                {data?.sixth_prize_5}
+                                                <br />
+                                                {data?.sixth_prize_6}
+                                                <br />
+                                                {data?.sixth_prize_7}
+                                                <br />
+                                                {data?.sixth_prize_8}
+                                                <br />
+                                                {data?.sixth_prize_9}
+                                                <br />
+                                                {data?.sixth_prize_10}
+                                                <br />
+                                                {data?.sixth_prize_11}
+                                                <br />
+                                                {data?.sixth_prize_12}
+                                                <br />
+                                                {data?.sixth_prize_13}
+                                                <br />
+                                                {data?.sixth_prize_14}
+                                                <br />
+                                                {data?.sixth_prize_15}
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
                                     </div>
                                   </div>
                                 );
