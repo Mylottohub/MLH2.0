@@ -154,6 +154,7 @@ const PlayGames = () => {
     "3 DIRECT": 3,
     "4 DIRECT": 4,
     "5 DIRECT": 5,
+    "Direct All5": 5,
     "PERM 2": 24,
     "PERM 3": 24,
     "PERM 4": 24,
@@ -168,27 +169,25 @@ const PlayGames = () => {
     setSelectedCount(0);
   };
 
-  const handleBetTypeChange = (event) => {
-    const newBetType = event.target.value;
-    setSelectedBetType(newBetType);
+  // const handleBetTypeChange = (event) => {
+  //   const newBetType = event.target.value;
+  //   setSelectedBetType(newBetType);
 
-    // Clear selected numbers
-    clearSelectedNumbers();
+  //   // Clear selected numbers
+  //   clearSelectedNumbers();
 
-    // Clear checkboxes
-    const checkboxes = document.querySelectorAll(".chk-btn");
-    checkboxes.forEach((checkbox) => {
-      checkbox.checked = false;
-    });
-  };
+  //   // Clear checkboxes
+  //   const checkboxes = document.querySelectorAll(".chk-btn");
+  //   checkboxes.forEach((checkbox) => {
+  //     checkbox.checked = false;
+  //   });
+  // };
   const handlePlayModeChange = (event) => {
     const newPlayMode = event.target.value;
     setSelectedPlayMode(newPlayMode);
 
-    // Clear selected numbers
     clearSelectedNumbers();
 
-    // Clear checkboxes
     const checkboxes = document.querySelectorAll(".chk-btn");
     checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
@@ -251,50 +250,58 @@ const PlayGames = () => {
     }
     if (selectedBetType === "AGAINST") {
       const isSelectingTop = event.target.getAttribute("data-type") === "top";
+
       if (isSelectingTop) {
-        // Update only topSelectedNumber
         setTopSelectedNumber((prevTop = []) => {
           let newTop = [...prevTop];
 
           if (checked) {
+            if (newTop.length >= 39) {
+              toast.error("You can only select up to 39 Top numbers.");
+              return prevTop;
+            }
             if (newTop.length + bottomSelectedNumber.length >= 40) {
-              toast.error("You can only select up to 40 numbers in total.");
+              toast.error("Total selection must not exceed 40 numbers.");
               return prevTop;
             }
             newTop.push(value);
           } else {
-            if (newTop.length === 1 && bottomSelectedNumber.length > 0) {
+            newTop = newTop.filter((num) => num !== value);
+            if (newTop.length === 0 && bottomSelectedNumber.length >= 39) {
               toast.error("At least 1 Top number is required.");
               return prevTop;
             }
-            newTop = newTop.filter((num) => num !== value);
           }
 
           return newTop;
         });
       } else {
-        // Update only bottomSelectedNumber
         setBottomSelectedNumber((prevBottom = []) => {
           let newBottom = [...prevBottom];
 
           if (checked) {
+            if (newBottom.length >= 39) {
+              toast.error("You can only select up to 39 Bottom numbers.");
+              return prevBottom;
+            }
             if (newBottom.length + topSelectedNumber.length >= 40) {
-              toast.error("You can only select up to 40 numbers in total.");
+              toast.error("Total selection must not exceed 40 numbers.");
               return prevBottom;
             }
             newBottom.push(value);
           } else {
-            if (newBottom.length === 1 && topSelectedNumber.length > 0) {
+            newBottom = newBottom.filter((num) => num !== value);
+            if (newBottom.length === 0 && topSelectedNumber.length >= 39) {
               toast.error("At least 1 Bottom number is required.");
               return prevBottom;
             }
-            newBottom = newBottom.filter((num) => num !== value);
           }
 
           return newBottom;
         });
       }
     }
+
     if (id === "gd_jackpot") {
       if (!selectedJackpotGame || !selectedBetType) {
         toast.error("Please select a game and bet type.");
@@ -835,7 +842,13 @@ const PlayGames = () => {
       return;
     }
 
-    const validDirectTypes = ["2 DIRECT", "3 DIRECT", "4 DIRECT", "5 DIRECT"];
+    const validDirectTypes = [
+      "2 DIRECT",
+      "3 DIRECT",
+      "4 DIRECT",
+      "5 DIRECT",
+      "Direct All5",
+    ];
 
     const gameTypeKey = ["gd_70", "gd_80", "gd_90"].includes(id) ? id : null;
 
@@ -1664,6 +1677,7 @@ const PlayGames = () => {
           ...allBetTypes,
           { value: "1 BANKER", label: "1 BANKER" },
           { value: "AGAINST", label: "AGAINST" },
+          { value: "Direct All5", label: "Direct All5" },
         ]
       : allBetTypes;
   const playModes = [
@@ -1671,6 +1685,24 @@ const PlayGames = () => {
     { value: "Machine", label: "Machine" },
     { value: "Dual Chance", label: "Dual Chance" },
   ];
+  const [filteredPlayModes, setFilteredPlayModes] = useState(playModes);
+  const handleBetTypeChange = (event) => {
+    const newBetType = event.target.value;
+    setSelectedBetType(newBetType);
+
+    clearSelectedNumbers();
+
+    document.querySelectorAll(".chk-btn").forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+
+    if (newBetType === "Direct All5") {
+      setFilteredPlayModes([{ value: "Winning", label: "Winning" }]);
+    } else {
+      setFilteredPlayModes(playModes);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -1891,7 +1923,7 @@ const PlayGames = () => {
                           onChange={handlePlayModeChange}
                         >
                           <option value="">Select Play Mode</option>
-                          {playModes.map((mode) => (
+                          {filteredPlayModes.map((mode) => (
                             <option key={mode.value} value={mode.value}>
                               {mode.label}
                             </option>
