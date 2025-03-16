@@ -1445,154 +1445,147 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-lg-4 col-md-6 mb-5"
+                                    className="col-md-4 mb-4"
                                   >
-                                    <div className="card border-0 shadow-sm">
-                                      <div className="card-body">
-                                        <h5 className="text-center text-primary mb-4">
-                                          {data?.game_name || data?.game}
-                                        </h5>
-                                        <p className="text-center text-muted mb-4">
+                                    <div className="card border-0 shadow-sm bg-success text-white p-3">
+                                      {/* Header: NNP Logo & Draw Time */}
+                                      <div className="d-flex justify-content-between align-items-center">
+                                        <p className="mb-0">
                                           <small>
                                             Draw Time:{" "}
                                             {moment
-                                              .utc(
-                                                data?.date,
-                                                "YYYY-MM-DD HH:mm:ss"
-                                              )
+                                              .utc(data?.date)
                                               .local()
                                               .format("MMM DD, YYYY h:mm:ss a")}
                                           </small>
                                         </p>
-                                        <table className="winning-table table table-striped table-bordered mb-0">
-                                          <tbody>
-                                            <tr>
-                                              <th
-                                                className="text-uppercase fw-bolder"
-                                                scope="row"
-                                              >
-                                                First Prize
-                                              </th>
-                                              <td className="text-uppercase fw-bolder">
-                                                {data?.first_prize}
-                                              </td>
-                                            </tr>
+                                      </div>
 
-                                            <tr>
-                                              <th
-                                                className="text-uppercase fw-bolder"
-                                                scope="row"
-                                              >
-                                                Second Prize
-                                              </th>
-                                              <td className="text-uppercase fw-bolder">
-                                                {data?.second_prize}
-                                              </td>
-                                            </tr>
+                                      {/* First, Second, Third Prizes */}
+                                      <div className="d-flex flex-wrap justify-content-between text-center mt-3 mb-3">
+                                        <div
+                                          className="p-2 border bg-white text-dark rounded"
+                                          style={{ flex: "1 1 30%" }}
+                                        >
+                                          <h6 className="text-uppercase text-success">
+                                            First Prize
+                                          </h6>
+                                          <p className="fw-bold display-6">
+                                            {data?.first_prize}
+                                          </p>
+                                        </div>
+                                        <div
+                                          className="p-2 border bg-white text-dark rounded"
+                                          style={{ flex: "1 1 30%" }}
+                                        >
+                                          <h6 className="text-uppercase text-success">
+                                            Second Prize
+                                          </h6>
+                                          <p className="fw-bold display-6">
+                                            {data?.second_prize}
+                                          </p>
+                                        </div>
+                                        <div
+                                          className="p-2 border bg-white text-dark rounded"
+                                          style={{ flex: "1 1 30%" }}
+                                        >
+                                          <h6 className="text-uppercase text-success">
+                                            Third Prize
+                                          </h6>
+                                          <p className="fw-bold display-6">
+                                            {data?.third_prize}
+                                          </p>
+                                        </div>
+                                      </div>
 
-                                            <tr>
-                                              <th
-                                                className="text-uppercase fw-bolder"
-                                                scope="row"
+                                      {/* Fourth Prize */}
+                                      <div className="bg-white text-dark mt-3 p-2 rounded">
+                                        <h6 className="text-center text-uppercase text-success">
+                                          Fourth Prize
+                                        </h6>
+                                        <div className="d-flex flex-wrap justify-content-center">
+                                          {[
+                                            data?.fourth_prize_1,
+                                            data?.fourth_prize_2,
+                                            data?.fourth_prize_3,
+                                            data?.fourth_prize_4,
+                                            data?.fourth_prize_5,
+                                          ]
+                                            .filter(Boolean)
+                                            .map((prize, index) => (
+                                              <span
+                                                key={index}
+                                                className="m-2 p-2 border rounded bg-light fw-bold"
                                               >
-                                                Third Prize
-                                              </th>
-                                              <td className="text-uppercase fw-bolder">
-                                                {data?.third_prize}
-                                              </td>
-                                            </tr>
+                                                {prize}
+                                              </span>
+                                            ))}
+                                        </div>
+                                      </div>
 
-                                            <tr>
-                                              <th
-                                                className="text-uppercase fw-bolder"
-                                                scope="row"
+                                      {/* Fifth Prize */}
+                                      <div className="bg-white text-dark mt-3 p-2 rounded">
+                                        <h6 className="text-center text-uppercase text-success">
+                                          Fifth Prize
+                                        </h6>
+                                        <div className="d-flex flex-wrap justify-content-center">
+                                          {[
+                                            data?.fifth_prize_1,
+                                            data?.fifth_prize_2,
+                                            data?.fifth_prize_3,
+                                            data?.fifth_prize_4,
+                                            data?.fifth_prize_5,
+                                            data?.fifth_prize_6,
+                                            data?.fifth_prize_7,
+                                            data?.fifth_prize_8,
+                                            data?.fifth_prize_9,
+                                            data?.fifth_prize_10,
+                                          ]
+                                            .filter(Boolean)
+                                            .map((prize, index) => (
+                                              <span
+                                                key={index}
+                                                className="m-2 p-2 border rounded bg-light fw-bold"
                                               >
-                                                Fourth Prize
-                                              </th>
-                                              <td className="text-uppercase fw-bolder">
-                                                {data?.fourth_prize_1}
-                                                <br />
-                                                {data?.fourth_prize_2}
-                                                <br />
-                                                {data?.fourth_prize_3}
-                                                <br />
-                                                {data?.fourth_prize_4}
-                                                <br />
-                                                {data?.fourth_prize_5}
-                                              </td>
-                                            </tr>
+                                                {prize}
+                                              </span>
+                                            ))}
+                                        </div>
+                                      </div>
 
-                                            <tr>
-                                              <th
-                                                className="text-uppercase fw-bolder"
-                                                scope="row"
+                                      {/* Sixth Prize */}
+                                      <div className="bg-white text-dark mt-3 p-2 rounded">
+                                        <h6 className="text-center text-uppercase text-success">
+                                          Sixth Prize (Special RNG)
+                                        </h6>
+                                        <div className="d-flex flex-wrap justify-content-center">
+                                          {[
+                                            data?.sixth_prize_1,
+                                            data?.sixth_prize_2,
+                                            data?.sixth_prize_3,
+                                            data?.sixth_prize_4,
+                                            data?.sixth_prize_5,
+                                            data?.sixth_prize_6,
+                                            data?.sixth_prize_7,
+                                            data?.sixth_prize_8,
+                                            data?.sixth_prize_9,
+                                            data?.sixth_prize_10,
+                                            data?.sixth_prize_11,
+                                            data?.sixth_prize_12,
+                                            data?.sixth_prize_13,
+                                            data?.sixth_prize_14,
+                                            data?.sixth_prize_15,
+                                          ]
+                                            .filter(Boolean)
+                                            .map((prize, index) => (
+                                              <span
+                                                key={index}
+                                                className="m-2 p-2 border rounded bg-light fw-bold"
                                               >
-                                                Fifth Prize
-                                              </th>
-                                              <td className="text-uppercase fw-bolder">
-                                                {data?.fifth_prize_1}
-                                                <br />
-                                                {data?.fifth_prize_2}
-                                                <br />
-                                                {data?.fifth_prize_3}
-                                                <br />
-                                                {data?.fifth_prize_4}
-                                                <br />
-                                                {data?.fifth_prize_5}
-                                                <br />
-                                                {data?.fifth_prize_6}
-                                                <br />
-                                                {data?.fifth_prize_7}
-                                                <br />
-                                                {data?.fifth_prize_8}
-                                                <br />
-                                                {data?.fifth_prize_9}
-                                                <br />
-                                                {data?.fifth_prize_10}
-                                              </td>
-                                            </tr>
-
-                                            <tr>
-                                              <th
-                                                className="text-uppercase fw-bolder"
-                                                scope="row"
-                                              >
-                                                Sixth Prize
-                                              </th>
-                                              <td className="text-uppercase fw-bolder">
-                                                {data?.sixth_prize_1}
-                                                <br />
-                                                {data?.sixth_prize_2}
-                                                <br />
-                                                {data?.sixth_prize_3}
-                                                <br />
-                                                {data?.sixth_prize_4}
-                                                <br />
-                                                {data?.sixth_prize_5}
-                                                <br />
-                                                {data?.sixth_prize_6}
-                                                <br />
-                                                {data?.sixth_prize_7}
-                                                <br />
-                                                {data?.sixth_prize_8}
-                                                <br />
-                                                {data?.sixth_prize_9}
-                                                <br />
-                                                {data?.sixth_prize_10}
-                                                <br />
-                                                {data?.sixth_prize_11}
-                                                <br />
-                                                {data?.sixth_prize_12}
-                                                <br />
-                                                {data?.sixth_prize_13}
-                                                <br />
-                                                {data?.sixth_prize_14}
-                                                <br />
-                                                {data?.sixth_prize_15}
-                                              </td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
+                                                {prize}
+                                              </span>
+                                            ))}
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
