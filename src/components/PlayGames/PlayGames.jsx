@@ -1081,16 +1081,36 @@ const PlayGames = () => {
       for (const game of requiredGames) {
         const selectedNumbers = jackpotSelections[game] || [];
 
-        if (selectedBetType === "DIRECT 2" && selectedNumbers.length < 2) {
+        if (
+          selectedBetType === "DIRECT 2" &&
+          selectedJackpotBetMode === "Direct" &&
+          selectedNumbers.length < 2
+        ) {
+          toast.error(`Please select at least 2 numbers for Direct 2.`);
+          return;
+        } else if (
+          selectedBetType === "DIRECT 3" &&
+          selectedJackpotBetMode === "Direct" &&
+          selectedNumbers.length < 3
+        ) {
+          toast.error(`Please select at least 3 numbers for Direct 3.`);
+          return;
+        } else if (
+          selectedJackpotBetMode === "Perm" &&
+          selectedBetType === "DIRECT 2" &&
+          selectedNumbers.length < 3
+        ) {
           toast.error(
-            `Please select at least 2 numbers for ${game.toUpperCase()}.`
+            `Please select at least 3 numbers for Direct 2 Permutation.`
           );
           return;
-        }
-
-        if (selectedBetType === "DIRECT 3" && selectedNumbers.length < 3) {
+        } else if (
+          selectedJackpotBetMode === "Perm" &&
+          selectedBetType === "DIRECT 3" &&
+          selectedNumbers.length < 4
+        ) {
           toast.error(
-            `Please select at least 3 numbers for ${game.toUpperCase()}.`
+            `Please select at least 4 numbers for Direct 3 Permutation.`
           );
           return;
         }
