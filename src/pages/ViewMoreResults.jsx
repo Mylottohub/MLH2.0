@@ -66,7 +66,6 @@ const ViewMoreResults = () => {
         setIsLoading(false);
       });
   };
-  // console.log(result);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +84,6 @@ const ViewMoreResults = () => {
         });
 
         const data = response.data;
-
         setPerOperator(data.result);
       } catch (error) {
         // console.error(`Error fetching ${id} games:`, error);
@@ -93,8 +91,9 @@ const ViewMoreResults = () => {
         setIsLoading(false);
       }
     };
-    fetchData(); // Call the async function
+    fetchData();
   }, []);
+
   useEffect(() => {
     if (userInfo.token) {
       fetchData();

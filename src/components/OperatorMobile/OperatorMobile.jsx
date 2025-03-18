@@ -46,15 +46,16 @@ const OperatorMobile = () => {
   }, []);
 
   const operatorTypes = [
-    "ghana_game",
-    "green_ghana_game",
-    "wesco",
-    "green_lotto",
-    "lottomania",
-    "lotto_nigeria",
-    "gd_lotto",
     "GH 5/90",
+    "ghana_game",
+    "gd_jackpot",
+    "green_lotto",
+    "green_ghana_game",
+    "lottomania",
+    "gd_lotto",
     "NNP",
+    "wesco",
+    "lotto_nigeria",
   ];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
@@ -110,9 +111,9 @@ const OperatorMobile = () => {
   const latestGame590 = Array.isArray(operatorData?.gd_lotto)
     ? operatorData.gd_lotto
         .filter(
-          (game) => game.gameType === "5/90" && new Date(game.drawTime) > now
+          (game) => game?.gameType === "5/90" && new Date(game?.drawTime) > now
         )
-        .sort((a, b) => new Date(a.drawTime) - new Date(b.drawTime))[0]
+        .sort((a, b) => new Date(a?.drawTime) - new Date(b?.drawTime))[0]
     : null;
 
   const filteredTimetable = timetable
@@ -147,6 +148,7 @@ const OperatorMobile = () => {
     lottomania: "lottomania",
     lotto_nigeria: "set_lotto",
     gd_lotto: "gd_lotto",
+    gd_jackpot: "gd_jackpot",
     "GH 5/90": "gd_ghana",
     NNP: "nigerian_number plate",
   };
@@ -194,6 +196,10 @@ const OperatorMobile = () => {
                     name: latestGame590?.gameName,
                     time: latestGame590?.drawTime,
                   },
+                  gd_jackpot: {
+                    name: latestGame590?.gameName,
+                    time: latestGame590?.drawTime,
+                  },
                   NNP: { name: "gameName", time: "drawTime" },
                 };
 
@@ -233,20 +239,47 @@ const OperatorMobile = () => {
                       const latestGame590 = operatorData.gd_lotto
                         .filter(
                           (game) =>
-                            game.gameType === "5/90" &&
-                            new Date(game.drawTime) > now
+                            game?.gameType === "5/90" &&
+                            new Date(game?.drawTime) > now
                         )
                         .sort(
-                          (a, b) => new Date(a.drawTime) - new Date(b.drawTime)
+                          (a, b) =>
+                            new Date(a?.drawTime) - new Date(b?.drawTime)
                         )[0];
 
                       if (latestGame590) {
                         game = {
-                          name: latestGame590.gameName,
-                          time: latestGame590.drawTime,
+                          name: latestGame590?.gameName,
+                          time: latestGame590?.drawTime,
                         };
                         drawTime = moment(
-                          latestGame590.drawTime,
+                          latestGame590?.drawTime,
+                          "YYYY-MM-DDTHH:mm:ss"
+                        );
+                      }
+                    }
+                  } else if (operatorType === "gd_jackpot") {
+                    if (Array.isArray(operatorData?.gd_lotto)) {
+                      const now = new Date();
+
+                      const latestGame590 = operatorData?.gd_lotto
+                        .filter(
+                          (game) =>
+                            game?.gameType === "5/90" &&
+                            new Date(game?.drawTime) > now
+                        )
+                        .sort(
+                          (a, b) =>
+                            new Date(a?.drawTime) - new Date(b?.drawTime)
+                        )[0];
+
+                      if (latestGame590) {
+                        game = {
+                          name: latestGame590?.gameName,
+                          time: latestGame590?.drawTime,
+                        };
+                        drawTime = moment(
+                          latestGame590?.drawTime,
                           "YYYY-MM-DDTHH:mm:ss"
                         );
                       }
@@ -261,8 +294,8 @@ const OperatorMobile = () => {
 
                 upcomingGames.sort(
                   (a, b) =>
-                    new Date(a[propertyMapping[operatorType].time]) -
-                    new Date(b[propertyMapping[operatorType].time])
+                    new Date(a[propertyMapping[operatorType]?.time]) -
+                    new Date(b[propertyMapping[operatorType]?.time])
                 );
 
                 // Take only the first game (next scheduled game)
@@ -270,7 +303,7 @@ const OperatorMobile = () => {
                   upcomingGames.length > 0 ? upcomingGames[0] : null;
 
                 const renderGameTime = (operatorType, game) => {
-                  const time = game[propertyMapping[operatorType].time];
+                  const time = game[propertyMapping[operatorType]?.time];
 
                   if (operatorType === "lottomania") {
                     return new Date(time);
@@ -362,18 +395,50 @@ const OperatorMobile = () => {
                     if (Array.isArray(operatorData?.gd_lotto)) {
                       const now = new Date();
 
-                      const latestGame590 = operatorData.gd_lotto
+                      const latestGame590 = operatorData?.gd_lotto
                         .filter(
                           (game) =>
-                            game.gameType === "5/90" &&
-                            new Date(game.drawTime) > now
+                            game?.gameType === "5/90" &&
+                            new Date(game?.drawTime) > now
                         )
                         .sort(
-                          (a, b) => new Date(a.drawTime) - new Date(b.drawTime)
+                          (a, b) =>
+                            new Date(a?.drawTime) - new Date(b?.drawTime)
                         )[0];
 
                       if (latestGame590) {
-                        const drawDateTimeString = latestGame590.drawTime;
+                        const drawDateTimeString = latestGame590?.drawTime;
+                        const parsedTime = moment(
+                          drawDateTimeString,
+                          "YYYY-MM-DDTHH:mm:ss"
+                        )
+                          .utcOffset("+00:00")
+                          .utc();
+
+                        if (parsedTime.isValid()) {
+                          return parsedTime.toDate();
+                        } else {
+                          return null;
+                        }
+                      }
+                    }
+                  } else if (operatorType === "gd_jackpot") {
+                    if (Array.isArray(operatorData?.gd_lotto)) {
+                      const now = new Date();
+
+                      const latestGame590 = operatorData?.gd_lotto
+                        .filter(
+                          (game) =>
+                            game?.gameType === "5/90" &&
+                            new Date(game?.drawTime) > now
+                        )
+                        .sort(
+                          (a, b) =>
+                            new Date(a?.drawTime) - new Date(b?.drawTime)
+                        )[0];
+
+                      if (latestGame590) {
+                        const drawDateTimeString = latestGame590?.drawTime;
                         const parsedTime = moment(
                           drawDateTimeString,
                           "YYYY-MM-DDTHH:mm:ss"
@@ -423,11 +488,12 @@ const OperatorMobile = () => {
                                           <br />
                                           <small>
                                             {" "}
-                                            {operatorType === "gd_lotto"
+                                            {operatorType === "gd_lotto" &&
+                                            operatorType === "gd_jackpot"
                                               ? latestGame590?.gameName
                                               : nextGame[
                                                   propertyMapping[operatorType]
-                                                    .name
+                                                    ?.name
                                                 ]}
                                           </small>
                                           <br />
@@ -482,6 +548,12 @@ const OperatorMobile = () => {
                                             onClick={() => {
                                               if (operatorType === "gd_lotto") {
                                                 navigate(`/gd-lotto`);
+                                              } else if (
+                                                operatorType === "gd_jackpot"
+                                              ) {
+                                                navigate(
+                                                  `/play-game/gd_jackpot`
+                                                );
                                               } else {
                                                 const sanitizedOperatorType =
                                                   operatorType === "GH 5/90"
@@ -538,7 +610,7 @@ const OperatorMobile = () => {
             })
           )}
 
-          <div className="hidden-md hidden-lg div_vlgrey">
+          {/* <div className="hidden-md hidden-lg div_vlgrey">
             <table width="100%" cellPadding="3">
               <tbody>
                 <tr valign="top">
@@ -606,7 +678,7 @@ const OperatorMobile = () => {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </div> */}
           <div className="hidden-md hidden-lg div_vlgrey">
             <table width="100%" cellPadding="3">
               <tbody>
