@@ -299,7 +299,7 @@ const ViewMoreResults = () => {
                               </div>
                             );
                           }
-                        } else if (operatorID === "gd_lotto") {
+                        } else if (id === "gd_lotto") {
                           if (index == 0) {
                             return (
                               <div key={index}>
@@ -648,6 +648,8 @@ const ViewMoreResults = () => {
                                     return null;
                                   }
                                 } else if (operatorID === "gd_lotto") {
+                                  console.log(item);
+
                                   const drawDateTimeString = `${item?.drawTime} ${item?.drawTime}`;
                                   const drawDateTime = moment(
                                     drawDateTimeString,
@@ -1297,7 +1299,7 @@ const ViewMoreResults = () => {
                               })}
                           </React.Fragment>
                         );
-                      } else if (record.name === "GD Lotto") {
+                      } else if (record.name === "GD LOTTO") {
                         return (
                           <React.Fragment key={record.id}>
                             {record.results
@@ -1365,7 +1367,7 @@ const ViewMoreResults = () => {
                               })}
                           </React.Fragment>
                         );
-                      } else if (record.name === "GD GHANA") {
+                      } else if (record.name === "GD Ghana") {
                         return (
                           <React.Fragment key={record.id}>
                             {record.results
@@ -1433,7 +1435,7 @@ const ViewMoreResults = () => {
                               })}
                           </React.Fragment>
                         );
-                      } else if (record.name === "Nigerian Number Plate") {
+                      } else if (record.name === "NNP") {
                         return (
                           <React.Fragment key={record.id}>
                             {record.results

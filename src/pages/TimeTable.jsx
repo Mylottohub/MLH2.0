@@ -54,6 +54,7 @@ const TimeTable = () => {
     );
     setFilteredTimetable(currentDayTimetable);
   };
+  console.log(timetable);
 
   useEffect(() => {
     fetchData();

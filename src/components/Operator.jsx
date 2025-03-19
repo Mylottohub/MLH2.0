@@ -45,15 +45,15 @@ const Operator = () => {
 
   const operatorTypes = [
     "GH 5/90",
-    "ghana_game",
     "gd_jackpot",
+    "ghana_game",
+    "wesco",
     "green_lotto",
+    "lotto_nigeria",
     "green_ghana_game",
-    "lottomania",
     "gd_lotto",
     "NNP",
-    "wesco",
-    "lotto_nigeria",
+    "lottomania",
   ];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
@@ -475,7 +475,7 @@ const Operator = () => {
                             <p>
                               <strong>NEXT GAME:</strong>
                               <br />
-                              {operatorType === "gd_lotto" &&
+                              {operatorType === "gd_lotto" ||
                               operatorType === "gd_jackpot"
                                 ? latestGame590?.gameName
                                 : nextGame[propertyMapping[operatorType].name]}

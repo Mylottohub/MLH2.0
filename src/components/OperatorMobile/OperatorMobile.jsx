@@ -47,15 +47,15 @@ const OperatorMobile = () => {
 
   const operatorTypes = [
     "GH 5/90",
-    "ghana_game",
     "gd_jackpot",
+    "ghana_game",
+    "wesco",
     "green_lotto",
+    "lotto_nigeria",
     "green_ghana_game",
-    "lottomania",
     "gd_lotto",
     "NNP",
-    "wesco",
-    "lotto_nigeria",
+    "lottomania",
   ];
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
@@ -488,7 +488,7 @@ const OperatorMobile = () => {
                                           <br />
                                           <small>
                                             {" "}
-                                            {operatorType === "gd_lotto" &&
+                                            {operatorType === "gd_lotto" ||
                                             operatorType === "gd_jackpot"
                                               ? latestGame590?.gameName
                                               : nextGame[
@@ -610,75 +610,6 @@ const OperatorMobile = () => {
             })
           )}
 
-          {/* <div className="hidden-md hidden-lg div_vlgrey">
-            <table width="100%" cellPadding="3">
-              <tbody>
-                <tr valign="top">
-                  <td width="41%">
-                    <img src="/images/gd_jackpot.png" className="img-fluid" />
-                  </td>
-                  <td style={{ lineHeight: "19px!important" }}>
-                    <p>
-                      <strong>NEXT GAME:</strong>
-                      <br />
-                      {latestGame590
-                        ? latestGame590.gameName
-                        : "Next Game Display at 12:00am"}
-                      <br />
-                      <br />
-
-                      <span>
-                        <small>
-                          <span>
-                            {latestGame590 ? (
-                              <Countdown
-                                date={new Date(latestGame590.drawTime)}
-                                renderer={({
-                                  days,
-                                  hours,
-                                  minutes,
-                                  seconds,
-                                }) => (
-                                  <>
-                                    <span className="countdown_box me-2">
-                                      {days}days
-                                    </span>
-                                    <span className="countdown_box me-2">
-                                      {hours}hrs
-                                    </span>
-                                    <span className="countdown_box me-2">
-                                      {minutes}mins
-                                    </span>
-                                    <span className="countdown_box me-2">
-                                      {seconds}secs
-                                    </span>
-                                  </>
-                                )}
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </span>
-                        </small>
-                      </span>
-                    </p>
-                    <p>
-                      <a
-                        onClick={() => {
-                          navigate(`/play-game/gd_jackpot`);
-                        }}
-                        className="btn btn-blue btn-sm btn-block mt-5"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Play Now
-                      </a>
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div> */}
           <div className="hidden-md hidden-lg div_vlgrey">
             <table width="100%" cellPadding="3">
               <tbody>

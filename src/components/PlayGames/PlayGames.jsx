@@ -847,10 +847,12 @@ const PlayGames = () => {
       "3 DIRECT",
       "4 DIRECT",
       "5 DIRECT",
-      "Direct All5",
+      // "Direct All5",
     ];
 
-    const gameTypeKey = ["gd_70", "gd_80", "gd_90"].includes(id) ? id : null;
+    const gameTypeKey = ["gd_70", "gd_80", "gd_90", "GH_5_90"].includes(id)
+      ? id
+      : null;
 
     if (validDirectTypes.includes(selectedBetType)) {
       const requiredNumbers = maxSelectableNumbers[selectedBetType];
@@ -1049,6 +1051,34 @@ const PlayGames = () => {
         total_stake: `₦${totalStake.toFixed(2)}`,
       };
 
+      setConfirmedBet(newConfirmedBet);
+      toast.success("Bet Slip Updated successfully");
+    } else if (selectedBetType.startsWith("Direct All5")) {
+      const requiredNumbers = 5;
+
+      if (selectedNumbers.length < requiredNumbers) {
+        toast.error(
+          `Select at least ${requiredNumbers} numbers for ${selectedBetType}`
+        );
+        return;
+      }
+
+      const lines = 1;
+      const totalStakeAmount = stakeAmount * lines;
+
+      if (stakeAmount < 100 || stakeAmount > 100) {
+        toast.error("Stake amount must be exactly ₦100");
+        return;
+      }
+
+      const newConfirmedBet = {
+        gname: selectedGameType,
+        line: 1,
+        gtype: selectedBetType,
+        ptype: selectedPlayMode,
+        bets: selectedNumbers,
+        total_stake: `₦${totalStakeAmount.toFixed(2)}`,
+      };
       setConfirmedBet(newConfirmedBet);
       toast.success("Bet Slip Updated successfully");
     } else if (id === "gd_jackpot") {
@@ -1472,7 +1502,6 @@ const PlayGames = () => {
           betname: gtype,
           isBanker: gtype === "1 BANKER" ? 1 : 0,
           isAgainst: gtype === "AGAINST" ? 1 : 0,
-          max_win: parseFloat(max_win.replace("₦", "")),
           ball:
             gtype === "AGAINST"
               ? bets.split("\n")[0].replace("T: ", "").split("-")
@@ -1503,6 +1532,9 @@ const PlayGames = () => {
             .replace("B: ", "")
             .split("-");
         }
+        if (gtype !== "Direct All5") {
+          payload.max_win = parseFloat(max_win.replace("₦", ""));
+        }
 
         return payload;
       }
@@ -1513,7 +1545,6 @@ const PlayGames = () => {
           betname: gtype,
           isBanker: gtype === "1 BANKER" ? 1 : 0,
           isAgainst: gtype === "AGAINST" ? 1 : 0,
-          max_win: parseFloat(max_win.replace("₦", "")),
           ball:
             gtype === "AGAINST"
               ? bets.split("\n")[0].replace("T: ", "").split("-")
@@ -1533,12 +1564,16 @@ const PlayGames = () => {
         if (!payload.isBanker && !payload.isAgainst) {
           payload.isPerm = gtype.startsWith("PERM") ? 1 : 0;
         }
+        console.log(gtype);
 
         if (gtype === "AGAINST") {
           payload.ball_against = bets
             .split("\n")[1]
             .replace("B: ", "")
             .split("-");
+        }
+        if (gtype !== "Direct All5") {
+          payload.max_win = parseFloat(max_win.replace("₦", ""));
         }
 
         return payload;
@@ -2663,7 +2698,13 @@ const PlayGames = () => {
                   className="form-control"
                   placeholder="Amount"
                   required
-                  value={id === "NNP" || id === "gd_jackpot" ? 100 : undefined}
+                  value={
+                    id === "NNP" ||
+                    id === "gd_jackpot" ||
+                    selectedBetType === "Direct All5"
+                      ? 100
+                      : undefined
+                  }
                   id="stakeAmount"
                   disabled={id === "NNP"}
                 />
@@ -2718,15 +2759,16 @@ const PlayGames = () => {
                         {id === "gd_jackpot"
                           ? confirmedBet?.bets.map((bet, index) => (
                               <div className="fw-bolder" key={index}>
-                                {bet.numbers} <br />
-                                {bet.game
+                                {bet?.numbers} <br />
+                                {bet?.game
                                   .replace("gd_", "5/")
                                   .toUpperCase()}{" "}
                                 <br />
-                                {confirmedBet.gtype} Bundle ({bet.type}) <br />
-                                Stake: ({bet.game.replace("gd_", "5/")}){" "}
-                                {bet.stakeAmount} x {bet.lines}{" "}
-                                {bet.lines > 1 ? "lines" : "line"}
+                                {confirmedBet?.gtype} Bundle ({bet?.type}){" "}
+                                <br />
+                                Stake: ({bet?.game.replace("gd_", "5/")}){" "}
+                                {bet?.stakeAmount} x {bet.lines}{" "}
+                                {bet?.lines > 1 ? "lines" : "line"}
                                 <br />
                                 <br />
                               </div>
