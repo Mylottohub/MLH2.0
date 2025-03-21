@@ -3,7 +3,7 @@ name: 🚀 Deploy to Bluehost via FTP
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
