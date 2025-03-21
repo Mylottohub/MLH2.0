@@ -1,23 +1,24 @@
-name: 🚀 Deploy to Bluehost via FTP
+name: Deploy to Bluehost via FTP
 
 on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: MLH 
+    environment: MLH
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install dependencies
         run: npm install
@@ -25,8 +26,8 @@ jobs:
       - name: Build Vite project
         run: npm run build
 
-      - name: Deploy dist folder to Bluehost
-        uses: SamKirkland/FTP-Deploy-Action@v4
+      - name: Upload via FTP
+        uses: SamKirkland/ftp-deploy-action@v4.3.4
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
