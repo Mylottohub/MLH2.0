@@ -37,11 +37,14 @@ const ViewMoreResults = () => {
     operatorID = "gd_lotto";
   } else if (id == 65) {
     operatorID = "GH_5_90";
+  } else if (id == 64) {
+    operatorID = "gd_lotto";
   } else if (id == 62) {
     operatorID = "NNP";
   }
 
-  const imageSrc = `/images/${operatorID}.png`;
+  const imageSrc =
+    id == 64 ? `/images/gd_jackpot.png` : `/images/${operatorID}.png`;
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -84,6 +87,7 @@ const ViewMoreResults = () => {
         });
 
         const data = response.data;
+
         setPerOperator(data.result);
       } catch (error) {
         // console.error(`Error fetching ${id} games:`, error);
@@ -292,6 +296,28 @@ const ViewMoreResults = () => {
                                   onClick={() =>
                                     navigate(`/play-game/${operatorID}`)
                                   }
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        } else if (id == 64) {
+                          if (index == 0) {
+                            return (
+                              <div key={index}>
+                                <strong>{item?.gameName}</strong> <br />
+                                <br />
+                                {moment
+                                  .utc(item?.drawTime, "YYYY-MM-DD")
+                                  .local()
+                                  .format("MMM DD, YYYY")}{" "}
+                                | {item?.drawTime}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() => navigate(`/gd-lotto`)}
                                   className="btn btn-blue"
                                 >
                                   Play Now
@@ -1299,6 +1325,74 @@ const ViewMoreResults = () => {
                               })}
                           </React.Fragment>
                         );
+                      } else if (record.name === "GD Jackpot") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                return (
+                                  <div
+                                    key={`${record?.id}-${dataIndex}`}
+                                    className="col-lg-4 col-md-6 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data?.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data?.date,
+                                              "YYYY-MM-DD HH:mm:ss"
+                                            )
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen mb-2">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                          <tr>
+                                            {data?.machine_number
+                                              ?.split("-")
+                                              .map((digit, j) => (
+                                                <td key={j}>
+                                                  {digit !== "0" ? (
+                                                    <div className="numboxred">
+                                                      {digit}
+                                                    </div>
+                                                  ) : null}
+                                                </td>
+                                              ))}
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
                       } else if (record.name === "GD LOTTO") {
                         return (
                           <React.Fragment key={record.id}>
@@ -1367,7 +1461,7 @@ const ViewMoreResults = () => {
                               })}
                           </React.Fragment>
                         );
-                      } else if (record.name === "GD Ghana") {
+                      } else if (record.name === "GH 590") {
                         return (
                           <React.Fragment key={record.id}>
                             {record.results
