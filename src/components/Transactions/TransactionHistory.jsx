@@ -946,6 +946,9 @@ const TransactionHistory = () => {
                 <option value="lotto_nigeria">Set Lotto</option>
                 <option value="green_ghana_game">Green Ghana Games</option>
                 <option value="gd_lotto">Gd Lotto</option>
+                <option value="gh_5_90">GH 5/90</option>
+                <option value="gd_jackpot">Gd Jackpot</option>
+                <option value="nnp">NNP</option>
               </select>
               <i
                 className="bi bi-chevron-down position-absolute"
@@ -1022,6 +1025,12 @@ const TransactionHistory = () => {
                                   <td>{record?.TikcetId}</td>
                                 ) : selectedOperator === "gd_lotto" ? (
                                   <td>{record?.TikcetId}</td>
+                                ) : selectedOperator === "gh_5_90" ? (
+                                  <td>{record?.TikcetId}</td>
+                                ) : selectedOperator === "gd_jackpot" ? (
+                                  <td>{record?.TikcetId}</td>
+                                ) : selectedOperator === "nnp" ? (
+                                  <td>{record?.TikcetId}</td>
                                 ) : (
                                   <td>{record?.TSN}</td>
                                 )}
@@ -1036,6 +1045,12 @@ const TransactionHistory = () => {
                                 ) : selectedOperator === "wesco" ? (
                                   <td>{record?.drawname}</td>
                                 ) : selectedOperator === "gd_lotto" ? (
+                                  <td>{record?.drawname}</td>
+                                ) : selectedOperator === "gh_5_90" ? (
+                                  <td>{record?.drawname}</td>
+                                ) : selectedOperator === "gd_jackpot" ? (
+                                  <td>{record?.drawname}</td>
+                                ) : selectedOperator === "nnp" ? (
                                   <td>{record?.drawname}</td>
                                 ) : selectedOperator === "lotto_nigeria" ? (
                                   <td>{record?.drawAlias}</td>
@@ -1083,7 +1098,7 @@ const TransactionHistory = () => {
                       </div>
                     ) : (
                       <>
-                        {betHistory?.data
+                        {betHistory
                           ?.sort(
                             (a, b) =>
                               new Date(b.created_at) - new Date(a.created_at)
@@ -1118,6 +1133,14 @@ const TransactionHistory = () => {
                                         <td>{record?.TikcetId}</td>
                                       ) : selectedOperator === "wesco" ? (
                                         <td>{record?.TikcetId}</td>
+                                      ) : selectedOperator === "gd_lotto" ? (
+                                        <td>{record?.TikcetId}</td>
+                                      ) : selectedOperator === "gh_5_90" ? (
+                                        <td>{record?.TikcetId}</td>
+                                      ) : selectedOperator === "gd_jackpot" ? (
+                                        <td>{record?.TikcetId}</td>
+                                      ) : selectedOperator === "nnp" ? (
+                                        <td>{record?.TikcetId}</td>
                                       ) : (
                                         <td>{record?.TSN}</td>
                                       )}
@@ -1149,6 +1172,14 @@ const TransactionHistory = () => {
                                         "green_ghana_game" ? (
                                         <td>{record?.drawname}</td>
                                       ) : selectedOperator === "wesco" ? (
+                                        <td>{record?.drawname}</td>
+                                      ) : selectedOperator === "gd_lotto" ? (
+                                        <td>{record?.drawname}</td>
+                                      ) : selectedOperator === "gh_5_90" ? (
+                                        <td>{record?.drawname}</td>
+                                      ) : selectedOperator === "gd_jackpot" ? (
+                                        <td>{record?.drawname}</td>
+                                      ) : selectedOperator === "nnp" ? (
                                         <td>{record?.drawname}</td>
                                       ) : (
                                         <td>{record?.GameName}</td>
@@ -1278,6 +1309,27 @@ const TransactionHistory = () => {
                   {selectedBet?.mgametype}
                 </span>
               </>
+            ) : selectedOperator === "gh_5_90" ? (
+              <>
+                <div>GH 5/90</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
+            ) : selectedOperator === "gd_jackpot" ? (
+              <>
+                <div>GD Jackpot</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
+            ) : selectedOperator === "nnp" ? (
+              <>
+                <div>NNP</div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             ) : (
               <>
                 <div>{selectedOperator}</div>
@@ -1302,6 +1354,12 @@ const TransactionHistory = () => {
                   ) : selectedOperator === "wesco" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "gd_lotto" ? (
+                    <span> {selectedBet?.TikcetId}</span>
+                  ) : selectedOperator === "gh_5_90" ? (
+                    <span> {selectedBet?.TikcetId}</span>
+                  ) : selectedOperator === "gd_jackpot" ? (
+                    <span> {selectedBet?.TikcetId}</span>
+                  ) : selectedOperator === "nnp" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "lotto_nigeria" ? (
                     <span> {selectedBet?.wagerID}</span>
@@ -1334,6 +1392,30 @@ const TransactionHistory = () => {
                         .format("Do MMM YYYY | h:mm:ssA")}
                     </span>
                   ) : selectedOperator === "gd_lotto" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
+                  ) : selectedOperator === "gh_5_90" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
+                  ) : selectedOperator === "gd_jackpot" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
+                  ) : selectedOperator === "nnp" ? (
                     <span>
                       {" "}
                       {moment
@@ -1399,6 +1481,12 @@ const TransactionHistory = () => {
                     <span className="text-capitalize">5/90 Games</span>
                   ) : selectedOperator === "gd_lotto" ? (
                     <span className="text-capitalize">Gd Lotto</span>
+                  ) : selectedOperator === "gh_5_90" ? (
+                    <span className="text-capitalize">GH 5/90</span>
+                  ) : selectedOperator === "gd_jackpot" ? (
+                    <span className="text-capitalize">Gd Jackpot</span>
+                  ) : selectedOperator === "nnp" ? (
+                    <span className="text-capitalize">NNP</span>
                   ) : (
                     <span> {selectedOperator}</span>
                   )}
@@ -1425,6 +1513,12 @@ const TransactionHistory = () => {
                   ) : selectedOperator === "wesco" ? (
                     <p> {selectedBet?.drawname}</p>
                   ) : selectedOperator === "gd_lotto" ? (
+                    <p> {selectedBet?.drawname}</p>
+                  ) : selectedOperator === "gh_5_90" ? (
+                    <p> {selectedBet?.drawname}</p>
+                  ) : selectedOperator === "gd_jackpot" ? (
+                    <p> {selectedBet?.drawname}</p>
+                  ) : selectedOperator === "nnp" ? (
                     <p> {selectedBet?.drawname}</p>
                   ) : selectedOperator === "lotto_nigeria" ? (
                     <p> {selectedBet?.drawAlias}</p>

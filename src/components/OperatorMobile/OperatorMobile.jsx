@@ -47,8 +47,8 @@ const OperatorMobile = () => {
 
   const operatorTypes = [
     "GH 5/90",
-    "gd_jackpot",
     "ghana_game",
+    "gd_jackpot",
     "wesco",
     "green_lotto",
     "lotto_nigeria",
@@ -149,8 +149,8 @@ const OperatorMobile = () => {
     lotto_nigeria: "set_lotto",
     gd_lotto: "gd_lotto",
     gd_jackpot: "gd_jackpot",
-    "GH 5/90": "gd_ghana",
-    NNP: "nigerian_number plate",
+    "GH 5/90": "gh_590",
+    NNP: "nnp",
   };
 
   return (

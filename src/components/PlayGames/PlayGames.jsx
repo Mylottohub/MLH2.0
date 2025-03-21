@@ -2584,9 +2584,9 @@ const PlayGames = () => {
                 <div>
                   {id === "NNP" && (
                     <div>
-                      <h5>Select Exactly 3 Numbers</h5>
+                      <h5>Select only 3 Numbers</h5>
                       <div className="numbers-container">{checkboxes}</div>
-                      <h5 className="mt-5">Select Exactly 2 Alphabets</h5>
+                      <h5 className="mt-5">Then add 2 Alphabets</h5>
                       <div className="alphabets-container">
                         {alphabetsCheckboxes}
                       </div>
