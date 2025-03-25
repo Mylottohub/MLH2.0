@@ -5,3 +5,4 @@ export { default as useGetReferral } from "./api-hooks/useGetReferral";
 export { default as useGetAllBank } from "./api-hooks/useGetAllBank";
 export { default as useGetSportsForecast } from "./api-hooks/useGetSportsForecast";
 export { default as useAllGetSportsForecast } from "./api-hooks/useAllGetSportsForecast";
+export { default as useGetInstantGame } from "./api-hooks/useGetInstantGame";

@@ -3,9 +3,9 @@ import queryKeys from "../constants";
 import { HTTP } from "../../utils";
 import { useSelector } from "react-redux";
 
-const getAllSportsForecast = async (token) => {
+const getInstantGame = async (token) => {
   try {
-    const res = await HTTP.get(`/get-sportoperator`, {
+    const res = await HTTP.get(`/user/get-instantgames `, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -18,20 +18,19 @@ const getAllSportsForecast = async (token) => {
   }
 };
 
-const useAllGetSportsForecast = () => {
-  const userInfo = useSelector((state) => state?.auth?.userInfo);
+const useGetInstantGame = () => {
+  const userInfo = useSelector((state) => state.auth.userInfo);
   const token = userInfo?.token;
-
   const { data, isLoading } = useQuery({
-    queryKey: [queryKeys.GET_All_SPORT_FORECAST],
-    queryFn: () => getAllSportsForecast(token),
+    queryKey: [queryKeys.GET_INSTANT_GAME],
+    queryFn: () => getInstantGame(token),
   });
 
   return {
-    userAllSportForecast: data?.data?.data,
+    userInstantGame: data?.data?.data,
     token,
-    isLoadingAllSportForecast: isLoading,
+    isLoadingInstantGame: isLoading,
   };
 };
 
-export default useAllGetSportsForecast;
+export default useGetInstantGame;

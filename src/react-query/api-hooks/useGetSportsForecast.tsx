@@ -3,7 +3,7 @@ import queryKeys from "../constants";
 import { HTTP } from "../../utils";
 import { useSelector } from "react-redux";
 
-const useAllSportsForecast = async (token) => {
+const getAllSportsForecast = async (token) => {
   try {
     const res = await HTTP.get(`/get-proforcaster`, {
       headers: {
@@ -20,11 +20,11 @@ const useAllSportsForecast = async (token) => {
 
 const useGetSportsForecast = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
-  const token = userInfo?.token?.accessToken;
+  const token = userInfo?.token;
 
   const { data, isLoading } = useQuery({
     queryKey: [queryKeys.GET_SPORT_FORECAST],
-    queryFn: () => useAllSportsForecast(token),
+    queryFn: () => getAllSportsForecast(token),
   });
 
   return {

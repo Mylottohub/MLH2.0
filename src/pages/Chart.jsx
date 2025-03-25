@@ -316,88 +316,72 @@ const Chart = () => {
     //   </div>
     // );
     return (
-      <div>
-        <p className="lead mt-3">
-          My selection for <strong>{operatorName} </strong> |{" "}
+      <div className="container-fluid mt-3 mb-4">
+        <h5 className="mb-3">
+          My selection for <strong>{operatorName}</strong> |{" "}
           <strong>{selections.length > 0 ? selections[0].game : ""}</strong>
-        </p>
-        <div className="container mt-3 mb-2">
-          <div className="row">
-            {filteredResults.map((result, index) => (
-              <div key={index} className="col-md-4 col-sm-12 mb-3">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="result-field d-flex">
-                      <h6 className="card-title">Game: </h6> &nbsp;&nbsp;
-                      <p className="card-text">
-                        {selections.length > 0 ? selections[0].game : ""}
-                      </p>
-                    </div>
-                    <div className="result-field d-flex">
-                      <h6 className="card-title">Date:</h6>
-                      &nbsp;&nbsp;
-                      <p className="card-text">
-                        {moment
-                          .utc(result?.date, "YYYY-MM-DD HH:mm:ss")
-                          .local()
-                          .format("MMM DD, YYYY h:mm:ss a")}
-                      </p>
-                    </div>
-                    <div className="result-field d-flex">
-                      <h6 className="card-title">Year:</h6>&nbsp;&nbsp;
-                      <p className="card-text">{result?.year}</p>
-                    </div>
-                    <div className="result-field mt-3 mb-3">
-                      <h6 className="card-title">Winning Number:</h6>
-                      <div className="number-list d-flex flex-wrap">
-                        {result?.winning_number?.split("-").map((digit, j) => (
-                          <span
-                            key={j}
-                            className="p-3 me-2 mb-2"
-                            style={{
-                              borderRadius: "50%",
-                              width: "40px",
-                              height: "40px",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              background: "#27AE60",
-                              color: "#FFF",
-                            }}
-                          >
-                            {digit}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="result-field mt-3 mb-3">
-                      <h6 className="card-title">Machine Number:</h6>
-                      <div className="number-list d-flex flex-wrap">
-                        {result?.machine_number?.split("-").map((digit, j) => (
-                          <span
-                            key={j}
-                            className="p-3 me-2 mb-2"
-                            style={{
-                              borderRadius: "50%",
-                              width: "40px",
-                              height: "40px",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              background: "#FF0013",
-                              color: "#fff",
-                            }}
-                          >
-                            {digit}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        </h5>
+
+        <div className="table-responsive">
+          <table className="table table-bordered text-center align-middle">
+            <thead>
+              <tr>
+                <th className="fw-bolder" rowSpan="2">
+                  Draw Date
+                </th>
+                <th colSpan="5" className="bg-success text-white fw-bolder">
+                  Winning Numbers
+                </th>
+                <th colSpan="5" className="bg-danger text-white  fw-bolder">
+                  Machine Numbers
+                </th>
+              </tr>
+              <tr>
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <th key={`win-${num}`} className="bg-light fw-bolder">
+                    W{num}
+                  </th>
+                ))}
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <th key={`mach-${num}`} className="bg-light fw-bolder">
+                    M{num}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredResults.map((result, index) => {
+                const drawDate = moment
+                  .utc(result?.date)
+                  .local()
+                  .format("YYYY-MM-DD");
+                const winningNumbers = result?.winning_number?.split("-");
+                const machineNumbers = result?.machine_number?.split("-");
+
+                return (
+                  <tr key={index}>
+                    <td>{drawDate}</td>
+                    {winningNumbers?.map((num, i) => (
+                      <td
+                        key={`w-${i}`}
+                        className="text-light bg-success fw-bold"
+                      >
+                        {num}
+                      </td>
+                    ))}
+                    {machineNumbers?.map((num, i) => (
+                      <td
+                        key={`m-${i}`}
+                        className="text-light bg-danger fw-bold"
+                      >
+                        {num}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     );
@@ -587,7 +571,7 @@ const Chart = () => {
         )}
 
         {showCreateCharts && (
-          <div className="meg_container mb-40">
+          <div>
             <div>
               <table cellPadding="3">
                 <tr>

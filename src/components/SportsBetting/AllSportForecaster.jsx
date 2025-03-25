@@ -92,7 +92,6 @@ const AllSportForecaster = () => {
         </div>
       </div>
 
-      {/* ✅ Fullscreen Modal */}
       {showModal && (
         <div
           className="modal show fade"
