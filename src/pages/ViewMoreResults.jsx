@@ -674,8 +674,6 @@ const ViewMoreResults = () => {
                                     return null;
                                   }
                                 } else if (operatorID === "gd_lotto") {
-                                  console.log(item);
-
                                   const drawDateTimeString = `${item?.drawTime} ${item?.drawTime}`;
                                   const drawDateTime = moment(
                                     drawDateTimeString,

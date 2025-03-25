@@ -207,7 +207,7 @@ const Navbar = () => {
                         <li>
                           <a
                             className="dropdown-item p-2 "
-                            onClick={() => navigate("/sport-forecast")}
+                            onClick={() => navigate("/all-forecast")}
                           >
                             {/* <img src={images.bet} alt={images.bet} /> */}
                             Sport Betting
@@ -538,7 +538,7 @@ const Navbar = () => {
                     <li>
                       <a
                         className="dropdown-item p-2"
-                        onClick={() => navigate("/sport-forecast")}
+                        onClick={() => navigate("/all-forecast")}
                       >
                         Sport Betting
                       </a>

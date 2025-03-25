@@ -11,7 +11,6 @@ const SportForecaster = () => {
   const { userSportForecast, isLoadingSportForecast } = useGetSportsForecast(
     []
   );
-  // console.log(userSportForecast);
 
   return (
     <React.Fragment>

@@ -111,6 +111,8 @@ const Forecast = () => {
                         <option value="45">Lottomania</option>
                         <option value="57">Set Lotto</option>
                         <option value="42">Golden Chance</option>
+                        <option value="61">Gd Lotto</option>
+                        <option value="65">GH 5/90</option>
                       </select>
 
                       <div className="form-group mb-4">
@@ -292,6 +294,8 @@ const Forecast = () => {
                   <option value="45">Lottomania</option>
                   <option value="57">Set Lotto</option>
                   <option value="42">Golden Chance</option>
+                  <option value="61">Gd Lotto</option>
+                  <option value="65">GH 5/90</option>
                 </select>
 
                 <div className="form-group mb-4">

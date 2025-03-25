@@ -32,6 +32,8 @@ function Slider() {
       return pageWebLower.includes("home");
     } else if (currentPath === "/sport-forecast") {
       return pageWebLower.includes("home");
+    } else if (currentPath === "/all-forecast") {
+      return pageWebLower.includes("home");
     } else if (currentPath === "/result") {
       return pageWebLower.includes("result");
     } else if (currentPath.startsWith("/view-more")) {
