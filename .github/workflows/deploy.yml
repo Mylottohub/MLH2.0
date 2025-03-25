@@ -24,7 +24,7 @@ jobs:
         run: yarn install
 
       - name: Build Vite project
-        run: yaen run build
+        run: yarn run build
 
       - name: Upload via FTP
         uses: SamKirkland/ftp-deploy-action@v4.3.4
