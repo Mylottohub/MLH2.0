@@ -1501,7 +1501,24 @@ const TransactionHistory = () => {
 
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">NUMBERS:</span>{" "}
-                <span>{selectedBet?.num}</span>
+                <span>
+                  {" "}
+                  {selectedOperator === "gd_jackpot" ? (
+                    <>
+                      {selectedBet?.gh_570_num && (
+                        <span>GH 70: {selectedBet.gh_570_num} </span>
+                      )}
+                      {selectedBet?.gh_580_num && (
+                        <span>GH 80: {selectedBet.gh_580_num} </span>
+                      )}
+                      {selectedBet?.gh_590_num && (
+                        <span>GH 90: {selectedBet.gh_590_num} </span>
+                      )}
+                    </>
+                  ) : (
+                    selectedBet?.num
+                  )}
+                </span>
               </p>
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">GAME NAME:</span>{" "}
