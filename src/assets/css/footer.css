@@ -16,6 +16,9 @@
     color: #fff;
     margin-bottom: 30px;
 }
+
+
+
 .footer-logo form{
     position: relative;
 }
@@ -44,8 +47,9 @@
     margin-bottom: 25px;
     padding-bottom: 10px;
     position: relative;
-    color: #fff;
-    font-size: 20px;
+    color: #DDEC04;
+    font-size: 25px;
+    font-weight: bolder;
     margin-left: 51px;
 }
 .footer-widget h2:before{
@@ -95,6 +99,7 @@
 .footer-menu ul li a{
     color: #fff;
     font-weight: 400;
+    font-size: 20px;
     position: relative;
     padding-left: 25px;
     text-decoration: none!important;
@@ -135,6 +140,14 @@
     .footer-area {
         height: auto;
         position: static;
-        display: none;
+        /* display: none; */
+    }
+
+    .footer_login{
+        display: none;  
+    }
+
+    .logo_footer{
+        width: 80px!important;
     }
 }

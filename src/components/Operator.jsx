@@ -774,7 +774,7 @@ const Operator = () => {
                 &nbsp;&nbsp;&nbsp;
                 <div className="col-xs-6  w-50">
                   <a
-                    href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com"
+                    href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                     // onClick={() => navigate("/login")}
                     className="btn btn-blue btn-block btn-lg"
                   >

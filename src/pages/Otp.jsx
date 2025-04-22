@@ -290,7 +290,7 @@ const Otp = () => {
             onClick={
               () =>
                 (window.location.href =
-                  "https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com")
+                  "https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com")
               // "https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app")
             }
             className="w-100 p-3 btn btn-light"

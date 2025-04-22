@@ -279,7 +279,7 @@ const Register = () => {
                 <p
                   onClick={() =>
                     (window.location.href =
-                      "https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com")
+                      "https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com")
                   }
                   style={{ cursor: "pointer", color: "#406777" }}
                 >

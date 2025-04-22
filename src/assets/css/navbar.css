@@ -5,7 +5,7 @@
 } */
 
 .app__navbar-bg {
-    background-color: #27aae1 !important;
+    background-color: #406777 !important;
     padding: 15px;
     font-family: Lato !important;
     font-weight: 500;
@@ -218,4 +218,15 @@ a:focus {
     .app__user-mobile {
         display: none !important;
     }
+
+    .navbar-toggler {
+        background-color: #fff!important;
+        border-color: 1px solid #fff;
+    }
 }
+@media (min-width: 991.98px) {
+   .offcanvas {
+    display: none;
+   }
+  }
+  

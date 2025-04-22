@@ -13,7 +13,7 @@ const Instance = () => {
       <div className="container mt-5">
         <span className="hidden-xs hidden-sm">
           <h4>
-            <strong>Instant Games</strong>
+            <strong>Casino Games</strong>
           </h4>
         </span>
         <br />
@@ -32,8 +32,8 @@ const Instance = () => {
                   onClick={() => window.open(game.link, "_blank")}
                 >
                   <img
-                    src={`/images/${game.pix}`}
-                    alt={game.name}
+                    src={game?.pix}
+                    alt={game?.name}
                     className="img-fluid"
                     style={{
                       borderTopRightRadius: "5px",
@@ -42,12 +42,9 @@ const Instance = () => {
                   />
                   <div style={{ padding: "10px", lineHeight: "28px" }}>
                     <p align="center">
-                      <strong>{game.name}</strong>
-                    </p>
-                    <p align="center">
-                      <small>
-                        {game.operator === 13 ? "Bet Bonanza" : "22bet"}
-                      </small>
+                      <a className="btn btn-blue btn-sm btn-block w-100">
+                        Play Now
+                      </a>
                     </p>
                   </div>
                 </div>

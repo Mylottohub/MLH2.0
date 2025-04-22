@@ -60,6 +60,14 @@ const Navbar = () => {
     }
     return amount;
   };
+  const handleNav = (path) => {
+    const offcanvasEl = document.getElementById("mobileNavbar");
+    const bsOffcanvas = window.bootstrap?.Offcanvas.getInstance(offcanvasEl);
+    if (bsOffcanvas) bsOffcanvas.hide();
+
+    navigate(path);
+  };
+
   return (
     <div>
       <Download />
@@ -71,7 +79,7 @@ const Navbar = () => {
 
             <nav className="navbar navbar-expand-lg app__navbar-bg">
               <div className="container">
-                <button
+                {/* <button
                   className="btn app__transaction-mobile app__navbar-mobile bg-light"
                   type="button"
                   data-bs-toggle="collapse"
@@ -81,95 +89,89 @@ const Navbar = () => {
                   aria-label="Toggle navigation"
                 >
                   <span className="navbar-toggler-icon"></span>
-                </button>
-                <div
-                  className="text-white app__transaction-mobile"
-                  style={{ marginTop: "-20px" }}
-                >
+                </button> */}
+                <p></p>
+                <div className="text-white app__transaction-mobile">
                   {" "}
                   <span>
                     {" "}
                     <ul className="d-flex justify-content-between app__sign-in">
-                      <li className="text-center">
-                        <li
-                          className="nav-item dropdown"
-                          // style={{ marginLeft: "-170px" }}
+                      <li className="nav-item dropdown text-center">
+                        <a
+                          id="app__mobile-nav"
+                          className="nav-link dropdown-toggle text-white"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
                         >
-                          <a
-                            id="app__mobile-nav"
-                            className="nav-link dropdown-toggle text-white"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            <FaUser className="fa-2x" />
-                          </a>
-                          <ul
-                            className="dropdown-menu"
-                            style={{ marginLeft: "-90px" }}
-                          >
-                            <li onClick={() => handleUserProfile()}>
-                              <a className="dropdown-item p-2">
-                                &nbsp;&nbsp;User Profile
-                              </a>
-                            </li>
-                            <li onClick={() => navigate("/wallet")}>
-                              <a className="dropdown-item p-2">
-                                &nbsp;&nbsp;Wallet
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="dropdown-item p-2"
-                                onClick={() => handleDeposit()}
-                              >
-                                &nbsp;&nbsp;Deposit
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="dropdown-item p-2"
-                                onClick={() => handleWithdraw()}
-                              >
-                                &nbsp;&nbsp;Withdraw
-                              </a>
-                            </li>
-                            {/* <li>
-                              <a className="dropdown-item p-2">
-                                &nbsp;&nbsp;Subscription
-                              </a>
-                            </li> */}
-                            <li>
-                              <a
-                                className="dropdown-item p-2"
-                                onClick={() => navigate("/transactions")}
-                              >
-                                &nbsp;&nbsp;Transactions
-                              </a>
-                            </li>{" "}
-                            <li onClick={() => navigate("/referral")}>
-                              <a className="dropdown-item p-2">
-                                &nbsp;&nbsp;Referral
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                href="https://agency.mylottohub.com/"
-                                target="_blank"
-                                className="dropdown-item p-2"
-                                rel="noreferrer"
-                              >
-                                &nbsp; Become an Agent
-                              </a>
-                            </li>
-                            <li className="dropdown-item p-2">
-                              <a onClick={() => handleLogout()}>
-                                {" "}
-                                &nbsp;&nbsp; Logout
-                              </a>
-                            </li>
-                          </ul>
-                        </li>
+                          <FaUser className="fa-2x" />
+                        </a>
+                        <ul
+                          className="dropdown-menu"
+                          style={{ marginLeft: "-90px" }}
+                        >
+                          <li onClick={() => handleUserProfile()}>
+                            <a className="dropdown-item p-2">
+                              &nbsp;&nbsp;User Profile
+                            </a>
+                          </li>
+                          <li onClick={() => navigate("/wallet")}>
+                            <a className="dropdown-item p-2">
+                              &nbsp;&nbsp;Wallet
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              className="dropdown-item p-2"
+                              onClick={() => handleDeposit()}
+                            >
+                              &nbsp;&nbsp;Deposit
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              className="dropdown-item p-2"
+                              onClick={() => handleWithdraw()}
+                            >
+                              &nbsp;&nbsp;Withdraw
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              className="dropdown-item p-2"
+                              onClick={() => navigate("/transactions")}
+                            >
+                              &nbsp;&nbsp;Transactions
+                            </a>
+                          </li>{" "}
+                          <li>
+                            <a
+                              className="dropdown-item p-2"
+                              onClick={() => navigate("/result")}
+                            >
+                              &nbsp;&nbsp;Results
+                            </a>
+                          </li>{" "}
+                          <li>
+                            <a
+                              className="dropdown-item p-2"
+                              onClick={() => navigate("/forecast")}
+                            >
+                              &nbsp;&nbsp;Quick Forecast
+                            </a>
+                          </li>{" "}
+                          <li onClick={() => navigate("/referral")}>
+                            <a className="dropdown-item p-2">
+                              &nbsp;&nbsp;Referral
+                            </a>
+                          </li>
+                          <li className="dropdown-item p-2">
+                            <a onClick={() => handleLogout()}>
+                              {" "}
+                              &nbsp;&nbsp; Logout
+                            </a>
+                          </li>
+                        </ul>
                       </li>
                     </ul>
                   </span>
@@ -501,14 +503,13 @@ const Navbar = () => {
             <button
               className="navbar-toggler app__navbar-mobile"
               type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#mobileNavbar"
+              aria-controls="mobileNavbar"
             >
-              <span className="navbar-toggler-icon"></span>
+              <span className="navbar-toggler-icon text-white"></span>
             </button>
+
             <div
               className="collapse navbar-collapse"
               id="navbarSupportedContent"
@@ -597,15 +598,6 @@ const Navbar = () => {
                     Tutorials
                   </a>
                 </li>
-                {/* <li className="nav-item">
-                  <a
-                    className="nav-link text-white me-3"
-                    href="/mlh.apk"
-                    download
-                  >
-                    Download App
-                  </a>
-                </li> */}
 
                 <li className="nav-item dropdown  ">
                   <a
@@ -670,7 +662,7 @@ const Navbar = () => {
                     </span>
                   </a>
 
-                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://mylottohub.com">
+                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com">
                     {/* <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app"> */}
                     <span
                       className="btn btn-yellow  "
@@ -680,6 +672,112 @@ const Navbar = () => {
                     </span>
                   </a>
                 </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            className="offcanvas offcanvas-end"
+            tabIndex="-1"
+            id="mobileNavbar"
+            aria-labelledby="mobileNavbarLabel"
+          >
+            <div className="offcanvas-header">
+              <h5 className="offcanvas-title" id="mobileNavbarLabel">
+                Menu
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="offcanvas-body">
+              <ul className="navbar-nav" style={{ cursor: "pointer" }}>
+                <li className="nav-item dropdown">
+                  <button
+                    className="nav-link dropdown-toggle text-dark fw-bolder btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    data-bs-auto-close="outside"
+                  >
+                    Play now
+                  </button>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <a
+                        className="dropdown-item text-dark fw-bolder"
+                        onClick={() => handleNav("/")}
+                      >
+                        Lotto
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="dropdown-item text-dark fw-bolder"
+                        onClick={() => handleNav("/all-forecast")}
+                      >
+                        Sport Betting
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="dropdown-item text-dark fw-bolder"
+                        onClick={() => handleNav("/instant")}
+                      >
+                        Instant Games
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <hr />
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-dark fw-bolder me-3"
+                    onClick={() => handleNav("/result")}
+                  >
+                    Results
+                  </a>
+                </li>
+                <hr />
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-dark fw-bolder app__proforecast"
+                    onClick={() => handleNav("/create-chart")}
+                  >
+                    Create Charts
+                  </a>
+                </li>
+                <hr />
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-dark fw-bolder me-3"
+                    onClick={() => handleNav("/timetable")}
+                  >
+                    Time Table
+                  </a>
+                </li>
+                <hr />
+                <li
+                  onClick={() => handleNav("/forecast")}
+                  className="nav-item  "
+                >
+                  <a className="nav-link text-dark fw-bolder me-3">
+                    {" "}
+                    Quick Forecast
+                  </a>
+                </li>
+                <hr />
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-dark fw-bolder me-3"
+                    onClick={() => handleNav("/tutorials")}
+                  >
+                    Tutorials
+                  </a>
+                </li>
+                <hr />
               </ul>
             </div>
           </div>

@@ -17,11 +17,6 @@ const AllSportForecaster = () => {
       const url =
         "https://gml-grp.com/C.ashx?btag=a_55590b_3366c_&affid=18865&siteid=55590&adid=3366&c=";
       window.open(url, "_blank");
-    } else {
-      window.open(
-        "https://betbonanza.com/register/?btag=AI1913352501_9k_sVBfeu6lJDtEI85Vm32Nd7ZgqdRLk&affcode=AI1913352501&utm_medium=MA_Affiliates&utm_source=AI1913352501",
-        "_blank"
-      );
     }
   };
 
@@ -36,16 +31,12 @@ const AllSportForecaster = () => {
         >
           Select Operator
         </h3>
-        <div className="row">
+
+        <div className="row d-none d-md-flex">
+          {/* Desktop view */}
           {isLoadingAllSportForecast ? (
             <div className="spinner text-dark text-center">
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
+              <Spinner animation="border" size="sm" />
             </div>
           ) : (
             userAllSportForecast?.map((forecaster) => (
@@ -53,9 +44,9 @@ const AllSportForecaster = () => {
                 <div className="card-body">
                   <img
                     src={forecaster?.logo}
-                    style={{ width: "100%", height: "100%" }}
                     alt={forecaster?.name}
                     className="mb-4 img-fluid"
+                    style={{ width: "100%", height: "100%" }}
                   />
                   <h3
                     className="card-title fw-bold mb-3"
@@ -75,6 +66,87 @@ const AllSportForecaster = () => {
                     Play now
                   </a>
                 </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Mobile View */}
+        <div className="d-block d-md-none mt-3">
+          {isLoadingAllSportForecast ? (
+            <div className="spinner text-dark text-center">
+              <Spinner animation="border" size="sm" />
+            </div>
+          ) : (
+            userAllSportForecast?.map((forecaster) => (
+              <div
+                key={forecaster.id}
+                className="div_vlgrey border rounded p-2 mb-3"
+              >
+                <table width="100%" cellPadding="3">
+                  <tbody>
+                    <tr valign="top">
+                      <td width="40%">
+                        <img
+                          src={forecaster?.logo}
+                          className="img-fluid"
+                          alt={forecaster?.name}
+                        />
+                      </td>
+                      <td style={{ lineHeight: "19px" }}>
+                        {/* <small>
+                          <strong>NEXT DRAW</strong>
+                        </small>
+                        <br />
+                        <small>
+                          {latestGame
+                            ? latestGame.name
+                            : "Next Game Display at 12:00am"}
+                        </small>
+                        <br />
+                        <br /> */}
+
+                        {/* <small>
+                          <Countdown
+                            date={moment().add(timeRemaining).toDate()}
+                            renderer={({ days, hours, minutes, seconds }) => (
+                              <div className="mb-2">
+                                <span className="countdown_box">
+                                  {days}days
+                                </span>{" "}
+                                <span className="countdown_box">
+                                  {hours}hrs
+                                </span>{" "}
+                                <span className="countdown_box">
+                                  {minutes}mins
+                                </span>{" "}
+                                <br />
+                                <p className="countdown_box mt-3">
+                                  {seconds}secs
+                                </p>
+                              </div>
+                            )}
+                          />
+                        </small> */}
+
+                        <p>
+                          <a
+                            href={forecaster?.link || "#"}
+                            className="btn btn-blue btn-sm btn-block mt-5"
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePlayNowClick(forecaster);
+                            }}
+                          >
+                            Play Now
+                          </a>
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             ))
           )}
