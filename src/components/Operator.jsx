@@ -44,6 +44,7 @@ const Operator = () => {
   }, []);
 
   const operatorTypes = [
+    "golden_chance",
     "GH 5/90",
     "ghana_game",
     "gd_jackpot",
@@ -141,6 +142,7 @@ const Operator = () => {
   const timeRemaining = gameStartTime ? gameStartTime.diff(currentTime) : null;
 
   const operatorNameMapping = {
+    golden_chance: "golden_chance",
     ghana_game: "5/90_games",
     green_ghana_game: "green_lotto ghana",
     wesco: "wesco",
@@ -208,9 +210,7 @@ const Operator = () => {
 
                 const upcomingGames = dataArray.filter((game) => {
                   const currentTime = moment();
-
                   let drawTime;
-
                   if (operatorType === "lotto_nigeria") {
                     drawTime = game?.drawDate
                       ? moment(game?.drawDate, "DD/MM/YYYY HH:mm")
@@ -446,6 +446,8 @@ const Operator = () => {
                         }
                       }
                     }
+                  } else if (operatorType === "golden_chance") {
+                    console.log(goldenChanceGames);
                   } else {
                     const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                       .utcOffset("+00:00")
@@ -477,6 +479,8 @@ const Operator = () => {
                               {operatorType === "gd_lotto" ||
                               operatorType === "gd_jackpot"
                                 ? latestGame590?.gameName
+                                : operatorType === "golden_chance"
+                                ? latestGame.name
                                 : nextGame[propertyMapping[operatorType].name]}
                               <br />
                               <br />

@@ -661,9 +661,9 @@ const Navbar = () => {
                       Sign Up
                     </span>
                   </a>
-
-                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com">
-                    {/* <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app"> */}
+                  {/* 
+                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"> */}
+                  <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app">
                     <span
                       className="btn btn-yellow  "
                       // onClick={() => navigate("/login")}
@@ -694,54 +694,43 @@ const Navbar = () => {
             </div>
             <div className="offcanvas-body">
               <ul className="navbar-nav" style={{ cursor: "pointer" }}>
-                <li className="nav-item dropdown">
-                  <button
-                    className="nav-link dropdown-toggle text-dark fw-bolder btn"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    data-bs-auto-close="outside"
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-dark fw-bolder me-3"
+                    onClick={() => handleNav("/")}
                   >
-                    Play now
-                  </button>
-                  <ul className="dropdown-menu">
-                    <li>
-                      <a
-                        className="dropdown-item text-dark fw-bolder"
-                        onClick={() => handleNav("/")}
-                      >
-                        Lotto
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item text-dark fw-bolder"
-                        onClick={() => handleNav("/all-forecast")}
-                      >
-                        Sport Betting
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item text-dark fw-bolder"
-                        onClick={() => handleNav("/instant")}
-                      >
-                        Instant Games
-                      </a>
-                    </li>
-                  </ul>
+                    Lotto
+                  </a>
                 </li>
                 <hr />
                 <li className="nav-item">
+                  <a
+                    className="nav-link text-dark fw-bolder me-3 w-50"
+                    onClick={() => handleNav("/all-forecast")}
+                  >
+                    Sport Betting
+                  </a>
+                </li>
+                <hr />
+                {/* <li className="nav-item">
+                  <a
+                    className="nav-link text-dark fw-bolder me-3 w-50"
+                    onClick={() => handleNav("/instant")}
+                  >
+                    Instant Games
+                  </a>
+                </li>
+                <hr /> */}
+                {/* <li className="nav-item">
                   <a
                     className="nav-link text-dark fw-bolder me-3"
                     onClick={() => handleNav("/result")}
                   >
                     Results
                   </a>
-                </li>
-                <hr />
-                <li className="nav-item">
+                </li> */}
+                {/* <hr /> */}
+                {/* <li className="nav-item">
                   <a
                     className="nav-link text-dark fw-bolder app__proforecast"
                     onClick={() => handleNav("/create-chart")}
@@ -749,7 +738,7 @@ const Navbar = () => {
                     Create Charts
                   </a>
                 </li>
-                <hr />
+                <hr /> */}
                 <li className="nav-item">
                   <a
                     className="nav-link text-dark fw-bolder me-3"
@@ -759,22 +748,41 @@ const Navbar = () => {
                   </a>
                 </li>
                 <hr />
-                <li
+                {/* <li
                   onClick={() => handleNav("/forecast")}
                   className="nav-item  "
                 >
-                  <a className="nav-link text-dark fw-bolder me-3">
+                  <a className="nav-link text-dark fw-bolder me-3 w-50">
                     {" "}
                     Quick Forecast
                   </a>
                 </li>
-                <hr />
+                <hr /> */}
                 <li className="nav-item">
                   <a
                     className="nav-link text-dark fw-bolder me-3"
                     onClick={() => handleNav("/tutorials")}
                   >
                     Tutorials
+                  </a>
+                </li>
+                <hr />
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-dark fw-bolder me-3"
+                    onClick={() => handleNav("/register")}
+                  >
+                    Sign Up
+                  </a>
+                </li>
+                <hr />
+                <li className="nav-item">
+                  {/* <a
+                    className="nav-link text-dark fw-bolder me-3"
+                    href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
+                  > */}
+                  <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app">
+                    Sign In
                   </a>
                 </li>
                 <hr />

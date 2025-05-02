@@ -9,10 +9,12 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../pages/slices/authSlice";
 import { toast } from "react-toastify";
 import { HTTP } from "../utils";
+import { useGetProfileUser } from "../react-query";
 
 const Homepage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const { userProfileResponse } = useGetProfileUser([]);
 
   useEffect(() => {
     const getCodeFromURL = () => {
@@ -36,7 +38,7 @@ const Homepage = () => {
           throw new Error("Token not found in response data");
         }
       } catch (error) {
-        toast.error(error?.response?.data?.error);
+        toast.error(error?.response?.data?.error || "Authentication failed");
       }
     };
 
@@ -45,6 +47,26 @@ const Homepage = () => {
       exchangeCodeForToken(code);
     }
   }, [location, dispatch]);
+
+  // Create temp token once userProfileResponse is
+  useEffect(() => {
+    const createTempToken = async () => {
+      if (userProfileResponse?.id) {
+        try {
+          await HTTP.post("/get_temp_token", {
+            userID: userProfileResponse.id,
+          });
+          console.log("Temp token generated for user:", userProfileResponse.id);
+        } catch (error) {
+          toast.error("Failed to create temp token");
+          console.error(error);
+        }
+      }
+    };
+
+    createTempToken();
+  }, [userProfileResponse]);
+
   return (
     <React.Fragment>
       <div>
