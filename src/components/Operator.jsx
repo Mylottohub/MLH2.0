@@ -6,6 +6,7 @@ import { Spinner } from "react-bootstrap";
 import Countdown from "react-countdown";
 import moment from "moment";
 import { HTTP } from "../utils";
+import { useGetProfileUser } from "../react-query";
 
 const Operator = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Operator = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   const [operatorData, setOperatorData] = useState({
+    golden_chance: [],
     wesco: [],
     green_lotto: [],
     lotto_nigeria: [],
@@ -23,6 +25,7 @@ const Operator = () => {
   });
 
   const [operatorLogos, setOperatorLogos] = useState({});
+  const { userProfileTempToken, userProfileResponse } = useGetProfileUser([]);
 
   useEffect(() => {
     // Fetch operator logos from the endpoint
@@ -77,7 +80,7 @@ const Operator = () => {
             : [data.result],
         }));
       } catch (error) {
-        console.error(`Error fetching ${operatorType} games:`, error);
+        // console.error(`Error fetching ${operatorType} games:`, error);
       } finally {
         setIsLoading(false);
       }
@@ -203,6 +206,7 @@ const Operator = () => {
                   },
                   "GH 5/90": { name: "gameName", time: "drawTime" },
                   NNP: { name: "gameName", time: "drawTime" },
+                  golden_chance: { name: "drawname", time: "drawtime" },
                 };
                 const dataArray = Array.isArray(operatorDataArray)
                   ? operatorDataArray
@@ -286,22 +290,32 @@ const Operator = () => {
                   } else if (operatorType === "NNP") {
                     const drawDateTimeString = `${game?.drawTime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-                  }
+                  } else if (operatorType === "golden_chance") {
+                    const drawDate = game?.drawdate; // format: "YYYYMMDD"
+                    const drawTimeString = game?.drawtime; // format: "HH:mm:ss"
 
+                    if (drawDate && drawTimeString) {
+                      drawTime = moment(
+                        `${drawDate} ${drawTimeString}`,
+                        "YYYYMMDD HH:mm:ss"
+                      );
+                    } else {
+                      drawTime = null; // fallback
+                    }
+                  }
                   return drawTime && drawTime.isAfter(currentTime);
                 });
-
                 upcomingGames.sort(
                   (a, b) =>
-                    new Date(a[propertyMapping[operatorType].time]) -
-                    new Date(b[propertyMapping[operatorType].time])
+                    new Date(a[propertyMapping[operatorType]?.time]) -
+                    new Date(b[propertyMapping[operatorType]?.time])
                 );
 
                 const nextGame =
                   upcomingGames.length > 0 ? upcomingGames[0] : null;
 
                 const renderGameTime = (operatorType, game) => {
-                  const time = game[propertyMapping[operatorType].time];
+                  const time = game[propertyMapping[operatorType]?.time];
 
                   if (operatorType === "lottomania") {
                     return new Date(time);
@@ -447,7 +461,19 @@ const Operator = () => {
                       }
                     }
                   } else if (operatorType === "golden_chance") {
-                    console.log(goldenChanceGames);
+                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
+                    const parsedTime = moment(
+                      drawDateTimeString,
+                      "YYYYMMDD HH:mm:ss"
+                    )
+                      .utcOffset("+00:00")
+                      .utc();
+
+                    if (parsedTime.isValid()) {
+                      return parsedTime.toDate();
+                    } else {
+                      return null;
+                    }
                   } else {
                     const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                       .utcOffset("+00:00")
@@ -479,9 +505,7 @@ const Operator = () => {
                               {operatorType === "gd_lotto" ||
                               operatorType === "gd_jackpot"
                                 ? latestGame590?.gameName
-                                : operatorType === "golden_chance"
-                                ? latestGame.name
-                                : nextGame[propertyMapping[operatorType].name]}
+                                : nextGame[propertyMapping[operatorType]?.name]}
                               <br />
                               <br />
                               <span>
@@ -525,6 +549,14 @@ const Operator = () => {
                                   navigate(`/gd-lotto`);
                                 } else if (operatorType === "gd_jackpot") {
                                   navigate(`/play-game/gd_jackpot`);
+                                } else if (operatorType === "golden_chance") {
+                                  const uid = userProfileResponse?.id;
+                                  const tempToken = userProfileTempToken;
+
+                                  if (uid && tempToken) {
+                                    const url = `http://5.9.25.78:8010/?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                                    window.open(url, "_blank");
+                                  }
                                 } else {
                                   const sanitizedOperatorType =
                                     operatorType === "GH 5/90"
@@ -558,7 +590,7 @@ const Operator = () => {
             })
           )}
 
-          <div className="col-md-3 col-sm-6 col-xs-12 col-2">
+          {/* <div className="col-md-3 col-sm-6 col-xs-12 col-2">
             <div className="service-wrap mb-5">
               <a>
                 <div className="service-img">
@@ -621,7 +653,7 @@ const Operator = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <section className="container mt-5 mb-5">
             <span className="hidden-sm hidden-xs">

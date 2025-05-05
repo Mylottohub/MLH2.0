@@ -69,6 +69,7 @@ const useGetProfileUser = () => {
 
   return {
     userProfileResponse: data?.data?.[0],
+    userProfileTempToken: data?.data?.temp_token,
     expires,
     token,
     isLoadingUserProfile: isLoading,

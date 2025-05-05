@@ -14,7 +14,7 @@ import { useGetProfileUser } from "../react-query";
 const Homepage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { userProfileResponse } = useGetProfileUser([]);
+  const { userProfileResponse, expires } = useGetProfileUser([]);
 
   useEffect(() => {
     const getCodeFromURL = () => {
@@ -24,21 +24,30 @@ const Homepage = () => {
 
     const exchangeCodeForToken = async (code) => {
       try {
-        const payload = {
-          code,
-          type: "user",
-        };
+        const payload = { code, type: "user" };
         const response = await HTTP.post("/miracl-hook", payload);
-
         const data = response?.data;
+
         if (data?.token) {
           dispatch(setCredentials(data));
           toast.success("Login Successfully");
+          const userID = data?.data?.id;
+
+          if (!userID) {
+            throw new Error("User not found");
+            // toast.error("User ID missing in Miracl response:", data);
+          } else {
+            try {
+              await HTTP.post("/get_temp_token", { userID });
+            } catch (tempTokenErr) {
+              toast.error("Failed to create temp token");
+            }
+          }
         } else {
           throw new Error("Token not found in response data");
         }
       } catch (error) {
-        toast.error(error?.response?.data?.error || "Authentication failed");
+        toast.error(error?.response?.data?.error);
       }
     };
 
@@ -48,24 +57,7 @@ const Homepage = () => {
     }
   }, [location, dispatch]);
 
-  // Create temp token once userProfileResponse is
-  useEffect(() => {
-    const createTempToken = async () => {
-      if (userProfileResponse?.id) {
-        try {
-          await HTTP.post("/get_temp_token", {
-            userID: userProfileResponse.id,
-          });
-          console.log("Temp token generated for user:", userProfileResponse.id);
-        } catch (error) {
-          toast.error("Failed to create temp token");
-          console.error(error);
-        }
-      }
-    };
-
-    createTempToken();
-  }, [userProfileResponse]);
+  useEffect(() => {}, [userProfileResponse, expires]);
 
   return (
     <React.Fragment>
