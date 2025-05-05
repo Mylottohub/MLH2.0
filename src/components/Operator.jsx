@@ -7,6 +7,7 @@ import Countdown from "react-countdown";
 import moment from "moment";
 import { HTTP } from "../utils";
 import { useGetProfileUser } from "../react-query";
+import { toast } from "react-toastify";
 
 const Operator = () => {
   const navigate = useNavigate();
@@ -556,6 +557,8 @@ const Operator = () => {
                                   if (uid && tempToken) {
                                     const url = `http://5.9.25.78:8010/?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
                                     window.open(url, "_blank");
+                                  } else {
+                                    toast.error("Pls Login to proceed");
                                   }
                                 } else {
                                   const sanitizedOperatorType =

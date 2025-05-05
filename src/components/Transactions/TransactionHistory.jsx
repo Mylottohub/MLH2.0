@@ -7,6 +7,7 @@ import { Spinner } from "react-bootstrap";
 import moment from "moment";
 import Footer from "../Footer";
 import { Modal } from "react-bootstrap";
+import { useGetProfileUser } from "../../react-query";
 
 const TransactionHistory = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -140,7 +141,7 @@ const TransactionHistory = () => {
   const fetchDataTransact = (page) => {
     setCurrentPage(page);
   };
-
+  const { userProfileTempToken, userProfileResponse } = useGetProfileUser([]);
   const renderPaginationLabel = (label) => {
     switch (label) {
       case "&laquo; Previous":
@@ -938,6 +939,7 @@ const TransactionHistory = () => {
                 onChange={(e) => setSelectedOperator(e.target.value)}
               >
                 <option value="">Select Operator</option>
+                <option value="golden_chance">Golden Chance</option>
                 <option value="ghana_game">5/90 Games</option>
                 <option value="wesco">Wesco</option>
                 <option value="green_lotto">Green lotto</option>
@@ -1029,13 +1031,35 @@ const TransactionHistory = () => {
                                   <td>{record?.TikcetId}</td>
                                 ) : selectedOperator === "gd_jackpot" ? (
                                   <td>{record?.TikcetId}</td>
+                                ) : selectedOperator === "golden_chance" ? (
+                                  <td>{record?.TikcetId}</td>
                                 ) : selectedOperator === "nnp" ? (
                                   <td>{record?.TikcetId}</td>
                                 ) : (
                                   <td>{record?.TSN}</td>
                                 )}
                               </td>
-                              <td>{record?.mgametype}</td>
+                              <td>
+                                {selectedOperator === "golden_chance" ? (
+                                  <span
+                                    onClick={() => {
+                                      const uid = userProfileResponse?.id;
+                                      const tempToken = userProfileTempToken;
+
+                                      if (uid && tempToken) {
+                                        const url = `http://5.9.25.78:8010/?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                                        window.open(url, "_blank");
+                                      }
+                                    }}
+                                    className="btn btn-blue"
+                                  >
+                                    View Here
+                                  </span>
+                                ) : (
+                                  record?.mgametype || "-"
+                                )}
+                              </td>
+
                               <td>
                                 {" "}
                                 {selectedOperator === "green_lotto" ? (
@@ -1052,6 +1076,8 @@ const TransactionHistory = () => {
                                   <td>{record?.drawname}</td>
                                 ) : selectedOperator === "nnp" ? (
                                   <td>{record?.drawname}</td>
+                                ) : selectedOperator === "golden_chance" ? (
+                                  <td>{record?.operator_type}</td>
                                 ) : selectedOperator === "lotto_nigeria" ? (
                                   <td>{record?.drawAlias}</td>
                                 ) : (
@@ -1074,7 +1100,7 @@ const TransactionHistory = () => {
                 </table>
 
                 <>
-                  <div className="app__transaction-mobile ">
+                  <div className="app__transaction-mobile">
                     {isLoading ? (
                       <div className="spinner text-dark text-center mt-5">
                         <Spinner
@@ -1112,7 +1138,11 @@ const TransactionHistory = () => {
                             return (
                               <div
                                 key={index}
-                                className="p-3 mb-5 mt-3"
+                                className={`mb-5 mt-3 ${
+                                  selectedOperator === "golden_chance"
+                                    ? ""
+                                    : "p-3"
+                                }`}
                                 style={{ background: "#f5f7f8" }}
                               >
                                 <div>
@@ -1133,6 +1163,9 @@ const TransactionHistory = () => {
                                         <td>{record?.TikcetId}</td>
                                       ) : selectedOperator === "wesco" ? (
                                         <td>{record?.TikcetId}</td>
+                                      ) : selectedOperator ===
+                                        "golden_chance" ? (
+                                        <td>{record?.TikcetId}</td>
                                       ) : selectedOperator === "gd_lotto" ? (
                                         <td>{record?.TikcetId}</td>
                                       ) : selectedOperator === "gh_5_90" ? (
@@ -1150,11 +1183,33 @@ const TransactionHistory = () => {
                                     style={{
                                       display: "flex",
                                       justifyContent: "space-between",
+                                      alignItems: "center",
                                     }}
                                   >
                                     <span className="fw-bolder">Game:</span>
-                                    <span>{record?.mgametype}</span>
+                                    <span> {record?.mgametype || "-"}</span>
+
+                                    {selectedOperator === "golden_chance" && (
+                                      <>
+                                        <button
+                                          onClick={() => {
+                                            const uid = userProfileResponse?.id;
+                                            const tempToken =
+                                              userProfileTempToken;
+
+                                            if (uid && tempToken) {
+                                              const url = `http://5.9.25.78:8010/?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                                              window.open(url, "_blank");
+                                            }
+                                          }}
+                                          className="btn btn-blue"
+                                        >
+                                          View Here
+                                        </button>
+                                      </>
+                                    )}
                                   </p>
+
                                   <p
                                     style={{
                                       display: "flex",
@@ -1175,6 +1230,9 @@ const TransactionHistory = () => {
                                         <td>{record?.drawname}</td>
                                       ) : selectedOperator === "gd_lotto" ? (
                                         <td>{record?.drawname}</td>
+                                      ) : selectedOperator ===
+                                        "golden_chance" ? (
+                                        <td>{record?.operator_type}</td>
                                       ) : selectedOperator === "gh_5_90" ? (
                                         <td>{record?.drawname}</td>
                                       ) : selectedOperator === "gd_jackpot" ? (
@@ -1219,7 +1277,7 @@ const TransactionHistory = () => {
                                       style={{ cursor: "pointer" }}
                                       onClick={() => openModal(record)}
                                     >
-                                      View More &gt;&gt;{" "}
+                                      View Here &gt;&gt;{" "}
                                     </span>
                                   </p>
                                 </div>
@@ -1330,6 +1388,13 @@ const TransactionHistory = () => {
                   {selectedBet?.mgametype}
                 </span>
               </>
+            ) : selectedOperator === "golden_chance" ? (
+              <>
+                <div>Golden Chance</div>
+                <span className="text-white text-center">
+                  {/* {selectedBet?.mgametype} */}
+                </span>
+              </>
             ) : (
               <>
                 <div>{selectedOperator}</div>
@@ -1359,6 +1424,8 @@ const TransactionHistory = () => {
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "gd_jackpot" ? (
                     <span> {selectedBet?.TikcetId}</span>
+                  ) : selectedOperator === "golden_chance" ? (
+                    <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "nnp" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "lotto_nigeria" ? (
@@ -1371,6 +1438,22 @@ const TransactionHistory = () => {
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">LINES:</span>{" "}
                 <span>{selectedBet?.line}</span>
+                {selectedOperator === "golden_chance" && (
+                  <button
+                    onClick={() => {
+                      const uid = userProfileResponse?.id;
+                      const tempToken = userProfileTempToken;
+
+                      if (uid && tempToken) {
+                        const url = `http://5.9.25.78:8010/?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                        window.open(url, "_blank");
+                      }
+                    }}
+                    className="btn btn-blue"
+                  >
+                    View Here
+                  </button>
+                )}
               </p>
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">DRAW DATE: </span>{" "}
@@ -1388,6 +1471,14 @@ const TransactionHistory = () => {
                       {" "}
                       {moment
                         .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
+                  ) : selectedOperator === "golden_chance" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.date, "YYYY-MM-DD HH:mm:ss")
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA")}
                     </span>
@@ -1487,6 +1578,8 @@ const TransactionHistory = () => {
                     <span className="text-capitalize">Gd Jackpot</span>
                   ) : selectedOperator === "nnp" ? (
                     <span className="text-capitalize">NNP</span>
+                  ) : selectedOperator === "golden_chance" ? (
+                    <span className="text-capitalize">Golden Chance</span>
                   ) : (
                     <span> {selectedOperator}</span>
                   )}
@@ -1518,6 +1611,22 @@ const TransactionHistory = () => {
                   ) : (
                     selectedBet?.num
                   )}
+                  {selectedOperator === "golden_chance" && (
+                    <button
+                      onClick={() => {
+                        const uid = userProfileResponse?.id;
+                        const tempToken = userProfileTempToken;
+
+                        if (uid && tempToken) {
+                          const url = `http://5.9.25.78:8010/?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                          window.open(url, "_blank");
+                        }
+                      }}
+                      className="btn btn-blue"
+                    >
+                      View Here
+                    </button>
+                  )}
                 </span>
               </p>
               <p style={{ display: "flex", justifyContent: "space-between" }}>
@@ -1539,6 +1648,8 @@ const TransactionHistory = () => {
                     <p> {selectedBet?.drawname}</p>
                   ) : selectedOperator === "lotto_nigeria" ? (
                     <p> {selectedBet?.drawAlias}</p>
+                  ) : selectedOperator === "golden_chance" ? (
+                    <p> {selectedBet?.operator_type}</p>
                   ) : (
                     <td> {selectedBet?.GameName}</td>
                   )}
