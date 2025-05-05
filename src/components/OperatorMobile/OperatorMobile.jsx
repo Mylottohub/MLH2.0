@@ -9,6 +9,8 @@ import Countdown from "react-countdown";
 import moment from "moment";
 import { HTTP } from "../../utils";
 import Slider from "../Slider";
+import { useGetProfileUser } from "../../react-query";
+import { toast } from "react-toastify";
 
 const OperatorMobile = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const OperatorMobile = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   const [operatorData, setOperatorData] = useState({
+    golden_chance: [],
     wesco: [],
     green_lotto: [],
     lotto_nigeria: [],
@@ -25,6 +28,7 @@ const OperatorMobile = () => {
     green_ghana_game: [],
   });
   const [operatorLogos, setOperatorLogos] = useState({});
+  const { userProfileTempToken, userProfileResponse } = useGetProfileUser([]);
 
   useEffect(() => {
     // Fetch operator logos from the endpoint
@@ -46,6 +50,7 @@ const OperatorMobile = () => {
   }, []);
 
   const operatorTypes = [
+    "golden_chance",
     "GH 5/90",
     "ghana_game",
     "gd_jackpot",
@@ -141,6 +146,7 @@ const OperatorMobile = () => {
     : null;
   const timeRemaining = gameStartTime ? gameStartTime.diff(currentTime) : null;
   const operatorNameMapping = {
+    golden_chance: "golden_chance",
     ghana_game: "5/90_games",
     green_ghana_game: "green_lotto ghana",
     wesco: "wesco",
@@ -185,6 +191,7 @@ const OperatorMobile = () => {
                   `/images/${operatorType}.png`;
 
                 const propertyMapping = {
+                  golden_chance: { name: "drawname", time: "drawtime" },
                   ghana_game: { name: "gn", time: "sdt" },
                   wesco: { name: "drawname", time: "drawtime" },
                   green_lotto: { name: "drawname", time: "drawtime" },
@@ -287,6 +294,17 @@ const OperatorMobile = () => {
                   } else if (operatorType === "NNP") {
                     const drawDateTimeString = `${game?.drawTime}`;
                     drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                  } else if (operatorType === "golden_chance") {
+                    const drawDate = game?.drawdate;
+                    const drawTimeString = game?.drawtime;
+                    if (drawDate && drawTimeString) {
+                      drawTime = moment(
+                        `${drawDate} ${drawTimeString}`,
+                        "YYYYMMDD HH:mm:ss"
+                      );
+                    } else {
+                      drawTime = null;
+                    }
                   }
 
                   return drawTime && drawTime?.isAfter(currentTime);
@@ -453,6 +471,20 @@ const OperatorMobile = () => {
                         }
                       }
                     }
+                  } else if (operatorType === "golden_chance") {
+                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
+                    const parsedTime = moment(
+                      drawDateTimeString,
+                      "YYYYMMDD HH:mm:ss"
+                    )
+                      .utcOffset("+00:00")
+                      .utc();
+
+                    if (parsedTime.isValid()) {
+                      return parsedTime.toDate();
+                    } else {
+                      return null;
+                    }
                   } else {
                     // Handle other operator types by parsing the time string
                     const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
@@ -554,6 +586,22 @@ const OperatorMobile = () => {
                                                 navigate(
                                                   `/play-game/gd_jackpot`
                                                 );
+                                              } else if (
+                                                operatorType === "golden_chance"
+                                              ) {
+                                                const uid =
+                                                  userProfileResponse?.id;
+                                                const tempToken =
+                                                  userProfileTempToken;
+
+                                                if (uid && tempToken) {
+                                                  const url = `http://5.9.25.78:8010/?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                                                  window.open(url, "_blank");
+                                                } else {
+                                                  toast.error(
+                                                    "Pls Login to proceed"
+                                                  );
+                                                }
                                               } else {
                                                 const sanitizedOperatorType =
                                                   operatorType === "GH 5/90"
@@ -609,73 +657,6 @@ const OperatorMobile = () => {
               }
             })
           )}
-
-          <div className="hidden-md hidden-lg div_vlgrey">
-            <table width="100%" cellPadding="3">
-              <tbody>
-                <tr valign="top">
-                  <td width="41%">
-                    <img
-                      src="/images/golden_chance.png"
-                      className="img-fluid"
-                    />
-                  </td>
-                  <td style={{ lineHeight: "19px!important" }}>
-                    <small>
-                      <strong>NEXT DRAW</strong>
-                    </small>
-                    <br />
-                    <small>
-                      {" "}
-                      {latestGame
-                        ? latestGame.name
-                        : "Next Game Display at 12:00am"}
-                    </small>
-                    <br />
-                    <br />
-
-                    <small>
-                      <span>
-                        <Countdown
-                          date={moment().add(timeRemaining).toDate()}
-                          renderer={({ days, hours, minutes, seconds }) => (
-                            <div className="mb-2">
-                              <span className="countdown_box">{days}days</span>{" "}
-                              <span className="countdown_box">{hours}hrs</span>{" "}
-                              <span className="countdown_box">
-                                {minutes}mins
-                              </span>{" "}
-                              <br />
-                              <span style={{ width: "38%" }}>
-                                <p
-                                  className="countdown_box mt-3"
-                                  style={{ width: "38%" }}
-                                >
-                                  {" "}
-                                  {seconds}secs
-                                </p>
-                              </span>{" "}
-                            </div>
-                          )}
-                        />
-                      </span>
-                    </small>
-
-                    <p>
-                      <a
-                        href="https://goldenchancelotto.com/?RefferalCode=0q6ua5wm"
-                        className="btn btn-blue btn-sm btn-block mt-3"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Play Now
-                      </a>
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
 
