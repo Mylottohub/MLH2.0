@@ -595,7 +595,7 @@ const OperatorMobile = () => {
                                                   userProfileTempToken;
 
                                                 if (uid && tempToken) {
-                                                  const url = `http://5.9.25.78:8010/?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                                                  const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
                                                   window.open(url, "_blank");
                                                 } else {
                                                   toast.error(
