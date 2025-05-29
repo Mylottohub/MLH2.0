@@ -21,7 +21,9 @@ const TransactionHistory = () => {
   const [betHistory, setBetHistory] = useState([]);
   const [selectedBet, setSelectedBet] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
+  const [showModalGolden, setShowModalGolden] = useState(false);
+  const [iframeUrl, setIframeUrl] = useState("");
+  const [isIframeLoading, setIsIframeLoading] = useState(false);
   const openModal = (bet) => {
     setSelectedBet(bet);
     setShowModal(true);
@@ -176,9 +178,65 @@ const TransactionHistory = () => {
       .includes(searchQuery.toLowerCase())
   );
   // console.log(betHistory);
+  const handleCloseModal = () => {
+    setShowModalGolden(false);
+    setIframeUrl("");
+    setIsIframeLoading(false);
+  };
 
+  // Function to handle modal open
+  const handleOpenModal = (url) => {
+    setIframeUrl(url);
+    setIsIframeLoading(true);
+    setShowModalGolden(true);
+  };
+
+  // Function to handle iframe load
+  const handleIframeLoad = () => {
+    setIsIframeLoading(false);
+  };
   return (
     <>
+      {/* Modal for Golden Chance Iframe */}
+      <div
+        className={`modal fade ${showModalGolden ? "show" : ""}`}
+        style={{ display: showModalGolden ? "block" : "none" }}
+        tabIndex="-1"
+        role="dialog"
+      >
+        <div className="modal-dialog modal-fullscreen" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Golden Chance Lotto</h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={handleCloseModal}
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body position-relative">
+              {isIframeLoading && (
+                <div className="spinner-overlay">
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    className="text-dark"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+              )}
+              <iframe
+                src={iframeUrl}
+                className="w-100 h-100"
+                title="Golden Chance Lotto"
+                onLoad={handleIframeLoad}
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
       <Navbar />
       <div className="container p-4 mt-5 app__transact-table mb-5">
         {/* <h5 className="fw-bold">Transaction History</h5> */}
@@ -1048,7 +1106,7 @@ const TransactionHistory = () => {
 
                                       if (uid && tempToken) {
                                         const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
-                                        window.open(url, "_blank");
+                                        handleOpenModal(url);
                                       }
                                     }}
                                     className="btn btn-blue"
@@ -1199,7 +1257,7 @@ const TransactionHistory = () => {
 
                                             if (uid && tempToken) {
                                               const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
-                                              window.open(url, "_blank");
+                                              handleOpenModal(url);
                                             }
                                           }}
                                           className="btn btn-blue"
@@ -1446,7 +1504,7 @@ const TransactionHistory = () => {
 
                       if (uid && tempToken) {
                         const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
-                        window.open(url, "_blank");
+                        handleOpenModal(url);
                       }
                     }}
                     className="btn btn-blue"
@@ -1619,7 +1677,7 @@ const TransactionHistory = () => {
 
                         if (uid && tempToken) {
                           const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
-                          window.open(url, "_blank");
+                          handleOpenModal(url);
                         }
                       }}
                       className="btn btn-blue"

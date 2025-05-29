@@ -40,7 +40,7 @@ const Homepage = () => {
             try {
               await HTTP.post("/get_temp_token", { userID });
             } catch (tempTokenErr) {
-              toast.error("Failed to create temp token");
+              // toast.error("Failed to create temp token");
             }
           }
         } else {

@@ -12,6 +12,9 @@ import { toast } from "react-toastify";
 const Operator = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [iframeUrl, setIframeUrl] = useState("");
+  const [isIframeLoading, setIsIframeLoading] = useState(false);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -29,7 +32,6 @@ const Operator = () => {
   const { userProfileTempToken, userProfileResponse } = useGetProfileUser([]);
 
   useEffect(() => {
-    // Fetch operator logos from the endpoint
     const fetchOperatorLogos = async () => {
       try {
         const response = await HTTP.get("/display-operators");
@@ -158,9 +160,67 @@ const Operator = () => {
     "GH 5/90": "gh_590",
     NNP: "nnp",
   };
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setIframeUrl("");
+    setIsIframeLoading(false);
+  };
+
+  // Function to handle modal open
+  const handleOpenModal = (url) => {
+    setIframeUrl(url);
+    setIsIframeLoading(true);
+    setShowModal(true);
+  };
+
+  // Function to handle iframe load
+  const handleIframeLoad = () => {
+    setIsIframeLoading(false);
+  };
 
   return (
     <>
+      {/* Modal for Golden Chance Iframe */}
+      <div
+        className={`modal fade ${showModal ? "show" : ""}`}
+        style={{ display: showModal ? "block" : "none" }}
+        tabIndex="-1"
+        role="dialog"
+      >
+        <div className="modal-dialog modal-fullscreen" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Golden Chance Lotto</h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={handleCloseModal}
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body position-relative">
+              {isIframeLoading && (
+                <div className="spinner-overlay">
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    className="text-dark"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+              )}
+              <iframe
+                src={iframeUrl}
+                className="w-100 h-100"
+                title="Golden Chance Lotto"
+                onLoad={handleIframeLoad}
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+      {showModal && <div className="modal-backdrop fade show"></div>}
       <div className="container">
         <div className="row app__select_operator">
           <div className="col-sm-12 mb-5">
@@ -556,7 +616,7 @@ const Operator = () => {
 
                                   if (uid && tempToken) {
                                     const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
-                                    window.open(url, "_blank");
+                                    handleOpenModal(url);
                                   } else {
                                     toast.error("Pls Login to proceed");
                                   }
