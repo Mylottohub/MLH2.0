@@ -31,7 +31,8 @@ const OperatorMobile = () => {
     green_ghana_game: [],
   });
   const [operatorLogos, setOperatorLogos] = useState({});
-  const { userProfileTempToken, userProfileResponse } = useGetProfileUser([]);
+  const { userProfileTempToken, userProfileResponse, token } =
+    useGetProfileUser([]);
 
   useEffect(() => {
     // Fetch operator logos from the endpoint
@@ -161,20 +162,37 @@ const OperatorMobile = () => {
     "GH 5/90": "gh_590",
     NNP: "nnp",
   };
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
     setShowModal(false);
     setIframeUrl("");
     setIsIframeLoading(false);
+
+    try {
+      const payload = {
+        user_id: userProfileResponse?.id,
+      };
+
+      await HTTP.post("/update_temp_token", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      // console.error(
+      //   "Error updating temp token:",
+      //   error.response?.data || error.message
+      // );
+    }
   };
 
-  // Function to handle modal open
   const handleOpenModal = (url) => {
     setIframeUrl(url);
     setIsIframeLoading(true);
     setShowModal(true);
   };
 
-  // Function to handle iframe load
   const handleIframeLoad = () => {
     setIsIframeLoading(false);
   };
@@ -228,7 +246,9 @@ const OperatorMobile = () => {
       <div className="container mb-5">
         <div className="row">
           <div className="col-sm-12 mb-5 mt-5 fw-bolder">
-            <h4 className="fw-bolder">Select Operator and Play Game</h4>
+            <h4 className="fw-bolder text-dark">
+              Select Operator and Play Game
+            </h4>
           </div>
 
           {isLoading ? (
@@ -567,18 +587,26 @@ const OperatorMobile = () => {
                               {nextGame ? (
                                 <>
                                   <table width="100%" cellPadding="3">
-                                    <tbody>
+                                    <tbody
+                                      style={{
+                                        color: "#000",
+                                        fontWeight: "bolder",
+                                      }}
+                                    >
                                       <tr valign="top">
                                         <td
                                           style={{
-                                            lineHeight: "19px!important",
+                                            lineHeight: "27px!important",
                                           }}
                                         >
                                           <small>
                                             <strong>NEXT DRAW</strong>
                                           </small>
                                           <br />
-                                          <small>
+                                          <small
+                                            className="fw-bolder"
+                                            style={{ fontSize: "18px" }}
+                                          >
                                             {" "}
                                             {operatorType === "gd_lotto" ||
                                             operatorType === "gd_jackpot"
@@ -609,13 +637,13 @@ const OperatorMobile = () => {
                                                   seconds,
                                                 }) => (
                                                   <div className="mb-2">
-                                                    <span className="countdown_box">
+                                                    <span className="countdown fw-bolder">
                                                       {days}days
                                                     </span>{" "}
-                                                    <span className="countdown_box">
+                                                    <span className="countdown_box  fw-bolder">
                                                       {hours}hrs
                                                     </span>{" "}
-                                                    <span className="countdown_box">
+                                                    <span className="countdown_box  fw-bolder">
                                                       {minutes}mins
                                                     </span>{" "}
                                                     <br />
@@ -623,7 +651,7 @@ const OperatorMobile = () => {
                                                       style={{ width: "38%" }}
                                                     >
                                                       <p
-                                                        className="countdown_box mt-3"
+                                                        className="countdown_box mt-3  fw-bolder"
                                                         style={{ width: "38%" }}
                                                       >
                                                         {" "}
@@ -651,11 +679,12 @@ const OperatorMobile = () => {
                                               ) {
                                                 const uid =
                                                   userProfileResponse?.id;
-                                                const tempToken =
-                                                  userProfileTempToken;
 
-                                                if (uid && tempToken) {
-                                                  const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                                                if (
+                                                  uid &&
+                                                  userProfileTempToken
+                                                ) {
+                                                  const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${userProfileTempToken}`;
                                                   handleOpenModal(url);
                                                 } else {
                                                   toast.error(

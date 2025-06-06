@@ -52,10 +52,10 @@ const Result = () => {
       <div className="about-area ptb-120">
         <div className="container">
           <div className="meg_container mt-5">
-            <span className="hidden-xs hidden-sm mb-5">
-              <h4>
-                <strong>Latest Results</strong>
-              </h4>
+            <span className="hidden-xs hidden-sm mb-5 fw-bolder text-dark">
+              <h3>
+                <strong style={{ fontSize: "25px" }}>Latest Results</strong>
+              </h3>
             </span>
             {isLoading ? (
               <div className="spinner-container d-flex align-items-center justify-content-center">
@@ -99,7 +99,7 @@ const Result = () => {
                                 alt={`${record.name}`}
                               />
                             </div>
-                            <div className="col-9 col-lg-10 div_lgrey">
+                            <div className="col-9 col-lg-10 div_lgrey fw-bolder text-dark">
                               <strong>
                                 {operatorId === 62
                                   ? latestResult?.game_name
@@ -108,9 +108,11 @@ const Result = () => {
 
                               <br />
                               <small>
-                                <strong>Draw Time:</strong>
+                                <strong className="fw-bolder text-dark">
+                                  Draw Time:
+                                </strong>
                                 {latestResult?.date && (
-                                  <span>
+                                  <span className="fw-bolder text-dark">
                                     {moment
                                       .utc(
                                         latestResult.date,
@@ -126,7 +128,7 @@ const Result = () => {
                               <br />
 
                               {operatorId === 62 ? (
-                                <table className="winning-table table">
+                                <table className="winning-table table fw-bolder text-dark">
                                   <tbody>
                                     <tr>
                                       <td>

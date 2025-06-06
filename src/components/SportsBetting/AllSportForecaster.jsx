@@ -26,8 +26,8 @@ const AllSportForecaster = () => {
       <Slider />
       <div className="container mt-5 mb-5">
         <h3
-          className="mt-5 fw-bold me-3 sport__mobile_select"
-          style={{ color: "#40678C" }}
+          className="mt-5 fw-bolder me-3 sport__mobile_select"
+          style={{ color: "#000" }}
         >
           Select Operator
         </h3>

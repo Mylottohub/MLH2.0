@@ -29,7 +29,8 @@ const Operator = () => {
   });
 
   const [operatorLogos, setOperatorLogos] = useState({});
-  const { userProfileTempToken, userProfileResponse } = useGetProfileUser([]);
+  const { userProfileTempToken, userProfileResponse, token } =
+    useGetProfileUser([]);
 
   useEffect(() => {
     const fetchOperatorLogos = async () => {
@@ -160,10 +161,30 @@ const Operator = () => {
     "GH 5/90": "gh_590",
     NNP: "nnp",
   };
-  const handleCloseModal = () => {
+
+  const handleCloseModal = async () => {
     setShowModal(false);
     setIframeUrl("");
     setIsIframeLoading(false);
+
+    try {
+      const payload = {
+        user_id: userProfileResponse?.id,
+      };
+
+      await HTTP.post("/update_temp_token", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      // console.error(
+      //   "Error updating temp token:",
+      //   error.response?.data || error.message
+      // );
+    }
   };
 
   // Function to handle modal open
@@ -180,7 +201,6 @@ const Operator = () => {
 
   return (
     <>
-      {/* Modal for Golden Chance Iframe */}
       <div
         className={`modal fade ${showModal ? "show" : ""}`}
         style={{ display: showModal ? "block" : "none" }}
@@ -224,7 +244,7 @@ const Operator = () => {
       <div className="container">
         <div className="row app__select_operator">
           <div className="col-sm-12 mb-5">
-            <h1>Select Operator</h1>
+            <h1 className="fw-bolder text-dark">Select Operator</h1>
           </div>
 
           {isLoading ? (
@@ -557,10 +577,16 @@ const Operator = () => {
                           />
                         </div>
                       </a>
-                      <div className="service-content text-center">
+                      <div className="service-conten text-center">
                         {nextGame ? (
                           <>
-                            <p>
+                            <p
+                              style={{
+                                color: "#000",
+                                fontWeight: "bolder",
+                                fontSize: "18px",
+                              }}
+                            >
                               <strong>NEXT GAME:</strong>
                               <br />
                               {operatorType === "gd_lotto" ||
@@ -585,16 +611,16 @@ const Operator = () => {
                                         seconds,
                                       }) => (
                                         <>
-                                          <span className="countdown_box me-2">
+                                          <span className="countdown_box me-2  fw-bolder">
                                             {days} days
                                           </span>
-                                          <span className="countdown_box me-2">
+                                          <span className="countdown_box me-2  fw-bolder">
                                             {hours} hrs
                                           </span>
-                                          <span className="countdown_box me-2">
+                                          <span className="countdown_box me-2  fw-bolder">
                                             {minutes} mins
                                           </span>
-                                          <span className="countdown_box me-2">
+                                          <span className="countdown_box me-2  fw-bolder">
                                             {seconds} secs
                                           </span>
                                         </>
@@ -612,10 +638,9 @@ const Operator = () => {
                                   navigate(`/play-game/gd_jackpot`);
                                 } else if (operatorType === "golden_chance") {
                                   const uid = userProfileResponse?.id;
-                                  const tempToken = userProfileTempToken;
 
-                                  if (uid && tempToken) {
-                                    const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                                  if (uid && userProfileTempToken) {
+                                    const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${userProfileTempToken}`;
                                     handleOpenModal(url);
                                   } else {
                                     toast.error("Pls Login to proceed");

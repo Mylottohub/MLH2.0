@@ -177,11 +177,30 @@ const TransactionHistory = () => {
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
   );
-  // console.log(betHistory);
-  const handleCloseModal = () => {
-    setShowModalGolden(false);
+
+  const handleCloseModal = async () => {
+    setShowModal(false);
     setIframeUrl("");
     setIsIframeLoading(false);
+
+    try {
+      const payload = {
+        user_id: userProfileResponse?.id,
+      };
+
+      await HTTP.post("/update_temp_token", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      // console.error(
+      //   "Error updating temp token:",
+      //   error.response?.data || error.message
+      // );
+    }
   };
 
   // Function to handle modal open
@@ -1102,10 +1121,10 @@ const TransactionHistory = () => {
                                   <span
                                     onClick={() => {
                                       const uid = userProfileResponse?.id;
-                                      const tempToken = userProfileTempToken;
+                                      // const tempToken = userProfileTempToken;
 
-                                      if (uid && tempToken) {
-                                        const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                                      if (uid && userProfileTempToken) {
+                                        const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${userProfileTempToken}`;
                                         handleOpenModal(url);
                                       }
                                     }}

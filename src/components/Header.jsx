@@ -65,12 +65,12 @@ const Header = () => {
                       <p>Balance Loading...</p>
                     ) : userProfileResponse ? (
                       <>
-                        <div className="col-md-3 col-xs-6">
+                        <div className="col-md-3 col-xs-6 fw-bolder">
                           <small>₦{userProfileResponse?.wallet}</small>
                           <br />
                           Wallet Balance
                         </div>
-                        <div className="col-md-3 col-xs-6">
+                        <div className="col-md-3 col-xs-6 fw-bolder">
                           <small>
                             ₦{formatAmount(userProfileResponse?.wwallet)}
                           </small>
@@ -85,7 +85,7 @@ const Header = () => {
                         onClick={() => handleDeposit()}
                         className="btn btn-blue"
                       >
-                        <small>Deposit</small>
+                        <small className="fw-bolder">Deposit</small>
                       </a>{" "}
                       &nbsp;&nbsp;
                       <button
@@ -94,7 +94,7 @@ const Header = () => {
                         data-toggle="modal"
                         data-target="#withdraw_modal"
                       >
-                        <small>Withdraw</small>
+                        <small className="fw-bolder">Withdraw</small>
                       </button>
                     </div>
                   </div>

@@ -31,18 +31,6 @@ const Homepage = () => {
         if (data?.token) {
           dispatch(setCredentials(data));
           toast.success("Login Successfully");
-          const userID = data?.data?.id;
-
-          if (!userID) {
-            throw new Error("User not found");
-            // toast.error("User ID missing in Miracl response:", data);
-          } else {
-            try {
-              await HTTP.post("/get_temp_token", { userID });
-            } catch (tempTokenErr) {
-              // toast.error("Failed to create temp token");
-            }
-          }
         } else {
           throw new Error("Token not found in response data");
         }

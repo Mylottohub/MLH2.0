@@ -49,7 +49,8 @@ th {
 .div_lgrey {
     background: rgba(64, 103, 119, 0.05) !important;
     border-radius: 5px;
-    color: #406777;
+     color: #000;
+    font-weight: bolder;
     padding: 10px;
 }
 

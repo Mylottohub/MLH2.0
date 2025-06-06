@@ -95,7 +95,7 @@ const Navbar = () => {
                   {" "}
                   <span>
                     {" "}
-                    <ul className="d-flex justify-content-between app__sign-in">
+                    <ul className="d-flex justify-content-between app__sign-in fw-bolder">
                       <li className="nav-item dropdown text-center">
                         <a
                           id="app__mobile-nav"
@@ -107,22 +107,22 @@ const Navbar = () => {
                           <FaUser className="fa-2x" />
                         </a>
                         <ul
-                          className="dropdown-menu"
+                          className="dropdown-menu fw-bolder"
                           style={{ marginLeft: "-90px" }}
                         >
                           <li onClick={() => handleUserProfile()}>
-                            <a className="dropdown-item p-2">
+                            <a className="dropdown-item p-2 fw-bolder">
                               &nbsp;&nbsp;User Profile
                             </a>
                           </li>
                           <li onClick={() => navigate("/wallet")}>
-                            <a className="dropdown-item p-2">
+                            <a className="dropdown-item p-2  fw-bolder">
                               &nbsp;&nbsp;Wallet
                             </a>
                           </li>
                           <li>
                             <a
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2  fw-bolder"
                               onClick={() => handleDeposit()}
                             >
                               &nbsp;&nbsp;Deposit
@@ -130,7 +130,7 @@ const Navbar = () => {
                           </li>
                           <li>
                             <a
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2  fw-bolder"
                               onClick={() => handleWithdraw()}
                             >
                               &nbsp;&nbsp;Withdraw
@@ -138,7 +138,7 @@ const Navbar = () => {
                           </li>
                           <li>
                             <a
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2  fw-bolder"
                               onClick={() => navigate("/transactions")}
                             >
                               &nbsp;&nbsp;Transactions
@@ -146,7 +146,7 @@ const Navbar = () => {
                           </li>{" "}
                           <li>
                             <a
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2  fw-bolder"
                               onClick={() => navigate("/result")}
                             >
                               &nbsp;&nbsp;Results
@@ -154,19 +154,22 @@ const Navbar = () => {
                           </li>{" "}
                           <li>
                             <a
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2  fw-bolder"
                               onClick={() => navigate("/forecast")}
                             >
                               &nbsp;&nbsp;Quick Forecast
                             </a>
                           </li>{" "}
                           <li onClick={() => navigate("/referral")}>
-                            <a className="dropdown-item p-2">
+                            <a className="dropdown-item p-2  fw-bolder">
                               &nbsp;&nbsp;Referral
                             </a>
                           </li>
-                          <li className="dropdown-item p-2">
-                            <a onClick={() => handleLogout()}>
+                          <li>
+                            <a
+                              onClick={() => handleLogout()}
+                              className="dropdown-item p-2  fw-bolder"
+                            >
                               {" "}
                               &nbsp;&nbsp; Logout
                             </a>
@@ -340,50 +343,21 @@ const Navbar = () => {
                         <ul className="dropdown-menu">
                           {/* <li onClick={() => navigate("/profile")}> */}
                           <li onClick={() => handleUserProfile()}>
-                            <a className="dropdown-item p-2">
+                            <a className="dropdown-item p-2 fw-bolder">
                               {/* <FaUser /> */}
                               &nbsp;&nbsp;User Profile
                             </a>
                           </li>
                           <li onClick={() => navigate("/wallet")}>
-                            <a className="dropdown-item p-2">
+                            <a className="dropdown-item p-2 fw-bolder">
                               {/* <BsWallet /> */}
                               &nbsp;&nbsp;Wallet
                             </a>
                           </li>
 
-                          {/* <div className="btn-group dropend">
-                            <button
-                              type="button"
-                              className="btn dropdown-toggle"
-                              data-bs-toggle="dropdown"
-                              aria-expanded="false"
-                            >
-                              <BsWallet />
-                              &nbsp;&nbsp;Wallets
-                            </button>
-                            <ul className="dropdown-menu">
-                              <li>
-                                <a className="dropdown-item" href="#">
-                                  Menu item
-                                </a>
-                              </li>
-                              <li>
-                                <a className="dropdown-item" href="#">
-                                  Menu item
-                                </a>
-                              </li>
-                              <li>
-                                <a className="dropdown-item" href="#">
-                                  Menu item
-                                </a>
-                              </li>
-                            </ul>
-                          </div> */}
-
                           <li>
                             <a
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2 fw-bolder"
                               onClick={() => handleDeposit()}
                             >
                               {/* <BsArrow90DegRight /> */}
@@ -392,7 +366,7 @@ const Navbar = () => {
                           </li>
                           <li>
                             <a
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2 fw-bolder"
                               onClick={() => handleWithdraw()}
                             >
                               &nbsp;&nbsp;Withdraw
@@ -406,7 +380,7 @@ const Navbar = () => {
                           </li> */}
                           <li>
                             <a
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2 fw-bolder"
                               onClick={() => navigate("/transactions")}
                             >
                               {/* <FaMoneyBill /> */}
@@ -414,7 +388,7 @@ const Navbar = () => {
                             </a>
                           </li>
                           <li onClick={() => navigate("/referral")}>
-                            <a className="dropdown-item p-2">
+                            <a className="dropdown-item p-2 fw-bolder">
                               {/* <BsShareFill /> */}
                               &nbsp;&nbsp;Referral
                             </a>
@@ -423,7 +397,7 @@ const Navbar = () => {
                             <a
                               href="https://agency.mylottohub.com/"
                               target="_blank"
-                              className="dropdown-item p-2"
+                              className="dropdown-item p-2 fw-bolder"
                               rel="noreferrer"
                             >
                               &nbsp; Become an Agent
@@ -457,7 +431,7 @@ const Navbar = () => {
               <>
                 <div className="row">
                   <div className="col-10">
-                    <small>
+                    <small className="fw-bolder" style={{ fontSize: "17px" }}>
                       ₦{userProfileResponse?.wallet}
                       <br />
                       Wallet Balance
@@ -465,11 +439,13 @@ const Navbar = () => {
                     <br />
                     <br />
                     <a onClick={() => handleDeposit()} className="btn btn-blue">
-                      <small>Deposit</small>
+                      <small style={{ fontSize: "17px" }} className="fw-bolder">
+                        Deposit
+                      </small>
                     </a>
                   </div>
                   <div className="col-2">
-                    <small>
+                    <small className="fw-bolder" style={{ fontSize: "17px" }}>
                       ₦{formatAmount(userProfileResponse?.wwallet)}
                       <br />
                       Winnings
@@ -482,7 +458,9 @@ const Navbar = () => {
                       data-toggle="modal"
                       data-target="#withdraw_modal"
                     >
-                      <small>Withdraw</small>
+                      <small style={{ fontSize: "17px" }} className="fw-bolder">
+                        Withdraw
+                      </small>
                     </a>
                   </div>
                 </div>
@@ -515,7 +493,7 @@ const Navbar = () => {
               id="navbarSupportedContent"
             >
               <ul
-                className="navbar-nav app_navbar-nav me-auto mb-2 mb-lg-0"
+                className="navbar-nav app_navbar-nav me-auto mb-2 mb-lg-0 fw-bolder"
                 style={{ cursor: "pointer" }}
               >
                 <li className="nav-item dropdown">

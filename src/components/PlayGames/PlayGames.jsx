@@ -1770,7 +1770,7 @@ const PlayGames = () => {
           id="play_form"
         >
           <p className="mt-5">
-            <strong className="text-capitalize">
+            <strong className="text-capitalize fw-bolder text-dark">
               {id === "lotto_nigeria" ? (
                 <strong> Select Operator &gt;&gt; Set Lotto</strong>
               ) : id === "ghana_game" ? (
@@ -2739,7 +2739,7 @@ const PlayGames = () => {
                   style={{ background: "#4067770D" }}
                   className="div_dgrey text-center p-4"
                 >
-                  <p>Bet Slip</p>
+                  <p className="fw-bolder text-dark">Bet Slip</p>
                 </div>
                 {confirmedBet && (
                   <div className="div_lgrey" style={{ marginTop: "-20px" }}>

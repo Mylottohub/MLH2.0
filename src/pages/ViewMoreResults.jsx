@@ -112,10 +112,12 @@ const ViewMoreResults = () => {
       <div className="about-area ptb-120">
         <div className="container">
           <div className="meg_container mt-5">
-            <span className="hidden-xs hidden-sm mb-5">
-              <h4>
-                <strong>Latest Results &gt;&gt; Operator Results</strong>
-              </h4>
+            <span className="hidden-xs hidden-sm mb-5 fw-bolder text-dark">
+              <h3>
+                <strong style={{ fontSize: "25px" }}>
+                  Latest Results &gt;&gt; Operator Results
+                </strong>
+              </h3>
             </span>
             {isLoading ? (
               <div className="spinner-container d-flex align-items-center justify-content-center">
@@ -178,7 +180,7 @@ const ViewMoreResults = () => {
                       <img src={imageSrc} className="img-fluid" />
                     </div>
                     <div
-                      className="col-8 col-lg-6 col-xs-8"
+                      className="col-8 col-lg-6 col-xs-8 fw-bolder text-dark"
                       style={{ padding: "20px" }}
                     >
                       {perOperator?.map((item, index) => {
@@ -400,7 +402,7 @@ const ViewMoreResults = () => {
                         }
                       })}
                     </div>
-                    <div className="col-lg-4 col-xs-12 mb-3">
+                    <div className="col-lg-4 col-xs-12 mb-3 fw-bolder text-dark">
                       <table cellPadding="10" width="100%">
                         <tbody>
                           <tr>
@@ -1334,15 +1336,17 @@ const ViewMoreResults = () => {
                                 return (
                                   <div
                                     key={`${record?.id}-${dataIndex}`}
-                                    className="col-lg-4 col-md-6 mb-5"
+                                    className="col-lg-4 col-md-6 mb-5 fw-bolder text-dark"
                                   >
                                     <div className="div_lgrey">
                                       <p className="text-center">
-                                        <strong>{data?.game}</strong>
+                                        <strong className="fw-bolder text-dark">
+                                          {data?.game}
+                                        </strong>
                                       </p>
                                       <br />
                                       <p className="text-center">
-                                        <small>
+                                        <small className="fw-bolder text-dark">
                                           Draw Time:{" "}
                                           {moment
                                             .utc(
