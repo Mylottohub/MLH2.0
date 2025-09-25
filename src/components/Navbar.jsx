@@ -45,8 +45,8 @@ const Navbar = () => {
   const handleLogout = () => {
     try {
       dispatch(logout());
-      navigate("/");
       toast.success("Logged Out Successfully");
+       window.location.href = "https://mylottohub.com/";
     } catch (error) {
       // console.log(error);
     }
@@ -158,6 +158,22 @@ const Navbar = () => {
                               onClick={() => navigate("/forecast")}
                             >
                               &nbsp;&nbsp;Quick Forecast
+                            </a>
+                          </li>{" "}
+                          <li>
+                            <a
+                              className="dropdown-item p-2  fw-bolder"
+                              onClick={() => navigate("/create-chart")}
+                            >
+                              &nbsp;&nbsp;Create Chart
+                            </a>
+                          </li>{" "}
+                           <li>
+                            <a
+                              className="dropdown-item p-2  fw-bolder"
+                              onClick={() => navigate("/timetable")}
+                            >
+                              &nbsp;&nbsp;Timetable
                             </a>
                           </li>{" "}
                           <li onClick={() => navigate("/referral")}>

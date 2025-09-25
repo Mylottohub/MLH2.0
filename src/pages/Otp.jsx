@@ -32,8 +32,9 @@ const schema = yup.object().shape({
 
 const Otp = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false); // new state for resend
   const [showOTPInput, setShowOTPInput] = useState(false);
-  const [verificationMethod, setVerificationMethod] = useState(null); // new state variable
+  const [verificationMethod, setVerificationMethod] = useState(null);
   const [emailOtp, setEmailOtp] = useState("");
   const location = useLocation();
 
@@ -52,16 +53,12 @@ const Otp = () => {
     const isValid = await trigger(
       verificationMethod === "email" ? "email" : "phone"
     );
-
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     if (verificationMethod === "email" && getValues("email") === "") {
       toast.error("Please enter an email address");
       return;
     }
-
     if (verificationMethod === "phone" && getValues("phone") === "") {
       toast.error("Please enter a phone number");
       return;
@@ -77,34 +74,48 @@ const Otp = () => {
       toast.success(successMessage);
       setShowOTPInput(true);
     } catch (error) {
-      const errorMessage =
+      toast.error(
         verificationMethod === "email"
           ? "Invalid Email Address"
-          : "Invalid Phone Number";
-      toast.error(errorMessage);
+          : "Invalid Phone Number"
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
+  // NEW: Resend OTP
+  const resendOTP = async () => {
+    if (!emailOtp) {
+      toast.error("Please enter your details before resending OTP");
+      return;
+    }
+    setResendLoading(true);
+    try {
+      await HTTP.post("/user/resend-otp", { user_details: emailOtp });
+      toast.success("OTP resent successfully");
+    } catch (error) {
+      toast.error("Failed to resend OTP");
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   const submitForm = async (data) => {
     setIsLoading(true);
-
     try {
       const getAccessIdFromURL = () => {
         const searchParams = new URLSearchParams(location.search);
         return searchParams.get("accessId");
       };
-
       const accessId = getAccessIdFromURL();
       const payload = {
         accessId: accessId,
         user_details: verificationMethod === "email" ? data.email : data.phone,
         type: verificationMethod,
       };
-      const payloadOtp = {
-        token: data.otp,
-      };
+      const payloadOtp = { token: data.otp };
+
       const otpResponse = await HTTP.post("/otp", payloadOtp);
       if (otpResponse) {
         toast.success("OTP has been confirmed Successfully");
@@ -121,11 +132,7 @@ const Otp = () => {
         toast.error("OTP is wrongly inputted");
       }
     } catch (err) {
-      if (err?.message) {
-        toast.error(err?.response?.data?.message);
-      } else {
-        toast.error("Wrong OTP.");
-      }
+      toast.error(err?.response?.data?.message || "Wrong OTP.");
     } finally {
       setIsLoading(false);
     }
@@ -172,23 +179,20 @@ const Otp = () => {
 
               {verificationMethod === "email" && (
                 <div className="mb-3">
-                  <div className="mb-3">
-                    <input
-                      type="email"
-                      required
-                      className="form-control mb-4 p-3"
-                      placeholder="Email Address"
-                      name="email"
-                      {...register("email")}
-                      onChange={(e) => setEmailOtp(e.target.value)}
-                    />
-                    {errors.email && (
-                      <p className="text-danger text-capitalize">
-                        {errors.email.message ||
-                          "Please enter an email address"}
-                      </p>
-                    )}
-                  </div>
+                  <input
+                    type="email"
+                    required
+                    className="form-control mb-4 p-3"
+                    placeholder="Email Address"
+                    {...register("email")}
+                    onChange={(e) => setEmailOtp(e.target.value)}
+                  />
+                  {errors.email && (
+                    <p className="text-danger">
+                      {errors.email.message ||
+                        "Please enter an email address"}
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -198,9 +202,7 @@ const Otp = () => {
                     country={"ng"}
                     inputClass="form-control mb-4 w-100"
                     placeholder="Phone Number"
-                    name="phone"
                     {...register("phone")}
-                    format={"(ddd) ddd-dddd"} // Add this line
                     onChange={(value) => {
                       const formattedValue = value.replace(/^234/, "234");
                       setEmailOtp(formattedValue);
@@ -208,7 +210,7 @@ const Otp = () => {
                     }}
                   />
                   {errors.phone && (
-                    <p className="text-danger text-capitalize">
+                    <p className="text-danger">
                       {errors.phone.message || "Please enter a phone number"}
                     </p>
                   )}
@@ -216,22 +218,32 @@ const Otp = () => {
               )}
 
               {showOTPInput && (
-                <div className="mb-3">
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    className="form-control p-3 mb-2"
-                    name="otp"
-                    placeholder="Enter OTP"
-                    {...register("otp")}
-                  />
-                  {errors.otp && (
-                    <p className="text-danger text-capitalize">
-                      {errors.otp.message}
-                    </p>
-                  )}
-                </div>
+                <>
+                  <div className="mb-3">
+                    <input
+                      type="number"
+                      required
+                      className="form-control p-3 mb-2"
+                      placeholder="Enter OTP"
+                      {...register("otp")}
+                    />
+                    {errors.otp && (
+                      <p className="text-danger">{errors.otp.message}</p>
+                    )}
+                  </div>
+                  <div className="text-end mb-3 p-2">
+                    <Button
+                      type="button"
+                      variant="link"
+                      onClick={resendOTP}
+                      disabled={resendLoading}
+                      style={{ padding: "0.5rem 1rem" }}
+                      className="text-decoration-none"
+                    >
+                      {resendLoading ? "Resending..." : "Resend OTP"}
+                    </Button>
+                  </div>
+                </>
               )}
 
               {!showOTPInput && verificationMethod && (
@@ -239,6 +251,7 @@ const Otp = () => {
                   type="button"
                   className="w-100 p-3"
                   onClick={generateOTP}
+                  disabled={isLoading}
                 >
                   {isLoading ? (
                     <Spinner
@@ -277,7 +290,6 @@ const Otp = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   ) : (
@@ -285,13 +297,10 @@ const Otp = () => {
       <div className="row">
         <div className="col-lg-6 mx-auto mt-5 app__register">
           <h1 className="mb-4">PROCEED TO LOGIN FOR VERIFICATION</h1>
-
           <a
-            onClick={
-              () =>
-                (window.location.href =
-                  "https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com")
-              // "https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app")
+            onClick={() =>
+              (window.location.href =
+                "https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com")
             }
             className="w-100 p-3 btn btn-light"
           >
@@ -302,5 +311,6 @@ const Otp = () => {
     </div>
   );
 };
+
 
 export default Otp;

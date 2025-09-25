@@ -1,0 +1,13 @@
+.dice-roll {
+  font-size: 3rem;
+  display: inline-block;
+  animation: rollDice 1.5s ease-in-out infinite;
+}
+
+@keyframes rollDice {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(90deg) scale(1.2); }
+  50% { transform: rotate(180deg) scale(1); }
+  75% { transform: rotate(270deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
+}

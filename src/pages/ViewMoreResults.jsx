@@ -10,11 +10,17 @@ import { Spinner } from "react-bootstrap";
 import Footer from "../components/Footer";
 import { useNavigate, useParams } from "react-router-dom";
 import Countdown from "react-countdown";
+import { useGetProfileUser } from "../react-query";
+import { toast } from "react-toastify";
 
 const ViewMoreResults = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResults] = useState([]);
   const [perOperator, setPerOperator] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [iframeUrl, setIframeUrl] = useState("");
+  const [isIframeLoading, setIsIframeLoading] = useState(false);
+
   const navigate = useNavigate();
   const { id } = useParams();
   let operatorID = null;
@@ -24,7 +30,7 @@ const ViewMoreResults = () => {
   } else if (id == 28) {
     operatorID = "wesco";
   } else if (id == 42) {
-    operatorID = "wgclogo";
+    operatorID = "golden_chance";
   } else if (id == 45) {
     operatorID = "lottomania";
   } else if (id == 57) {
@@ -103,9 +109,88 @@ const ViewMoreResults = () => {
       fetchData();
     }
   }, [userInfo.token]);
+  // console.log(perOperator);
+  const { userProfileTempToken, userProfileResponse, token } =
+    useGetProfileUser([]);
+  const handleCloseModal = async () => {
+    setShowModal(false);
+    setIframeUrl("");
+    setIsIframeLoading(false);
+
+    try {
+      const payload = {
+        user_id: userProfileResponse?.id,
+      };
+
+      await HTTP.post("/update_temp_token", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      // console.error(
+      //   "Error updating temp token:",
+      //   error.response?.data || error.message
+      // );
+    }
+  };
+
+  // Function to handle modal open
+  const handleOpenModal = (url) => {
+    setIframeUrl(url);
+    setIsIframeLoading(true);
+    setShowModal(true);
+  };
+
+  // Function to handle iframe load
+  const handleIframeLoad = () => {
+    setIsIframeLoading(false);
+  };
 
   return (
     <div>
+      <div
+        className={`modal fade ${showModal ? "show" : ""}`}
+        style={{ display: showModal ? "block" : "none" }}
+        tabIndex="-1"
+        role="dialog"
+      >
+        <div className="modal-dialog modal-fullscreen" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Golden Chance Lotto</h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={handleCloseModal}
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body position-relative">
+              {isIframeLoading && (
+                <div className="spinner-overlay">
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    className="text-dark"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+              )}
+              <iframe
+                src={iframeUrl}
+                className="w-100 h-100"
+                title="Golden Chance Lotto"
+                onLoad={handleIframeLoad}
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+      {showModal && <div className="modal-backdrop fade show"></div>}
       <Navbar />
       <Slider />
 
@@ -327,6 +412,28 @@ const ViewMoreResults = () => {
                               </div>
                             );
                           }
+                        } else if (id == 61) {
+                          if (index == 0) {
+                            return (
+                              <div key={index}>
+                                <strong>{item?.gameName}</strong> <br />
+                                <br />
+                                {moment
+                                  .utc(item?.drawTime, "YYYY-MM-DD")
+                                  .local()
+                                  .format("MMM DD, YYYY")}{" "}
+                                | {item?.drawTime}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() => navigate(`/gd-lotto`)}
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
                         } else if (id === "gd_lotto") {
                           if (index == 0) {
                             return (
@@ -390,6 +497,36 @@ const ViewMoreResults = () => {
                                   onClick={() =>
                                     navigate(`/play-game/${operatorID}`)
                                   }
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        } else if (operatorID === "golden_chance") {
+                          const uid = userProfileResponse?.id;
+                          if (index == 0) {
+                            return (
+                              <div key={index}>
+                                <strong>{item?.drawname}</strong> <br />
+                                <br />
+                                {moment
+                                  .utc(item?.drawdate, "YYYY-MM-DD")
+                                  .local()
+                                  .format("MMM DD, YYYY")}{" "}
+                                | {item?.drawtime}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() => {
+                                    if (uid && userProfileTempToken) {
+                                      const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${userProfileTempToken}`;
+                                      handleOpenModal(url);
+                                    } else {
+                                      toast.error("Pls Login to proceed");
+                                    }
+                                  }}
                                   className="btn btn-blue"
                                 >
                                   Play Now
@@ -779,6 +916,57 @@ const ViewMoreResults = () => {
                                   }
                                 } else if (operatorID === "NNP") {
                                   const drawDateTimeString = `${item?.drawTime} ${item?.drawTime}`;
+                                  const drawDateTime = moment(
+                                    drawDateTimeString,
+                                    "YYYYMMDD HH:mm:ss"
+                                  );
+                                  const currentTime = moment();
+                                  const timeDifference =
+                                    drawDateTime.diff(currentTime);
+
+                                  if (timeDifference > 0) {
+                                    if (index == 0) {
+                                      return (
+                                        <>
+                                          <span>
+                                            <small className="countdown_box">
+                                              <Countdown
+                                                date={
+                                                  currentTime.valueOf() +
+                                                  timeDifference
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <>
+                                                    <span className="countdown_box me-2">
+                                                      {days}days
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {hours}hrs
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {minutes}mins
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {seconds}secs
+                                                    </span>
+                                                  </>
+                                                )}
+                                              />
+                                            </small>
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                  } else {
+                                    return null;
+                                  }
+                                } else if (operatorID === "golden_chance") {
+                                  const drawDateTimeString = `${item?.drawdate} ${item?.drawtime}`;
                                   const drawDateTime = moment(
                                     drawDateTimeString,
                                     "YYYYMMDD HH:mm:ss"

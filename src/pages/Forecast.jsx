@@ -68,7 +68,7 @@ const Forecast = () => {
       const data = response.data;
       setForecastData(data);
     } catch (error) {
-      console.error("Error fetching forecast data:", error);
+      // console.error("Error fetching forecast data:", error);
       if (error.response && error.response.status === 400) {
         // Show toast for 400 status code
         toast.error("No forecasts available for this game", {});

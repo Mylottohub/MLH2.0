@@ -13,11 +13,16 @@ const AllSportForecaster = () => {
   const handlePlayNowClick = (forecaster) => {
     if (forecaster?.name === "Easy win") {
       navigate(`/sport-forecast`);
-    } else if (forecaster?.name === "Betano") {
-      const url =
-        "https://gml-grp.com/C.ashx?btag=a_55590b_3366c_&affid=18865&siteid=55590&adid=3366&c=";
-      window.open(url, "_blank");
-    }
+    } 
+    // else if (forecaster?.name === "Betano") {
+    //   const url =
+    //     "https://gml-grp.com/C.ashx?btag=a_55590b_3366c_&affid=18865&siteid=55590&adid=3366&c=";
+    //   window.open(url, "_blank");
+    // } else if (forecaster?.name === "Ginjabet") {
+    //   const url =
+    //     "https://affiliates.ginjabet.com/visit/?bta=35532&brand=ginjabet";
+    //   window.open(url, "_blank");
+    // }
   };
 
   return (

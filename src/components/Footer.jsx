@@ -247,7 +247,7 @@ const Footer = () => {
                         </a>
                       </li>
                       <li>
-                        <a onClick={() => navigate("/create-charts")} href="#">
+                        <a onClick={() => navigate("/create-chart")} href="#">
                           Create Charts
                         </a>
                       </li>

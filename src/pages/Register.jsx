@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 const schema = yup.object().shape({
   name: yup.string().required("This is a required field"),
   g_recaptcha_response: yup.string(),
-  username: yup.string().required("This is a required field"),
+  // username: yup.string().required("This is a required field"),
   useEmail: yup.boolean().required(),
   email: yup
     .string()
@@ -31,6 +31,7 @@ const schema = yup.object().shape({
       is: false,
       then: (schema) => schema.required("This is a required field"),
     }),
+  referral_code: yup.string(),
 });
 
 const siteKey = import.meta.env.VITE_SITE_KEY;
@@ -203,7 +204,7 @@ const Register = () => {
                   )}
                 </div>
 
-                <div className="mb-3">
+                {/* <div className="mb-3">
                   <input
                     type="text"
                     className="form-control mb-2 p-3"
@@ -218,7 +219,7 @@ const Register = () => {
                       {errors.username.message}
                     </p>
                   )}
-                </div>
+                </div> */}
 
                 {useEmail ? (
                   <div className="mb-3">
@@ -255,6 +256,21 @@ const Register = () => {
                     )}
                   </div>
                 )}
+
+                <div className="mb-3">
+                  <input
+                    type="tel"
+                    className="form-control mb-2 p-3"
+                    placeholder="Referral Code (Optional)"
+                    name="referral_code"
+                    {...register("referral_code")}
+                  />
+                  {errors.referral_code && (
+                    <p className="text-danger text-capitalize">
+                      {errors.referral_code.message}
+                    </p>
+                  )}
+                </div>
 
                 <div className="mb-3 form-check mt-4">
                   <input
