@@ -129,78 +129,51 @@ const Result = () => {
 
                               {operatorId === 62 ? (
                                 <table className="winning-table table fw-bolder text-dark">
+                                  <thead>
+                                    <tr>
+                                      <th>Prize</th>
+                                      <th>Total Winners</th>
+                                      <th>Min Prize Per Forecast</th>
+                                      <th>Code</th>
+                                    </tr>
+                                  </thead>
                                   <tbody>
                                     <tr>
-                                      <td>
-                                        <strong>First Prize</strong>
-                                      </td>
-                                      <td>
-                                        <strong>
-                                          {latestResult?.first_prize}
-                                        </strong>
-                                      </td>
+                                      <td>First Prize</td>
+                                      <td>1 Winner</td>
+                                      <td>₦5,000,000</td>
+                                      <td>{latestResult?.first_prize}</td>
                                     </tr>
-
                                     <tr>
-                                      <td>
-                                        <strong>Second Prize</strong>
-                                      </td>
-                                      <td>
-                                        <strong>
-                                          {latestResult?.second_prize}
-                                        </strong>
-                                      </td>
+                                      <td>Second Prize</td>
+                                      <td>1 Winner</td>
+                                      <td>₦2,000,000</td>
+                                      <td>{latestResult?.second_prize}</td>
                                     </tr>
-
                                     <tr>
-                                      <td>
-                                        <strong>Third Prize</strong>
-                                      </td>
-                                      <td>
-                                        <strong>
-                                          {latestResult?.third_prize}
-                                        </strong>
-                                      </td>
+                                      <td>Third Prize</td>
+                                      <td>1 Winner</td>
+                                      <td>₦1,000,000</td>
+                                      <td>{latestResult?.third_prize}</td>
                                     </tr>
-
-                                    {latestResult?.fourth_prize_1 && (
-                                      <tr>
-                                        <td>
-                                          <strong>Fourth Prize</strong>
-                                        </td>
-                                        <td>
-                                          <strong>
-                                            {latestResult?.fourth_prize_1}
-                                          </strong>
-                                        </td>
-                                      </tr>
-                                    )}
-
-                                    {latestResult?.fifth_prize_1 && (
-                                      <tr>
-                                        <td>
-                                          <strong>Fifth Prize</strong>
-                                        </td>
-                                        <td>
-                                          <strong>
-                                            {latestResult?.fifth_prize_1}
-                                          </strong>
-                                        </td>
-                                      </tr>
-                                    )}
-
-                                    {latestResult?.sixth_prize_1 && (
-                                      <tr>
-                                        <td>
-                                          <strong>Sixth Prize</strong>
-                                        </td>
-                                        <td>
-                                          <strong>
-                                            {latestResult?.sixth_prize_1}
-                                          </strong>
-                                        </td>
-                                      </tr>
-                                    )}
+                                    <tr>
+                                      <td>Fourth Prize</td>
+                                      <td>3 Winners</td>
+                                      <td>₦500,000</td>
+                                      <td>{latestResult?.fourth_prize_1}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Fifth Prize</td>
+                                      <td>10 Winners</td>
+                                      <td>₦200,000</td>
+                                      <td>{latestResult?.fifth_prize_1}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Sixth Prize</td>
+                                      <td>15 Winners</td>
+                                      <td>₦100,000</td>
+                                      <td>{latestResult?.sixth_prize_1}</td>
+                                    </tr>
                                   </tbody>
                                 </table>
                               ) : (
@@ -269,89 +242,53 @@ const Result = () => {
                                 </table>
                                 <br />
 
-                                {/* {latestResult?.winning_number
-                                  ?.split("-")
-                                  .map((digit, j) => (
-                                    <td key={j}>
-                                      <div className="numboxwhite app__mobile-white">
-                                        {digit}
-                                      </div>
-                                    </td>
-                                  ))} */}
                                 {operatorId === 62 ? (
-                                  <table className="winning-table table">
+                                  <table className="winning-table table fw-bolder text-dark">
+                                    <thead>
+                                      <tr>
+                                        <th>Prize</th>
+                                        <th>Total Winners</th>
+                                        <th>Min Prize Per Forecast</th>
+                                        <th>Code</th>
+                                      </tr>
+                                    </thead>
                                     <tbody>
                                       <tr>
-                                        <td>
-                                          <strong>First Prize</strong>
-                                        </td>
-                                        <td>
-                                          <strong>
-                                            {latestResult?.first_prize}
-                                          </strong>
-                                        </td>
+                                        <td>First Prize</td>
+                                        <td>1 Winner</td>
+                                        <td>₦{(5000000).toLocaleString()}</td>
+                                        <td>{latestResult?.first_prize}</td>
                                       </tr>
-
                                       <tr>
-                                        <td>
-                                          <strong>Second Prize</strong>
-                                        </td>
-                                        <td>
-                                          <strong>
-                                            {latestResult?.second_prize}
-                                          </strong>
-                                        </td>
+                                        <td>Second Prize</td>
+                                        <td>1 Winner</td>
+                                        <td>₦{(2000000).toLocaleString()}</td>
+                                        <td>{latestResult?.second_prize}</td>
                                       </tr>
-
                                       <tr>
-                                        <td>
-                                          <strong>Third Prize</strong>
-                                        </td>
-                                        <td>
-                                          <strong>
-                                            {latestResult?.third_prize}
-                                          </strong>
-                                        </td>
+                                        <td>Third Prize</td>
+                                        <td>1 Winner</td>
+                                        <td>₦{(1000000).toLocaleString()}</td>
+                                        <td>{latestResult?.third_prize}</td>
                                       </tr>
-
-                                      {latestResult?.fourth_prize_1 && (
-                                        <tr>
-                                          <td>
-                                            <strong>Fourth Prize</strong>
-                                          </td>
-                                          <td>
-                                            <strong>
-                                              {latestResult?.fourth_prize_1}
-                                            </strong>
-                                          </td>
-                                        </tr>
-                                      )}
-
-                                      {latestResult?.fifth_prize_1 && (
-                                        <tr>
-                                          <td>
-                                            <strong>Fifth Prize</strong>
-                                          </td>
-                                          <td>
-                                            <strong>
-                                              {latestResult?.fifth_prize_1}
-                                            </strong>
-                                          </td>
-                                        </tr>
-                                      )}
-
-                                      {latestResult?.sixth_prize_1 && (
-                                        <tr>
-                                          <td>
-                                            <strong>Sixth Prize</strong>
-                                          </td>
-                                          <td>
-                                            <strong>
-                                              {latestResult?.sixth_prize_1}
-                                            </strong>
-                                          </td>
-                                        </tr>
-                                      )}
+                                      <tr>
+                                        <td>Fourth Prize</td>
+                                        <td>3 Winners</td>
+                                        <td>₦{(500000).toLocaleString()}</td>
+                                        <td>{latestResult?.fourth_prize_1}</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Fifth Prize</td>
+                                        <td>10 Winners</td>
+                                        <td>₦{(200000).toLocaleString()}</td>
+                                        <td>{latestResult?.fifth_prize_1}</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Sixth Prize</td>
+                                        <td>15 Winners</td>
+                                        <td>₦{(100000).toLocaleString()}</td>
+                                        <td>{latestResult?.sixth_prize_1}</td>
+                                      </tr>
                                     </tbody>
                                   </table>
                                 ) : (

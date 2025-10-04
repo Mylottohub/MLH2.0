@@ -77,7 +77,6 @@ export const GdLotto = () => {
 
               return (
                 <div key={type} className="col-md-4 text-center mb-4">
-                  {/* Desktop View */}
                   <div className="d-none d-md-block">
                     <img
                       src={image}

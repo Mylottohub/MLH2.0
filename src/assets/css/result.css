@@ -11,6 +11,14 @@
     border-radius: 50px;
 }
 
+.winning-table th,
+.winning-table td {
+    border: 1px solid #406777 !important;
+    padding: 10px !important;
+    vertical-align: middle !important;
+    font-weight: bolder !important;
+}
+
 .numboxred {
     /* border-radius: 50%; */
     behavior: url(PIE.htc);
