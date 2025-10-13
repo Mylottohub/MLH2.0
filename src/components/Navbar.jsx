@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { images } from "../constant";
 import Header from "./Header";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BModal from "./BModal/BModal";
 import Deposit from "./Payment/Deposit";
 import WithdrawModal from "./Payment/Withdraw";
@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { useGetProfileUser } from "../react-query";
 import Download from "./Download";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -68,8 +69,26 @@ const Navbar = () => {
     navigate(path);
   };
 
+  // Sticky/shrink on scroll
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 8);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Animation presets
+  const fadeSlideIn = {
+    initial: { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    transition: { type: "spring", stiffness: 200, damping: 20 },
+  };
+
   return (
-    <div>
+    <motion.div initial={fadeSlideIn.initial} animate={fadeSlideIn.animate} transition={fadeSlideIn.transition} className="fade-in">
       <Download />
 
       {token && expires && new Date(expires) > new Date() ? (
@@ -77,24 +96,12 @@ const Navbar = () => {
           <div className="mobile__header">
             <Header />
 
-            <nav className="navbar navbar-expand-lg app__navbar-bg">
+            <nav className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""}`}>
               <div className="container">
-                {/* <button
-                  className="btn app__transaction-mobile app__navbar-mobile bg-light"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent"
-                  aria-expanded="false"
-                  aria-label="Toggle navigation"
-                >
-                  <span className="navbar-toggler-icon"></span>
-                </button> */}
+                {/* left spacer */}
                 <p></p>
                 <div className="text-white app__transaction-mobile">
-                  {" "}
                   <span>
-                    {" "}
                     <ul className="d-flex justify-content-between app__sign-in fw-bolder">
                       <li className="nav-item dropdown text-center">
                         <a
@@ -104,11 +111,21 @@ const Navbar = () => {
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
-                          <FaUser className="fa-2x" />
+                          <span className="avatar-with-live">
+                            <FaUser className="fa-2x" />
+                            <motion.span
+                              className="live-dot"
+                              animate={{ scale: [1, 1.3, 1], opacity: [0.8, 1, 0.8] }}
+                              transition={{ duration: 1.2, repeat: Infinity }}
+                            />
+                          </span>
                         </a>
-                        <ul
+                        <motion.ul
                           className="dropdown-menu fw-bolder"
                           style={{ marginLeft: "-90px" }}
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.18 }}
                         >
                           <li onClick={() => handleUserProfile()}>
                             <a className="dropdown-item p-2 fw-bolder">
@@ -182,15 +199,16 @@ const Navbar = () => {
                             </a>
                           </li>
                           <li>
-                            <a
+                            <motion.a
                               onClick={() => handleLogout()}
                               className="dropdown-item p-2  fw-bolder"
+                              whileTap={{ scale: 0.96, opacity: 0.9 }}
                             >
                               {" "}
                               &nbsp;&nbsp; Logout
-                            </a>
+                            </motion.a>
                           </li>
-                        </ul>
+                        </motion.ul>
                       </li>
                     </ul>
                   </span>
@@ -212,16 +230,12 @@ const Navbar = () => {
                       >
                         Play now
                       </a>
-                      <ul className="dropdown-menu">
+                      <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
                         <li>
                           <a
                             className="dropdown-item p-2 "
                             onClick={() => navigate("/")}
                           >
-                            {/* <img
-                              src={images.lotto_icon}
-                              alt={images.lotto_icon}
-                            />{" "} */}
                             Lotto
                           </a>
                         </li>
@@ -230,7 +244,6 @@ const Navbar = () => {
                             className="dropdown-item p-2 "
                             onClick={() => navigate("/all-forecast")}
                           >
-                            {/* <img src={images.bet} alt={images.bet} /> */}
                             Sport Betting
                           </a>
                         </li>
@@ -239,11 +252,10 @@ const Navbar = () => {
                             className="dropdown-item p-2"
                             onClick={() => navigate("/instant")}
                           >
-                            {/* <img src={images.instant} alt={images.instant} />{" "} */}
                             Instant Games
                           </a>
                         </li>
-                      </ul>
+                      </motion.ul>
                     </li>
 
                     <li className="nav-item">
@@ -298,13 +310,12 @@ const Navbar = () => {
                       >
                         More
                       </a>
-                      <ul className="dropdown-menu">
+                      <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
                         <li>
                           <a
                             className="dropdown-item p-2 "
                             onClick={() => navigate("/about-us")}
                           >
-                            {/* <i className="fa fa-info"></i> */}
                             &nbsp;About us
                           </a>
                         </li>
@@ -313,7 +324,6 @@ const Navbar = () => {
                             className="dropdown-item p-2 "
                             onClick={() => navigate("/faq")}
                           >
-                            {/* <i className="fa fa-question"></i> */}
                             &nbsp;FAQs
                           </a>
                         </li>
@@ -323,7 +333,6 @@ const Navbar = () => {
                             className="dropdown-item p-2 "
                             onClick={() => navigate("/terms")}
                           >
-                            {/* <i className="fa fa-anchor"></i> */}
                             &nbsp;Terms and Conditions
                           </a>
                         </li>
@@ -333,11 +342,10 @@ const Navbar = () => {
                             className="dropdown-item p-2 "
                             onClick={() => navigate("/contact-us")}
                           >
-                            {/* <i className="fa fa-phone"></i> */}
                             &nbsp;Contact Us
                           </a>
                         </li>
-                      </ul>
+                      </motion.ul>
                     </li>
                   </ul>
 
@@ -356,17 +364,14 @@ const Navbar = () => {
                             ID: {userProfileResponse?.id}
                           </small>
                         </a>
-                        <ul className="dropdown-menu">
-                          {/* <li onClick={() => navigate("/profile")}> */}
+                        <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
                           <li onClick={() => handleUserProfile()}>
                             <a className="dropdown-item p-2 fw-bolder">
-                              {/* <FaUser /> */}
                               &nbsp;&nbsp;User Profile
                             </a>
                           </li>
-                          <li onClick={() => navigate("/wallet")}>
+                          <li onClick={() => navigate("/wallet")}> 
                             <a className="dropdown-item p-2 fw-bolder">
-                              {/* <BsWallet /> */}
                               &nbsp;&nbsp;Wallet
                             </a>
                           </li>
@@ -376,7 +381,6 @@ const Navbar = () => {
                               className="dropdown-item p-2 fw-bolder"
                               onClick={() => handleDeposit()}
                             >
-                              {/* <BsArrow90DegRight /> */}
                               &nbsp;&nbsp;Deposit
                             </a>
                           </li>
@@ -388,24 +392,16 @@ const Navbar = () => {
                               &nbsp;&nbsp;Withdraw
                             </a>
                           </li>
-                          {/* <li>
-                            <a className="dropdown-item p-2">
-                             
-                              &nbsp;&nbsp;Subscription
-                            </a>
-                          </li> */}
                           <li>
                             <a
                               className="dropdown-item p-2 fw-bolder"
                               onClick={() => navigate("/transactions")}
                             >
-                              {/* <FaMoneyBill /> */}
                               &nbsp;&nbsp;Transactions
                             </a>
                           </li>
                           <li onClick={() => navigate("/referral")}>
                             <a className="dropdown-item p-2 fw-bolder">
-                              {/* <BsShareFill /> */}
                               &nbsp;&nbsp;Referral
                             </a>
                           </li>
@@ -419,19 +415,20 @@ const Navbar = () => {
                               &nbsp; Become an Agent
                             </a>
                           </li>
-                        </ul>
+                        </motion.ul>
                       </li>
                     </li>
 
                     <li className="text-right hidden-xs hidden-sm">
                       <li className="nav-item dropdown">
                         <a>
-                          <span
+                          <motion.span
                             className="btn btn-white text-white"
                             onClick={() => handleLogout()}
+                            whileTap={{ scale: 0.96, opacity: 0.9 }}
                           >
                             Logout
-                          </span>
+                          </motion.span>
                         </a>
                       </li>
                     </li>
@@ -447,37 +444,39 @@ const Navbar = () => {
               <>
                 <div className="row">
                   <div className="col-10">
-                    <small className="fw-bolder" style={{ fontSize: "17px" }}>
+                    <motion.small className="fw-bolder" style={{ fontSize: "17px" }} key={userProfileResponse?.wallet} initial={{ scale: 0.98, opacity: 0.9 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25 }}>
                       ₦{userProfileResponse?.wallet}
                       <br />
                       Wallet Balance
-                    </small>
+                    </motion.small>
                     <br />
                     <br />
-                    <a onClick={() => handleDeposit()} className="btn btn-blue">
+                    <motion.a onClick={() => handleDeposit()} className="btn btn-blue" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
                       <small style={{ fontSize: "17px" }} className="fw-bolder">
                         Deposit
                       </small>
-                    </a>
+                    </motion.a>
                   </div>
                   <div className="col-2">
-                    <small className="fw-bolder" style={{ fontSize: "17px" }}>
+                    <motion.small className="fw-bolder" style={{ fontSize: "17px" }} key={userProfileResponse?.wwallet} initial={{ scale: 0.98, opacity: 0.9 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25 }}>
                       ₦{formatAmount(userProfileResponse?.wwallet)}
                       <br />
                       Winnings
-                    </small>
+                    </motion.small>
                     <br />
                     <br />
-                    <a
+                    <motion.a
                       onClick={() => handleWithdraw()}
                       className="btn btn-trans2"
                       data-toggle="modal"
                       data-target="#withdraw_modal"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       <small style={{ fontSize: "17px" }} className="fw-bolder">
                         Withdraw
                       </small>
-                    </a>
+                    </motion.a>
                   </div>
                 </div>
               </>
@@ -485,7 +484,7 @@ const Navbar = () => {
           </div>
         </>
       ) : (
-        <nav className="navbar navbar-expand-lg app__navbar-bg">
+        <nav className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""}`}>
           <div className="container">
             <a
               className="navbar-brand"
@@ -521,7 +520,7 @@ const Navbar = () => {
                   >
                     Play now
                   </a>
-                  <ul className="dropdown-menu">
+                  <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
                     <li>
                       <a
                         className="dropdown-item p-2"
@@ -543,11 +542,10 @@ const Navbar = () => {
                         className="dropdown-item p-2"
                         onClick={() => navigate("/instant")}
                       >
-                        {/* <img src={images.instant} alt={images.instant} />{" "} */}
                         Instant Games
                       </a>
                     </li>
-                  </ul>
+                  </motion.ul>
                 </li>
 
                 <li className="nav-item">
@@ -602,13 +600,12 @@ const Navbar = () => {
                   >
                     More
                   </a>
-                  <ul className="dropdown-menu">
+                  <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
                     <li>
                       <a
                         className="dropdown-item p-2 "
                         onClick={() => navigate("/about-us")}
                       >
-                        {/* <i className="fa fa-info"></i> */}
                         &nbsp;About us
                       </a>
                     </li>
@@ -617,7 +614,6 @@ const Navbar = () => {
                         className="dropdown-item p-2 "
                         onClick={() => navigate("/faq")}
                       >
-                        {/* <i className="fa fa-question"></i> */}
                         &nbsp;FAQs
                       </a>
                     </li>
@@ -627,7 +623,6 @@ const Navbar = () => {
                         className="dropdown-item p-2 "
                         onClick={() => navigate("/terms")}
                       >
-                        {/* <i className="fa fa-anchor"></i> */}
                         &nbsp;Terms and Conditions
                       </a>
                     </li>
@@ -637,32 +632,33 @@ const Navbar = () => {
                         className="dropdown-item p-2 "
                         onClick={() => navigate("/contact-us")}
                       >
-                        {/* <i className="fa fa-phone"></i> */}
                         &nbsp;Contact Us
                       </a>
                     </li>
-                  </ul>
+                  </motion.ul>
                 </li>
               </ul>
 
               <ul className="app__sign-in">
                 <li className="text-right hidden-xs hidden-sm mt-2">
                   <a>
-                    <span
+                    <motion.span
                       className="btn text-white me-3  "
                       onClick={() => navigate("/register")}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       Sign Up
-                    </span>
+                    </motion.span>
                   </a>
-                  {/* <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"> */}
-                    <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app">
-                    <span
+                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com">
+                    <motion.span
                       className="btn btn-yellow  "
-                      // onClick={() => navigate("/login")}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       Sign In
-                    </span>
+                    </motion.span>
                   </a>
                 </li>
               </ul>
@@ -705,33 +701,6 @@ const Navbar = () => {
                   </a>
                 </li>
                 <hr />
-                {/* <li className="nav-item">
-                  <a
-                    className="nav-link text-dark fw-bolder me-3 w-50"
-                    onClick={() => handleNav("/instant")}
-                  >
-                    Instant Games
-                  </a>
-                </li>
-                <hr /> */}
-                {/* <li className="nav-item">
-                  <a
-                    className="nav-link text-dark fw-bolder me-3"
-                    onClick={() => handleNav("/result")}
-                  >
-                    Results
-                  </a>
-                </li> */}
-                {/* <hr /> */}
-                {/* <li className="nav-item">
-                  <a
-                    className="nav-link text-dark fw-bolder app__proforecast"
-                    onClick={() => handleNav("/create-chart")}
-                  >
-                    Create Charts
-                  </a>
-                </li>
-                <hr /> */}
                 <li className="nav-item">
                   <a
                     className="nav-link text-dark fw-bolder me-3"
@@ -741,16 +710,6 @@ const Navbar = () => {
                   </a>
                 </li>
                 <hr />
-                {/* <li
-                  onClick={() => handleNav("/forecast")}
-                  className="nav-item  "
-                >
-                  <a className="nav-link text-dark fw-bolder me-3 w-50">
-                    {" "}
-                    Quick Forecast
-                  </a>
-                </li>
-                <hr /> */}
                 <li className="nav-item">
                   <a
                     className="nav-link text-dark fw-bolder me-3"
@@ -774,7 +733,6 @@ const Navbar = () => {
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                   >
-                    {/* <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://mlh2.netlify.app"> */}
                     Sign In
                   </a>
                 </li>
@@ -784,30 +742,50 @@ const Navbar = () => {
           </div>
         </nav>
       )}
-      <BModal
-        backdrop="static"
-        keyboard={false}
-        show={isOpen}
-        onHide={handleClose}
-        size="md"
-      >
-        <WithdrawModal />
-      </BModal>
 
-      <BModal
-        backdrop="static"
-        keyboard={false}
-        show={isOpenDeposit}
-        onHide={handleCloseDeposit}
-        size="md"
-      >
-        <Deposit />
-      </BModal>
+      {/* Modals with AnimatePresence */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <BModal
+              backdrop="static"
+              keyboard={false}
+              show={isOpen}
+              onHide={handleClose}
+              size="md"
+            >
+              <WithdrawModal />
+            </BModal>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <BModal show={isOpenUser} onHide={handleUserClose} size="md">
-        <UserProfile />
-      </BModal>
-    </div>
+      <AnimatePresence>
+        {isOpenDeposit && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <BModal
+              backdrop="static"
+              keyboard={false}
+              show={isOpenDeposit}
+              onHide={handleCloseDeposit}
+              size="md"
+            >
+              <Deposit />
+            </BModal>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isOpenUser && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <BModal show={isOpenUser} onHide={handleUserClose} size="md">
+              <UserProfile />
+            </BModal>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

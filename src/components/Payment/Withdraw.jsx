@@ -119,40 +119,6 @@ const WithdrawModal = () => {
   const bankName = watch("bank_name");
   const accountNo = watch("account_no");
   const { userInfo } = useSelector((state) => state.auth);
-  // const fetchAccountName = async () => {
-  //   try {
-  //     setFetchingAccountName(true);
-  //     const response = await HTTP.post(
-  //       "/user/resolve-bank-account",
-  //       {
-  // bank_name: bankName,
-  // account_no: accountNo,
-  // email: userProfileResponse?.email,
-  //       },
-  // {
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Accept: "application/json",
-  //     Authorization: `Bearer ${userInfo.token}`,
-  //   },
-  // }
-  //     );
-
-  //     if (response.data.status === "Success") {
-  //       const resolvedAccountName = response?.data?.data?.data?.account_name;
-  //       setAccountName(resolvedAccountName);
-  //       setValue("account_name", resolvedAccountName);
-  //       toast.success("Account Details Saved Successfully.");
-  //     }
-  //   } catch (error) {
-  //     // console.error("Error:", error);
-  //     if (error.response && error.response.status === 500) {
-  //       toast.error("Account name not found.");
-  //     }
-  //   } finally {
-  //     setFetchingAccountName(false);
-  //   }
-  // };
 
   const fetchAccountName = async () => {
     setFetchingAccountName(true);

@@ -8,6 +8,10 @@ import moment from "moment";
 import { HTTP } from "../utils";
 import { useGetProfileUser } from "../react-query";
 import { toast } from "react-toastify";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+
+// Cache display-operators logos for this session to avoid re-fetching on navigation
+let OPERATOR_LOGOS_CACHE = null;
 
 const Operator = () => {
   const navigate = useNavigate();
@@ -35,12 +39,17 @@ const Operator = () => {
   useEffect(() => {
     const fetchOperatorLogos = async () => {
       try {
+        if (OPERATOR_LOGOS_CACHE) {
+          setOperatorLogos(OPERATOR_LOGOS_CACHE);
+          return;
+        }
         const response = await HTTP.get("/display-operators");
         const data = response.data.data;
         const logos = {};
         data.forEach((operator) => {
           logos[operator.name.replace(" ", "_").toLowerCase()] = operator.logo;
         });
+        OPERATOR_LOGOS_CACHE = logos;
         setOperatorLogos(logos);
       } catch (error) {
         console.error("Error fetching operator logos:", error);
@@ -168,6 +177,59 @@ const Operator = () => {
     setIsIframeLoading(false);
   };
 
+  // Animated Countdown wrapper
+  const MotionCountdown = ({ date }) => (
+    <Countdown
+      date={date}
+      renderer={({ days, hours, minutes, seconds }) => (
+        <motion.div
+          initial={false}
+          animate={{
+            backgroundColor: seconds === 0 ? ["#ffffff", "#fff9e6", "#ffffff"] : "#ffffff",
+          }}
+          transition={{ duration: 0.45 }}
+        >
+          <motion.span
+            key={`d-${days}`}
+            className="countdown_box me-2  fw-bolder"
+            initial={{ scale: 0.96, opacity: 0.9 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            {days} days
+          </motion.span>
+          <motion.span
+            key={`h-${hours}`}
+            className="countdown_box me-2  fw-bolder"
+            initial={{ scale: 0.96, opacity: 0.9 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            {hours} hrs
+          </motion.span>
+          <motion.span
+            key={`m-${minutes}`}
+            className="countdown_box me-2  fw-bolder"
+            initial={{ scale: 0.96, opacity: 0.9 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            {minutes} mins
+          </motion.span>
+          <motion.span
+            key={`s-${seconds}`}
+            className="countdown_box me-2  fw-bolder"
+            initial={{ scale: 0.9, opacity: 0.9 }}
+            animate={{ scale: [1, 1.08, 1], opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {seconds} secs
+          </motion.span>
+        </motion.div>
+      )}
+    />
+  );
+
   return (
     <>
       <div
@@ -217,14 +279,20 @@ const Operator = () => {
           </div>
 
           {isLoading ? (
-            <div className="spinner text-dark text-center">
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
+            <div className="row">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="col-md-3 col-sm-6 col-xs-12 col-2">
+                  <div className="service-wrap mb-5 card-soft shimmer">
+                    <div className="service-img">
+                      <div className="skeleton-logo"></div>
+                    </div>
+                    <div className="service-conten text-center p-3">
+                      <div className="skeleton-line"></div>
+                      <div className="skeleton-line" style={{ width: "60%", margin: "10px auto 0" }}></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : operatorTypes.length === 0 ? (
             <tr>
@@ -233,316 +301,261 @@ const Operator = () => {
               </td>
             </tr>
           ) : (
-            operatorTypes.map((operatorType, index) => {
-              const operatorDataArray = operatorData[operatorType];
-              if (operatorType === "gd_lotto") {
-                return null;
-              }
-
-              if (operatorDataArray && operatorDataArray.length > 0) {
-                const imageSrc =
-                  operatorLogos[operatorNameMapping[operatorType]] ||
-                  `/images/${operatorType}.png`;
-
-                const propertyMapping = {
-                  ghana_game: { name: "gn", time: "sdt" },
-                  wesco: { name: "drawname", time: "drawtime" },
-                  green_lotto: { name: "drawname", time: "drawtime" },
-                  green_ghana_game: { name: "drawname", time: "drawtime" },
-                  lottomania: { name: "gn", time: "sdt" },
-                  lotto_nigeria: { name: "drawAlias", time: "drawDate" },
-                  GD570: {
-                    name: latestGame590?.gameName,
-                    time: latestGame590?.drawTime,
-                  },
-                  GD580: {
-                    name: latestGame590?.gameName,
-                    time: latestGame590?.drawTime,
-                  },
-                  GD590: {
-                    name: latestGame590?.gameName,
-                    time: latestGame590?.drawTime,
-                  },
-                  gd_jackpot: {
-                    name: latestGame590?.gameName,
-                    time: latestGame590?.drawTime,
-                  },
-                  "GH 5/90": { name: "gameName", time: "drawTime" },
-                  NNP: { name: "gameName", time: "drawTime" },
-                  golden_chance: { name: "drawname", time: "drawtime" },
-                };
-
-                const dataArray = Array.isArray(operatorDataArray)
-                  ? operatorDataArray
-                  : Object.values(operatorDataArray);
-
-                const upcomingGames = dataArray.filter((game) => {
-                  const currentTime = moment();
-                  let drawTime;
-                  if (operatorType === "lotto_nigeria") {
-                    drawTime = game?.drawDate
-                      ? moment(game?.drawDate, "DD/MM/YYYY HH:mm")
-                      : null;
-                  } else if (operatorType === "wesco") {
-                    const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-                  } else if (operatorType === "lottomania") {
-                    drawTime = moment(game?.sdt);
-                  } else if (operatorType === "ghana_game") {
-                    drawTime = moment(game?.sdt);
-                  } else if (operatorType === "green_lotto") {
-                    const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-                  } else if (operatorType === "green_ghana_game") {
-                    const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-                  } else if (operatorType === "GH 5/90") {
-                    const drawDateTimeString = `${game?.drawTime}`;
-                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-                  } else if (operatorType === "GD570") {
-                    if (Array.isArray(operatorData?.gd_lotto)) {
-                      const now = new Date();
-                      const latestGame590 = operatorData.gd_lotto
-                        .filter(
-                          (game) =>
-                            game?.gameType === "5/90" &&
-                            new Date(game?.drawTime) > now
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(a?.drawTime) - new Date(b?.drawTime)
-                        )[0];
-
-                      if (latestGame590) {
-                        game = {
-                          name: latestGame590?.gameName,
-                          time: latestGame590?.drawTime,
-                        };
-                        drawTime = moment(
-                          latestGame590?.drawTime,
-                          "YYYY-MM-DDTHH:mm:ss"
-                        );
-                      }
-                    }
-                  } else if (operatorType === "GD580") {
-                    if (Array.isArray(operatorData?.gd_lotto)) {
-                      const now = new Date();
-
-                      const latestGame590 = operatorData.gd_lotto
-                        .filter(
-                          (game) =>
-                            game?.gameType === "5/90" &&
-                            new Date(game?.drawTime) > now
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(a?.drawTime) - new Date(b?.drawTime)
-                        )[0];
-
-                      if (latestGame590) {
-                        const drawDateTimeString = latestGame590?.drawTime;
-                        const parsedTime = moment(
-                          drawDateTimeString,
-                          "YYYY-MM-DDTHH:mm:ss"
-                        )
-                          .utcOffset("+00:00")
-                          .utc();
-
-                        if (parsedTime.isValid()) {
-                          return parsedTime.toDate();
-                        } else {
-                          return null;
-                        }
-                      }
-                    }
-                  } else if (operatorType === "GD590") {
-                    if (Array.isArray(operatorData?.gd_lotto)) {
-                      const now = new Date();
-
-                      const latestGame590 = operatorData.gd_lotto
-                        .filter(
-                          (game) =>
-                            game?.gameType === "5/90" &&
-                            new Date(game?.drawTime) > now
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(a?.drawTime) - new Date(b?.drawTime)
-                        )[0];
-
-                      if (latestGame590) {
-                        const drawDateTimeString = latestGame590?.drawTime;
-                        const parsedTime = moment(
-                          drawDateTimeString,
-                          "YYYY-MM-DDTHH:mm:ss"
-                        )
-                          .utcOffset("+00:00")
-                          .utc();
-
-                        if (parsedTime.isValid()) {
-                          return parsedTime.toDate();
-                        } else {
-                          return null;
-                        }
-                      }
-                    }
-                  } else if (operatorType === "gd_jackpot") {
-                    if (Array.isArray(operatorData?.gd_lotto)) {
-                      const now = new Date();
-
-                      const latestGame590 = operatorData.gd_lotto
-                        .filter(
-                          (game) =>
-                            game?.gameType === "5/90" &&
-                            new Date(game?.drawTime) > now
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(a?.drawTime) - new Date(b?.drawTime)
-                        )[0];
-
-                      if (latestGame590) {
-                        game = {
-                          name: latestGame590?.gameName,
-                          time: latestGame590?.drawTime,
-                        };
-                        drawTime = moment(
-                          latestGame590?.drawTime,
-                          "YYYY-MM-DDTHH:mm:ss"
-                        );
-                      }
-                    }
-                  } else if (operatorType === "NNP") {
-                    const drawDateTimeString = `${game?.drawTime}`;
-                    drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
-                  } else if (operatorType === "golden_chance") {
-                    const drawDate = game?.drawdate;
-                    const drawTimeString = game?.drawtime;
-
-                    if (drawDate && drawTimeString) {
-                      drawTime = moment(
-                        `${drawDate} ${drawTimeString}`,
-                        "YYYYMMDD HH:mm:ss"
-                      );
-                    } else {
-                      drawTime = null;
-                    }
+            <LayoutGroup>
+              <AnimatePresence initial={false}>
+                {operatorTypes.map((operatorType, index) => {
+                  const operatorDataArray = operatorData[operatorType];
+                  if (operatorType === "gd_lotto") {
+                    return null;
                   }
-                  return drawTime && drawTime.isAfter(currentTime);
-                });
-                upcomingGames?.sort(
-                  (a, b) =>
-                    new Date(a[propertyMapping[operatorType]?.time]) -
-                    new Date(b[propertyMapping[operatorType]?.time])
-                );
 
-                const nextGame =
-                  upcomingGames.length > 0 ? upcomingGames[0] : null;
+                  if (operatorDataArray && operatorDataArray.length > 0) {
+                    const imageSrc =
+                      operatorLogos[operatorNameMapping[operatorType]] ||
+                      `/images/${operatorType}.png`;
 
-                const renderGameTime = (operatorType, game) => {
-                  const time = game[propertyMapping[operatorType]?.time];
+                    const propertyMapping = {
+                      ghana_game: { name: "gn", time: "sdt" },
+                      wesco: { name: "drawname", time: "drawtime" },
+                      green_lotto: { name: "drawname", time: "drawtime" },
+                      green_ghana_game: { name: "drawname", time: "drawtime" },
+                      lottomania: { name: "gn", time: "sdt" },
+                      lotto_nigeria: { name: "drawAlias", time: "drawDate" },
+                      GD570: {
+                        name: latestGame590?.gameName,
+                        time: latestGame590?.drawTime,
+                      },
+                      GD580: {
+                        name: latestGame590?.gameName,
+                        time: latestGame590?.drawTime,
+                      },
+                      GD590: {
+                        name: latestGame590?.gameName,
+                        time: latestGame590?.drawTime,
+                      },
+                      gd_jackpot: {
+                        name: latestGame590?.gameName,
+                        time: latestGame590?.drawTime,
+                      },
+                      "GH 5/90": { name: "gameName", time: "drawTime" },
+                      NNP: { name: "gameName", time: "drawTime" },
+                      golden_chance: { name: "drawname", time: "drawtime" },
+                    };
 
-                  if (operatorType === "lottomania") {
-                    return new Date(time);
-                  } else if (operatorType === "ghana_game") {
-                    return new Date(time);
-                  } else if (operatorType === "lotto_nigeria") {
-                    const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
-                      .utcOffset("+00:00")
-                      .utc();
-                    return parsedTime.toDate();
-                  } else if (operatorType === "wesco") {
-                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
-                    const parsedTime = moment(
-                      drawDateTimeString,
-                      "YYYYMMDD HH:mm:ss"
-                    )
-                      .utcOffset("+00:00")
-                      .utc();
+                    const dataArray = Array.isArray(operatorDataArray)
+                      ? operatorDataArray
+                      : Object.values(operatorDataArray);
 
-                    if (parsedTime.isValid()) {
-                      return parsedTime.toDate();
-                    } else {
-                      console.error("Invalid date format:", drawDateTimeString);
-                      return null;
-                    }
-                  } else if (operatorType === "green_lotto") {
-                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
-                    const parsedTime = moment(
-                      drawDateTimeString,
-                      "YYYYMMDD HH:mm:ss"
-                    )
-                      .utcOffset("+00:00")
-                      .utc();
+                    const upcomingGames = dataArray.filter((game) => {
+                      const currentTime = moment();
+                      let drawTime;
+                      if (operatorType === "lotto_nigeria") {
+                        drawTime = game?.drawDate
+                          ? moment(game?.drawDate, "DD/MM/YYYY HH:mm")
+                          : null;
+                      } else if (operatorType === "wesco") {
+                        const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
+                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                      } else if (operatorType === "lottomania") {
+                        drawTime = moment(game?.sdt);
+                      } else if (operatorType === "ghana_game") {
+                        drawTime = moment(game?.sdt);
+                      } else if (operatorType === "green_lotto") {
+                        const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
+                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                      } else if (operatorType === "green_ghana_game") {
+                        const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
+                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                      } else if (operatorType === "GH 5/90") {
+                        const drawDateTimeString = `${game?.drawTime}`;
+                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                      } else if (operatorType === "GD570") {
+                        if (Array.isArray(operatorData?.gd_lotto)) {
+                          const now = new Date();
+                          const latestGame590 = operatorData.gd_lotto
+                            .filter(
+                              (game) =>
+                                game?.gameType === "5/90" &&
+                                new Date(game?.drawTime) > now
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                            )[0];
 
-                    if (parsedTime.isValid()) {
-                      return parsedTime.toDate();
-                    } else {
-                      console.error("Invalid date format:", drawDateTimeString);
-                      return null;
-                    }
-                  } else if (operatorType === "green_ghana_game") {
-                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
-                    const parsedTime = moment(
-                      drawDateTimeString,
-                      "YYYYMMDD HH:mm:ss"
-                    )
-                      .utcOffset("+00:00")
-                      .utc();
+                          if (latestGame590) {
+                            game = {
+                              name: latestGame590?.gameName,
+                              time: latestGame590?.drawTime,
+                            };
+                            drawTime = moment(
+                              latestGame590?.drawTime,
+                              "YYYY-MM-DDTHH:mm:ss"
+                            );
+                          }
+                        }
+                      } else if (operatorType === "GD580") {
+                        if (Array.isArray(operatorData?.gd_lotto)) {
+                          const now = new Date();
 
-                    if (parsedTime.isValid()) {
-                      return parsedTime.toDate();
-                    } else {
-                      return null;
-                    }
-                  } else if (operatorType === "GH 5/90") {
-                    const drawDateTimeString = `${game?.drawTime}`;
-                    const parsedTime = moment(
-                      drawDateTimeString,
-                      "YYYYMMDD HH:mm:ss"
-                    )
-                      .utcOffset("+00:00")
-                      .utc();
+                          const latestGame590 = operatorData.gd_lotto
+                            .filter(
+                              (game) =>
+                                game?.gameType === "5/90" &&
+                                new Date(game?.drawTime) > now
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                            )[0];
 
-                    if (parsedTime.isValid()) {
-                      return parsedTime.toDate();
-                    } else {
-                      return null;
-                    }
-                  } else if (operatorType === "NNP") {
-                    const drawDateTimeString = `${game?.drawTime}`;
-                    const parsedTime = moment(
-                      drawDateTimeString,
-                      "YYYYMMDD HH:mm:ss"
-                    )
-                      .utcOffset("+00:00")
-                      .utc();
+                          if (latestGame590) {
+                            const drawDateTimeString = latestGame590?.drawTime;
+                            const parsedTime = moment(
+                              drawDateTimeString,
+                              "YYYY-MM-DDTHH:mm:ss"
+                            )
+                              .utcOffset("+00:00")
+                              .utc();
 
-                    if (parsedTime.isValid()) {
-                      return parsedTime.toDate();
-                    } else {
-                      return null;
-                    }
-                  } else if (operatorType === "GD570") {
-                    if (Array.isArray(operatorData?.gd_lotto)) {
-                      const now = new Date();
+                            if (parsedTime.isValid()) {
+                              return parsedTime.toDate();
+                            } else {
+                              return null;
+                            }
+                          }
+                        }
+                      } else if (operatorType === "GD590") {
+                        if (Array.isArray(operatorData?.gd_lotto)) {
+                          const now = new Date();
 
-                      const latestGame590 = operatorData.gd_lotto
-                        .filter(
-                          (game) =>
-                            game?.gameType === "5/90" &&
-                            new Date(game?.drawTime) > now
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(a?.drawTime) - new Date(b?.drawTime)
-                        )[0];
+                          const latestGame590 = operatorData.gd_lotto
+                            .filter(
+                              (game) =>
+                                game?.gameType === "5/90" &&
+                                new Date(game?.drawTime) > now
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                            )[0];
 
-                      if (latestGame590) {
-                        const drawDateTimeString = latestGame590?.drawTime;
+                          if (latestGame590) {
+                            const drawDateTimeString = latestGame590?.drawTime;
+                            const parsedTime = moment(
+                              drawDateTimeString,
+                              "YYYY-MM-DDTHH:mm:ss"
+                            )
+                              .utcOffset("+00:00")
+                              .utc();
+
+                            if (parsedTime.isValid()) {
+                              return parsedTime.toDate();
+                            } else {
+                              return null;
+                            }
+                          }
+                        }
+                      } else if (operatorType === "gd_jackpot") {
+                        if (Array.isArray(operatorData?.gd_lotto)) {
+                          const now = new Date();
+
+                          const latestGame590 = operatorData.gd_lotto
+                            .filter(
+                              (game) =>
+                                game?.gameType === "5/90" &&
+                                new Date(game?.drawTime) > now
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                            )[0];
+
+                          if (latestGame590) {
+                            game = {
+                              name: latestGame590?.gameName,
+                              time: latestGame590?.drawTime,
+                            };
+                            drawTime = moment(
+                              latestGame590?.drawTime,
+                              "YYYY-MM-DDTHH:mm:ss"
+                            );
+                          }
+                        }
+                      } else if (operatorType === "NNP") {
+                        const drawDateTimeString = `${game?.drawTime}`;
+                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                      } else if (operatorType === "golden_chance") {
+                        const drawDate = game?.drawdate;
+                        const drawTimeString = game?.drawtime;
+
+                        if (drawDate && drawTimeString) {
+                          drawTime = moment(
+                            `${drawDate} ${drawTimeString}`,
+                            "YYYYMMDD HH:mm:ss"
+                          );
+                        } else {
+                          drawTime = null;
+                        }
+                      }
+                      return drawTime && drawTime.isAfter(currentTime);
+                    });
+                    upcomingGames?.sort(
+                      (a, b) =>
+                        new Date(a[propertyMapping[operatorType]?.time]) -
+                        new Date(b[propertyMapping[operatorType]?.time])
+                    );
+
+                    const nextGame =
+                      upcomingGames.length > 0 ? upcomingGames[0] : null;
+
+                    const renderGameTime = (operatorType, game) => {
+                      const time = game[propertyMapping[operatorType]?.time];
+
+                      if (operatorType === "lottomania") {
+                        return new Date(time);
+                      } else if (operatorType === "ghana_game") {
+                        return new Date(time);
+                      } else if (operatorType === "lotto_nigeria") {
+                        const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
+                          .utcOffset("+00:00")
+                          .utc();
+                        return parsedTime.toDate();
+                      } else if (operatorType === "wesco") {
+                        const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYY-MM-DDTHH:mm:ss"
+                          "YYYYMMDD HH:mm:ss"
+                        )
+                          .utcOffset("+00:00")
+                          .utc();
+
+                        if (parsedTime.isValid()) {
+                          return parsedTime.toDate();
+                        } else {
+                          console.error("Invalid date format:", drawDateTimeString);
+                          return null;
+                        }
+                      } else if (operatorType === "green_lotto") {
+                        const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
+                        const parsedTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss"
+                        )
+                          .utcOffset("+00:00")
+                          .utc();
+
+                        if (parsedTime.isValid()) {
+                          return parsedTime.toDate();
+                        } else {
+                          console.error("Invalid date format:", drawDateTimeString);
+                          return null;
+                        }
+                      } else if (operatorType === "green_ghana_game") {
+                        const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
+                        const parsedTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss"
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -552,28 +565,11 @@ const Operator = () => {
                         } else {
                           return null;
                         }
-                      }
-                    }
-                  } else if (operatorType === "GD580") {
-                    if (Array.isArray(operatorData?.gd_lotto)) {
-                      const now = new Date();
-
-                      const latestGame590 = operatorData.gd_lotto
-                        .filter(
-                          (game) =>
-                            game?.gameType === "5/90" &&
-                            new Date(game?.drawTime) > now
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(a?.drawTime) - new Date(b?.drawTime)
-                        )[0];
-
-                      if (latestGame590) {
-                        const drawDateTimeString = latestGame590?.drawTime;
+                      } else if (operatorType === "GH 5/90") {
+                        const drawDateTimeString = `${game?.drawTime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYY-MM-DDTHH:mm:ss"
+                          "YYYYMMDD HH:mm:ss"
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -583,28 +579,11 @@ const Operator = () => {
                         } else {
                           return null;
                         }
-                      }
-                    }
-                  } else if (operatorType === "GD590") {
-                    if (Array.isArray(operatorData?.gd_lotto)) {
-                      const now = new Date();
-
-                      const latestGame590 = operatorData.gd_lotto
-                        .filter(
-                          (game) =>
-                            game?.gameType === "5/90" &&
-                            new Date(game?.drawTime) > now
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(a?.drawTime) - new Date(b?.drawTime)
-                        )[0];
-
-                      if (latestGame590) {
-                        const drawDateTimeString = latestGame590?.drawTime;
+                      } else if (operatorType === "NNP") {
+                        const drawDateTimeString = `${game?.drawTime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYY-MM-DDTHH:mm:ss"
+                          "YYYYMMDD HH:mm:ss"
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -614,28 +593,135 @@ const Operator = () => {
                         } else {
                           return null;
                         }
-                      }
-                    }
-                  } else if (operatorType === "gd_jackpot") {
-                    if (Array.isArray(operatorData?.gd_lotto)) {
-                      const now = new Date();
+                      } else if (operatorType === "GD570") {
+                        if (Array.isArray(operatorData?.gd_lotto)) {
+                          const now = new Date();
 
-                      const latestGame590 = operatorData?.gd_lotto
-                        .filter(
-                          (game) =>
-                            game?.gameType === "5/90" &&
-                            new Date(game?.drawTime) > now
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(a?.drawTime) - new Date(b?.drawTime)
-                        )[0];
+                          const latestGame590 = operatorData.gd_lotto
+                            .filter(
+                              (game) =>
+                                game?.gameType === "5/90" &&
+                                new Date(game?.drawTime) > now
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                            )[0];
 
-                      if (latestGame590) {
-                        const drawDateTimeString = latestGame590?.drawTime;
+                          if (latestGame590) {
+                            const drawDateTimeString = latestGame590?.drawTime;
+                            const parsedTime = moment(
+                              drawDateTimeString,
+                              "YYYY-MM-DDTHH:mm:ss"
+                            )
+                              .utcOffset("+00:00")
+                              .utc();
+
+                            if (parsedTime.isValid()) {
+                              return parsedTime.toDate();
+                            } else {
+                              return null;
+                            }
+                          }
+                        }
+                      } else if (operatorType === "GD580") {
+                        if (Array.isArray(operatorData?.gd_lotto)) {
+                          const now = new Date();
+
+                          const latestGame590 = operatorData.gd_lotto
+                            .filter(
+                              (game) =>
+                                game?.gameType === "5/90" &&
+                                new Date(game?.drawTime) > now
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                            )[0];
+
+                          if (latestGame590) {
+                            const drawDateTimeString = latestGame590?.drawTime;
+                            const parsedTime = moment(
+                              drawDateTimeString,
+                              "YYYY-MM-DDTHH:mm:ss"
+                            )
+                              .utcOffset("+00:00")
+                              .utc();
+
+                            if (parsedTime.isValid()) {
+                              return parsedTime.toDate();
+                            } else {
+                              return null;
+                            }
+                          }
+                        }
+                      } else if (operatorType === "GD590") {
+                        if (Array.isArray(operatorData?.gd_lotto)) {
+                          const now = new Date();
+
+                          const latestGame590 = operatorData.gd_lotto
+                            .filter(
+                              (game) =>
+                                game?.gameType === "5/90" &&
+                                new Date(game?.drawTime) > now
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                            )[0];
+
+                          if (latestGame590) {
+                            const drawDateTimeString = latestGame590?.drawTime;
+                            const parsedTime = moment(
+                              drawDateTimeString,
+                              "YYYY-MM-DDTHH:mm:ss"
+                            )
+                              .utcOffset("+00:00")
+                              .utc();
+
+                            if (parsedTime.isValid()) {
+                              return parsedTime.toDate();
+                            } else {
+                              return null;
+                            }
+                          }
+                        }
+                      } else if (operatorType === "gd_jackpot") {
+                        if (Array.isArray(operatorData?.gd_lotto)) {
+                          const now = new Date();
+
+                          const latestGame590 = operatorData?.gd_lotto
+                            .filter(
+                              (game) =>
+                                game?.gameType === "5/90" &&
+                                new Date(game?.drawTime) > now
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                            )[0];
+
+                          if (latestGame590) {
+                            const drawDateTimeString = latestGame590?.drawTime;
+                            const parsedTime = moment(
+                              drawDateTimeString,
+                              "YYYY-MM-DDTHH:mm:ss"
+                            )
+                              .utcOffset("+00:00")
+                              .utc();
+
+                            if (parsedTime.isValid()) {
+                              return parsedTime.toDate();
+                            } else {
+                              return null;
+                            }
+                          }
+                        }
+                      } else if (operatorType === "golden_chance") {
+                        const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYY-MM-DDTHH:mm:ss"
+                          "YYYYMMDD HH:mm:ss"
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -645,213 +731,136 @@ const Operator = () => {
                         } else {
                           return null;
                         }
+                      } else {
+                        const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
+                          .utcOffset("+00:00")
+                          .utc();
+                        return parsedTime.toDate();
                       }
-                    }
-                  } else if (operatorType === "golden_chance") {
-                    const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
-                    const parsedTime = moment(
-                      drawDateTimeString,
-                      "YYYYMMDD HH:mm:ss"
-                    )
-                      .utcOffset("+00:00")
-                      .utc();
-
-                    if (parsedTime.isValid()) {
-                      return parsedTime.toDate();
-                    } else {
-                      return null;
-                    }
-                  } else {
-                    const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
-                      .utcOffset("+00:00")
-                      .utc();
-                    return parsedTime.toDate();
-                  }
-                };
-                return (
-                  <div
-                    key={index}
-                    className="col-md-3 col-sm-6 col-xs-12 col-2"
-                  >
-                    <div className="service-wrap mb-5">
-                      <a>
-                        <div className="service-img">
-                          <img
-                            src={imageSrc}
-                            alt=""
-                            className="img-fluid mb-3"
-                          />
-                        </div>
-                      </a>
-                      <div className="service-conten text-center">
-                        {nextGame ? (
-                          <>
-                            <p
-                              style={{
-                                color: "#000",
-                                fontWeight: "bolder",
-                                fontSize: "18px",
-                              }}
+                    };
+                    return (
+                      <motion.div
+                        key={index}
+                        layout
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.25 }}
+                        className="col-md-3 col-sm-6 col-xs-12 col-2"
+                      >
+                        <motion.div
+                          className="service-wrap mb-5"
+                          whileHover={{ y: -6, boxShadow: "0 14px 34px rgba(0,0,0,0.12)" }}
+                          transition={{ type: "spring", stiffness: 260, damping: 24 }}
+                        >
+                          <a>
+                            <motion.div
+                              className="service-img"
+                              initial={{ opacity: 0, scale: 0.96, y: 8 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              transition={{ type: "spring", stiffness: 260, damping: 24, delay: (index % 8) * 0.06 }}
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.98 }}
                             >
-                              <strong>NEXT GAME:</strong>
-                              <br />
-                              {operatorType === "GD570" ||
-                              operatorType === "GD580" ||
-                              operatorType === "GD590" ||
-                              operatorType === "gd_jackpot"
-                                ? latestGame590?.gameName
-                                : nextGame[propertyMapping[operatorType]?.name]}
-                              <br />
-                              <br />
-                              <span>
-                                <small>
-                                  <span>
-                                    <Countdown
-                                      date={
-                                        new Date(
-                                          renderGameTime(operatorType, nextGame)
-                                        )
-                                      }
-                                      renderer={({
-                                        days,
-                                        hours,
-                                        minutes,
-                                        seconds,
-                                      }) => (
-                                        <>
-                                          <span className="countdown_box me-2  fw-bolder">
-                                            {days} days
-                                          </span>
-                                          <span className="countdown_box me-2  fw-bolder">
-                                            {hours} hrs
-                                          </span>
-                                          <span className="countdown_box me-2  fw-bolder">
-                                            {minutes} mins
-                                          </span>
-                                          <span className="countdown_box me-2  fw-bolder">
-                                            {seconds} secs
-                                          </span>
-                                        </>
-                                      )}
-                                    />
-                                  </span>
-                                </small>
-                              </span>
-                            </p>
-                            <p
-                              onClick={() => {
-                                if (operatorType === "GD570") {
-                                  navigate(`/play-game/gd_70`);
-                                } else if (operatorType === "GD580") {
-                                  navigate(`/play-game/gd_80`);
-                                } else if (operatorType === "GD590") {
-                                  navigate(`/play-game/gd_90`);
-                                } else if (operatorType === "golden_chance") {
-                                  const uid = userProfileResponse?.id;
-
-                                  if (uid && userProfileTempToken) {
-                                    const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${userProfileTempToken}`;
-                                    handleOpenModal(url);
-                                  } else {
-                                    toast.error("Pls Login to proceed");
-                                  }
-                                } else {
-                                  const sanitizedOperatorType =
-                                    operatorType === "GH 5/90"
-                                      ? operatorType.replace(/\s|\/+/g, "_")
-                                      : operatorType;
-
-                                  navigate(
-                                    `/play-game/${sanitizedOperatorType}`
-                                  );
-                                }
-                              }}
-                            >
-                              <a className="btn btn-blue btn-sm btn-block w-100 p-2">
-                                Play Now
-                              </a>
-                            </p>
-                          </>
-                        ) : (
-                          <>
-                            <div className="service-img"></div>
-                            <p>Next Game Display at 12:00am</p>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              } else {
-                return null;
-              }
-            })
-          )}
-
-          {/* <div className="col-md-3 col-sm-6 col-xs-12 col-2">
-            <div className="service-wrap mb-5">
-              <a>
-                <div className="service-img">
-                  <img
-                    src="/images/golden_chance.png"
-                    alt=""
-                    className="img-fluid mb-3"
-                  />
-                </div>
-              </a>
-              <div className="service-content text-center">
-                <p>
-                  <strong>NEXT GAME:</strong>
-                  <br />
-                  {latestGame
-                    ? latestGame.name
-                    : " Next Game Display at 12:00am"}
-                  <br />
-                  <br />
-
-                  <span>
-                    <small>
-                      <span>
-                        {timeRemaining !== null ? (
-                          <Countdown
-                            date={moment().add(timeRemaining).toDate()}
-                            renderer={({ days, hours, minutes, seconds }) => (
+                              <motion.img
+                                src={imageSrc}
+                                alt=""
+                                className="img-fluid mb-3"
+                                initial={false}
+                                whileHover={{ scale: 1.02 }}
+                                transition={{ duration: 0.2 }}
+                              />
+                            </motion.div>
+                          </a>
+                          <div className="service-conten text-center">
+                            {nextGame ? (
                               <>
-                                <span className="countdown_box me-2">
-                                  {days}days
-                                </span>
-                                <span className="countdown_box me-2">
-                                  {hours}hrs
-                                </span>
-                                <span className="countdown_box me-2">
-                                  {minutes}mins
-                                </span>
-                                <span className="countdown_box me-2">
-                                  {seconds}secs
-                                </span>
+                                <p
+                                  style={{
+                                    color: "#000",
+                                    fontWeight: "bolder",
+                                    fontSize: "18px",
+                                  }}
+                                >
+                                  <strong>NEXT GAME:</strong>
+                                  <br />
+                                  {operatorType === "GD570" ||
+                                  operatorType === "GD580" ||
+                                  operatorType === "GD590" ||
+                                  operatorType === "gd_jackpot"
+                                    ? latestGame590?.gameName
+                                    : nextGame[propertyMapping[operatorType]?.name]}
+                                  <br />
+                                  <br />
+                                  <span>
+                                    <small>
+                                      <span>
+                                        <MotionCountdown
+                                          date={
+                                            new Date(
+                                              renderGameTime(operatorType, nextGame)
+                                            )
+                                          }
+                                        />
+                                      </span>
+                                    </small>
+                                  </span>
+                                </p>
+                                <p
+                                  onClick={() => {
+                                    if (operatorType === "GD570") {
+                                      navigate(`/play-game/gd_70`);
+                                    } else if (operatorType === "GD580") {
+                                      navigate(`/play-game/gd_80`);
+                                    } else if (operatorType === "GD590") {
+                                      navigate(`/play-game/gd_90`);
+                                    } else if (operatorType === "golden_chance") {
+                                      const uid = userProfileResponse?.id;
+
+                                      if (uid && userProfileTempToken) {
+                                        const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${userProfileTempToken}`;
+                                        handleOpenModal(url);
+                                      } else {
+                                        toast.error("Pls Login to proceed");
+                                      }
+                                    } else {
+                                      const sanitizedOperatorType =
+                                        operatorType === "GH 5/90"
+                                          ? operatorType.replace(/\s|\/+|\//g, "_")
+                                          : operatorType;
+
+                                      navigate(
+                                        `/play-game/${sanitizedOperatorType}`
+                                      );
+                                    }
+                                  }}
+                                >
+                                  <motion.a
+                                    className="btn btn-blue btn-sm btn-block w-100 p-2"
+                                    whileHover={{ scale: [1, 1.05, 1], y: [-1, 0], transition: { duration: 0.6, repeat: Infinity, repeatType: "mirror" } }}
+                                    whileTap={{ scale: 0.98 }}
+                                  >
+                                    Play Now
+                                  </motion.a>
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <div className="service-img shimmer"></div>
+                                <p className="loading-pulse">Next Game Display at 12:00am</p>
                               </>
                             )}
-                          />
-                        ) : (
-                          ""
-                        )}
-                      </span>
-                    </small>
-                  </span>
-                </p>
-                <p>
-                  <a
-                    href="https://goldenchancelotto.com/?RefferalCode=0q6ua5wm"
-                    className="btn btn-blue btn-sm btn-block w-100 p-2"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Play Now
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div> */}
+                          </div>
+                        </motion.div>
+                      </motion.div>
+                    );
+                  } else {
+                    return null;
+                  }
+                })}
+              </AnimatePresence>
+            </LayoutGroup>
+          )}
 
           <section className="container mt-5 mb-5">
             <span className="hidden-sm hidden-xs">

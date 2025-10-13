@@ -2585,9 +2585,9 @@ const PlayGames = () => {
                   {id === "NNP" && (
                     <div>
                       <h5>Select only 3 Numbers</h5>
-                      <div className="numbers-container">{checkboxes}</div>
+                      <div className="numbers-container fade-in slide-up">{checkboxes}</div>
                       <h5 className="mt-5">Then add 2 Alphabets</h5>
-                      <div className="alphabets-container">
+                      <div className="alphabets-container fade-in slide-up">
                         {alphabetsCheckboxes}
                       </div>
                     </div>
@@ -2595,7 +2595,7 @@ const PlayGames = () => {
                   {id !== "NNP" && (
                     <>
                       {selectedBetType === "AGAINST" ? (
-                        <div className="numbers-container">
+                        <div className="numbers-container fade-in slide-up">
                           {Array.from(
                             {
                               length:
@@ -2646,7 +2646,7 @@ const PlayGames = () => {
                       ) : null}
 
                       {id === "gd_jackpot" && (
-                        <div className="numbers-container">
+                        <div className="numbers-container fade-in slide-up">
                           {Array.from(
                             {
                               length:
@@ -2685,7 +2685,7 @@ const PlayGames = () => {
                       )}
 
                       {selectedBetType !== "AGAINST" && id !== "gd_jackpot" && (
-                        <div className="numbers-container">{checkboxes}</div>
+                        <div className="numbers-container fade-in slide-up">{checkboxes}</div>
                       )}
                     </>
                   )}

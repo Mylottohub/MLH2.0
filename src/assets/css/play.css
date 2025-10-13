@@ -25,9 +25,10 @@
 
 .numbers-container,
 .alphabets-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+  gap: 12px;
+  align-items: center;
 }
 
 .numbers-container {
@@ -46,16 +47,23 @@ input.chk-btn {
 }
 
 input.chk-btn+label {
-    padding: 18px;
-    color: #406777;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #2d5563;
     text-align: center;
-    font-size: 24px;
-    width: 70px;
-    height: 70px;
-    border: 3px solid #406777;
+    font-size: 22px;
+    font-weight: 700;
+    width: 64px;
+    height: 64px;
+    border: 2px solid rgba(64, 103, 119, 0.35);
     box-sizing: border-box;
-    border-radius: 50px;
-    margin: 3px;
+    border-radius: 999px;
+    margin: 0;
+    background: linear-gradient(180deg, #ffffff, #f9fbfc);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    transition: all .22s ease;
 }
 
 #sport__bet {
@@ -66,22 +74,16 @@ input.chk-btn+label {
 }
 @media (max-width: 767px) {
     input.chk-btn + label {
-        padding: 0;
-        color: #406777;
-        text-align: center;
-        font-size: 14px;
-        width: 40px; 
-        height: 40px;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin: 2px; 
+        font-size: 16px;
+        width: 46px; 
+        height: 46px;
+        margin: 0; 
     }
 
     .numbers-container,
     .alphabets-container {
-        gap: 5px; 
+        grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+        gap: 8px; 
     }
 
     #sport__bet-num button {
@@ -107,13 +109,25 @@ input.chk-btn+label {
 }
 
 input.chk-btn:not(:checked)+label:hover {
-    box-shadow: 0px 1px 3px;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.10);
 }
 
 input.chk-btn+label:active,
 input.chk-btn:checked+label {
-    box-shadow: 0px 0px 3px inset;
-    background: #406777;
+    transform: translateY(0);
+    box-shadow: 0 0 0 3px rgba(64, 103, 119, 0.15) inset, 0 8px 22px rgba(0,0,0,0.10);
+    background: linear-gradient(180deg, #2f6a7c, #234e5b);
     color: #FFF;
+    border-color: transparent;
+}
 
+/* Against mode coloring uses sibling selectors already present */
+.top-selected + label {
+    background: linear-gradient(180deg, #e74c3c, #c0392b) !important;
+    border-color: transparent !important;
+}
+.bottom-selected + label {
+    background: linear-gradient(180deg, #27ae60, #1e8449) !important;
+    border-color: transparent !important;
 }

@@ -6,6 +6,7 @@ import { useState } from "react";
 import Withdraw from "./Payment/Withdraw";
 import Deposit from "./Payment/Deposit";
 import { useGetProfileUser } from "../react-query";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -32,9 +33,15 @@ const Header = () => {
     return amount;
   };
 
+  const fadeSlideIn = {
+    initial: { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    transition: { type: "spring", stiffness: 200, damping: 20 },
+  };
+
   return (
-    <div>
-      <header className="header-area">
+    <motion.div initial={fadeSlideIn.initial} animate={fadeSlideIn.animate} transition={fadeSlideIn.transition}>
+      <header className="header-area fade-in">
         <div className="header-top-area hidden-sm hidden-xs">
           <div className="container">
             <div className="row">
@@ -45,12 +52,15 @@ const Header = () => {
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate("/")}
                   >
-                    <img
+                    <motion.img
                       className="img-fluid"
                       width="113"
                       height="67"
                       src={images.logo}
                       alt={images.logo}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 20 }}
                     />
                   </a>
                 </div>
@@ -62,40 +72,44 @@ const Header = () => {
                     style={{ padding: "20px", width: "70%" }}
                   >
                     {isLoadingUserProfile ? (
-                      <p>Balance Loading...</p>
+                      <p className="loading-pulse">Balance Loading...</p>
                     ) : userProfileResponse ? (
                       <>
-                        <div className="col-md-3 col-xs-6 fw-bolder">
+                        <motion.div className="col-md-3 col-xs-6 fw-bolder balance-display" key={userProfileResponse?.wallet} initial={{ scale: 0.98, opacity: 0.9 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25 }}>
                           <small>₦{userProfileResponse?.wallet}</small>
                           <br />
                           Wallet Balance
-                        </div>
-                        <div className="col-md-3 col-xs-6 fw-bolder">
+                        </motion.div>
+                        <motion.div className="col-md-3 col-xs-6 fw-bolder balance-display" key={userProfileResponse?.wwallet} initial={{ scale: 0.98, opacity: 0.9 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25 }}>
                           <small>
                             ₦{formatAmount(userProfileResponse?.wwallet)}
                           </small>
                           <br />
                           Winnings
-                        </div>
+                        </motion.div>
                       </>
                     ) : null}
 
                     <div className="col-md-6 mt-2">
-                      <a
+                      <motion.a
                         onClick={() => handleDeposit()}
-                        className="btn btn-blue"
+                        className="btn btn-blue chip"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
                       >
                         <small className="fw-bolder">Deposit</small>
-                      </a>{" "}
+                      </motion.a>{" "}
                       &nbsp;&nbsp;
-                      <button
+                      <motion.button
                         onClick={() => handleWithdraw()}
-                        className="btn btn-trans2_withraw"
+                        className="btn btn-trans2_withraw chip"
                         data-toggle="modal"
                         data-target="#withdraw_modal"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
                       >
                         <small className="fw-bolder">Withdraw</small>
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                 </div>
@@ -104,53 +118,69 @@ const Header = () => {
           </div>
         </div>
       </header>
-      <div className="mobile__header-hide p-3">
+      <div className="mobile__header-hide p-3 slide-up">
         <table cellPadding="5">
           <tbody>
             <tr>
               <td>
                 <a onClick={() => navigate("/")}>
-                  <img
+                  <motion.img
                     src={images.logo}
                     alt=""
                     width="107"
                     height="67"
                     className="meg_logo"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
                   />
                 </a>
               </td>
               <td valign="middle">
-                <p>
+                <motion.p className="balance-display" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
                   {userProfileResponse?.username}
                   <br />
                   <strong>User ID:</strong> {userProfileResponse?.id}
-                </p>
+                </motion.p>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <BModal
-        backdrop="static"
-        keyboard={false}
-        show={isOpen}
-        onHide={handleClose}
-        size="md"
-      >
-        <Withdraw />
-      </BModal>
+      {/* Modals with AnimatePresence */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <BModal
+              backdrop="static"
+              keyboard={false}
+              show={isOpen}
+              onHide={handleClose}
+              size="md"
+            >
+              <Withdraw />
+            </BModal>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <BModal
-        backdrop="static"
-        keyboard={false}
-        show={isOpenDeposit}
-        onHide={handleCloseDeposit}
-        size="md"
-      >
-        <Deposit />
-      </BModal>
-    </div>
+      <AnimatePresence>
+        {isOpenDeposit && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <BModal
+              backdrop="static"
+              keyboard={false}
+              show={isOpenDeposit}
+              onHide={handleCloseDeposit}
+              size="md"
+            >
+              <Deposit />
+            </BModal>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
