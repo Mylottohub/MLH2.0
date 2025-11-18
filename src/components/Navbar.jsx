@@ -47,7 +47,7 @@ const Navbar = () => {
     try {
       dispatch(logout());
       toast.success("Logged Out Successfully");
-       window.location.href = "https://mylottohub.com/";
+      window.location.href = "https://mylottohub.com/";
     } catch (error) {
       // console.log(error);
     }
@@ -88,7 +88,12 @@ const Navbar = () => {
   };
 
   return (
-    <motion.div initial={fadeSlideIn.initial} animate={fadeSlideIn.animate} transition={fadeSlideIn.transition} className="fade-in">
+    <motion.div
+      initial={fadeSlideIn.initial}
+      animate={fadeSlideIn.animate}
+      transition={fadeSlideIn.transition}
+      className="fade-in"
+    >
       <Download />
 
       {token && expires && new Date(expires) > new Date() ? (
@@ -96,7 +101,11 @@ const Navbar = () => {
           <div className="mobile__header">
             <Header />
 
-            <nav className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""}`}>
+            <nav
+              className={`navbar navbar-expand-lg app__navbar-bg ${
+                isScrolled ? "navbar-scrolled" : ""
+              }`}
+            >
               <div className="container">
                 {/* left spacer */}
                 <p></p>
@@ -115,7 +124,10 @@ const Navbar = () => {
                             <FaUser className="fa-2x" />
                             <motion.span
                               className="live-dot"
-                              animate={{ scale: [1, 1.3, 1], opacity: [0.8, 1, 0.8] }}
+                              animate={{
+                                scale: [1, 1.3, 1],
+                                opacity: [0.8, 1, 0.8],
+                              }}
                               transition={{ duration: 1.2, repeat: Infinity }}
                             />
                           </span>
@@ -185,7 +197,7 @@ const Navbar = () => {
                               &nbsp;&nbsp;Create Chart
                             </a>
                           </li>{" "}
-                           <li>
+                          <li>
                             <a
                               className="dropdown-item p-2  fw-bolder"
                               onClick={() => navigate("/timetable")}
@@ -230,7 +242,12 @@ const Navbar = () => {
                       >
                         Play now
                       </a>
-                      <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
+                      <motion.ul
+                        className="dropdown-menu"
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.18 }}
+                      >
                         <li>
                           <a
                             className="dropdown-item p-2 "
@@ -310,7 +327,12 @@ const Navbar = () => {
                       >
                         More
                       </a>
-                      <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
+                      <motion.ul
+                        className="dropdown-menu"
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.18 }}
+                      >
                         <li>
                           <a
                             className="dropdown-item p-2 "
@@ -364,13 +386,18 @@ const Navbar = () => {
                             ID: {userProfileResponse?.id}
                           </small>
                         </a>
-                        <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
+                        <motion.ul
+                          className="dropdown-menu"
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.18 }}
+                        >
                           <li onClick={() => handleUserProfile()}>
                             <a className="dropdown-item p-2 fw-bolder">
                               &nbsp;&nbsp;User Profile
                             </a>
                           </li>
-                          <li onClick={() => navigate("/wallet")}> 
+                          <li onClick={() => navigate("/wallet")}>
                             <a className="dropdown-item p-2 fw-bolder">
                               &nbsp;&nbsp;Wallet
                             </a>
@@ -444,21 +471,40 @@ const Navbar = () => {
               <>
                 <div className="row">
                   <div className="col-10">
-                    <motion.small className="fw-bolder" style={{ fontSize: "17px" }} key={userProfileResponse?.wallet} initial={{ scale: 0.98, opacity: 0.9 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25 }}>
+                    <motion.small
+                      className="fw-bolder"
+                      style={{ fontSize: "17px" }}
+                      key={userProfileResponse?.wallet}
+                      initial={{ scale: 0.98, opacity: 0.9 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.25 }}
+                    >
                       ₦{userProfileResponse?.wallet}
                       <br />
                       Wallet Balance
                     </motion.small>
                     <br />
                     <br />
-                    <motion.a onClick={() => handleDeposit()} className="btn btn-blue" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                    <motion.a
+                      onClick={() => handleDeposit()}
+                      className="btn btn-blue"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
                       <small style={{ fontSize: "17px" }} className="fw-bolder">
                         Deposit
                       </small>
                     </motion.a>
                   </div>
                   <div className="col-2">
-                    <motion.small className="fw-bolder" style={{ fontSize: "17px" }} key={userProfileResponse?.wwallet} initial={{ scale: 0.98, opacity: 0.9 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25 }}>
+                    <motion.small
+                      className="fw-bolder"
+                      style={{ fontSize: "17px" }}
+                      key={userProfileResponse?.wwallet}
+                      initial={{ scale: 0.98, opacity: 0.9 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.25 }}
+                    >
                       ₦{formatAmount(userProfileResponse?.wwallet)}
                       <br />
                       Winnings
@@ -484,7 +530,11 @@ const Navbar = () => {
           </div>
         </>
       ) : (
-        <nav className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""}`}>
+        <nav
+          className={`navbar navbar-expand-lg app__navbar-bg ${
+            isScrolled ? "navbar-scrolled" : ""
+          }`}
+        >
           <div className="container">
             <a
               className="navbar-brand"
@@ -520,7 +570,12 @@ const Navbar = () => {
                   >
                     Play now
                   </a>
-                  <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
+                  <motion.ul
+                    className="dropdown-menu"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
                     <li>
                       <a
                         className="dropdown-item p-2"
@@ -600,7 +655,12 @@ const Navbar = () => {
                   >
                     More
                   </a>
-                  <motion.ul className="dropdown-menu" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
+                  <motion.ul
+                    className="dropdown-menu"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
                     <li>
                       <a
                         className="dropdown-item p-2 "
@@ -652,6 +712,7 @@ const Navbar = () => {
                     </motion.span>
                   </a>
                   <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com">
+                    {/* <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"> */}
                     <motion.span
                       className="btn btn-yellow  "
                       whileHover={{ scale: 1.03 }}
@@ -746,7 +807,11 @@ const Navbar = () => {
       {/* Modals with AnimatePresence */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             <BModal
               backdrop="static"
               keyboard={false}
@@ -762,7 +827,11 @@ const Navbar = () => {
 
       <AnimatePresence>
         {isOpenDeposit && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             <BModal
               backdrop="static"
               keyboard={false}
@@ -778,7 +847,11 @@ const Navbar = () => {
 
       <AnimatePresence>
         {isOpenUser && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             <BModal show={isOpenUser} onHide={handleUserClose} size="md">
               <UserProfile />
             </BModal>

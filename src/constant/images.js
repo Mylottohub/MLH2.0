@@ -21,6 +21,7 @@ import easywin from "../assets/images/easywin.png";
 import gdlogo from "../assets/images/gd_lotto.png";
 import apksure from "../assets/images/apkpure.jpg";
 import upto from "../assets/images/upto.png";
+import LSLGA from "../assets/images/LSLGA.png";
 
 const allImages = {
   easywin,
@@ -45,7 +46,8 @@ const allImages = {
   paystack,
   payment_gate,
   apksure,
-  upto
+  upto,
+  LSLGA
 };
 
 export default allImages;
