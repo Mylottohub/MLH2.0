@@ -26,6 +26,13 @@ const Navbar = () => {
 
   const [isOpenUser, setIsOpenUser] = useState(false);
 
+  // Mobile avatar dropdown section toggles
+  const [isMobileUserSectionOpen, setIsMobileUserSectionOpen] = useState(false);
+  const [isMobileWalletSectionOpen, setIsMobileWalletSectionOpen] =
+    useState(false);
+  const [isMobileToolsSectionOpen, setIsMobileToolsSectionOpen] =
+    useState(false);
+
   const handleUserClose = () => setIsOpenUser(false);
   const handleUserOpen = () => setIsOpenUser(true);
 
@@ -139,85 +146,160 @@ const Navbar = () => {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.18 }}
                         >
-                          <li onClick={() => handleUserProfile()}>
-                            <a className="dropdown-item p-2 fw-bolder">
-                              &nbsp;&nbsp;User Profile
-                            </a>
-                          </li>
-                          <li onClick={() => navigate("/wallet")}>
-                            <a className="dropdown-item p-2  fw-bolder">
-                              &nbsp;&nbsp;Wallet
-                            </a>
-                          </li>
+                          {/* User Profile section */}
                           <li>
-                            <a
-                              className="dropdown-item p-2  fw-bolder"
-                              onClick={() => handleDeposit()}
+                            <button
+                              type="button"
+                              className="dropdown-item p-2 fw-bolder d-flex justify-content-between align-items-center"
+                              onClick={() =>
+                                setIsMobileUserSectionOpen((prev) => !prev)
+                              }
                             >
-                              &nbsp;&nbsp;Deposit
-                            </a>
+                              <a className="fw-bolder text-decoration-none text-dark" onClick={() => navigate("/profile")}>&nbsp;&nbsp;User Profile</a>
+                              <span>{isMobileUserSectionOpen ? "−" : "+"}</span>
+                            </button>
                           </li>
+                          {isMobileUserSectionOpen && (
+                            <>
+                              <li onClick={() => handleUserProfile()}>
+                                <a className="dropdown-item ps-4 p-2 fw-bolder">
+                                  Profile
+                                </a>
+                              </li>
+                              <li onClick={() => navigate("/transactions")}>
+                                <a className="dropdown-item ps-4 p-2 fw-bolder">
+                                  Transactions
+                                </a>
+                              </li>
+                              <li onClick={() => navigate("/referral")}>
+                                <a className="dropdown-item ps-4 p-2 fw-bolder">
+                                  Referral
+                                </a>
+                              </li>
+                              <li>
+                                <hr className="dropdown-divider" />
+                              </li>
+                            </>
+                          )}
+
+                          {/* Wallet section */}
                           <li>
-                            <a
-                              className="dropdown-item p-2  fw-bolder"
-                              onClick={() => handleWithdraw()}
+                            <button
+                              type="button"
+                              className="dropdown-item p-2 fw-bolder d-flex justify-content-between align-items-center"
+                              style={{ fontSize: "15px" }}
+                              onClick={() =>
+                                setIsMobileWalletSectionOpen((prev) => !prev)
+                              }
                             >
-                              &nbsp;&nbsp;Withdraw
-                            </a>
+                              <a className="fw-bolder text-decoration-none text-dark" >&nbsp;&nbsp;Wallet</a>
+                              <span>{isMobileWalletSectionOpen ? "−" : "+"}</span>
+                            </button>
                           </li>
+                          {isMobileWalletSectionOpen && (
+                            <>
+                              <li onClick={() => navigate("/wallet")}>
+                                <a className="dropdown-item ps-4 p-2 fw-bolder">
+                                  Wallet Information
+                                </a>
+                              </li>
+                              <li>
+                                <a
+                                  className="dropdown-item ps-4 p-2 fw-bolder"
+                                  onClick={() => handleDeposit()}
+                                >
+                                  Deposit
+                                </a>
+                              </li>
+                              <li>
+                                <a
+                                  className="dropdown-item ps-4 p-2 fw-bolder"
+                                  onClick={() => handleWithdraw()}
+                                >
+                                  Withdraw
+                                </a>
+                              </li>
+                              <li>
+                                <hr className="dropdown-divider" />
+                              </li>
+                            </>
+                          )}
+
+                          {/* Results */}
                           <li>
                             <a
-                              className="dropdown-item p-2  fw-bolder"
-                              onClick={() => navigate("/transactions")}
-                            >
-                              &nbsp;&nbsp;Transactions
-                            </a>
-                          </li>{" "}
-                          <li>
-                            <a
-                              className="dropdown-item p-2  fw-bolder"
+                              className="dropdown-item p-2 fw-bolder"
                               onClick={() => navigate("/result")}
                             >
                               &nbsp;&nbsp;Results
                             </a>
-                          </li>{" "}
+                          </li>
+                          <li>
+                            <hr className="dropdown-divider" />
+                          </li>
+
+                          {/* Tools section */}
+                          <li>
+                            <button
+                              type="button"
+                              className="dropdown-item p-2 fw-bolder d-flex justify-content-between align-items-center"
+                              style={{ fontSize: "15px" }}
+                              onClick={() =>
+                                setIsMobileToolsSectionOpen((prev) => !prev)
+                              }
+                            >
+                              <a className="fw-bolder text-decoration-none text-dark" >&nbsp;&nbsp;Tools</a>
+                              <span>{isMobileToolsSectionOpen ? "−" : "+"}</span>
+                            </button>
+                          </li>
+                          {isMobileToolsSectionOpen && (
+                            <>
+                              <li>
+                                <a
+                                  className="dropdown-item ps-4 p-2 fw-bolder"
+                                  onClick={() => navigate("/forecast")}
+                                >
+                                  Quick Forecast
+                                </a>
+                              </li>
+                              <li>
+                                <a
+                                  className="dropdown-item ps-4 p-2 fw-bolder"
+                                  onClick={() => navigate("/create-chart")}
+                                >
+                                  Create Chart
+                                </a>
+                              </li>
+                              <li>
+                                <a
+                                  className="dropdown-item ps-4 p-2 fw-bolder"
+                                  onClick={() => navigate("/timetable")}
+                                >
+                                  Time Table
+                                </a>
+                              </li>
+                              <li>
+                                <hr className="dropdown-divider" />
+                              </li>
+                            </>
+                          )}
+
+                          {/* Lotto Ladies & Logout */}
                           <li>
                             <a
-                              className="dropdown-item p-2  fw-bolder"
-                              onClick={() => navigate("/forecast")}
+                              className="dropdown-item p-2 fw-bolder"
+                              onClick={() => navigate("/lotto-ladies")}
                             >
-                              &nbsp;&nbsp;Quick Forecast
-                            </a>
-                          </li>{" "}
-                          <li>
-                            <a
-                              className="dropdown-item p-2  fw-bolder"
-                              onClick={() => navigate("/create-chart")}
-                            >
-                              &nbsp;&nbsp;Create Chart
-                            </a>
-                          </li>{" "}
-                          <li>
-                            <a
-                              className="dropdown-item p-2  fw-bolder"
-                              onClick={() => navigate("/timetable")}
-                            >
-                              &nbsp;&nbsp;Timetable
-                            </a>
-                          </li>{" "}
-                          <li onClick={() => navigate("/referral")}>
-                            <a className="dropdown-item p-2  fw-bolder">
-                              &nbsp;&nbsp;Referral
+                              &nbsp;&nbsp;Lotto Ladies
                             </a>
                           </li>
                           <li>
                             <motion.a
                               onClick={() => handleLogout()}
-                              className="dropdown-item p-2  fw-bolder"
+                              className="dropdown-item p-2 fw-bolder"
                               whileTap={{ scale: 0.96, opacity: 0.9 }}
                             >
-                              {" "}
-                              &nbsp;&nbsp; Logout
+                              &nbsp;&nbsp;Logout
                             </motion.a>
                           </li>
                         </motion.ul>
@@ -284,38 +366,60 @@ const Navbar = () => {
                       </a>
                     </li>
 
-                    <li className="nav-item">
+                    <li className="nav-item dropdown">
                       <a
-                        className="nav-link text-white me-3  app__proforecast"
-                        onClick={() => navigate("/create-chart")}
+                        className="nav-link dropdown-toggle text-white me-3"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
                       >
-                        Create Charts
+                        Tools
                       </a>
+                      <motion.ul
+                        className="dropdown-menu"
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.18 }}
+                      >
+                        <li>
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/forecast")}
+                          >
+                            Quick Forecast
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/create-chart")}
+                          >
+                            Create Charts
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => navigate("/timetable")}
+                          >
+                            Time Table
+                          </a>
+                        </li>
+                      </motion.ul>
                     </li>
 
-                    <li className="nav-item">
-                      <a
-                        className="nav-link text-white me-3 "
-                        onClick={() => navigate("/timetable")}
-                      >
-                        Time Table
-                      </a>
-                    </li>
-
-                    <li
-                      onClick={() => navigate("/forecast")}
-                      className="nav-item"
-                    >
-                      <a className="nav-link text-white me-3 app__quick-forecast">
-                        {" "}
-                        Quick Forecast
-                      </a>
-                    </li>
                     <li
                       className="nav-item"
                       onClick={() => navigate("/tutorials")}
                     >
                       <a className="nav-link text-white me-3 ">Tutorials</a>
+                    </li>
+
+                    <li
+                      className="nav-item"
+                      onClick={() => navigate("/lotto-ladies")}
+                    >
+                      <a className="nav-link text-white me-3 ">Lotto Ladies</a>
                     </li>
 
                     <li className="nav-item dropdown">
@@ -392,17 +496,39 @@ const Navbar = () => {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.18 }}
                         >
+                          <li>
+                            <h6 className="dropdown-header text-uppercase">
+                              User Profile
+                            </h6>
+                          </li>
                           <li onClick={() => handleUserProfile()}>
                             <a className="dropdown-item p-2 fw-bolder">
-                              &nbsp;&nbsp;User Profile
+                              &nbsp;&nbsp;Profile
                             </a>
+                          </li>
+                          <li onClick={() => navigate("/transactions")}>
+                            <a className="dropdown-item p-2 fw-bolder">
+                              &nbsp;&nbsp;Transactions
+                            </a>
+                          </li>
+                          <li onClick={() => navigate("/referral")}>
+                            <a className="dropdown-item p-2 fw-bolder">
+                              &nbsp;&nbsp;Referral
+                            </a>
+                          </li>
+                          <li>
+                            <hr className="dropdown-divider" />
+                          </li>
+                          <li>
+                            <h6 className="dropdown-header text-uppercase">
+                              Wallet
+                            </h6>
                           </li>
                           <li onClick={() => navigate("/wallet")}>
                             <a className="dropdown-item p-2 fw-bolder">
                               &nbsp;&nbsp;Wallet
                             </a>
                           </li>
-
                           <li>
                             <a
                               className="dropdown-item p-2 fw-bolder"
@@ -420,17 +546,7 @@ const Navbar = () => {
                             </a>
                           </li>
                           <li>
-                            <a
-                              className="dropdown-item p-2 fw-bolder"
-                              onClick={() => navigate("/transactions")}
-                            >
-                              &nbsp;&nbsp;Transactions
-                            </a>
-                          </li>
-                          <li onClick={() => navigate("/referral")}>
-                            <a className="dropdown-item p-2 fw-bolder">
-                              &nbsp;&nbsp;Referral
-                            </a>
+                            <hr className="dropdown-divider" />
                           </li>
                           <li>
                             <a
@@ -794,8 +910,9 @@ const Navbar = () => {
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                   >
-                    Sign In
-                  </a>
+                   {/* <a  className="nav-link text-dark fw-bolder me-3" href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com">
+                    Sign In*/}
+                  </a> 
                 </li>
                 <hr />
               </ul>

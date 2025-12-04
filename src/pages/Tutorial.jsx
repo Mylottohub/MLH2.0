@@ -52,6 +52,42 @@ const Tutorial = () => {
           frameBorder="0"
           allowfullscreen
         ></iframe>
+
+        <table className="table table-express mt-5">
+          <tbody>
+            <tr>
+              <th className="text-uppercase">
+                How to Play Direct Bundle Jackpot
+              </th>
+            </tr>
+          </tbody>
+        </table>
+
+        <iframe
+          width="100%"
+          height="355"
+          src="https://www.youtube.com/embed/wahUIabPbOY?si=OWa6x15yKNMvnvri"
+          title="How to Play Direct Bundle Jackpot"
+          frameBorder="0"
+          allowfullscreen
+        ></iframe>
+
+        <table className="table table-express mt-5">
+          <tbody>
+            <tr>
+              <th className="text-uppercase">NNP Game Tutorial</th>
+            </tr>
+          </tbody>
+        </table>
+
+        <iframe
+          width="100%"
+          height="355"
+          src="https://www.youtube.com/embed/7zwcYXIr95s?si=wUKNUqOZp1u3M5-Y" 
+          title="NNP Game Tutorial"
+          frameBorder="0"
+          allowfullscreen
+        ></iframe>
       </div>
 
       <Footer />

@@ -16,13 +16,18 @@ const schema = yup.object().shape({
   g_recaptcha_response: yup.string(),
   // username: yup.string().required("This is a required field"),
   useEmail: yup.boolean().required(),
+  // email: yup
+  //   .string()
+  //   .email()
+  //   .when("useEmail", {
+  //     is: true,
+  //     then: (schema) => schema.required("This is a required field"),
+  //   }),
   email: yup
-    .string()
-    .email()
-    .when("useEmail", {
-      is: true,
-      then: (schema) => schema.required("This is a required field"),
-    }),
+  .string()
+  .email("Invalid email address")
+  .required("This is a required field"),
+
   phone: yup
     .string()
     .min(11)
@@ -237,6 +242,7 @@ const Register = () => {
                     )}
                   </div>
                 ) : (
+                <>
                   <div className="mb-3">
                     <input
                       type="number"
@@ -255,6 +261,21 @@ const Register = () => {
                       </p>
                     )}
                   </div>
+                   <div className="mb-3">
+                    <input
+                      type="email"
+                      className="form-control mb-2 p-3"
+                      placeholder="Email Address"
+                      name="email"
+                      {...register("email")}
+                    />
+                    {errors.email && (
+                      <p className="text-danger text-capitalize">
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+             </>
                 )}
 
                 <div className="mb-3">

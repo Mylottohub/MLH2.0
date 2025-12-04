@@ -31,6 +31,7 @@ import SportForecaster from "../components/SportsBetting/SportForecaster";
 import BettingAll from "../components/SportsBetting/BettingAll";
 import { GdLotto } from "../pages/GdLotto";
 import AllSportForecaster from "../components/SportsBetting/AllSportForecaster";
+import LottoLadies from "../pages/LottoLadies";
 
 export const routes = [
   {
@@ -242,6 +243,12 @@ export const routes = [
     id: 33,
     path: "/all-forecast",
     element: <AllSportForecaster />,
+    protected: false,
+  },
+  {
+    id: 34,
+    path: "/lotto-ladies",
+    element: <LottoLadies />,
     protected: false,
   },
 ];
