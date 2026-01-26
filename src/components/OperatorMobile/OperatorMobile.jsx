@@ -362,7 +362,7 @@ const OperatorMobile = () => {
                               <tr valign="top">
                                 <td width="41%">
                                   <motion.img
-                                    src="/images/afrimillions.png"
+                                    src={allImages.afrimillions}
                                     alt="AfriMillions"
                                     className="img-fluid"
                                     initial={{ opacity: 0, scale: 0.96, y: 6 }}
