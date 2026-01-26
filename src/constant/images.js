@@ -22,7 +22,10 @@ import gdlogo from "../assets/images/gd_lotto.png";
 import apksure from "../assets/images/apkpure.jpg";
 import upto from "../assets/images/upto.png";
 import LSLGA from "../assets/images/LSLGA.png";
-import xcape from "../assets/images/xcape.png";
+import xcape from "../assets/images/xcape.jpg";
+import eagle from "../assets/images/eagle.jpg";
+import luckyrise from "../assets/images/luckyrise.jpg";
+import afrimillions from "../assets/images/affrimilli.svg";
 
 const allImages = {
   easywin,
@@ -49,7 +52,10 @@ const allImages = {
   apksure,
   upto,
   LSLGA,
-  xcape
+  xcape,
+  eagle,
+  luckyrise,
+  afrimillions
 };
 
 export default allImages;

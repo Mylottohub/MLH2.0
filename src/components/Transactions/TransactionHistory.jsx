@@ -92,7 +92,7 @@ const TransactionHistory = () => {
       .then((response) => {
         setWithdraw(response.data.data);
       })
-      .catch((error) => {})
+      .catch((error) => { })
       .finally(() => {
         setIsLoading(false);
       });
@@ -523,9 +523,8 @@ const TransactionHistory = () => {
                     {transaction?.links?.map((link, index) => (
                       <div key={index}>
                         <li
-                          className={`page-item ${
-                            link?.active ? "active" : ""
-                          }`}
+                          className={`page-item ${link?.active ? "active" : ""
+                            }`}
                         >
                           <a
                             className="page-link"
@@ -750,9 +749,8 @@ const TransactionHistory = () => {
                     {deposit?.links?.map((link, index) => (
                       <div key={index}>
                         <li
-                          className={`page-item ${
-                            link?.active ? "active" : ""
-                          }`}
+                          className={`page-item ${link?.active ? "active" : ""
+                            }`}
                         >
                           <a
                             className="page-link"
@@ -979,9 +977,8 @@ const TransactionHistory = () => {
                     {withdraw?.links?.map((link, index) => (
                       <div key={index}>
                         <li
-                          className={`page-item ${
-                            link?.active ? "active" : ""
-                          }`}
+                          className={`page-item ${link?.active ? "active" : ""
+                            }`}
                         >
                           <a
                             className="page-link"
@@ -1028,6 +1025,7 @@ const TransactionHistory = () => {
                 <option value="gh_5_90">GH 5/90</option>
                 <option value="gd_jackpot">Gd Jackpot</option>
                 <option value="nnp">NNP</option>
+                <option value="luckyworldgames">CRASH GAME</option>
               </select>
               <i
                 className="bi bi-chevron-down position-absolute"
@@ -1110,6 +1108,8 @@ const TransactionHistory = () => {
                                   <td>{record?.TikcetId}</td>
                                 ) : selectedOperator === "golden_chance" ? (
                                   <td>{record?.TikcetId}</td>
+                                ) : selectedOperator === "luckyworldgames" ? (
+                                  <td>{record?.provider_tx_id}</td>
                                 ) : selectedOperator === "nnp" ? (
                                   <td>{record?.TikcetId}</td>
                                 ) : (
@@ -1121,7 +1121,6 @@ const TransactionHistory = () => {
                                   <span
                                     onClick={() => {
                                       const uid = userProfileResponse?.id;
-                                      // const tempToken = userProfileTempToken;
 
                                       if (uid && userProfileTempToken) {
                                         const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${userProfileTempToken}`;
@@ -1132,9 +1131,12 @@ const TransactionHistory = () => {
                                   >
                                     View Here
                                   </span>
+                                ) : selectedOperator === "luckyworldgames" ? (
+                                  record?.game || "-"
                                 ) : (
                                   record?.mgametype || "-"
                                 )}
+
                               </td>
 
                               <td>
@@ -1155,6 +1157,8 @@ const TransactionHistory = () => {
                                   <td>{record?.drawname}</td>
                                 ) : selectedOperator === "golden_chance" ? (
                                   <td>{record?.operator_type}</td>
+                                ) : selectedOperator === "luckyworldgames" ? (
+                                  <td>CRASH GAME</td>
                                 ) : selectedOperator === "lotto_nigeria" ? (
                                   <td>{record?.drawAlias}</td>
                                 ) : (
@@ -1215,11 +1219,10 @@ const TransactionHistory = () => {
                             return (
                               <div
                                 key={index}
-                                className={`mb-5 mt-3 ${
-                                  selectedOperator === "golden_chance"
-                                    ? ""
-                                    : "p-3"
-                                }`}
+                                className={`mb-5 mt-3 ${selectedOperator === "golden_chance"
+                                  ? ""
+                                  : "p-3"
+                                  }`}
                                 style={{ background: "#f5f7f8" }}
                               >
                                 <div>
@@ -1249,6 +1252,8 @@ const TransactionHistory = () => {
                                         <td>{record?.TikcetId}</td>
                                       ) : selectedOperator === "gd_jackpot" ? (
                                         <td>{record?.TikcetId}</td>
+                                      ) : selectedOperator === "luckyworldgames" ? (
+                                        <td>{record?.provider_tx_id}</td>
                                       ) : selectedOperator === "nnp" ? (
                                         <td>{record?.TikcetId}</td>
                                       ) : (
@@ -1264,7 +1269,11 @@ const TransactionHistory = () => {
                                     }}
                                   >
                                     <span className="fw-bolder">Game:</span>
-                                    <span> {record?.mgametype || "-"}</span>
+                                    <span>
+                                      {selectedOperator === "luckyworldgames"
+                                        ? record?.game || "-"
+                                        : record?.mgametype || "-"}
+                                    </span>
 
                                     {selectedOperator === "golden_chance" && (
                                       <>
@@ -1316,6 +1325,8 @@ const TransactionHistory = () => {
                                         <td>{record?.drawname}</td>
                                       ) : selectedOperator === "nnp" ? (
                                         <td>{record?.drawname}</td>
+                                      ) : selectedOperator === "luckyworldgames" ? (
+                                        <td>CRASH GAME</td>
                                       ) : (
                                         <td>{record?.GameName}</td>
                                       )}
@@ -1371,9 +1382,8 @@ const TransactionHistory = () => {
                     {withdraw?.links?.map((link, index) => (
                       <div key={index}>
                         <li
-                          className={`page-item ${
-                            link?.active ? "active" : ""
-                          }`}
+                          className={`page-item ${link?.active ? "active" : ""
+                            }`}
                         >
                           <a
                             className="page-link"
@@ -1507,117 +1517,116 @@ const TransactionHistory = () => {
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "lotto_nigeria" ? (
                     <span> {selectedBet?.wagerID}</span>
+                  ) : selectedOperator === "luckyworldgames" ? (
+                    <span> {selectedBet?.provider_tx_id}</span>
                   ) : (
                     <span> {selectedBet?.TSN}</span>
                   )}
                 </span>
               </p>
-              <p style={{ display: "flex", justifyContent: "space-between" }}>
-                <span className="fw-bolder">LINES:</span>{" "}
-                <span>{selectedBet?.line}</span>
-                {selectedOperator === "golden_chance" && (
-                  <button
-                    onClick={() => {
-                      const uid = userProfileResponse?.id;
-                      const tempToken = userProfileTempToken;
+              {selectedOperator !== "luckyworldgames" && (
+                <p style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span className="fw-bolder">LINES:</span>
+                  <span>{selectedBet?.line}</span>
 
-                      if (uid && tempToken) {
-                        const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
-                        handleOpenModal(url);
-                      }
-                    }}
-                    className="btn btn-blue"
-                  >
-                    View Here
-                  </button>
-                )}
-              </p>
-              <p style={{ display: "flex", justifyContent: "space-between" }}>
-                <span className="fw-bolder">DRAW DATE: </span>{" "}
-                <span>
-                  {selectedOperator === "green_lotto" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : selectedOperator === "green_ghana_game" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : selectedOperator === "golden_chance" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.date, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : selectedOperator === "gd_lotto" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : selectedOperator === "gh_5_90" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : selectedOperator === "gd_jackpot" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : selectedOperator === "nnp" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : selectedOperator === "wesco" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : selectedOperator === "lotto_nigeria" ? (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.drawDate, "DD-MM-YYYY HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
-                  ) : (
-                    <span>
-                      {" "}
-                      {moment
-                        .utc(selectedBet?.DrawTime, "YYYY-MM-DD HH:mm:ss")
-                        .local()
-                        .format("Do MMM YYYY | h:mm:ssA")}
-                    </span>
+                  {selectedOperator === "golden_chance" && (
+                    <button
+                      onClick={() => {
+                        const uid = userProfileResponse?.id;
+                        const tempToken = userProfileTempToken;
+
+                        if (uid && tempToken) {
+                          const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                          handleOpenModal(url);
+                        }
+                      }}
+                      className="btn btn-blue"
+                    >
+                      View Here
+                    </button>
                   )}
-                </span>
-              </p>
+                </p>
+              )}
+
+              {selectedOperator !== "luckyworldgames" && (
+                <p style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span className="fw-bolder">DRAW DATE: </span>
+                  <span>
+                    {selectedOperator === "green_lotto" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : selectedOperator === "green_ghana_game" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : selectedOperator === "golden_chance" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.date, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : selectedOperator === "gd_lotto" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : selectedOperator === "gh_5_90" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : selectedOperator === "gd_jackpot" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : selectedOperator === "nnp" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : selectedOperator === "wesco" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.drawdate, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : selectedOperator === "lotto_nigeria" ? (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.drawDate, "DD-MM-YYYY HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : (
+                      <span>
+                        {moment
+                          .utc(selectedBet?.DrawTime, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    )}
+                  </span>
+                </p>
+              )}
+
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">STATUS:</span>{" "}
                 <span>{selectedBet?.status}</span>
@@ -1669,43 +1678,46 @@ const TransactionHistory = () => {
                 <span>{selectedBet?.amount}</span>
               </p>
 
-              <p style={{ display: "flex", justifyContent: "space-between" }}>
-                <span className="fw-bolder">NUMBERS:</span>{" "}
-                <span>
-                  {" "}
-                  {selectedOperator === "gd_jackpot" ? (
-                    <>
-                      {selectedBet?.gh_570_num && (
-                        <span>GH 70: {selectedBet.gh_570_num} </span>
-                      )}
-                      {selectedBet?.gh_580_num && (
-                        <span>GH 80: {selectedBet.gh_580_num} </span>
-                      )}
-                      {selectedBet?.gh_590_num && (
-                        <span>GH 90: {selectedBet.gh_590_num} </span>
-                      )}
-                    </>
-                  ) : (
-                    selectedBet?.num
-                  )}
-                  {selectedOperator === "golden_chance" && (
-                    <button
-                      onClick={() => {
-                        const uid = userProfileResponse?.id;
-                        const tempToken = userProfileTempToken;
+              {selectedOperator !== "luckyworldgames" && (
+                <p style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span className="fw-bolder">NUMBERS:</span>
+                  <span>
+                    {selectedOperator === "gd_jackpot" ? (
+                      <>
+                        {selectedBet?.gh_570_num && (
+                          <span>GH 70: {selectedBet.gh_570_num} </span>
+                        )}
+                        {selectedBet?.gh_580_num && (
+                          <span>GH 80: {selectedBet.gh_580_num} </span>
+                        )}
+                        {selectedBet?.gh_590_num && (
+                          <span>GH 90: {selectedBet.gh_590_num} </span>
+                        )}
+                      </>
+                    ) : (
+                      selectedBet?.num
+                    )}
 
-                        if (uid && tempToken) {
-                          const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
-                          handleOpenModal(url);
-                        }
-                      }}
-                      className="btn btn-blue"
-                    >
-                      View Here
-                    </button>
-                  )}
-                </span>
-              </p>
+                    {selectedOperator === "golden_chance" && (
+                      <button
+                        onClick={() => {
+                          const uid = userProfileResponse?.id;
+                          const tempToken = userProfileTempToken;
+
+                          if (uid && tempToken) {
+                            const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${tempToken}`;
+                            handleOpenModal(url);
+                          }
+                        }}
+                        className="btn btn-blue"
+                      >
+                        View Here
+                      </button>
+                    )}
+                  </span>
+                </p>
+              )}
+
               <p style={{ display: "flex", justifyContent: "space-between" }}>
                 <span className="fw-bolder">GAME NAME:</span>{" "}
                 <span>
@@ -1727,6 +1739,8 @@ const TransactionHistory = () => {
                     <p> {selectedBet?.drawAlias}</p>
                   ) : selectedOperator === "golden_chance" ? (
                     <p> {selectedBet?.operator_type}</p>
+                  ): selectedOperator === "luckyworldgames" ? (
+                    <p> {selectedBet?.game}</p>
                   ) : (
                     <td> {selectedBet?.GameName}</td>
                   )}

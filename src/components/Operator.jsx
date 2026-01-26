@@ -9,6 +9,8 @@ import { HTTP } from "../utils";
 import { useGetProfileUser } from "../react-query";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import AfriMillionsModal from "./AfrimillionsModal";
+import allImages from "../constant/images";
 
 // Cache display-operators logos for this session to avoid re-fetching on navigation
 let OPERATOR_LOGOS_CACHE = null;
@@ -19,6 +21,9 @@ const Operator = () => {
   const [showModal, setShowModal] = useState(false);
   const [iframeUrl, setIframeUrl] = useState("");
   const [isIframeLoading, setIsIframeLoading] = useState(false);
+  
+  // AfriMillions modal state
+  const [showAfriMillionsModal, setShowAfriMillionsModal] = useState(false);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -74,6 +79,7 @@ const Operator = () => {
     "GD570",
     "GD580",
     "GD590",
+    "afrimillions", // Added AfriMillions
   ];
 
   const requestTypeMapping = {
@@ -84,6 +90,9 @@ const Operator = () => {
 
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
+      // Skip AfriMillions from API fetching since it's handled separately
+      if (operatorType === "afrimillions") return;
+      
       const requestData = {
         operator_type: requestTypeMapping[operatorType] || operatorType,
       };
@@ -138,6 +147,7 @@ const Operator = () => {
     GD580: "GD580",
     GD590: "GD590",
     NNP: "nnp",
+    afrimillions: "afrimillions", // Added AfriMillions
   };
 
   const handleCloseModal = async () => {
@@ -175,6 +185,35 @@ const Operator = () => {
   // Function to handle iframe load
   const handleIframeLoad = () => {
     setIsIframeLoading(false);
+  };
+
+  // Function to open AfriMillions modal
+  const handleOpenAfriMillions = () => {
+    // if (!userInfo || !userInfo.token) {
+    //   toast.error("Please login to play AfriMillions");
+    //   return;
+    // }
+    setShowAfriMillionsModal(true);
+  };
+
+  // Function to close AfriMillions modal
+  const handleCloseAfriMillions = () => {
+    setShowAfriMillionsModal(false);
+  };
+
+  // Get next Saturday 8 PM for AfriMillions
+  const getNextAfriMillionsDraw = () => {
+    const now = new Date();
+    const nextSaturday = new Date();
+    const daysUntilSaturday = (6 - now.getDay() + 7) % 7 || 7;
+    nextSaturday.setDate(now.getDate() + daysUntilSaturday);
+    nextSaturday.setHours(20, 0, 0, 0);
+    
+    if (now.getDay() === 6 && now.getHours() >= 20) {
+      nextSaturday.setDate(nextSaturday.getDate() + 7);
+    }
+    
+    return nextSaturday;
   };
 
   // Animated Countdown wrapper
@@ -232,6 +271,7 @@ const Operator = () => {
 
   return (
     <>
+      {/* Golden Chance Modal */}
       <div
         className={`modal fade ${showModal ? "show" : ""}`}
         style={{ display: showModal ? "block" : "none" }}
@@ -272,6 +312,14 @@ const Operator = () => {
         </div>
       </div>
       {showModal && <div className="modal-backdrop fade show"></div>}
+
+      {/* AfriMillions Modal */}
+      <AfriMillionsModal 
+        showModal={showAfriMillionsModal}
+        onClose={handleCloseAfriMillions}
+        userInfo={userInfo}
+      />
+
       <div className="container">
         <div className="row app__select_operator">
           <div className="col-sm-12 mb-5">
@@ -304,6 +352,72 @@ const Operator = () => {
             <LayoutGroup>
               <AnimatePresence initial={false}>
                 {operatorTypes.map((operatorType, index) => {
+                  // Special handling for AfriMillions
+                  if (operatorType === "afrimillions") {
+                    return (
+                      <motion.div
+                        key="afrimillions"
+                        layout
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.25 }}
+                        className="col-md-3 col-sm-6 col-xs-12 col-2"
+                      >
+                        <motion.div
+                          className="service-wrap mb-5"
+                          whileHover={{ y: -6, boxShadow: "0 14px 34px rgba(0,0,0,0.12)" }}
+                          transition={{ type: "spring", stiffness: 260, damping: 24 }}
+                        >
+                          <a>
+                            <motion.div
+                              className="service-img"
+                              initial={{ opacity: 0, scale: 0.96, y: 8 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              transition={{ type: "spring", stiffness: 260, damping: 24, delay: (index % 8) * 0.06 }}
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <motion.img
+                                src={allImages.afrimillions}
+                                alt="AfriMillions"
+                                className="img-fluid mb-3"
+                                initial={false}
+                                whileHover={{ scale: 1.02 }}
+                                transition={{ duration: 0.2 }}
+                              />
+                            </motion.div>
+                          </a>
+                          <div className="service-conten text-center">
+                            <p style={{ color: "#000", fontWeight: "bolder", fontSize: "18px" }}>
+                              <strong>NEXT GAME:</strong>
+                              <br />
+                              AfriMillions Lottery
+                              <br />
+                              <br />
+                              <span>
+                                <small>
+                                  <span>
+                                    <MotionCountdown date={getNextAfriMillionsDraw()} />
+                                  </span>
+                                </small>
+                              </span>
+                            </p>
+                            <p onClick={handleOpenAfriMillions}>
+                              <motion.a
+                                className="btn btn-blue btn-sm btn-block w-100 p-2"
+                                whileHover={{ scale: [1, 1.05, 1], y: [-1, 0], transition: { duration: 0.6, repeat: Infinity, repeatType: "mirror" } }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                Play Now
+                              </motion.a>
+                            </p>
+                          </div>
+                        </motion.div>
+                      </motion.div>
+                    );
+                  }
+
                   const operatorDataArray = operatorData[operatorType];
                   if (operatorType === "gd_lotto") {
                     return null;

@@ -13,6 +13,7 @@ import { FaUser } from "react-icons/fa";
 import { useGetProfileUser } from "../react-query";
 import Download from "./Download";
 import { motion, AnimatePresence } from "framer-motion";
+import ScrollingNotice from "./ScrollingNotice";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -101,6 +102,7 @@ const Navbar = () => {
       transition={fadeSlideIn.transition}
       className="fade-in"
     >
+      {/* <ScrollingNotice /> */}
       <Download />
 
       {token && expires && new Date(expires) > new Date() ? (
@@ -109,9 +111,8 @@ const Navbar = () => {
             <Header />
 
             <nav
-              className={`navbar navbar-expand-lg app__navbar-bg ${
-                isScrolled ? "navbar-scrolled" : ""
-              }`}
+              className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""
+                }`}
             >
               <div className="container">
                 {/* left spacer */}
@@ -366,46 +367,25 @@ const Navbar = () => {
                       </a>
                     </li>
 
-                    <li className="nav-item dropdown">
-                      <a
-                        className="nav-link dropdown-toggle text-white me-3"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Tools
-                      </a>
-                      <motion.ul
-                        className="dropdown-menu"
-                        initial={{ opacity: 0, y: -6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.18 }}
-                      >
-                        <li>
-                          <a
-                            className="dropdown-item p-2"
-                            onClick={() => navigate("/forecast")}
-                          >
-                            Quick Forecast
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            className="dropdown-item p-2"
-                            onClick={() => navigate("/create-chart")}
-                          >
-                            Create Charts
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            className="dropdown-item p-2"
-                            onClick={() => navigate("/timetable")}
-                          >
-                            Time Table
-                          </a>
-                        </li>
-                      </motion.ul>
+                    <li
+                      className="nav-item"
+                      onClick={() => navigate("/forecast")}
+                    >
+                      <a className="nav-link text-white me-3 ">Quick Forecast</a>
+                    </li>
+
+                    <li
+                      className="nav-item"
+                      onClick={() => navigate("/create-chart")}
+                    >
+                      <a className="nav-link text-white me-3 ">Create Charts</a>
+                    </li>
+
+                    <li
+                      className="nav-item"
+                      onClick={() => navigate("/timetable")}
+                    >
+                      <a className="nav-link text-white me-3 ">Time Table</a>
                     </li>
 
                     <li
@@ -647,9 +627,8 @@ const Navbar = () => {
         </>
       ) : (
         <nav
-          className={`navbar navbar-expand-lg app__navbar-bg ${
-            isScrolled ? "navbar-scrolled" : ""
-          }`}
+          className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""
+            }`}
         >
           <div className="container">
             <a
@@ -730,7 +709,16 @@ const Navbar = () => {
 
                 <li className="nav-item">
                   <a
-                    className="nav-link text-white app__proforecast"
+                    className="nav-link text-white me-3"
+                    onClick={() => navigate("/forecast")}
+                  >
+                    Quick Forecast
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-white me-3"
                     onClick={() => navigate("/create-chart")}
                   >
                     Create Charts
@@ -746,19 +734,21 @@ const Navbar = () => {
                   </a>
                 </li>
 
-                <li
-                  onClick={() => navigate("/forecast")}
-                  className="nav-item  "
-                >
-                  <a className="nav-link text-white me-3"> Quick Forecast</a>
-                </li>
-
                 <li className="nav-item">
                   <a
                     className="nav-link text-white me-3"
                     onClick={() => navigate("/tutorials")}
                   >
                     Tutorials
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-white me-3"
+                    onClick={() => navigate("/lotto-ladies")}
+                  >
+                    Lotto Ladies
                   </a>
                 </li>
 
@@ -910,9 +900,9 @@ const Navbar = () => {
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                   >
-                   {/* <a  className="nav-link text-dark fw-bolder me-3" href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com">
-                    Sign In*/}
-                  </a> 
+                    {/* <a  className="nav-link text-dark fw-bolder me-3" href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"> */}
+                    Sign In
+                  </a>
                 </li>
                 <hr />
               </ul>

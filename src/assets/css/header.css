@@ -7,6 +7,7 @@ body {
     font-feature-settings: 'liga' off;
     color: #406777;
     overflow-x: hidden;
+     /* padding-top: 36px; */
 }
 
 .header-top-area {

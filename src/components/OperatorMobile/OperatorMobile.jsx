@@ -12,6 +12,7 @@ import Slider from "../Slider";
 import { useGetProfileUser } from "../../react-query";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import AfriMillionsModal from "../AfriMillionsModal";
 
 // Cache display-operators logos for this session to avoid re-fetching on navigation
 let OPERATOR_LOGOS_CACHE_MOBILE = null;
@@ -22,6 +23,8 @@ const OperatorMobile = () => {
   const [showModal, setShowModal] = useState(false);
   const [iframeUrl, setIframeUrl] = useState("");
   const [isIframeLoading, setIsIframeLoading] = useState(false);
+  // AfriMillions modal state
+  const [showAfriMillionsModal, setShowAfriMillionsModal] = useState(false);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -77,6 +80,7 @@ const OperatorMobile = () => {
     "GD570",
     "GD580",
     "GD590",
+    "afrimillions", // Added AfriMillions
   ];
 
   const requestTypeMapping = {
@@ -87,6 +91,9 @@ const OperatorMobile = () => {
 
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
+      // Skip AfriMillions from API fetching since it's handled separately
+      if (operatorType === "afrimillions") return;
+
       const requestData = {
         operator_type: requestTypeMapping[operatorType] || operatorType,
       };
@@ -141,7 +148,9 @@ const OperatorMobile = () => {
     GD570: "GD570",
     GD580: "GD580",
     GD590: "GD590",
+    afrimillions: "afrimillions", // Added AfriMillions
   };
+
   const handleCloseModal = async () => {
     setShowModal(false);
     setIframeUrl("");
@@ -177,55 +186,83 @@ const OperatorMobile = () => {
     setIsIframeLoading(false);
   };
 
-  // Animated Countdown wrapper (mobile)
+  // Function to open AfriMillions modal
+  const handleOpenAfriMillions = () => {
+    // if (!userInfo || !userInfo.token) {
+    //   toast.error("Please login to play AfriMillions");
+    //   return;
+    // }
+    setShowAfriMillionsModal(true);
+  };
+
+  // Function to close AfriMillions modal
+  const handleCloseAfriMillions = () => {
+    setShowAfriMillionsModal(false);
+  };
+
+  // Get next Saturday 8 PM for AfriMillions
+  const getNextAfriMillionsDraw = () => {
+    const now = new Date();
+    const nextSaturday = new Date();
+    const daysUntilSaturday = (6 - now.getDay() + 7) % 7 || 7;
+    nextSaturday.setDate(now.getDate() + daysUntilSaturday);
+    nextSaturday.setHours(20, 0, 0, 0);
+
+    if (now.getDay() === 6 && now.getHours() >= 20) {
+      nextSaturday.setDate(nextSaturday.getDate() + 7);
+    }
+
+    return nextSaturday;
+  };
+
+  // Animated Countdown wrapper
   const MotionCountdown = ({ date }) => (
     <Countdown
       date={date}
       renderer={({ days, hours, minutes, seconds }) => (
         <motion.div
           initial={false}
-          // animate={{
-          //   backgroundColor: seconds === 0 ? ["#ffffff", "#fff9e6", "#ffffff"] : "#ffffff",
-          // }}
+          animate={{
+            backgroundColor:
+              seconds === 0 ? ["#ffffff", "#fff9e6", "#ffffff"] : "#ffffff",
+          }}
           transition={{ duration: 0.45 }}
         >
           <motion.span
             key={`d-${days}`}
-            className="countdown fw-bolder"
+            className="countdown_box me-2  fw-bolder"
             initial={{ scale: 0.96, opacity: 0.9 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.2 }}
           >
-            {days}days
-          </motion.span>{" "}
+            {days} days
+          </motion.span>
           <motion.span
             key={`h-${hours}`}
-            className="countdown_box  fw-bolder"
+            className="countdown_box me-2  fw-bolder"
             initial={{ scale: 0.96, opacity: 0.9 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.2 }}
           >
-            {hours}hrs
-          </motion.span>{" "}
+            {hours} hrs
+          </motion.span>
           <motion.span
             key={`m-${minutes}`}
-            className="countdown_box  fw-bolder"
+            className="countdown_box me-2  fw-bolder"
             initial={{ scale: 0.96, opacity: 0.9 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.2 }}
           >
-            {minutes}mins
-          </motion.span>{" "}
-          <br />
+            {minutes} mins
+          </motion.span>
           <motion.span
             key={`s-${seconds}`}
-            className="countdown_box mt-3  fw-bolder"
-            style={{ width: "38%" }}
+            className="countdown_box me-2  fw-bolder"
             initial={{ scale: 0.9, opacity: 0.9 }}
             animate={{ scale: [1, 1.08, 1], opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {seconds}secs
+            {seconds} secs
           </motion.span>
         </motion.div>
       )}
@@ -274,6 +311,13 @@ const OperatorMobile = () => {
           </div>
         </div>
       </div>
+
+      <AfriMillionsModal
+        showModal={showAfriMillionsModal}
+        onClose={handleCloseAfriMillions}
+        userInfo={userInfo}
+      />
+
       <section>
         <Navbar />
         <Slider />
@@ -290,7 +334,10 @@ const OperatorMobile = () => {
             <div className="row">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="col-12 mb-3">
-                  <div className="div_vlgrey card-soft shimmer" style={{ minHeight: 92 }} />
+                  <div
+                    className="div_vlgrey card-soft shimmer"
+                    style={{ minHeight: 92 }}
+                  />
                 </div>
               ))}
             </div>
@@ -298,6 +345,103 @@ const OperatorMobile = () => {
             <LayoutGroup>
               <AnimatePresence initial={false}>
                 {operatorTypes?.map((operatorType, index) => {
+                  // Special handling for AfriMillions
+                  if (operatorType === "afrimillions") {
+                    return (
+                      <motion.div
+                        key="afrimillions"
+                        layout
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <div className="hidden-md hidden-lg div_vlgrey">
+                          <table width="100%" cellPadding="3">
+                            <tbody>
+                              <tr valign="top">
+                                <td width="41%">
+                                  <motion.img
+                                    src="/images/afrimillions.png"
+                                    alt="AfriMillions"
+                                    className="img-fluid"
+                                    initial={{ opacity: 0, scale: 0.96, y: 6 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    transition={{
+                                      type: "spring",
+                                      stiffness: 260,
+                                      damping: 24,
+                                      delay: (index % 8) * 0.05,
+                                    }}
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.98 }}
+                                  />
+                                </td>
+                                <td style={{ lineHeight: "19px!important" }}>
+                                  <table width="100%" cellPadding="3">
+                                    <tbody
+                                      style={{
+                                        color: "#000",
+                                        fontWeight: "bolder",
+                                      }}
+                                    >
+                                      <tr valign="top">
+                                        <td
+                                          style={{
+                                            lineHeight: "27px!important",
+                                          }}
+                                        >
+                                          <small>
+                                            <strong>NEXT DRAW</strong>
+                                          </small>
+                                          <br />
+                                          <small
+                                            className="fw-bolder"
+                                            style={{ fontSize: "18px" }}
+                                          >
+                                            AfriMillions Lottery
+                                          </small>
+                                          <br />
+                                          <br />
+
+                                          <small>
+                                            <span>
+                                              <MotionCountdown
+                                                date={getNextAfriMillionsDraw()}
+                                              />
+                                            </span>
+                                          </small>
+
+                                          <p onClick={handleOpenAfriMillions}>
+                                            <motion.a
+                                              className="btn btn-blue btn-sm btn-block w-100 mt-3"
+                                              whileHover={{
+                                                scale: [1, 1.05, 1],
+                                                y: [-1, 0],
+                                                transition: {
+                                                  duration: 0.6,
+                                                  repeat: Infinity,
+                                                  repeatType: "mirror",
+                                                },
+                                              }}
+                                              whileTap={{ scale: 0.98 }}
+                                            >
+                                              Play Now
+                                            </motion.a>
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </motion.div>
+                    );
+                  }
+
                   const operatorDataArray = operatorData[operatorType];
                   if (operatorType === "gd_lotto") {
                     return null;
@@ -351,20 +495,32 @@ const OperatorMobile = () => {
                           : null;
                       } else if (operatorType === "wesco") {
                         const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss"
+                        );
                       } else if (operatorType === "lottomania") {
                         drawTime = moment(game?.sdt);
                       } else if (operatorType === "ghana_game") {
                         drawTime = moment(game?.sdt);
                       } else if (operatorType === "green_lotto") {
                         const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss"
+                        );
                       } else if (operatorType === "green_ghana_game") {
                         const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss"
+                        );
                       } else if (operatorType === "GH 5/90") {
                         const drawDateTimeString = `${game?.drawTime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss"
+                        );
                       } else if (operatorType === "GD570") {
                         if (Array.isArray(operatorData?.gd_lotto)) {
                           const now = new Date();
@@ -480,7 +636,10 @@ const OperatorMobile = () => {
                         }
                       } else if (operatorType === "NNP") {
                         const drawDateTimeString = `${game?.drawTime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss"
+                        );
                       } else if (operatorType === "golden_chance") {
                         const drawDate = game?.drawdate;
                         const drawTimeString = game?.drawtime;
@@ -519,7 +678,6 @@ const OperatorMobile = () => {
                           .utc();
                         return parsedTime.toDate();
                       } else if (operatorType === "wesco") {
-                        // For "wesco," combine "drawdate" and "drawtime" in the correct format
                         const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
@@ -528,11 +686,13 @@ const OperatorMobile = () => {
                           .utcOffset("+00:00")
                           .utc();
 
-                        // Check if parsedTime is valid
                         if (parsedTime.isValid()) {
                           return parsedTime.toDate();
                         } else {
-                          console.error("Invalid date format:", drawDateTimeString);
+                          console.error(
+                            "Invalid date format:",
+                            drawDateTimeString
+                          );
                           return null;
                         }
                       } else if (operatorType === "green_lotto") {
@@ -544,11 +704,13 @@ const OperatorMobile = () => {
                           .utcOffset("+00:00")
                           .utc();
 
-                        // Check if parsedTime is valid
                         if (parsedTime.isValid()) {
                           return parsedTime.toDate();
                         } else {
-                          console.error("Invalid date format:", drawDateTimeString);
+                          console.error(
+                            "Invalid date format:",
+                            drawDateTimeString
+                          );
                           return null;
                         }
                       } else if (operatorType === "green_ghana_game") {
@@ -560,11 +722,13 @@ const OperatorMobile = () => {
                           .utcOffset("+00:00")
                           .utc();
 
-                        // Check if parsedTime is valid
                         if (parsedTime.isValid()) {
                           return parsedTime.toDate();
                         } else {
-                          console.error("Invalid date format:", drawDateTimeString);
+                          console.error(
+                            "Invalid date format:",
+                            drawDateTimeString
+                          );
                           return null;
                         }
                       } else if (operatorType === "GH 5/90") {
@@ -765,7 +929,6 @@ const OperatorMobile = () => {
                           return null;
                         }
                       } else {
-                        // Handle other operator types by parsing the time string
                         const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                           .utcOffset("+00:00")
                           .utc();
@@ -774,7 +937,14 @@ const OperatorMobile = () => {
                     };
 
                     return (
-                      <motion.div key={index} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                      <motion.div
+                        key={index}
+                        layout
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.25 }}
+                      >
                         <div className="hidden-md hidden-lg div_vlgrey">
                           <table width="100%" cellPadding="3">
                             <tbody>
@@ -785,7 +955,12 @@ const OperatorMobile = () => {
                                     className="img-fluid"
                                     initial={{ opacity: 0, scale: 0.96, y: 6 }}
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    transition={{ type: "spring", stiffness: 260, damping: 24, delay: (index % 8) * 0.05 }}
+                                    transition={{
+                                      type: "spring",
+                                      stiffness: 260,
+                                      damping: 24,
+                                      delay: (index % 8) * 0.05,
+                                    }}
                                     whileHover={{ scale: 1.03 }}
                                     whileTap={{ scale: 0.98 }}
                                   />
@@ -814,15 +989,15 @@ const OperatorMobile = () => {
                                                 className="fw-bolder"
                                                 style={{ fontSize: "18px" }}
                                               >
-                                                {" "}
                                                 {operatorType === "GD570" ||
                                                 operatorType === "GD580" ||
                                                 operatorType === "GD590" ||
                                                 operatorType === "gd_jackpot"
                                                   ? latestGame590?.gameName
                                                   : nextGame[
-                                                      propertyMapping[operatorType]
-                                                        ?.name
+                                                      propertyMapping[
+                                                        operatorType
+                                                      ]?.name
                                                     ]}
                                               </small>
                                               <br />
@@ -845,7 +1020,9 @@ const OperatorMobile = () => {
 
                                               <p
                                                 onClick={() => {
-                                                  if (operatorType === "GD570") {
+                                                  if (
+                                                    operatorType === "GD570"
+                                                  ) {
                                                     navigate(`/play-game/gd_70`);
                                                   } else if (
                                                     operatorType === "GD580"
@@ -862,7 +1039,8 @@ const OperatorMobile = () => {
                                                       `/play-game/gd_jackpot`
                                                     );
                                                   } else if (
-                                                    operatorType === "golden_chance"
+                                                    operatorType ===
+                                                    "golden_chance"
                                                   ) {
                                                     const uid =
                                                       userProfileResponse?.id;
@@ -881,7 +1059,10 @@ const OperatorMobile = () => {
                                                   } else {
                                                     const sanitizedOperatorType =
                                                       operatorType === "GH 5/90"
-                                                        ? operatorType.replace(/[\s/]+/g, "_")
+                                                        ? operatorType.replace(
+                                                            /[\s/]+/g,
+                                                            "_"
+                                                          )
                                                         : operatorType;
 
                                                     navigate(
@@ -892,7 +1073,15 @@ const OperatorMobile = () => {
                                               >
                                                 <motion.a
                                                   className="btn btn-blue btn-sm btn-block w-100 mt-3"
-                                                  whileHover={{ scale: [1, 1.05, 1], y: [-1, 0], transition: { duration: 0.6, repeat: Infinity, repeatType: "mirror" } }}
+                                                  whileHover={{
+                                                    scale: [1, 1.05, 1],
+                                                    y: [-1, 0],
+                                                    transition: {
+                                                      duration: 0.6,
+                                                      repeat: Infinity,
+                                                      repeatType: "mirror",
+                                                    },
+                                                  }}
                                                   whileTap={{ scale: 0.98 }}
                                                 >
                                                   Play Now
