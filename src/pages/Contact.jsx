@@ -217,7 +217,7 @@ const Contact = () => {
           <p className="lead app__info">Info@Mylottohub.Com</p>
           <h4 className="line_header hidden-sm hidden-xs">CONTACT ADDRESS</h4>
           <p className="lead app__info">
-            No 1, Oba Adetona street, off sura mogaji street ilupeju, lagos
+            The Philippi Centre, Oluwalogbon House, Plot A Obafemi Awolowo Wy, Alausa, Ikeja
           </p>
           {/* <br><br><br><br> */}
           <h4 className="line_header hidden-sm hidden-xs">WE ARE ON SOCIALS</h4>

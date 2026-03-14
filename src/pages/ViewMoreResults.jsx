@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 
 const ViewMoreResults = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPerOperator, setIsLoadingPerOperator] = useState(false);
   const [result, setResults] = useState([]);
   const [perOperator, setPerOperator] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -47,6 +48,10 @@ const ViewMoreResults = () => {
     operatorID = "gd_lotto";
   } else if (id == 62) {
     operatorID = "NNP";
+  } else if (id == 68) {
+    operatorID = "afri_millions";
+  }else if (id == 70) {
+    operatorID = "afri_millions_5_55";
   }
 
   const imageSrc =
@@ -75,11 +80,10 @@ const ViewMoreResults = () => {
         setIsLoading(false);
       });
   };
-
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
-
+      // setIsLoading(true);
+      setIsLoadingPerOperator(true);
       const requestData = {
         operator_type: operatorID === "GH_5_90" ? "GH 5/90" : operatorID,
       };
@@ -98,7 +102,8 @@ const ViewMoreResults = () => {
       } catch (error) {
         // console.error(`Error fetching ${id} games:`, error);
       } finally {
-        setIsLoading(false);
+        // setIsLoading(false);
+        setIsLoadingPerOperator(false);
       }
     };
     fetchData();
@@ -109,7 +114,6 @@ const ViewMoreResults = () => {
       fetchData();
     }
   }, [userInfo.token]);
-  // console.log(perOperator);
   const { userProfileTempToken, userProfileResponse, token } =
     useGetProfileUser([]);
   const handleCloseModal = async () => {
@@ -204,7 +208,7 @@ const ViewMoreResults = () => {
                 </strong>
               </h3>
             </span>
-            {isLoading ? (
+            {isLoading || isLoadingPerOperator ? (
               <div className="spinner-container d-flex align-items-center justify-content-center">
                 <Spinner
                   as="span"
@@ -214,7 +218,7 @@ const ViewMoreResults = () => {
                   aria-hidden="true"
                 />
               </div>
-            ) : result.length === 0 ? (
+            ) : result.length === 0 && perOperator.length === 0 ? (
               <tr>
                 <td
                   colSpan="8"
@@ -269,6 +273,7 @@ const ViewMoreResults = () => {
                       style={{ padding: "20px" }}
                     >
                       {perOperator?.map((item, index) => {
+                        
                         if (operatorID === "lotto_nigeria") {
                           if (index === 0) {
                             return (
@@ -527,6 +532,52 @@ const ViewMoreResults = () => {
                                       toast.error("Pls Login to proceed");
                                     }
                                   }}
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        } else if (id == 68) {
+                          if (index === 0) {
+                            return (
+                              <div key={index}>
+                                <strong> {item?.gn}</strong> <br />
+                                <br />
+                                {moment(item?.sdt)
+                                  .local()
+                                  .format("DD MMM, YYYY")}{" "}
+                                | {moment(item?.sdt).format("HH:mm")}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() =>
+                                    navigate(`/afrimillions?type=6_49`)
+                                  }
+                                  className="btn btn-blue"
+                                >
+                                  Play Now
+                                </a>
+                              </div>
+                            );
+                          }
+                        }else if (id == 70) {
+                          if (index === 0) {
+                            return (
+                              <div key={index}>
+                                <strong> {item?.GameName}</strong> <br />
+                                <br />
+                                {moment(item?.drawTime)
+                                  .local()
+                                  .format("DD MMM, YYYY")}{" "}
+                                | {moment(item?.drawTime).format("HH:mm")}
+                                <br />
+                                <br />
+                                <a
+                                  onClick={() =>
+                                    navigate(`/afrimillions?type=5_55`)
+                                  }
                                   className="btn btn-blue"
                                 >
                                   Play Now
@@ -1016,6 +1067,114 @@ const ViewMoreResults = () => {
                                   } else {
                                     return null;
                                   }
+                                } else if (operatorID === "afri_millions") {
+                                  const drawDateTime = moment(item.drawTime);
+
+                                  const currentTime = moment();
+                                  const timeDifference =
+                                    drawDateTime.diff(currentTime);
+
+                                  if (timeDifference > 0) {
+                                    if (index == 0) {
+                                      return (
+                                        <>
+                                          <span>
+                                            <small className="countdown_box">
+                                              <Countdown
+                                                date={
+                                                  currentTime.valueOf() +
+                                                  timeDifference
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <>
+                                                    <span className="countdown_box me-2">
+                                                      {days}days
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {hours}hrs
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {minutes}mins
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {seconds}secs
+                                                    </span>
+                                                  </>
+                                                )}
+                                              />
+                                            </small>
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                  } else {
+                                    return (
+                                      <>
+                                        <button className="text-center bg-danger">
+                                          No Record Found
+                                        </button>
+                                      </>
+                                    );
+                                  }
+                                } else if (operatorID === "afri_millions_5_55") {
+                                  const drawDateTime = moment(item.drawTime);
+
+                                  const currentTime = moment();
+                                  const timeDifference =
+                                    drawDateTime.diff(currentTime);
+
+                                  if (timeDifference > 0) {
+                                    if (index == 0) {
+                                      return (
+                                        <>
+                                          <span>
+                                            <small className="countdown_box">
+                                              <Countdown
+                                                date={
+                                                  currentTime.valueOf() +
+                                                  timeDifference
+                                                }
+                                                renderer={({
+                                                  days,
+                                                  hours,
+                                                  minutes,
+                                                  seconds,
+                                                }) => (
+                                                  <>
+                                                    <span className="countdown_box me-2">
+                                                      {days}days
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {hours}hrs
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {minutes}mins
+                                                    </span>
+                                                    <span className="countdown_box me-2">
+                                                      {seconds}secs
+                                                    </span>
+                                                  </>
+                                                )}
+                                              />
+                                            </small>
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                  } else {
+                                    return (
+                                      <>
+                                        <button className="text-center bg-danger">
+                                          No Record Found
+                                        </button>
+                                      </>
+                                    );
+                                  }
                                 }
 
                                 return null;
@@ -1033,6 +1192,7 @@ const ViewMoreResults = () => {
                   {result
                     .filter((record) => record.id === parseInt(id, 10))
                     .map((record) => {
+                      
                       if (record.name === "Wesco") {
                         return (
                           <React.Fragment key={record.id}>
@@ -1878,7 +2038,121 @@ const ViewMoreResults = () => {
                               })}
                           </React.Fragment>
                         );
-                      } else {
+                      } else if (record.name === "Afrimillions") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                
+                                return (
+                                  <div
+                                    key={`${record?.id}-${dataIndex}`}
+                                    className="col-lg-4 col-md-6 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
+                                            )
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen mb-2">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                         
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      }else if (record.name === "Afrimillions 555") {
+                        return (
+                          <React.Fragment key={record.id}>
+                            {record.results
+                              .sort(
+                                (a, b) => new Date(b.date) - new Date(a.date)
+                              )
+                              .map((data, dataIndex) => {
+                                
+                                return (
+                                  <div
+                                    key={`${record?.id}-${dataIndex}`}
+                                    className="col-lg-4 col-md-6 mb-5"
+                                  >
+                                    <div className="div_lgrey">
+                                      <p className="text-center">
+                                        <strong>{data.game}</strong>
+                                      </p>
+                                      <br />
+                                      <p className="text-center">
+                                        <small>
+                                          Draw Time:{" "}
+                                          {moment
+                                            .utc(
+                                              data.date,
+                                              "YYYY-MM-DD HH:mm:ss"
+                                            )
+                                            .local()
+                                            .format("MMM DD, YYYY h:mm:ss a")}
+                                        </small>
+                                      </p>
+                                      <br />
+                                      <table align="center">
+                                        <tbody>
+                                          <tr>
+                                            {data?.winning_number
+                                              ?.split("-")
+                                              .map(
+                                                (digit, j) =>
+                                                  digit && (
+                                                    <td key={j}>
+                                                      <div className="numboxgreen mb-2">
+                                                        {digit}
+                                                      </div>
+                                                    </td>
+                                                  )
+                                              )}
+                                          </tr>
+                                         
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </React.Fragment>
+                        );
+                      }  else {
                         return (
                           <p
                             key={record.id}

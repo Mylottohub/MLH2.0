@@ -51,7 +51,7 @@ input.chk-btn+label {
     align-items: center;
     justify-content: center;
     padding: 0;
-    color: #2d5563;
+    /* color: #2d5563; */
     text-align: center;
     font-size: 22px;
     font-weight: 700;
@@ -106,7 +106,7 @@ input.chk-btn+label {
         max-width: 100%;
         height: auto;
     }  */
-}
+
 
 input.chk-btn:not(:checked)+label:hover {
     transform: translateY(-2px);
@@ -116,10 +116,10 @@ input.chk-btn:not(:checked)+label:hover {
 input.chk-btn+label:active,
 input.chk-btn:checked+label {
     transform: translateY(0);
-    box-shadow: 0 0 0 3px rgba(64, 103, 119, 0.15) inset, 0 8px 22px rgba(0,0,0,0.10);
+    /* box-shadow: 0 0 0 3px rgba(64, 103, 119, 0.15) inset, 0 8px 22px rgba(0,0,0,0.10); */
     background: linear-gradient(180deg, #2f6a7c, #234e5b);
     color: #FFF;
-    border-color: transparent;
+    /* border-color: transparent; */
 }
 
 /* Against mode coloring uses sibling selectors already present */

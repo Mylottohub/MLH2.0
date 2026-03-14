@@ -12,7 +12,6 @@ import Slider from "../Slider";
 import { useGetProfileUser } from "../../react-query";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-import AfriMillionsModal from "../AfriMillionsModal";
 
 // Cache display-operators logos for this session to avoid re-fetching on navigation
 let OPERATOR_LOGOS_CACHE_MOBILE = null;
@@ -23,8 +22,6 @@ const OperatorMobile = () => {
   const [showModal, setShowModal] = useState(false);
   const [iframeUrl, setIframeUrl] = useState("");
   const [isIframeLoading, setIsIframeLoading] = useState(false);
-  // AfriMillions modal state
-  const [showAfriMillionsModal, setShowAfriMillionsModal] = useState(false);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -53,7 +50,7 @@ const OperatorMobile = () => {
         const data = response.data.data;
         const logos = {};
         data.forEach((operator) => {
-          logos[operator.name.replace(" ", "_").toLowerCase()] = operator.logo;
+          logos[operator.name.replace(/\s+/g, "_").toLowerCase()] = operator.logo;
         });
         OPERATOR_LOGOS_CACHE_MOBILE = logos;
         setOperatorLogos(logos);
@@ -66,6 +63,9 @@ const OperatorMobile = () => {
   }, []);
 
   const operatorTypes = [
+     "afrimillions_5_55", // AfriMillions 5/55
+    "afrimillions", // AfriMillions 6/49
+    "afrimillions_5_90", // AfriMillions 5/90
     "golden_chance",
     "GH 5/90",
     "ghana_game",
@@ -80,20 +80,20 @@ const OperatorMobile = () => {
     "GD570",
     "GD580",
     "GD590",
-    "afrimillions", // Added AfriMillions
+   
   ];
 
   const requestTypeMapping = {
     GD570: "gd_lotto",
     GD580: "gd_lotto",
     GD590: "gd_lotto",
+    afrimillions: "afri_millions", // API endpoint for AfriMillions 6/49
+    afrimillions_5_90: "afri_millions_5_90", // API endpoint for AfriMillions 5/90
+    afrimillions_5_55: "afri_millions_5_55", // API endpoint for AfriMillions 5/55
   };
 
   useEffect(() => {
     operatorTypes.forEach(async (operatorType) => {
-      // Skip AfriMillions from API fetching since it's handled separately
-      if (operatorType === "afrimillions") return;
-
       const requestData = {
         operator_type: requestTypeMapping[operatorType] || operatorType,
       };
@@ -134,6 +134,10 @@ const OperatorMobile = () => {
     : null;
 
   const operatorNameMapping = {
+      afrimillions_5_55: "afrimillions_555",
+    afrimillions: "afrimillions",
+    afrimillions_5_90: "afrimillions",
+   
     golden_chance: "golden_chance",
     ghana_game: "5/90_games",
     green_ghana_game: "green_lotto ghana",
@@ -148,7 +152,7 @@ const OperatorMobile = () => {
     GD570: "GD570",
     GD580: "GD580",
     GD590: "GD590",
-    afrimillions: "afrimillions", // Added AfriMillions
+ 
   };
 
   const handleCloseModal = async () => {
@@ -188,32 +192,11 @@ const OperatorMobile = () => {
 
   // Function to open AfriMillions modal
   const handleOpenAfriMillions = () => {
-    // if (!userInfo || !userInfo.token) {
-    //   toast.error("Please login to play AfriMillions");
-    //   return;
-    // }
-    setShowAfriMillionsModal(true);
+    navigate("/afrimillions");
   };
 
   // Function to close AfriMillions modal
-  const handleCloseAfriMillions = () => {
-    setShowAfriMillionsModal(false);
-  };
-
   // Get next Saturday 8 PM for AfriMillions
-  const getNextAfriMillionsDraw = () => {
-    const now = new Date();
-    const nextSaturday = new Date();
-    const daysUntilSaturday = (6 - now.getDay() + 7) % 7 || 7;
-    nextSaturday.setDate(now.getDate() + daysUntilSaturday);
-    nextSaturday.setHours(20, 0, 0, 0);
-
-    if (now.getDay() === 6 && now.getHours() >= 20) {
-      nextSaturday.setDate(nextSaturday.getDate() + 7);
-    }
-
-    return nextSaturday;
-  };
 
   // Animated Countdown wrapper
   const MotionCountdown = ({ date }) => (
@@ -312,11 +295,6 @@ const OperatorMobile = () => {
         </div>
       </div>
 
-      <AfriMillionsModal
-        showModal={showAfriMillionsModal}
-        onClose={handleCloseAfriMillions}
-        userInfo={userInfo}
-      />
 
       <section>
         <Navbar />
@@ -346,102 +324,6 @@ const OperatorMobile = () => {
               <AnimatePresence initial={false}>
                 {operatorTypes?.map((operatorType, index) => {
                   // Special handling for AfriMillions
-                  if (operatorType === "afrimillions") {
-                    return (
-                      <motion.div
-                        key="afrimillions"
-                        layout
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.25 }}
-                      >
-                        <div className="hidden-md hidden-lg div_vlgrey">
-                          <table width="100%" cellPadding="3">
-                            <tbody>
-                              <tr valign="top">
-                                <td width="41%">
-                                  <motion.img
-                                    src={allImages.afrimillions}
-                                    alt="AfriMillions"
-                                    className="img-fluid"
-                                    initial={{ opacity: 0, scale: 0.96, y: 6 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    transition={{
-                                      type: "spring",
-                                      stiffness: 260,
-                                      damping: 24,
-                                      delay: (index % 8) * 0.05,
-                                    }}
-                                    whileHover={{ scale: 1.03 }}
-                                    whileTap={{ scale: 0.98 }}
-                                  />
-                                </td>
-                                <td style={{ lineHeight: "19px!important" }}>
-                                  <table width="100%" cellPadding="3">
-                                    <tbody
-                                      style={{
-                                        color: "#000",
-                                        fontWeight: "bolder",
-                                      }}
-                                    >
-                                      <tr valign="top">
-                                        <td
-                                          style={{
-                                            lineHeight: "27px!important",
-                                          }}
-                                        >
-                                          <small>
-                                            <strong>NEXT DRAW</strong>
-                                          </small>
-                                          <br />
-                                          <small
-                                            className="fw-bolder"
-                                            style={{ fontSize: "18px" }}
-                                          >
-                                            AfriMillions Lottery
-                                          </small>
-                                          <br />
-                                          <br />
-
-                                          <small>
-                                            <span>
-                                              <MotionCountdown
-                                                date={getNextAfriMillionsDraw()}
-                                              />
-                                            </span>
-                                          </small>
-
-                                          <p onClick={handleOpenAfriMillions}>
-                                            <motion.a
-                                              className="btn btn-blue btn-sm btn-block w-100 mt-3"
-                                              whileHover={{
-                                                scale: [1, 1.05, 1],
-                                                y: [-1, 0],
-                                                transition: {
-                                                  duration: 0.6,
-                                                  repeat: Infinity,
-                                                  repeatType: "mirror",
-                                                },
-                                              }}
-                                              whileTap={{ scale: 0.98 }}
-                                            >
-                                              Play Now
-                                            </motion.a>
-                                          </p>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </motion.div>
-                    );
-                  }
-
                   const operatorDataArray = operatorData[operatorType];
                   if (operatorType === "gd_lotto") {
                     return null;
@@ -478,6 +360,9 @@ const OperatorMobile = () => {
                         time: latestGame590?.drawTime,
                       },
                       NNP: { name: "gameName", time: "drawTime" },
+                      afrimillions: { name: "GameName", time: "drawTime" }, // AfriMillions 6/49
+                      afrimillions_5_90: { name: "GameName", time: "drawTime" }, // AfriMillions 5/90
+                      afrimillions_5_55: { name: "GameName", time: "drawTime" }, // AfriMillions 5/55
                     };
 
                     const dataArray = Array.isArray(operatorDataArray)
@@ -651,6 +536,9 @@ const OperatorMobile = () => {
                         } else {
                           drawTime = null;
                         }
+                      } else if (operatorType === "afrimillions" || operatorType === "afrimillions_5_90" || operatorType === "afrimillions_5_55") {
+                        // drawTime is Unix timestamp in milliseconds
+                        drawTime = game?.drawTime ? moment(game.drawTime) : null;
                       }
 
                       return drawTime && drawTime?.isAfter(currentTime);
@@ -928,6 +816,9 @@ const OperatorMobile = () => {
                         } else {
                           return null;
                         }
+                      } else if (operatorType === "afrimillions" || operatorType === "afrimillions_5_90" || operatorType === "afrimillions_5_55") {
+                        // drawTime is Unix timestamp in milliseconds
+                        return game?.drawTime ? new Date(game.drawTime) : null;
                       } else {
                         const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                           .utcOffset("+00:00")
@@ -1056,6 +947,18 @@ const OperatorMobile = () => {
                                                         "Pls Login to proceed"
                                                       );
                                                     }
+                                                  } else if (
+                                                    operatorType === "afrimillions"
+                                                  ) {
+                                                    navigate("/afrimillions?type=6_49");
+                                                  } else if (
+                                                    operatorType === "afrimillions_5_90"
+                                                  ) {
+                                                    navigate("/afrimillions?type=5_90");
+                                                  } else if (
+                                                    operatorType === "afrimillions_5_55"
+                                                  ) {
+                                                    navigate("/afrimillions?type=5_55");
                                                   } else {
                                                     const sanitizedOperatorType =
                                                       operatorType === "GH 5/90"

@@ -1921,6 +1921,7 @@ const PlayGames = () => {
                     <select
                       name="gtype"
                       className="form-select p-2 mb-2 blue_dropdown_select w-100"
+                      style={{width:"100%"}}
                       required=""
                       id="gtype"
                       value={selectedBetType}

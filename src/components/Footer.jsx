@@ -141,7 +141,7 @@ const Footer = () => {
 
                 <div className="col-md-3 col-sm-6 col-xs-12">
                   <div className="footer-widget footer-contact">
-                    <h2>
+                    {/* <h2>
                       <a
                         href="https://apkpure.net/mylottohub/com.mylottohub_app/downloading"
                         target="_blank"
@@ -155,7 +155,7 @@ const Footer = () => {
                       >
                         Download App
                       </a>
-                    </h2>
+                    </h2> */}
                     <p
                       className="text-center"
                       style={{

@@ -106,18 +106,22 @@ const BetHistory = () => {
               {id === "ghana_game"
                 ? "5/90 Games"
                 : id === "lotto_nigeria"
-                ? "Set Lotto"
-                : id === "green_lotto"
-                ? "Green Lotto"
-                : id === "green_ghana_game"
-                ? "Green Ghana Game"
-                : id === "gd_jackpot"
-                ? "Gd Jackpot"
-                : id === "gd_lotto"
-                ? "Gd Lotto"
-                : id === "gh_5_90"
-                ? "GH 5/90"
-                : `${id}`}{" "}
+                  ? "Set Lotto"
+                  : id === "green_lotto"
+                    ? "Green Lotto"
+                    : id === "green_ghana_game"
+                      ? "Green Ghana Game"
+                      : id === "gd_jackpot"
+                        ? "Gd Jackpot"
+                        : id === "gd_lotto"
+                          ? "Gd Lotto"
+                          :id === "gd_lotto"
+                          ? "Gd Lotto"
+                          : id === "afri_millions_5_55"
+                            ? "AfriMillions 55"
+                            : id === "gh_5_90"
+                              ? "GH 5/90"
+                              : `${id}`}{" "}
               Bet History
             </strong>
           </h4>
@@ -231,6 +235,8 @@ const BetHistory = () => {
                                 <td>{record?.TikcetId}</td>
                               ) : id === "gh_5_90" ? (
                                 <td>{record?.TikcetId}</td>
+                              ) : id === "afri_millions" ? (
+                                <td>{record?.TikcetId}</td>
                               ) : (
                                 <td>{record?.TSN}</td>
                               )}
@@ -238,6 +244,8 @@ const BetHistory = () => {
                             <td>
                               {id === "NNP" ? (
                                 <td>{record?.drawname}</td>
+                              ) : id === "afri_millions" ? (
+                                <td>AfriMillions</td>
                               ) : (
                                 <td> {record?.mgametype}</td>
                               )}
@@ -255,6 +263,8 @@ const BetHistory = () => {
                               ) : id === "gd_lotto" ? (
                                 <td>{record?.drawname}</td>
                               ) : id === "NNP" ? (
+                                <td>{record?.drawname}</td>
+                              ) : id === "afri_millions" ? (
                                 <td>{record?.drawname}</td>
                               ) : id === "gd_jackpot" ? (
                                 <td>{record?.drawname}</td>
@@ -340,6 +350,8 @@ const BetHistory = () => {
                                 <td>{record?.TikcetId}</td>
                               ) : id === "gh_5_90" ? (
                                 <td>{record?.TikcetId}</td>
+                              ) : id === "afri_millions" ? (
+                                <td>{record?.TikcetId}</td>
                               ) : id === "lotto_nigeria" ? (
                                 <td>{record?.wagerID}</td>
                               ) : (
@@ -354,7 +366,12 @@ const BetHistory = () => {
                             }}
                           >
                             <span className="fw-bolder">Game:</span>
-                            <span>{record?.mgametype}</span>
+                            <span>
+                              {id === "afri_millions"
+                                ? "AfriMillions"
+                                : record?.mgametype}
+                            </span>
+
                           </p>
                           <p
                             style={{
@@ -376,6 +393,8 @@ const BetHistory = () => {
                               ) : id === "NNP" ? (
                                 <td>{record?.drawname}</td>
                               ) : id === "gd_jackpot" ? (
+                                <td>{record?.drawname}</td>
+                              ) : id === "afri_millions" ? (
                                 <td>{record?.drawname}</td>
                               ) : id === "lotto_nigeria" ? (
                                 <td>{record?.drawAlias}</td>
@@ -480,6 +499,13 @@ const BetHistory = () => {
                   {selectedBet?.mgametype}
                 </span>
               </>
+            ) : id === "afri_millions" ? (
+              <>
+                <div>AfriMillions </div>
+                <span className="text-white text-center">
+                  {selectedBet?.mgametype}
+                </span>
+              </>
             ) : id === "green_lotto" ? (
               <>
                 <div>Green Lotto</div>
@@ -545,6 +571,8 @@ const BetHistory = () => {
                   ) : id === "gd_jackpot" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : id === "gh_5_90" ? (
+                    <span> {selectedBet?.TikcetId}</span>
+                  ) : id === "afri_millions" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : id === "lotto_nigeria" ? (
                     <span> {selectedBet?.wagerID}</span>
@@ -621,6 +649,14 @@ const BetHistory = () => {
                       {" "}
                       {moment
                         .utc(selectedBet?.drawdate, "DD-MM-YYYY HH:mm:ss")
+                        .local()
+                        .format("Do MMM YYYY | h:mm:ssA")}
+                    </span>
+                  ) : id === "afri_millions" ? (
+                    <span>
+                      {" "}
+                      {moment
+                        .utc(selectedBet?.closetime, "YYYY-MM-DD HH:mm:ss")
                         .local()
                         .format("Do MMM YYYY | h:mm:ssA")}
                     </span>
@@ -717,6 +753,8 @@ const BetHistory = () => {
                   ) : id === "NNP" ? (
                     <p> {selectedBet?.drawname}</p>
                   ) : id === "gd_jackpot" ? (
+                    <p> {selectedBet?.drawname}</p>
+                  ) : id === "afri_millions" ? (
                     <p> {selectedBet?.drawname}</p>
                   ) : id === "gh_5_90" ? (
                     <p> {selectedBet?.drawname}</p>

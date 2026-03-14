@@ -43,7 +43,7 @@ const Download = () => {
           className="d-flex navigation-items text-center"
           style={{ gap: "15px", alignItems: "center" }}
         >
-          <a
+          {/* <a
             href="https://apkpure.net/mylottohub/com.mylottohub_app/downloading"
             target="_blank"
             rel="noopener noreferrer"
@@ -54,7 +54,7 @@ const Download = () => {
             className="navigation-item_play-c1 w-nav-link signInBtn_new fw-bolder"
           >
             Download App
-          </a>
+          </a> */}
           <a
             href="https://agency.mylottohub.com/"
             target="_blank"

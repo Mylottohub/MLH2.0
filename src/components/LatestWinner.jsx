@@ -45,7 +45,7 @@ const LatestWinner = () => {
         <div className="scroll-content">
           Latest Winners =&gt;
           {winners.map((results, index) => (
-            <span key={index}>
+            <span className="text-white" key={index}>
               {results?.username.substring(0, 4)}***** &nbsp; - ₦
               {results?.amount} &nbsp; - {formatDate(results?.date)} |{" "}
             </span>

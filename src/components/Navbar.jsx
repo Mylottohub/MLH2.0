@@ -129,7 +129,7 @@ const Navbar = () => {
                           aria-expanded="false"
                         >
                           <span className="avatar-with-live">
-                            <FaUser className="fa-2x" />
+                            <FaUser className="fa-2x text-white" />
                             <motion.span
                               className="live-dot"
                               animate={{
@@ -291,7 +291,7 @@ const Navbar = () => {
                               className="dropdown-item p-2 fw-bolder"
                               onClick={() => navigate("/lotto-ladies")}
                             >
-                              &nbsp;&nbsp;Lotto Ladies
+                              &nbsp;&nbsp;Watch Videos
                             </a>
                           </li>
                           <li>
@@ -399,7 +399,7 @@ const Navbar = () => {
                       className="nav-item"
                       onClick={() => navigate("/lotto-ladies")}
                     >
-                      <a className="nav-link text-white me-3 ">Lotto Ladies</a>
+                      <a className="nav-link text-white me-3 ">Watch Videos</a>
                     </li>
 
                     <li className="nav-item dropdown">
@@ -560,7 +560,7 @@ const Navbar = () => {
               </div>
             </nav>
           </div>
-          <div className="container mobile_bottom_head">
+          <div className="mobile_bottom_head">
             {isLoadingUserProfile ? (
               <p>Balance Loading...</p>
             ) : userProfileResponse ? (
@@ -748,7 +748,7 @@ const Navbar = () => {
                     className="nav-link text-white me-3"
                     onClick={() => navigate("/lotto-ladies")}
                   >
-                    Lotto Ladies
+                    Watch Videos
                   </a>
                 </li>
 
@@ -900,8 +900,8 @@ const Navbar = () => {
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                   >
-                    {/* <a  className="nav-link text-dark fw-bolder me-3" href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"> */}
-                    Sign In
+                    {/* <a  className="nav-link text-dark fw-bolder me-3" href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com">
+                    Sign In */}
                   </a>
                 </li>
                 <hr />
