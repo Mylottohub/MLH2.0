@@ -307,12 +307,12 @@ const AfriMillionsPage = () => {
                 );
                 setLines([{ id: 1, numbers: [] }]);
                 setCurrentLineIndex(0);
-                setTimeout(() => navigate(BET_HISTORY_ROUTE), 2000);
+                // setTimeout(() => navigate(BET_HISTORY_ROUTE), 2000);
             } else {
                 toast.error("Some bets failed");
             }
         } catch (error) {
-            console.error("Bet error:", error);
+            // console.error("Bet error:", error);
             toast.error(error.response?.data?.message || "Failed to place bet");
         } finally {
             setIsSubmitting(false);

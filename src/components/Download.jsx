@@ -1,12 +1,19 @@
 import { useNavigate } from "react-router-dom";
+import { usePwaInstall } from "../context/PwaInstallContext";
 
 const Download = () => {
   const navigate = useNavigate();
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const { installApp, isIOS, openInstallModal, shouldExposeInstallUI } =
+    usePwaInstall();
 
-  if (isIOS) {
-    return null;
-  }
+  const handleInstallClick = async () => {
+    if (isIOS) {
+      openInstallModal();
+      return;
+    }
+
+    await installApp();
+  };
 
   return (
     <div
@@ -16,7 +23,7 @@ const Download = () => {
       role="banner"
       className="navigation w-nav navigationData"
       style={{
-        // position: "fixed",
+        position: "fixed",
         top: 0,
         left: 0,
         width: "100%",
@@ -43,18 +50,19 @@ const Download = () => {
           className="d-flex navigation-items text-center"
           style={{ gap: "15px", alignItems: "center" }}
         >
-          {/* <a
-            href="https://apkpure.net/mylottohub/com.mylottohub_app/downloading"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              backgroundColor: "#F82020",
-              transition: "all 0.3s ease",
-            }}
-            className="navigation-item_play-c1 w-nav-link signInBtn_new fw-bolder"
-          >
-            Download App
-          </a> */}
+          {shouldExposeInstallUI ? (
+            <button
+              type="button"
+              onClick={handleInstallClick}
+              className="navigation-item_play-c1 install-app-trigger fw-bolder"
+              style={{
+                backgroundColor: "#db801e",
+                transition: "all 0.3s ease",
+              }}
+            >
+              Install App
+            </button>
+          ) : null}
           <a
             href="https://agency.mylottohub.com/"
             target="_blank"
@@ -84,18 +92,32 @@ const Download = () => {
       </div>
       <style>
         {`
+          /* Add padding to body to account for fixed header */
+          body {
+            padding-top: 60px;
+          }
+
           /* Default button styles */
           .navigation .navigation-item_play-c1 {
             color: #fff;
             text-decoration: none;
             padding: 10px 15px;          
             border-radius: 5px;
+            border: 0;
             transition: all 0.3s ease;
             font-size: 16px;
           }
 
+          .navigation .install-app-trigger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(219, 128, 30, 0.3);
+          }
+
           /* Mobile-specific styles */
           @media (max-width: 768px) {
+            body {
+              padding-top: 60px;
+            }
             .navigation .navigation-item_play-c1 {
               padding: 6px 10px; 
               font-size: 13px; 

@@ -10,17 +10,19 @@ import { useGetProfileUser } from "../react-query";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 
-
 // Cache display-operators logos for this session to avoid re-fetching on navigation
 let OPERATOR_LOGOS_CACHE = null;
 
 const Operator = () => {
   const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [iframeUrl, setIframeUrl] = useState("");
   const [isIframeLoading, setIsIframeLoading] = useState(false);
-  
+  const [modalTitle, setModalTitle] = useState("");
+  const [showComingSoonModal, setShowComingSoonModal] = useState(false);
+
   // AfriMillions modal state
 
   const { userInfo } = useSelector((state) => state.auth);
@@ -50,7 +52,8 @@ const Operator = () => {
         const data = response.data.data;
         const logos = {};
         data.forEach((operator) => {
-          logos[operator.name.replace(/\s+/g, "_").toLowerCase()] = operator.logo;
+          logos[operator.name.replace(/\s+/g, "_").toLowerCase()] =
+            operator.logo;
         });
         OPERATOR_LOGOS_CACHE = logos;
         setOperatorLogos(logos);
@@ -63,10 +66,10 @@ const Operator = () => {
   }, []);
 
   const operatorTypes = [
-     "afrimillions_5_55", // AfriMillions 5/55
+    "afrimillions_5_55", // AfriMillions 5/55
     "afrimillions", // AfriMillions 6/49
     "afrimillions_5_90", // AfriMillions 5/90
-   
+
     "golden_chance",
     "GH 5/90",
     "ghana_game",
@@ -81,7 +84,6 @@ const Operator = () => {
     "GD570",
     "GD580",
     "GD590",
-  
   ];
 
   const requestTypeMapping = {
@@ -129,13 +131,13 @@ const Operator = () => {
   const latestGame590 = Array.isArray(operatorData?.gd_lotto)
     ? operatorData?.gd_lotto
         .filter(
-          (game) => game?.gameType === "5/90" && new Date(game?.drawTime) > now
+          (game) => game?.gameType === "5/90" && new Date(game?.drawTime) > now,
         )
         .sort((a, b) => new Date(a.drawTime) - new Date(b.drawTime))[0]
     : null;
 
   const operatorNameMapping = {
-     afrimillions_5_55: "afrimillions_555",
+    afrimillions_5_55: "afrimillions_555",
     afrimillions: "afrimillions", // AfriMillions 6/49 - matches API name "Afrimillions"
     afrimillions_5_90: "afrimillions", // AfriMillions 5/90 - matches API name "Afrimillions"
     golden_chance: "golden_chance",
@@ -152,7 +154,6 @@ const Operator = () => {
     GD580: "GD580",
     GD590: "GD590",
     NNP: "nnp",
-  
   };
 
   const handleCloseModal = async () => {
@@ -181,8 +182,9 @@ const Operator = () => {
   };
 
   // Function to handle modal open
-  const handleOpenModal = (url) => {
+  const handleOpenModal = (url, title = "Game") => {
     setIframeUrl(url);
+    setModalTitle(title);
     setIsIframeLoading(true);
     setShowModal(true);
   };
@@ -205,7 +207,8 @@ const Operator = () => {
         <motion.div
           initial={false}
           animate={{
-            backgroundColor: seconds === 0 ? ["#ffffff", "#fff9e6", "#ffffff"] : "#ffffff",
+            backgroundColor:
+              seconds === 0 ? ["#ffffff", "#fff9e6", "#ffffff"] : "#ffffff",
           }}
           transition={{ duration: 0.45 }}
         >
@@ -249,6 +252,27 @@ const Operator = () => {
       )}
     />
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [gameUrl, setGameUrl] = useState("");
+  const [loadingIframe, setLoadingIframe] = useState(false);
+  const [gameTitle, setGameTitle] = useState("");
+
+
+  const openGameModal = (url, title) => {
+    setGameTitle(title);
+    setGameUrl(url);
+    setLoadingIframe(true);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setGameUrl("");
+    setLoadingIframe(false);
+    setGameTitle("");
+  };
+
+
 
   return (
     <>
@@ -262,7 +286,7 @@ const Operator = () => {
         <div className="modal-dialog modal-fullscreen" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Golden Chance Lotto</h5>
+              <h5 className="modal-title">{modalTitle}</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -285,7 +309,7 @@ const Operator = () => {
               <iframe
                 src={iframeUrl}
                 className="w-100 h-100"
-                title="Golden Chance Lotto"
+                title={modalTitle}
                 onLoad={handleIframeLoad}
               ></iframe>
             </div>
@@ -294,8 +318,90 @@ const Operator = () => {
       </div>
       {showModal && <div className="modal-backdrop fade show"></div>}
 
+      <AnimatePresence>
+        {showComingSoonModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowComingSoonModal(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background:
+                "radial-gradient(circle at top, rgba(255,214,64,0.28), rgba(0,0,0,0.72))",
+              zIndex: 999998,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "18px",
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 24 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.96, y: 12 }}
+              onClick={(event) => event.stopPropagation()}
+              style={{
+                width: "min(440px, 100%)",
+                background: "#fff",
+                borderRadius: "18px",
+                overflow: "hidden",
+                boxShadow: "0 24px 80px rgba(0,0,0,0.28)",
+              }}
+            >
+              <div
+                style={{
+                  background: "linear-gradient(135deg, #07394b, #0f7c74)",
+                  color: "#fff",
+                  padding: "34px 28px",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    width: "76px",
+                    height: "76px",
+                    margin: "0 auto 18px",
+                    borderRadius: "50%",
+                    background: "#ffd640",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 14px 34px rgba(0,0,0,0.22)",
+                  }}
+                >
+                  <img
+                    src="/images/instant_games_icon.png"
+                    alt="Instant Lotto"
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
+                <h3 className="fw-bolder mb-2">Coming Soon</h3>
+                <p className="mb-0" style={{ lineHeight: "25px" }}>
+                  Instant Lotto is getting polished for launch. Check back soon
+                  for a faster way to play.
+                </p>
+              </div>
+              <div className="p-3">
+                <button
+                  type="button"
+                  className="btn btn-yellow w-100 fw-bolder"
+                  onClick={() => setShowComingSoonModal(false)}
+                >
+                  Got it
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* AfriMillions Modal */}
-  
 
       <div className="container">
         <div className="row app__select_operator">
@@ -313,7 +419,10 @@ const Operator = () => {
                     </div>
                     <div className="service-conten text-center p-3">
                       <div className="skeleton-line"></div>
-                      <div className="skeleton-line" style={{ width: "60%", margin: "10px auto 0" }}></div>
+                      <div
+                        className="skeleton-line"
+                        style={{ width: "60%", margin: "10px auto 0" }}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -383,20 +492,32 @@ const Operator = () => {
                           : null;
                       } else if (operatorType === "wesco") {
                         const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss",
+                        );
                       } else if (operatorType === "lottomania") {
                         drawTime = moment(game?.sdt);
                       } else if (operatorType === "ghana_game") {
                         drawTime = moment(game?.sdt);
                       } else if (operatorType === "green_lotto") {
                         const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss",
+                        );
                       } else if (operatorType === "green_ghana_game") {
                         const drawDateTimeString = `${game?.drawdate}${game?.drawtime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss",
+                        );
                       } else if (operatorType === "GH 5/90") {
                         const drawDateTimeString = `${game?.drawTime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss",
+                        );
                       } else if (operatorType === "GD570") {
                         if (Array.isArray(operatorData?.gd_lotto)) {
                           const now = new Date();
@@ -404,11 +525,11 @@ const Operator = () => {
                             .filter(
                               (game) =>
                                 game?.gameType === "5/90" &&
-                                new Date(game?.drawTime) > now
+                                new Date(game?.drawTime) > now,
                             )
                             .sort(
                               (a, b) =>
-                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                                new Date(a?.drawTime) - new Date(b?.drawTime),
                             )[0];
 
                           if (latestGame590) {
@@ -418,7 +539,7 @@ const Operator = () => {
                             };
                             drawTime = moment(
                               latestGame590?.drawTime,
-                              "YYYY-MM-DDTHH:mm:ss"
+                              "YYYY-MM-DDTHH:mm:ss",
                             );
                           }
                         }
@@ -430,18 +551,18 @@ const Operator = () => {
                             .filter(
                               (game) =>
                                 game?.gameType === "5/90" &&
-                                new Date(game?.drawTime) > now
+                                new Date(game?.drawTime) > now,
                             )
                             .sort(
                               (a, b) =>
-                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                                new Date(a?.drawTime) - new Date(b?.drawTime),
                             )[0];
 
                           if (latestGame590) {
                             const drawDateTimeString = latestGame590?.drawTime;
                             const parsedTime = moment(
                               drawDateTimeString,
-                              "YYYY-MM-DDTHH:mm:ss"
+                              "YYYY-MM-DDTHH:mm:ss",
                             )
                               .utcOffset("+00:00")
                               .utc();
@@ -461,18 +582,18 @@ const Operator = () => {
                             .filter(
                               (game) =>
                                 game?.gameType === "5/90" &&
-                                new Date(game?.drawTime) > now
+                                new Date(game?.drawTime) > now,
                             )
                             .sort(
                               (a, b) =>
-                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                                new Date(a?.drawTime) - new Date(b?.drawTime),
                             )[0];
 
                           if (latestGame590) {
                             const drawDateTimeString = latestGame590?.drawTime;
                             const parsedTime = moment(
                               drawDateTimeString,
-                              "YYYY-MM-DDTHH:mm:ss"
+                              "YYYY-MM-DDTHH:mm:ss",
                             )
                               .utcOffset("+00:00")
                               .utc();
@@ -492,11 +613,11 @@ const Operator = () => {
                             .filter(
                               (game) =>
                                 game?.gameType === "5/90" &&
-                                new Date(game?.drawTime) > now
+                                new Date(game?.drawTime) > now,
                             )
                             .sort(
                               (a, b) =>
-                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                                new Date(a?.drawTime) - new Date(b?.drawTime),
                             )[0];
 
                           if (latestGame590) {
@@ -506,13 +627,16 @@ const Operator = () => {
                             };
                             drawTime = moment(
                               latestGame590?.drawTime,
-                              "YYYY-MM-DDTHH:mm:ss"
+                              "YYYY-MM-DDTHH:mm:ss",
                             );
                           }
                         }
                       } else if (operatorType === "NNP") {
                         const drawDateTimeString = `${game?.drawTime}`;
-                        drawTime = moment(drawDateTimeString, "YYYYMMDD HH:mm:ss");
+                        drawTime = moment(
+                          drawDateTimeString,
+                          "YYYYMMDD HH:mm:ss",
+                        );
                       } else if (operatorType === "golden_chance") {
                         const drawDate = game?.drawdate;
                         const drawTimeString = game?.drawtime;
@@ -520,21 +644,27 @@ const Operator = () => {
                         if (drawDate && drawTimeString) {
                           drawTime = moment(
                             `${drawDate} ${drawTimeString}`,
-                            "YYYYMMDD HH:mm:ss"
+                            "YYYYMMDD HH:mm:ss",
                           );
                         } else {
                           drawTime = null;
                         }
-                      } else if (operatorType === "afrimillions" || operatorType === "afrimillions_5_90" || operatorType === "afrimillions_5_55") {
+                      } else if (
+                        operatorType === "afrimillions" ||
+                        operatorType === "afrimillions_5_90" ||
+                        operatorType === "afrimillions_5_55"
+                      ) {
                         // drawTime is Unix timestamp in milliseconds
-                        drawTime = game?.drawTime ? moment(game.drawTime) : null;
+                        drawTime = game?.drawTime
+                          ? moment(game.drawTime)
+                          : null;
                       }
                       return drawTime && drawTime.isAfter(currentTime);
                     });
                     upcomingGames?.sort(
                       (a, b) =>
                         new Date(a[propertyMapping[operatorType]?.time]) -
-                        new Date(b[propertyMapping[operatorType]?.time])
+                        new Date(b[propertyMapping[operatorType]?.time]),
                     );
 
                     const nextGame =
@@ -556,7 +686,7 @@ const Operator = () => {
                         const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYYMMDD HH:mm:ss"
+                          "YYYYMMDD HH:mm:ss",
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -564,14 +694,17 @@ const Operator = () => {
                         if (parsedTime.isValid()) {
                           return parsedTime.toDate();
                         } else {
-                          console.error("Invalid date format:", drawDateTimeString);
+                          console.error(
+                            "Invalid date format:",
+                            drawDateTimeString,
+                          );
                           return null;
                         }
                       } else if (operatorType === "green_lotto") {
                         const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYYMMDD HH:mm:ss"
+                          "YYYYMMDD HH:mm:ss",
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -579,14 +712,17 @@ const Operator = () => {
                         if (parsedTime.isValid()) {
                           return parsedTime.toDate();
                         } else {
-                          console.error("Invalid date format:", drawDateTimeString);
+                          console.error(
+                            "Invalid date format:",
+                            drawDateTimeString,
+                          );
                           return null;
                         }
                       } else if (operatorType === "green_ghana_game") {
                         const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYYMMDD HH:mm:ss"
+                          "YYYYMMDD HH:mm:ss",
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -600,7 +736,7 @@ const Operator = () => {
                         const drawDateTimeString = `${game?.drawTime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYYMMDD HH:mm:ss"
+                          "YYYYMMDD HH:mm:ss",
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -614,7 +750,7 @@ const Operator = () => {
                         const drawDateTimeString = `${game?.drawTime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYYMMDD HH:mm:ss"
+                          "YYYYMMDD HH:mm:ss",
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -632,18 +768,18 @@ const Operator = () => {
                             .filter(
                               (game) =>
                                 game?.gameType === "5/90" &&
-                                new Date(game?.drawTime) > now
+                                new Date(game?.drawTime) > now,
                             )
                             .sort(
                               (a, b) =>
-                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                                new Date(a?.drawTime) - new Date(b?.drawTime),
                             )[0];
 
                           if (latestGame590) {
                             const drawDateTimeString = latestGame590?.drawTime;
                             const parsedTime = moment(
                               drawDateTimeString,
-                              "YYYY-MM-DDTHH:mm:ss"
+                              "YYYY-MM-DDTHH:mm:ss",
                             )
                               .utcOffset("+00:00")
                               .utc();
@@ -663,18 +799,18 @@ const Operator = () => {
                             .filter(
                               (game) =>
                                 game?.gameType === "5/90" &&
-                                new Date(game?.drawTime) > now
+                                new Date(game?.drawTime) > now,
                             )
                             .sort(
                               (a, b) =>
-                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                                new Date(a?.drawTime) - new Date(b?.drawTime),
                             )[0];
 
                           if (latestGame590) {
                             const drawDateTimeString = latestGame590?.drawTime;
                             const parsedTime = moment(
                               drawDateTimeString,
-                              "YYYY-MM-DDTHH:mm:ss"
+                              "YYYY-MM-DDTHH:mm:ss",
                             )
                               .utcOffset("+00:00")
                               .utc();
@@ -694,18 +830,18 @@ const Operator = () => {
                             .filter(
                               (game) =>
                                 game?.gameType === "5/90" &&
-                                new Date(game?.drawTime) > now
+                                new Date(game?.drawTime) > now,
                             )
                             .sort(
                               (a, b) =>
-                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                                new Date(a?.drawTime) - new Date(b?.drawTime),
                             )[0];
 
                           if (latestGame590) {
                             const drawDateTimeString = latestGame590?.drawTime;
                             const parsedTime = moment(
                               drawDateTimeString,
-                              "YYYY-MM-DDTHH:mm:ss"
+                              "YYYY-MM-DDTHH:mm:ss",
                             )
                               .utcOffset("+00:00")
                               .utc();
@@ -725,18 +861,18 @@ const Operator = () => {
                             .filter(
                               (game) =>
                                 game?.gameType === "5/90" &&
-                                new Date(game?.drawTime) > now
+                                new Date(game?.drawTime) > now,
                             )
                             .sort(
                               (a, b) =>
-                                new Date(a?.drawTime) - new Date(b?.drawTime)
+                                new Date(a?.drawTime) - new Date(b?.drawTime),
                             )[0];
 
                           if (latestGame590) {
                             const drawDateTimeString = latestGame590?.drawTime;
                             const parsedTime = moment(
                               drawDateTimeString,
-                              "YYYY-MM-DDTHH:mm:ss"
+                              "YYYY-MM-DDTHH:mm:ss",
                             )
                               .utcOffset("+00:00")
                               .utc();
@@ -752,7 +888,7 @@ const Operator = () => {
                         const drawDateTimeString = `${game?.drawdate} ${game?.drawtime}`;
                         const parsedTime = moment(
                           drawDateTimeString,
-                          "YYYYMMDD HH:mm:ss"
+                          "YYYYMMDD HH:mm:ss",
                         )
                           .utcOffset("+00:00")
                           .utc();
@@ -762,7 +898,11 @@ const Operator = () => {
                         } else {
                           return null;
                         }
-                      } else if (operatorType === "afrimillions" || operatorType === "afrimillions_5_90" || operatorType === "afrimillions_5_55") {
+                      } else if (
+                        operatorType === "afrimillions" ||
+                        operatorType === "afrimillions_5_90" ||
+                        operatorType === "afrimillions_5_55"
+                      ) {
                         // drawTime is Unix timestamp in milliseconds
                         return game?.drawTime ? new Date(game.drawTime) : null;
                       } else {
@@ -784,15 +924,27 @@ const Operator = () => {
                       >
                         <motion.div
                           className="service-wrap mb-5"
-                          whileHover={{ y: -6, boxShadow: "0 14px 34px rgba(0,0,0,0.12)" }}
-                          transition={{ type: "spring", stiffness: 260, damping: 24 }}
+                          whileHover={{
+                            y: -6,
+                            boxShadow: "0 14px 34px rgba(0,0,0,0.12)",
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 260,
+                            damping: 24,
+                          }}
                         >
                           <a>
                             <motion.div
                               className="service-img"
                               initial={{ opacity: 0, scale: 0.96, y: 8 }}
                               animate={{ opacity: 1, scale: 1, y: 0 }}
-                              transition={{ type: "spring", stiffness: 260, damping: 24, delay: (index % 8) * 0.06 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 260,
+                                damping: 24,
+                                delay: (index % 8) * 0.06,
+                              }}
                               whileHover={{ scale: 1.03 }}
                               whileTap={{ scale: 0.98 }}
                             >
@@ -823,7 +975,9 @@ const Operator = () => {
                                   operatorType === "GD590" ||
                                   operatorType === "gd_jackpot"
                                     ? latestGame590?.gameName
-                                    : nextGame[propertyMapping[operatorType]?.name]}
+                                    : nextGame[
+                                        propertyMapping[operatorType]?.name
+                                      ]}
                                   <br />
                                   <br />
                                   <span>
@@ -832,7 +986,10 @@ const Operator = () => {
                                         <MotionCountdown
                                           date={
                                             new Date(
-                                              renderGameTime(operatorType, nextGame)
+                                              renderGameTime(
+                                                operatorType,
+                                                nextGame,
+                                              ),
                                             )
                                           }
                                         />
@@ -848,36 +1005,58 @@ const Operator = () => {
                                       navigate(`/play-game/gd_80`);
                                     } else if (operatorType === "GD590") {
                                       navigate(`/play-game/gd_90`);
-                                    } else if (operatorType === "golden_chance") {
+                                    } else if (
+                                      operatorType === "golden_chance"
+                                    ) {
                                       const uid = userProfileResponse?.id;
 
                                       if (uid && userProfileTempToken) {
                                         const url = `https://goldenchancelotto.com/lotto-iframe/play-now?IntegrationCode=mlh&AffiliateCustomerUID=${uid}&TempToken=${userProfileTempToken}`;
-                                        handleOpenModal(url);
+                                        handleOpenModal(
+                                          url,
+                                          "Golden Chance Lotto",
+                                        );
                                       } else {
                                         toast.error("Pls Login to proceed");
                                       }
-                                    } else if (operatorType === "afrimillions") {
+                                    } else if (
+                                      operatorType === "afrimillions"
+                                    ) {
                                       navigate("/afrimillions?type=6_49");
-                                    } else if (operatorType === "afrimillions_5_90") {
+                                    } else if (
+                                      operatorType === "afrimillions_5_90"
+                                    ) {
                                       navigate("/afrimillions?type=5_90");
-                                    } else if (operatorType === "afrimillions_5_55") {
+                                    } else if (
+                                      operatorType === "afrimillions_5_55"
+                                    ) {
                                       navigate("/afrimillions?type=5_55");
                                     } else {
                                       const sanitizedOperatorType =
                                         operatorType === "GH 5/90"
-                                          ? operatorType.replace(/\s|\/+|\//g, "_")
+                                          ? operatorType.replace(
+                                              /\s|\/+|\//g,
+                                              "_",
+                                            )
                                           : operatorType;
 
                                       navigate(
-                                        `/play-game/${sanitizedOperatorType}`
+                                        `/play-game/${sanitizedOperatorType}`,
                                       );
                                     }
                                   }}
                                 >
                                   <motion.a
                                     className="btn btn-blue btn-sm btn-block w-100 p-2"
-                                    whileHover={{ scale: [1, 1.05, 1], y: [-1, 0], transition: { duration: 0.6, repeat: Infinity, repeatType: "mirror" } }}
+                                    whileHover={{
+                                      scale: [1, 1.05, 1],
+                                      y: [-1, 0],
+                                      transition: {
+                                        duration: 0.6,
+                                        repeat: Infinity,
+                                        repeatType: "mirror",
+                                      },
+                                    }}
                                     whileTap={{ scale: 0.98 }}
                                   >
                                     Play Now
@@ -887,7 +1066,9 @@ const Operator = () => {
                             ) : (
                               <>
                                 <div className="service-img shimmer"></div>
-                                <p className="loading-pulse">Next Game Display at 12:00am</p>
+                                <p className="loading-pulse">
+                                  Next Game Display at 12:00am
+                                </p>
                               </>
                             )}
                           </div>
@@ -1066,89 +1247,122 @@ const Operator = () => {
                 </div>
               </div>
             ) : null}
+            <br />
+            <br />
+            <div className="mobile_game_grid">
+              <button
+                type="button"
+                className="mobile_game_tile"
+                onClick={() => navigate("/play-lotto")}
+              >
+                <span className="mobile_game_icon">
+                  <img src="/images/balls.png"  className="img-fluid" alt="" />
+                </span>
+                <span className="mobile_game_title text-white">Lotto Games</span>
+                <span className="mobile_game_action fw-bolder">Play Now →</span>
+              </button>
 
-            <br />
-            <table width="100%" className="mobile_home_div" cellPadding="15">
-              <tbody>
-                <tr>
-                  <td valign="top" width="60%">
-                    <p style={{ color: "#FFF !important" }}>LOTTO GAMES</p>
-                    <p>
-                      <a
-                        className="btn btn-yellow btn-block"
-                        onClick={() => navigate("/play-lotto")}
-                      >
-                        Play Now
-                      </a>
-                    </p>
-                  </td>
-                  <td valign="middle" width="40%">
-                    <p>
-                      <img
-                        src="/images/lotto_games_icon.png"
-                        className="img-responsive"
-                        height="70"
-                        width="70"
-                      />
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <br />
-            <table width="100%" className="mobile_home_div" cellPadding="15">
-              <tbody>
-                <tr>
-                  <td valign="top" width="60%">
-                    <p style={{ color: "#FFF !important" }}>SPORTS BETTING</p>
-                    <p>
-                      <a
-                        onClick={() => navigate("/all-forecast")}
-                        className="btn btn-yellow btn-block"
-                      >
-                        Play Now
-                      </a>
-                    </p>
-                  </td>
-                  <td valign="middle" width="40%">
-                    <p>
-                      <img
-                        src="images/sports_betting_icon.png"
-                        className="img-responsive"
-                        height="70"
-                        width="70"
-                      />
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <br />
-            <table width="100%" className="mobile_home_div" cellPadding="15">
-              <tbody>
-                <tr onClick={() => navigate("/instant")}>
-                  <td valign="top" width="60%">
-                    <p style={{ color: "#FFF !important" }}>INSTANT GAMES</p>
-                    <p>
-                      <a className="btn btn-yellow btn-block">Play Now</a>
-                    </p>
-                  </td>
-                  <td valign="middle" width="40%">
-                    <p>
-                      <img
-                        src="/images/instant_games_icon.png"
-                        className="img-responsive"
-                        height="70"
-                        width="90"
-                      />
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              <button
+                type="button"
+                className="mobile_game_tile"
+                onClick={() =>
+                  openGameModal(
+                    "https://games.bcrgslaunchgame.com",
+                    "Crash Games",
+                  )
+                }
+              >
+                <span className="mobile_game_icon">
+                  <img src="images/ROCKET.png" className="img-fluid" alt="" />
+                </span>
+
+                <span className="mobile_game_title text-white">
+                  Crash Games
+                </span>
+
+                <span className="mobile_game_action fw-bolder">Play Now →</span>
+              </button>
+
+              <button
+                type="button"
+                className="mobile_game_tile"
+                onClick={() => setShowComingSoonModal(true)}
+              >
+                <span className="mobile_game_icon">
+                  <img src="/images/instant_games_icon.png" alt="" />
+                </span>
+                <span className="mobile_game_title text-white">
+                  Instant Lotto
+                </span>
+                <span className="mobile_game_action mobile_game_action_muted">
+                  Coming soon
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="mobile_game_tile"
+                onClick={() => navigate("/instant")}
+              >
+                <span className="mobile_game_icon">
+                  <img src="/images/other_games.png" alt="" />
+                </span>
+                <span className="mobile_game_title text-white">
+                  Other Games
+                </span>
+                <span className="mobile_game_action fw-bolder">Play Now →</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Crash Game Modal */}
+      <div
+        className={`modal fade ${isModalOpen ? "show" : ""}`}
+        style={{ display: isModalOpen ? "block" : "none" }}
+        tabIndex="-1"
+        role="dialog"
+      >
+        <div className="modal-dialog modal-fullscreen" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">{gameTitle}</h5>
+
+              <button
+                type="button"
+                className="btn-close"
+                onClick={closeModal}
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div className="modal-body position-relative">
+              {loadingIframe && (
+                <div className="spinner-overlay">
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    className="text-dark"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+              )}
+
+              <iframe
+                src={gameUrl}
+                className="w-100 h-100"
+                title={gameTitle}
+                onLoad={() => setLoadingIframe(false)}
+                style={{ border: "none" }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {isModalOpen && <div className="modal-backdrop fade show"></div>}
     </>
   );
 };

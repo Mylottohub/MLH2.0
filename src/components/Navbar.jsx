@@ -14,6 +14,7 @@ import { useGetProfileUser } from "../react-query";
 import Download from "./Download";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollingNotice from "./ScrollingNotice";
+import { Spinner } from "react-bootstrap";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -95,6 +96,30 @@ const Navbar = () => {
     transition: { type: "spring", stiffness: 200, damping: 20 },
   };
 
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+
+  // =============================
+  // OPEN CRASH GAME
+  // =============================
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [gameUrl, setGameUrl] = useState("");
+  const [loadingIframe, setLoadingIframe] = useState(false);
+  const [gameTitle, setGameTitle] = useState("");
+  const openGameModal = (url, title) => {
+    setGameTitle(title);
+    setGameUrl(url);
+    setLoadingIframe(true);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setGameUrl("");
+    setLoadingIframe(false);
+    setGameTitle("");
+  };
+
+
   return (
     <motion.div
       initial={fadeSlideIn.initial}
@@ -111,8 +136,9 @@ const Navbar = () => {
             <Header />
 
             <nav
-              className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""
-                }`}
+              className={`navbar navbar-expand-lg app__navbar-bg ${
+                isScrolled ? "navbar-scrolled" : ""
+              }`}
             >
               <div className="container">
                 {/* left spacer */}
@@ -156,7 +182,12 @@ const Navbar = () => {
                                 setIsMobileUserSectionOpen((prev) => !prev)
                               }
                             >
-                              <a className="fw-bolder text-decoration-none text-dark" onClick={() => navigate("/profile")}>&nbsp;&nbsp;User Profile</a>
+                              <a
+                                className="fw-bolder text-decoration-none text-dark"
+                                onClick={() => navigate("/profile")}
+                              >
+                                &nbsp;&nbsp;User Profile
+                              </a>
                               <span>{isMobileUserSectionOpen ? "−" : "+"}</span>
                             </button>
                           </li>
@@ -193,8 +224,12 @@ const Navbar = () => {
                                 setIsMobileWalletSectionOpen((prev) => !prev)
                               }
                             >
-                              <a className="fw-bolder text-decoration-none text-dark" >&nbsp;&nbsp;Wallet</a>
-                              <span>{isMobileWalletSectionOpen ? "−" : "+"}</span>
+                              <a className="fw-bolder text-decoration-none text-dark">
+                                &nbsp;&nbsp;Wallet
+                              </a>
+                              <span>
+                                {isMobileWalletSectionOpen ? "−" : "+"}
+                              </span>
                             </button>
                           </li>
                           {isMobileWalletSectionOpen && (
@@ -249,8 +284,12 @@ const Navbar = () => {
                                 setIsMobileToolsSectionOpen((prev) => !prev)
                               }
                             >
-                              <a className="fw-bolder text-decoration-none text-dark" >&nbsp;&nbsp;Tools</a>
-                              <span>{isMobileToolsSectionOpen ? "−" : "+"}</span>
+                              <a className="fw-bolder text-decoration-none text-dark">
+                                &nbsp;&nbsp;Tools
+                              </a>
+                              <span>
+                                {isMobileToolsSectionOpen ? "−" : "+"}
+                              </span>
                             </button>
                           </li>
                           {isMobileToolsSectionOpen && (
@@ -342,9 +381,22 @@ const Navbar = () => {
                         <li>
                           <a
                             className="dropdown-item p-2 "
-                            onClick={() => navigate("/all-forecast")}
+                              onClick={() =>
+                  openGameModal(
+                    "https://games.bcrgslaunchgame.com",
+                    "Crash Games",
+                  )
+                }
                           >
-                            Sport Betting
+                            Crash Game
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            className="dropdown-item p-2"
+                            onClick={() => setIsComingSoonOpen(true)}
+                          >
+                            Instant Lotto
                           </a>
                         </li>
                         <li>
@@ -352,7 +404,7 @@ const Navbar = () => {
                             className="dropdown-item p-2"
                             onClick={() => navigate("/instant")}
                           >
-                            Instant Games
+                            Other Games
                           </a>
                         </li>
                       </motion.ul>
@@ -371,7 +423,9 @@ const Navbar = () => {
                       className="nav-item"
                       onClick={() => navigate("/forecast")}
                     >
-                      <a className="nav-link text-white me-3 ">Quick Forecast</a>
+                      <a className="nav-link text-white me-3 ">
+                        Quick Forecast
+                      </a>
                     </li>
 
                     <li
@@ -627,8 +681,9 @@ const Navbar = () => {
         </>
       ) : (
         <nav
-          className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""
-            }`}
+          className={`navbar navbar-expand-lg app__navbar-bg ${
+            isScrolled ? "navbar-scrolled" : ""
+          }`}
         >
           <div className="container">
             <a
@@ -681,10 +736,23 @@ const Navbar = () => {
                     </li>
                     <li>
                       <a
-                        className="dropdown-item p-2"
-                        onClick={() => navigate("/all-forecast")}
+                        className="dropdown-item p-2 "
+                        onClick={() =>
+                          openGameModal(
+                            "https://games.bcrgslaunchgame.com",
+                            "Crash Games",
+                          )
+                        }
                       >
-                        Sport Betting
+                        Crash Game
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="dropdown-item p-2"
+                        onClick={() => setIsComingSoonOpen(true)}
+                      >
+                        Instant Lotto
                       </a>
                     </li>
                     <li>
@@ -692,7 +760,7 @@ const Navbar = () => {
                         className="dropdown-item p-2"
                         onClick={() => navigate("/instant")}
                       >
-                        Instant Games
+                        Other Games
                       </a>
                     </li>
                   </motion.ul>
@@ -817,8 +885,8 @@ const Navbar = () => {
                       Sign Up
                     </motion.span>
                   </a>
-                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com">
-                    {/* <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"> */}
+                  {/* <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"> */}
+                  <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com">
                     <motion.span
                       className="btn btn-yellow  "
                       whileHover={{ scale: 1.03 }}
@@ -862,9 +930,14 @@ const Navbar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link text-dark fw-bolder me-3 w-50"
-                    onClick={() => handleNav("/all-forecast")}
+                    onClick={() =>
+                      openGameModal(
+                        "https://games.bcrgslaunchgame.com",
+                        "Crash Games",
+                      )
+                    }
                   >
-                    Sport Betting
+                    Crash Game
                   </a>
                 </li>
                 <hr />
@@ -886,22 +959,27 @@ const Navbar = () => {
                   </a>
                 </li>
                 <hr />
-                <li className="nav-item">
-                  <a
-                    className="nav-link text-dark fw-bolder me-3"
-                    onClick={() => handleNav("/register")}
-                  >
-                    Sign Up
-                  </a>
-                </li>
+                {!(token && expires && new Date(expires) > new Date()) && (
+                  <li className="nav-item">
+                    <a
+                      className="nav-link text-dark fw-bolder me-3"
+                      onClick={() => handleNav("/register")}
+                    >
+                      Sign Up
+                    </a>
+                  </li>
+                )}
                 <hr />
                 <li className="nav-item">
-                  <a
+                  {/* <a
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
+                  > */}
+                  <a
+                    className="nav-link text-dark fw-bolder me-3"
+                    href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"
                   >
-                    {/* <a  className="nav-link text-dark fw-bolder me-3" href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com">
-                    Sign In */}
+                    Sign In
                   </a>
                 </li>
                 <hr />
@@ -910,6 +988,134 @@ const Navbar = () => {
           </div>
         </nav>
       )}
+
+         {/* Crash Game Modal */}
+         <div
+        className={`modal fade ${isModalOpen ? "show" : ""}`}
+        style={{ display: isModalOpen ? "block" : "none" }}
+        tabIndex="-1"
+        role="dialog"
+      >
+        <div className="modal-dialog modal-fullscreen" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">{gameTitle}</h5>
+
+              <button
+                type="button"
+                className="btn-close"
+                onClick={closeModal}
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div className="modal-body position-relative">
+              {loadingIframe && (
+                <div className="spinner-overlay">
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    className="text-dark"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+              )}
+
+              <iframe
+                src={gameUrl}
+                className="w-100 h-100"
+                title={gameTitle}
+                onLoad={() => setLoadingIframe(false)}
+                style={{ border: "none" }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isComingSoonOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsComingSoonOpen(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background:
+                "radial-gradient(circle at top, rgba(255,214,64,0.28), rgba(0,0,0,0.72))",
+              zIndex: 999998,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "18px",
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 24 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.96, y: 12 }}
+              onClick={(event) => event.stopPropagation()}
+              style={{
+                width: "min(440px, 100%)",
+                background: "#fff",
+                borderRadius: "18px",
+                overflow: "hidden",
+                boxShadow: "0 24px 80px rgba(0,0,0,0.28)",
+              }}
+            >
+              <div
+                style={{
+                  background: "linear-gradient(135deg, #07394b, #0f7c74)",
+                  color: "#fff",
+                  padding: "34px 28px",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    width: "76px",
+                    height: "76px",
+                    margin: "0 auto 18px",
+                    borderRadius: "50%",
+                    background: "#ffd640",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 14px 34px rgba(0,0,0,0.22)",
+                  }}
+                >
+                  <img
+                    src={images.instant}
+                    alt="Instant Lotto"
+                    style={{
+                      width: "44px",
+                      height: "44px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
+                <h3 className="fw-bolder mb-2">Coming Soon</h3>
+                <p className="mb-0" style={{ lineHeight: "25px" }}>
+                  Instant Lotto is getting polished for launch. Check back soon
+                  for a faster way to play.
+                </p>
+              </div>
+              <div className="p-3">
+                <button
+                  type="button"
+                  className="btn btn-yellow w-100 fw-bolder"
+                  onClick={() => setIsComingSoonOpen(false)}
+                >
+                  Got it
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Modals with AnimatePresence */}
       <AnimatePresence>

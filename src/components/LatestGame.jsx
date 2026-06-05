@@ -23,7 +23,7 @@ const LatestGame = () => {
       .then((response) => {
         setTimetable(response.data.data);
       })
-      .catch((err) => {
+      .catch(() => {
         // Handle error
       });
   };

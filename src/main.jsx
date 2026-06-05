@@ -9,9 +9,15 @@ import App from "./App.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WhatsAppWidget from "./components/WhatsAppWidget.jsx";
+import { registerSW } from "virtual:pwa-register";
+import TelegramWidget from "./components/TelegramWidget.jsx";
 // import { logout } from "./pages/slices/authSlice.js";
 
 const queryClient = new QueryClient();
+
+registerSW({
+  immediate: true,
+});
 
 // const handleVisibilityChange = () => {
 //   if (document.visibilityState === "hidden") {
@@ -29,7 +35,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <React.StrictMode>
           <div>
             <App />
-            <WhatsAppWidget />
+            <TelegramWidget />
             <ToastContainer />
             <ReactQueryDevtools initialIsOpen={false} />
           </div>

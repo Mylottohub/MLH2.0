@@ -5,6 +5,8 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LatestWinner from "./components/LatestWinner";
 import LatestGame from "./components/LatestGame";
 import NotFound from "./components/NotFound/NotFound";
+import PwaInstallModal from "./components/PwaInstallModal";
+import { PwaInstallProvider } from "./context/PwaInstallContext";
 
 function App() {
   useEffect(() => {
@@ -22,24 +24,27 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        {routes.map((route, index) => (
-          <Route
-            key={index}
-            path={route.path}
-            element={
-              route.protected ? (
-                <PrivateRoute>{route.element}</PrivateRoute>
-              ) : (
-                route.element
-              )
-            }
-          />
-        ))}
-        <Route path="*" element={<NotFound />} /> {/* Wildcard route */}
-      </Routes>
-      <LatestWinner />
-      <LatestGame />
+      <PwaInstallProvider>
+        <Routes>
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                route.protected ? (
+                  <PrivateRoute>{route.element}</PrivateRoute>
+                ) : (
+                  route.element
+                )
+              }
+            />
+          ))}
+          <Route path="*" element={<NotFound />} /> {/* Wildcard route */}
+        </Routes>
+        <LatestWinner />
+        <LatestGame />
+        <PwaInstallModal />
+      </PwaInstallProvider>
     </BrowserRouter>
   );
 }

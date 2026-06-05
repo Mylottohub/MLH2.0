@@ -33,6 +33,7 @@ import { GdLotto } from "../pages/GdLotto";
 import AllSportForecaster from "../components/SportsBetting/AllSportForecaster";
 import LottoLadies from "../pages/LottoLadies";
 import AfriMillionsPage from "../pages/AfriMillionsPage";
+import CrashGames from "../pages/CrashGames";
 
 export const routes = [
   {
@@ -252,8 +253,14 @@ export const routes = [
     element: <LottoLadies />,
     protected: false,
   },
-   {
-    id: 34,
+  {
+    id: 35,
+    path: "/crash-games",
+    element: <CrashGames />,
+    protected: false,
+  },
+  {
+    id: 36,
     path: "/afrimillions",
     element: <AfriMillionsPage />,
     protected: false,

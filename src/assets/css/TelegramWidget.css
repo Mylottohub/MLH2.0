@@ -1,0 +1,25 @@
+.telegram-widget {
+  position: fixed;
+  bottom: 90px; /* Place above WhatsApp button */
+  right: 20px;
+  z-index: 1000;
+}
+
+.telegram-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: #0088cc;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.telegram-button:hover {
+  transform: scale(1.1);
+}

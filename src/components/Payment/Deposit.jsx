@@ -24,6 +24,7 @@ const Deposit = () => {
       selectedOption === "flutterwave" ||
         selectedOption === "paystack" ||
         selectedOption === "opay" ||
+        selectedOption === "coralpay" ||
         selectedOption === "palmpay" ||
         selectedOption === "monnify"
     );
@@ -167,6 +168,35 @@ const Deposit = () => {
         } catch (error) {
           toast.error("An error occurred.");
         }
+      } else if (selectedPaymentOption === "coralpay") {
+        const paymentData = {
+          id: userId,
+          amount: data.amount,
+          posting: "coralpay",
+        };
+
+        try {
+          const coralPayResponse = await HTTP.post(
+            "/payment-initialize",
+            paymentData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+              },
+            }
+          );
+
+          if (coralPayResponse.status === 200) {
+            const coralpayData = coralPayResponse.data;
+            window.location.href = coralpayData.redirect_url;
+          } else {
+            toast.error("An error occurred.");
+          }
+        } catch (error) {
+          toast.error("An error occurred.");
+        }
       } else if (selectedPaymentOption === "monnify") {
         const paymentData = {
           id: userId,
@@ -251,8 +281,9 @@ const Deposit = () => {
                     <option value="paystack">Paystack</option>
                     <option value="opay">Opay</option>
                     <option value="monnify">Bank Transfer (Monnify)</option>
-                    <option value="flutterwave">Flutterwave</option>
                     <option value="palmpay">Palmpay</option>
+                    <option value="flutterwave">Flutterwave</option>
+                    <option value="coralpay">CoralPay</option>
                   </select>
                 </div>
               </div>

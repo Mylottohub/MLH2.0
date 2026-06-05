@@ -23,7 +23,7 @@ const LottoLadies = () => {
         <table className="table table-express mt-5">
           <tbody>
             <tr>
-              <th className="text-uppercase">AfriMillions – 3rd AfriMillions Live Draw</th>
+              <th className="text-uppercase">AfriMillions – AfriMillions Live Draw</th>
             </tr>
           </tbody>
         </table>
@@ -31,8 +31,8 @@ const LottoLadies = () => {
         <iframe
           width="100%"
           height="355"
-          src="https://www.youtube.com/embed/7mXk2iU4kck?si=0QvwcFioMWfNQ1eC"
-          title="Lottomania – Lotto Ladies Tutorial"
+          src="https://www.youtube.com/embed/pHimxLnz-u0?si=kmrhaUIs8T0YdqhU"
+          title="AfriMillions – AfriMillions Live Draw"
           frameBorder="0"
           allowFullScreen
         ></iframe>

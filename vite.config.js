@@ -6,29 +6,28 @@ import { VitePWA } from "vite-plugin-pwa";
 
 const manifestForPlugIn = {
   registerType: "prompt",
-  includeAssests: ["favicon.ico", "apple-touc-icon.png", "masked-icon.svg"],
+  includeAssets: ["favicon.ico", "apple-touch-icon.png", "maskable_icon.png"],
   manifest: {
-    name: "My Lottohub",
-    short_name: "MLH",
+    name: "MyLottoHub",
+    short_name: "MyLottoHub",
     description: "Play Lotto Games and Win big",
     icons: [
       {
         src: "/android-chrome-192x192.png",
         sizes: "192x192",
         type: "image/png",
-        purpose: "favicon",
+        purpose: "any",
       },
       {
         src: "/android-chrome-512x512.png",
         sizes: "512x512",
         type: "image/png",
-        purpose: "favicon",
+        purpose: "any",
       },
       {
         src: "/apple-touch-icon.png",
         sizes: "180x180",
         type: "image/png",
-        purpose: "apple touch icon",
       },
       {
         src: "/maskable_icon.png",
@@ -44,10 +43,17 @@ const manifestForPlugIn = {
     start_url: "/",
     orientation: "portrait",
   },
+  devOptions: {
+    enabled: false,
+    type: "module",
+  },
 };
 
 export default defineConfig({
   // plugins: [react()],
   plugins: [react(), VitePWA(manifestForPlugIn)],
+  resolve: {
+    dedupe: ["react", "react-dom"],
+  },
   base: "/",
 });
