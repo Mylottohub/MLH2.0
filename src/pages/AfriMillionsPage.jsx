@@ -393,6 +393,17 @@ const AfriMillionsPage = () => {
         <>
             <Navbar />
             <div className="container-afri">
+                 <div className="d-flex align-items-center gap-3">
+                <button 
+                    type="button"
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => navigate(-1)} // or navigate('/') to go home
+                    style={{ fontSize: '14px' }}
+                >
+                    ← Back
+                </button>
+                <h4 className="fw-bold mb-0">{GAME_TITLE}</h4>
+            </div>
                 <form onSubmit={handleConfirmBet} name="play_form" id="play_form">
                     <p className="mt-5">
                         <strong className="text-capitalize fw-bolder text-dark">

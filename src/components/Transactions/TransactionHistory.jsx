@@ -1026,7 +1026,8 @@ const TransactionHistory = () => {
                 <option value="gh_5_90">GH 5/90</option>
                 <option value="gd_jackpot">Gd Jackpot</option>
                 <option value="nnp">NNP</option>
-                <option value="luckyworldgames">CRASH GAME</option>
+                <option value="betconstructgames">Crash Games </option>
+                <option value="luckyworldgames">Classic Games</option>
               </select>
               <i
                 className="bi bi-chevron-down position-absolute"
@@ -1113,7 +1114,9 @@ const TransactionHistory = () => {
                                   <td>{record?.TikcetId}</td>
                                 ) : selectedOperator === "luckyworldgames" ? (
                                   <td>{record?.provider_tx_id}</td>
-                                ) : selectedOperator === "nnp" ? (
+                                ) : selectedOperator === "betconstructgames" ? (
+                                  <td>{record?.ticket_id}</td>
+                                ): selectedOperator === "nnp" ? (
                                   <td>{record?.TikcetId}</td>
                                 ) : (
                                   <td>{record?.TSN}</td>
@@ -1136,6 +1139,8 @@ const TransactionHistory = () => {
                                   </span>
                                 ) : selectedOperator === "luckyworldgames" ? (
                                   record?.game || "-"
+                                ): selectedOperator === "betconstructgames" ? (
+                                  record?.operator_type || "-"
                                 ) : selectedOperator === "afri_millions" ? (
                                   <td>AfriMillions</td>
                                 ) : (
@@ -1163,7 +1168,9 @@ const TransactionHistory = () => {
                                 ) : selectedOperator === "golden_chance" ? (
                                   <td>{record?.operator_type}</td>
                                 ) : selectedOperator === "luckyworldgames" ? (
-                                  <td>CRASH GAME</td>
+                                  <td>Classic Game</td>
+                                ): selectedOperator === "betconstructgames" ? (
+                                  <td>Crash Game</td>
                                 ) : selectedOperator === "afri_millions" ? (
                                   <td>{record?.drawname}</td>
                                 ) : selectedOperator === "lotto_nigeria" ? (
@@ -1263,6 +1270,8 @@ const TransactionHistory = () => {
                                         <td>{record?.TikcetId}</td>
                                       ) : selectedOperator === "luckyworldgames" ? (
                                         <td>{record?.provider_tx_id}</td>
+                                      ) : selectedOperator === "betconstructgames" ? (
+                                        <td>{record?.ticket_id}</td>
                                       ) : selectedOperator === "nnp" ? (
                                         <td>{record?.TikcetId}</td>
                                       ) : (
@@ -1283,7 +1292,8 @@ const TransactionHistory = () => {
                                         selectedOperator === "luckyworldgames"
                                           ? record?.game || "-"
                                           : selectedOperator === "afri_millions"
-                                            ? "AfriMillions"
+                                            ? "AfriMillions": selectedOperator === "betconstructgames"
+                                            ? "operator_type"
                                             : record?.mgametype || "-"
                                       }
 
@@ -1333,16 +1343,18 @@ const TransactionHistory = () => {
                                       ) : selectedOperator ===
                                         "golden_chance" ? (
                                         <td>{record?.operator_type}</td>
-                                      )  : selectedOperator === "afri_millions" ? (
-                                <td>{record?.drawname}</td>
-                              ): selectedOperator === "gh_5_90" ? (
+                                      ) : selectedOperator === "afri_millions" ? (
+                                        <td>{record?.drawname}</td>
+                                      ) : selectedOperator === "gh_5_90" ? (
                                         <td>{record?.drawname}</td>
                                       ) : selectedOperator === "gd_jackpot" ? (
                                         <td>{record?.drawname}</td>
                                       ) : selectedOperator === "nnp" ? (
                                         <td>{record?.drawname}</td>
                                       ) : selectedOperator === "luckyworldgames" ? (
-                                        <td>CRASH GAME</td>
+                                        <td>Classic Game</td>
+                                      ) : selectedOperator === "betconstructgames" ? (
+                                        <td>Crash Game</td>
                                       ) : selectedOperator === "afri_million" ? (
                                         <td>AfriMillions</td>
                                       ) : (
@@ -1458,14 +1470,14 @@ const TransactionHistory = () => {
                   {selectedBet?.mgametype}
                 </span>
               </>
-            ): selectedOperator === "afri_millions" ? (
+            ) : selectedOperator === "afri_millions" ? (
               <>
                 <div>AfriMillions </div>
                 <span className="text-white text-center">
                   {selectedBet?.mgametype}
                 </span>
               </>
-            )  : selectedOperator === "green_ghana_game" ? (
+            ) : selectedOperator === "green_ghana_game" ? (
               <>
                 <div>Green Ghana Game</div>
                 <span className="text-white text-center">
@@ -1540,18 +1552,20 @@ const TransactionHistory = () => {
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "afri_millions" ? (
                     <span> {selectedBet?.TikcetId}</span>
-                  ): selectedOperator === "nnp" ? (
+                  ) : selectedOperator === "nnp" ? (
                     <span> {selectedBet?.TikcetId}</span>
                   ) : selectedOperator === "lotto_nigeria" ? (
                     <span> {selectedBet?.wagerID}</span>
                   ) : selectedOperator === "luckyworldgames" ? (
                     <span> {selectedBet?.provider_tx_id}</span>
+                  ) : selectedOperator === "betconstructgames" ? (
+                    <span> {selectedBet?.ticket_id}</span>
                   ) : (
                     <span> {selectedBet?.TSN}</span>
                   )}
                 </span>
               </p>
-              {selectedOperator !== "luckyworldgames" && (
+              {selectedOperator !== "luckyworldgames" && selectedOperator !== "betconstructgames" && (
                 <p style={{ display: "flex", justifyContent: "space-between" }}>
                   <span className="fw-bolder">LINES:</span>
                   <span>{selectedBet?.line}</span>
@@ -1575,7 +1589,7 @@ const TransactionHistory = () => {
                 </p>
               )}
 
-              {selectedOperator !== "luckyworldgames" && (
+              {selectedOperator !== "luckyworldgames" && selectedOperator !== "betconstructgames" &&  (
                 <p style={{ display: "flex", justifyContent: "space-between" }}>
                   <span className="fw-bolder">DRAW DATE: </span>
                   <span>
@@ -1642,15 +1656,15 @@ const TransactionHistory = () => {
                           .local()
                           .format("Do MMM YYYY | h:mm:ssA")}
                       </span>
-                    ): selectedOperator === "afri_millions" ? (
-                                        <span>
-                                          {" "}
-                                          {moment
-                                            .utc(selectedBet?.closetime, "YYYY-MM-DD HH:mm:ss")
-                                            .local()
-                                            .format("Do MMM YYYY | h:mm:ssA")}
-                                        </span>
-                                      )  : (
+                    ) : selectedOperator === "afri_millions" ? (
+                      <span>
+                        {" "}
+                        {moment
+                          .utc(selectedBet?.closetime, "YYYY-MM-DD HH:mm:ss")
+                          .local()
+                          .format("Do MMM YYYY | h:mm:ssA")}
+                      </span>
+                    ) : (
                       <span>
                         {moment
                           .utc(selectedBet?.DrawTime, "YYYY-MM-DD HH:mm:ss")
@@ -1699,7 +1713,7 @@ const TransactionHistory = () => {
                     <span className="text-capitalize">Gd Jackpot</span>
                   ) : selectedOperator === "nnp" ? (
                     <span className="text-capitalize">NNP</span>
-                  ): selectedOperator === "afri_millions" ? (
+                  ) : selectedOperator === "afri_millions" ? (
                     <span className="text-capitalize">AfriMillions</span>
                   ) : selectedOperator === "golden_chance" ? (
                     <span className="text-capitalize">Golden Chance</span>
@@ -1715,7 +1729,7 @@ const TransactionHistory = () => {
                 <span>{selectedBet?.amount}</span>
               </p>
 
-              {selectedOperator !== "luckyworldgames" && (
+              {selectedOperator !== "luckyworldgames" && selectedOperator !== "betconstructgames" &&  (
                 <p style={{ display: "flex", justifyContent: "space-between" }}>
                   <span className="fw-bolder">NUMBERS:</span>
                   <span>
@@ -1774,12 +1788,14 @@ const TransactionHistory = () => {
                     <p> {selectedBet?.drawname}</p>
                   ) : selectedOperator === "lotto_nigeria" ? (
                     <p> {selectedBet?.drawAlias}</p>
-                  )  : selectedOperator === "afri_millions" ? (
+                  ) : selectedOperator === "afri_millions" ? (
                     <p> {selectedBet?.drawname}</p>
-                  ): selectedOperator === "golden_chance" ? (
+                  ) : selectedOperator === "golden_chance" ? (
                     <p> {selectedBet?.operator_type}</p>
                   ) : selectedOperator === "luckyworldgames" ? (
                     <p> {selectedBet?.game}</p>
+                  ) : selectedOperator === "betconstructgames" ? (
+                    <p> {selectedBet?.operator_type}</p>
                   ) : (
                     <td> {selectedBet?.GameName}</td>
                   )}

@@ -1237,10 +1237,14 @@ const Operator = () => {
                 </div>
                 &nbsp;&nbsp;&nbsp;
                 <div className="col-xs-6  w-50">
-                  <a
+                  {/* <a
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                     // onClick={() => navigate("/login")}
                     className="btn btn-blue btn-block btn-lg"
+                  > */}
+                    <a
+                   className="btn btn-blue btn-block btn-lg"
+                    href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"
                   >
                     Login
                   </a>
@@ -1265,12 +1269,7 @@ const Operator = () => {
               <button
                 type="button"
                 className="mobile_game_tile"
-                onClick={() =>
-                  openGameModal(
-                    "https://games.bcrgslaunchgame.com",
-                    "Crash Games",
-                  )
-                }
+                 onClick={() => navigate("/betconstruct-games")}
               >
                 <span className="mobile_game_icon">
                   <img src="images/ROCKET.png" className="img-fluid" alt="" />
@@ -1286,7 +1285,7 @@ const Operator = () => {
               <button
                 type="button"
                 className="mobile_game_tile"
-                onClick={() => setShowComingSoonModal(true)}
+                onClick={() => navigate("/betconstruct-other-games")}
               >
                 <span className="mobile_game_icon">
                   <img src="/images/instant_games_icon.png" alt="" />
@@ -1294,9 +1293,8 @@ const Operator = () => {
                 <span className="mobile_game_title text-white">
                   Instant Lotto
                 </span>
-                <span className="mobile_game_action mobile_game_action_muted">
-                  Coming soon
-                </span>
+                 <span className="mobile_game_action fw-bolder">Play Now →</span>
+        
               </button>
 
               <button
@@ -1308,7 +1306,7 @@ const Operator = () => {
                   <img src="/images/other_games.png" alt="" />
                 </span>
                 <span className="mobile_game_title text-white">
-                  Other Games
+                  Classic Games
                 </span>
                 <span className="mobile_game_action fw-bolder">Play Now →</span>
               </button>

@@ -8,8 +8,9 @@ const LatestGame = () => {
     position: "fixed",
     height: "30px",
     width: "100%",
+    fontWeight: "bolder",
     zIndex: 2000,
-    color: "#34282C",
+    color: "#000!important",
     paddingTop: "5px",
     bottom: 0,
     fontSize: "15px",
@@ -68,7 +69,7 @@ const LatestGame = () => {
 
   return (
     <div>
-      <div style={scrollStyle} className="meg_next_game_scroll mt-5">
+      <div style={scrollStyle} className="meg_next_game_scrol mt-5">
         <div className="scroll-content">
           Next Games =&gt;
           {filteredTimetable.map((game) => (

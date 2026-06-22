@@ -182,6 +182,7 @@ const PlayGames = () => {
   //     checkbox.checked = false;
   //   });
   // };
+  
   const handlePlayModeChange = (event) => {
     const newPlayMode = event.target.value;
     setSelectedPlayMode(newPlayMode);
@@ -1211,8 +1212,8 @@ const PlayGames = () => {
     const gdMultipliers = {
       gd_70: { 40: 140 },
       gd_80: { 40: 180 },
-      gd_90: { 40: 250 },
-      GH_5_90: { 40: 250 },
+      gd_90: { 40: 240 },
+      GH_5_90: { 40: 240 },
     };
 
     if (gdMultipliers[gameType] && gdMultipliers[gameType][requiredNumbers]) {
@@ -1226,8 +1227,8 @@ const PlayGames = () => {
     const gdMultipliers = {
       gd_70: { 2: 140, 3: 1300, 4: 4000, 5: 30000 },
       gd_80: { 2: 180, 3: 1600, 4: 4600, 5: 35000 },
-      gd_90: { 2: 250, 3: 2200, 4: 6200, 5: 46000 },
-      GH_5_90: { 2: 250, 3: 2200, 4: 6200, 5: 46000 },
+      gd_90: { 2: 240, 3: 2200, 4: 6200, 5: 46000 },
+      GH_5_90: { 2: 240, 3: 2200, 4: 6200, 5: 46000 },
     };
 
     if (gameType in gdMultipliers) {
@@ -1252,9 +1253,9 @@ const PlayGames = () => {
     const gdMultipliers = {
       gd_70: { "PERM 2": 140, "PERM 3": 1300, "PERM 4": 4000, "PERM 5": 30000 },
       gd_80: { "PERM 2": 180, "PERM 3": 1600, "PERM 4": 4600, "PERM 5": 35000 },
-      gd_90: { "PERM 2": 250, "PERM 3": 2200, "PERM 4": 6200, "PERM 5": 46000 },
+      gd_90: { "PERM 2": 240, "PERM 3": 2200, "PERM 4": 6200, "PERM 5": 46000 },
       GH_5_90: {
-        "PERM 2": 250,
+        "PERM 2": 240,
         "PERM 3": 2200,
         "PERM 4": 6200,
         "PERM 5": 46000,
@@ -1762,6 +1763,14 @@ const PlayGames = () => {
     <>
       <Navbar />
       <div className="container">
+           <button
+          type="button"
+          className="btn btn-outline-secondary btn-sm mt-3"
+          onClick={() => navigate(-1)} // or navigate('/') to go home
+          style={{ fontSize: '14px' }}
+        >
+          ← Back
+        </button>
         <form
           action=""
           method="post"

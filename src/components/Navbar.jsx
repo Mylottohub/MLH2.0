@@ -136,9 +136,8 @@ const Navbar = () => {
             <Header />
 
             <nav
-              className={`navbar navbar-expand-lg app__navbar-bg ${
-                isScrolled ? "navbar-scrolled" : ""
-              }`}
+              className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""
+                }`}
             >
               <div className="container">
                 {/* left spacer */}
@@ -381,12 +380,7 @@ const Navbar = () => {
                         <li>
                           <a
                             className="dropdown-item p-2 "
-                              onClick={() =>
-                  openGameModal(
-                    "https://games.bcrgslaunchgame.com",
-                    "Crash Games",
-                  )
-                }
+                            onClick={() => handleNav("/betconstruct-games")}
                           >
                             Crash Game
                           </a>
@@ -394,7 +388,7 @@ const Navbar = () => {
                         <li>
                           <a
                             className="dropdown-item p-2"
-                            onClick={() => setIsComingSoonOpen(true)}
+                            onClick={() => handleNav("/betconstruct-other-games")}
                           >
                             Instant Lotto
                           </a>
@@ -404,7 +398,7 @@ const Navbar = () => {
                             className="dropdown-item p-2"
                             onClick={() => navigate("/instant")}
                           >
-                            Other Games
+                            Classic Games
                           </a>
                         </li>
                       </motion.ul>
@@ -681,9 +675,8 @@ const Navbar = () => {
         </>
       ) : (
         <nav
-          className={`navbar navbar-expand-lg app__navbar-bg ${
-            isScrolled ? "navbar-scrolled" : ""
-          }`}
+          className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""
+            }`}
         >
           <div className="container">
             <a
@@ -737,12 +730,7 @@ const Navbar = () => {
                     <li>
                       <a
                         className="dropdown-item p-2 "
-                        onClick={() =>
-                          openGameModal(
-                            "https://games.bcrgslaunchgame.com",
-                            "Crash Games",
-                          )
-                        }
+                         onClick={() => handleNav("/betconstruct-games")}
                       >
                         Crash Game
                       </a>
@@ -750,7 +738,7 @@ const Navbar = () => {
                     <li>
                       <a
                         className="dropdown-item p-2"
-                        onClick={() => setIsComingSoonOpen(true)}
+                       onClick={() => handleNav("/betconstruct-other-games")}
                       >
                         Instant Lotto
                       </a>
@@ -760,7 +748,7 @@ const Navbar = () => {
                         className="dropdown-item p-2"
                         onClick={() => navigate("/instant")}
                       >
-                        Other Games
+                        Classic Games
                       </a>
                     </li>
                   </motion.ul>
@@ -930,12 +918,7 @@ const Navbar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link text-dark fw-bolder me-3 w-50"
-                    onClick={() =>
-                      openGameModal(
-                        "https://games.bcrgslaunchgame.com",
-                        "Crash Games",
-                      )
-                    }
+                    onClick={() => handleNav("/betconstruct-games")}
                   >
                     Crash Game
                   </a>
@@ -975,7 +958,7 @@ const Navbar = () => {
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                   > */}
-                  <a
+                    <a
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"
                   >
@@ -989,8 +972,8 @@ const Navbar = () => {
         </nav>
       )}
 
-         {/* Crash Game Modal */}
-         <div
+      {/* Crash Game Modal */}
+      <div
         className={`modal fade ${isModalOpen ? "show" : ""}`}
         style={{ display: isModalOpen ? "block" : "none" }}
         tabIndex="-1"

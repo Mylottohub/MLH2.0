@@ -127,25 +127,40 @@ const Instance = () => {
           boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
           paddingBottom: "10px",
           cursor: onCardClick ? "pointer" : "default",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <img
-          src={image}
-          alt={title}
-          className="img-fluid"
+        <div
           style={{
             height: "180px",
             width: "100%",
-            objectFit: "cover",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#f8f9fa",
           }}
-        />
+        >
+          <img
+            src={image}
+            alt={title}
+            style={{
+              height: "100%",
+              width: "100%",
+              objectFit: "contain",
+              padding: "10px",
+            }}
+          />
+        </div>
 
-        <div className="px-2 mt-3">
+        <div className="px-2 mt-3" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <h6 className="fw-bold text-center">{title}</h6>
 
-          <div className="d-flex justify-content-between gap-2 mt-3">
+          <div className="d-flex justify-content-between gap-2 mt-3" style={{ marginTop: "auto" }}>
             <button
-              className="btn btn-primary btn-sm w-100"
+              className="btn btn-primary btn-sm game-btn play-now-btn"
               onClick={(event) => {
                 event.stopPropagation();
                 onPlay();
@@ -156,7 +171,7 @@ const Instance = () => {
 
             {!hideDemo && (
               <button
-                className="btn btn-secondary btn-sm w-100"
+                className="btn btn-secondary btn-sm game-btn demo-btn"
                 onClick={(event) => {
                   event.stopPropagation();
                   onDemo();
@@ -177,7 +192,15 @@ const Instance = () => {
       <Slider />
 
       <div className="container mt-5">
-        <h4 className="fw-bold text-uppercase">Other Games</h4>
+          <button
+          type="button"
+          className="btn btn-outline-secondary btn-sm mt-3 mb-3"
+          onClick={() => navigate(-1)}
+          style={{ fontSize: '14px' }}
+        >
+          ← Back
+        </button>
+        <h4 className="fw-bold text-uppercase">Classic Games</h4>
 
         <br />
 
@@ -316,8 +339,114 @@ const Instance = () => {
           </div>
         </>
       )}
+
+      {/* Button styles */}
+      <style>
+        {`
+          /* Mobile first - small buttons on mobile */
+          .game-btn {
+            font-size: 16px !important;
+            padding: 4px 6px !important;
+            min-height: 28px;
+            border-radius: 4px !important;
+          }
+
+          .play-now-btn {
+            background: #406777 !important;
+            border-color: #406777 !important;
+            color: white !important;
+          }
+
+          .demo-btn {
+            background: #28a745 !important;
+            border-color: #28a745 !important;
+            color: white !important;
+          }
+
+          /* Tablet screens (768px - 991px) */
+          @media (min-width: 768px) {
+            .game-btn {
+              font-size: 13px !important;
+              padding: 6px 10px !important;
+              min-height: 36px;
+            }
+          }
+
+          /* Desktop screens (992px - 1199px) */
+          @media (min-width: 992px) {
+            .game-btn {
+              font-size: 15px !important;
+              padding: 8px 12px !important;
+              min-height: 44px;
+            }
+          }
+
+          /* Large desktop screens (1200px+) */
+          @media (min-width: 1200px) {
+            .game-btn {
+              font-size: 16px !important;
+              padding: 10px 14px !important;
+              min-height: 48px;
+            }
+          }
+
+          /* Extra large desktop screens (1400px+) */
+          @media (min-width: 1400px) {
+            .game-btn {
+              font-size: 18px !important;
+              padding: 12px 16px !important;
+              min-height: 52px;
+            }
+          }
+
+          /* Button hover effects */
+          .play-now-btn:hover {
+            background: #406777 !important;
+            border-color: #406777 !important;
+          }
+
+          .demo-btn:hover {
+            background: #28a745 !important;
+            border-color: #28a745 !important;
+          }
+
+          /* Improved card image container */
+          .game-card-image {
+            height: 180px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            padding: 10px;
+          }
+
+          .game-card-image img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+          }
+
+          /* Ensure cards are equal height */
+          .game-card-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+          }
+
+          /* Mobile - make buttons stack vertically on very small screens */
+          @media (max-width: 350px) {
+            .d-flex.gap-2 {
+              flex-direction: column;
+            }
+            .game-btn {
+              width: 100% !important;
+            }
+          }
+        `}
+      </style>
     </>
   );
 };
 
-export default Instance;
+export default Instance; 

@@ -1,0 +1,532 @@
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import HTTP from "../utils/httpClient";
+import { Spinner } from "react-bootstrap";
+import Navbar from "../components/Navbar";
+import { useSelector } from "react-redux";
+import { toast } from 'react-toastify';
+
+const HEADER_HEIGHT = 52;
+
+const BetConstructGames = () => {
+  const [games, setGames] = useState([]);
+  const [filteredGames, setFilteredGames] = useState([]);
+  const [rawResponse, setRawResponse] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [loadingIframe, setLoadingIframe] = useState(true);
+  const [modalHeight, setModalHeight] = useState(0);
+  const [iframeScale, setIframeScale] = useState(1);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const modalRef = useRef(null);
+  const iframeRef = useRef(null);
+  const navigate = useNavigate();
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const updateModalHeight = useCallback(() => {
+    const height = window.innerHeight;
+    setModalHeight(height);
+
+    const availableHeight = height - HEADER_HEIGHT;
+    const gameDesignHeight = 800;
+    const scale = availableHeight / gameDesignHeight;
+    setIframeScale(Math.max(scale, 0.8));
+  }, []);
+
+  useEffect(() => {
+    if (!isModalOpen) return;
+    updateModalHeight();
+    window.addEventListener("resize", updateModalHeight);
+    window.addEventListener("orientationchange", () => {
+      setTimeout(updateModalHeight, 300);
+    });
+    return () => {
+      window.removeEventListener("resize", updateModalHeight);
+      window.removeEventListener("orientationchange", updateModalHeight);
+    };
+  }, [isModalOpen, updateModalHeight]);
+
+  const fetchGames = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await HTTP.get("/betconstruct-get-games", {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${userInfo?.token}`,
+        },
+        timeout: 30000,
+      });
+
+      if (response.status === 200) {
+        const data = response.data;
+        setRawResponse(data);
+        let list = [];
+        if (data?.result && Array.isArray(data.result)) list = data.result;
+        else if (data?.data && Array.isArray(data.data)) list = data.data;
+        else if (data?.games && Array.isArray(data.games)) list = data.games;
+        else if (data?.items && Array.isArray(data.items)) list = data.items;
+        else if (Array.isArray(data)) list = data;
+        else {
+          for (const key in data) {
+            if (Array.isArray(data[key]) && data[key].length > 0) {
+              list = data[key];
+              break;
+            }
+          }
+        }
+
+        setGames(list);
+        const instantGames = list.filter((game) => {
+          const gameType = game?.type || game?.gameType || game?.category || "";
+          return gameType === "Instant Games";
+        });
+        setFilteredGames(instantGames);
+      } else {
+        throw new Error(`Unexpected status: ${response.status}`);
+      }
+    } catch (err) {
+      if (err.response?.status === 401) {
+        setError("Authentication failed. Your session may have expired. Please log in again.");
+      } else if (err.response?.status === 403) {
+        setError("You don't have permission to access these games.");
+      } else if (err.response?.status === 404) {
+        setError("Games endpoint not found. Please check the API URL.");
+      } else if (err.request) {
+        setError("No response from server. Please check your internet connection.");
+      } else {
+        setError(`Error: ${err.message}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGames();
+  }, [userInfo?.token]);
+
+  // iOS-safe scroll lock
+  useEffect(() => {
+    if (isModalOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.overflow = "hidden";
+    } else {
+      const scrollY = Math.abs(parseInt(document.body.style.top || "0", 10));
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = "";
+      if (scrollY) window.scrollTo(0, scrollY);
+    }
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = "";
+    };
+  }, [isModalOpen]);
+
+  const checkAuthAndOpenGame = (game, isDemo = false) => {
+    // Comprehensive authentication check
+    const token = userInfo?.token || localStorage.getItem('token');
+    const isAuthenticated = token && userInfo;
+
+    if (!isAuthenticated) {
+      toast.error("Please log in to play games", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
+    }
+
+    // Ensure modal is closed if any previous state exists
+    setIsModalOpen(false);
+    setSelectedGame(null);
+
+    // Small delay to ensure state resets before opening
+    setTimeout(() => {
+      setSelectedGame(game);
+      setLoadingIframe(true);
+      setIsDemoMode(isDemo);
+      setIsModalOpen(true);
+    }, 100);
+  };
+
+  // Also add this useEffect to handle cases where user logs out while modal is open
+  useEffect(() => {
+    if (!userInfo?.token && isModalOpen) {
+      // Close modal if user logs out
+      setIsModalOpen(false);
+      setSelectedGame(null);
+      setLoadingIframe(true);
+      toast.info("You have been logged out", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  }, [userInfo?.token, isModalOpen]);
+  const handleOpenGame = (game) => {
+    checkAuthAndOpenGame(game, false);
+  };
+
+  const handleOpenDemo = (game) => {
+    checkAuthAndOpenGame(game, true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedGame(null);
+    setLoadingIframe(true);
+    setIsDemoMode(false);
+  };
+
+  const gameTitle = selectedGame?.name || selectedGame?.gameName || "Instant Game";
+  // For demo mode, add a demo parameter or use a demo URL if available
+  const gameUrl = isDemoMode
+    ? (selectedGame?.demo || selectedGame?.link || "")
+    : (selectedGame?.link || "");
+  const iframeHeight = modalHeight ? modalHeight - HEADER_HEIGHT : `calc(100vh - ${HEADER_HEIGHT}px)`;
+
+  return (
+    <>
+      <Navbar />
+      <div className="container mt-5 mb-5">
+        <button
+          type="button"
+          className="btn btn-outline-secondary btn-sm mt-3 mb-3"
+          onClick={() => navigate(-1)}
+          style={{ fontSize: '14px' }}
+        >
+          ← Back
+        </button>
+        <p>
+          <strong className="text-capitalize fw-bolder text-dark">
+            Select Operator &gt;&gt; Crash Games
+          </strong>
+        </p>
+        <br />
+
+        {isLoading && (
+          <div className="text-center py-5">
+            <Spinner animation="border" role="status" />
+            <p className="mt-3 text-muted">Loading games...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            <strong>Error:</strong> {error}
+            <div className="mt-2">
+              {error.includes("Authentication") ? (
+                <button className="btn btn-sm btn-primary me-2" onClick={() => navigate("/login")}>
+                  Go to Login
+                </button>
+              ) : (
+                <button className="btn btn-sm btn-outline-secondary" onClick={fetchGames}>
+                  Retry
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {!isLoading && !error && filteredGames.length === 0 && rawResponse !== null && (
+          <div className="alert alert-warning">
+            <strong>No Crash Games found.</strong>
+            <br />
+            <small>Showing only "Crash Games" type. Check the console for all available games.</small>
+            <br />
+            <button className="btn btn-sm btn-outline-warning mt-2" onClick={fetchGames}>
+              Refresh
+            </button>
+          </div>
+        )}
+
+        {!isLoading && !error && filteredGames.length > 0 && (
+          <>
+            <p className="text-muted mb-5">
+              {filteredGames.length} Instant Game{filteredGames.length !== 1 ? "s" : ""} available
+            </p>
+            <div className="row g-3">
+              {filteredGames.map((game, index) => {
+                const gameName =
+                  game?.name || game?.gameName || game?.game_name || game?.title || `Game ${index + 1}`;
+                const gameImage =
+                  game?.image || game?.imageUrl || game?.gameIconUrl || game?.icon || game?.thumbnail || null;
+
+                return (
+                  <div className="col-6 mb-5 col-md-4 col-lg-3" key={index}>
+                    <div
+                      className="card h-100 border"
+                      style={{ cursor: "pointer", transition: "box-shadow 0.2s" }}
+                    >
+                      <div
+                        className="card-img-top p-3 d-flex align-items-center justify-content-center bg-light"
+                        onClick={() => handleOpenGame(game)}
+                      >
+                        {gameImage ? (
+                          <img
+                            src={gameImage}
+                            alt={gameName}
+                            className="img-fluid"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.style.display = "none";
+                              e.target.parentElement.innerHTML = `<div class="text-muted text-center px-2" style="font-size:12px"><i class="fa fa-gamepad fa-2x mb-1" style="display:block"></i>No image</div>`;
+                            }}
+                          />
+                        ) : (
+                          <div className="text-muted text-center px-2" style={{ fontSize: "12px" }}>
+                            <i className="fa fa-gamepad fa-2x mb-1" style={{ display: "block" }} />
+                            No image
+                          </div>
+                        )}
+                      </div>
+                      <div className="card-footer bg-transparent border-top-0 p-2 mb-3 mt-4">
+                        <div className="d-flex gap-2">
+                          <button
+                            className="btn btn-sm w-100 fw-bolder text-white"
+                            style={{
+                              background: "#406777",
+                              fontSize: "12px",
+                              padding: "6px 8px"
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenGame(game);
+                            }}
+                          >
+                            Play Now
+                          </button>
+                          <button
+                            className="btn btn-sm w-100 fw-bolder"
+                            style={{
+                              background: "#28a745",
+                              color: "white",
+                              fontSize: "12px",
+                              border: "none",
+                              padding: "6px 8px"
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenDemo(game);
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = "#218838")}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = "#28a745")}
+                          >
+                            Demo
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ── GAME MODAL ── */}
+      {isModalOpen && (
+        <div
+          ref={modalRef}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: modalHeight ? `${modalHeight}px` : "100vh",
+            zIndex: 9999,
+            display: "flex",
+            flexDirection: "column",
+            background: "#000",
+            overflow: "hidden",
+          }}
+        >
+          {/* Header */}
+          <div
+            style={{
+              flexShrink: 0,
+              height: `${HEADER_HEIGHT}px`,
+              minHeight: `${HEADER_HEIGHT}px`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "0 16px",
+              background: "#406777",
+              zIndex: 2,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: 1, minWidth: 0 }}>
+              <span
+                style={{
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {gameTitle}
+              </span>
+              {isDemoMode && (
+                <span
+                  style={{
+                    background: "#28a745",
+                    color: "#fff",
+                    padding: "2px 10px",
+                    borderRadius: "12px",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    flexShrink: 0,
+                  }}
+                >
+                  DEMO
+                </span>
+              )}
+            </div>
+            <button
+              onClick={handleCloseModal}
+              aria-label="Close game"
+              style={{
+                flexShrink: 0,
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                border: "none",
+                background: "rgba(255,255,255,0.18)",
+                color: "#fff",
+                fontSize: "18px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "background 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.3)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Iframe wrapper with scaling fix */}
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: typeof iframeHeight === "number" ? `${iframeHeight}px` : iframeHeight,
+              flexShrink: 0,
+              overflow: "hidden",
+              background: "#000",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {loadingIframe && (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "#1a1a1a",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 3,
+                  gap: "12px",
+                }}
+              >
+                <div
+                  className="spinner-border text-light"
+                  style={{ width: "48px", height: "48px", borderWidth: "3px" }}
+                />
+                <p style={{ color: "#fff", margin: 0, fontWeight: 600 }}>
+                  {isDemoMode ? "Loading Demo…" : "Loading Game…"}
+                </p>
+                <p style={{ color: "#888", margin: 0, fontSize: "13px" }}>Please wait</p>
+              </div>
+            )}
+
+            {/* Iframe with scale transform to fill the entire area */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden",
+              }}
+            >
+              <iframe
+                ref={iframeRef}
+                src={gameUrl}
+                title={gameTitle}
+                allowFullScreen
+                allow="autoplay; fullscreen"
+                onLoad={() => setLoadingIframe(false)}
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                  display: "block",
+                  background: "#000",
+                  transform: `scale(${iframeScale})`,
+                  transformOrigin: "center center",
+                  objectFit: "contain",
+                }}
+                scrolling="no"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop-specific button styles */}
+      <style>
+        {`
+          @media (min-width: 992px) {
+            .card-footer .btn {
+              font-size: 16px !important;
+              padding: 10px 12px !important;
+              min-height: 48px;
+            }
+          }
+          
+          @media (min-width: 1200px) {
+            .card-footer .btn {
+              font-size: 18px !important;
+              padding: 12px 16px !important;
+              min-height: 52px;
+            }
+          }
+        `}
+      </style>
+    </>
+  );
+};
+
+export default BetConstructGames;

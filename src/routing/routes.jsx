@@ -34,6 +34,8 @@ import AllSportForecaster from "../components/SportsBetting/AllSportForecaster";
 import LottoLadies from "../pages/LottoLadies";
 import AfriMillionsPage from "../pages/AfriMillionsPage";
 import CrashGames from "../pages/CrashGames";
+import BetConstructGames from "../pages/BetConstructGames";
+import BetConstructOtherGames from "../pages/BetConstructOtherGames";
 
 export const routes = [
   {
@@ -196,7 +198,7 @@ export const routes = [
     id: 25,
     path: "/instant",
     element: <Instance />,
-    protected: true,
+    protected: false,
   },
   {
     id: 26,
@@ -263,6 +265,18 @@ export const routes = [
     id: 36,
     path: "/afrimillions",
     element: <AfriMillionsPage />,
+    protected: false,
+  },
+  {
+    id: 37,
+    path: "/betconstruct-games",
+    element: <BetConstructGames />,
+    protected: false,
+  },
+  {
+    id: 38,
+    path: "/betconstruct-other-games",
+    element: <BetConstructOtherGames />,
     protected: false,
   },
 ];

@@ -63,7 +63,7 @@ const OperatorMobile = () => {
   }, []);
 
   const operatorTypes = [
-     "afrimillions_5_55", // AfriMillions 5/55
+    "afrimillions_5_55", // AfriMillions 5/55
     "afrimillions", // AfriMillions 6/49
     "afrimillions_5_90", // AfriMillions 5/90
     "golden_chance",
@@ -80,7 +80,7 @@ const OperatorMobile = () => {
     "GD570",
     "GD580",
     "GD590",
-   
+
   ];
 
   const requestTypeMapping = {
@@ -127,17 +127,17 @@ const OperatorMobile = () => {
 
   const latestGame590 = Array.isArray(operatorData?.gd_lotto)
     ? operatorData.gd_lotto
-        .filter(
-          (game) => game?.gameType === "5/90" && new Date(game?.drawTime) > now
-        )
-        .sort((a, b) => new Date(a?.drawTime) - new Date(b?.drawTime))[0]
+      .filter(
+        (game) => game?.gameType === "5/90" && new Date(game?.drawTime) > now
+      )
+      .sort((a, b) => new Date(a?.drawTime) - new Date(b?.drawTime))[0]
     : null;
 
   const operatorNameMapping = {
-      afrimillions_5_55: "afrimillions_555",
+    afrimillions_5_55: "afrimillions_555",
     afrimillions: "afrimillions",
     afrimillions_5_90: "afrimillions",
-   
+
     golden_chance: "golden_chance",
     ghana_game: "5/90_games",
     green_ghana_game: "green_lotto ghana",
@@ -152,7 +152,7 @@ const OperatorMobile = () => {
     GD570: "GD570",
     GD580: "GD580",
     GD590: "GD590",
- 
+
   };
 
   const handleCloseModal = async () => {
@@ -301,6 +301,14 @@ const OperatorMobile = () => {
         <Slider />
       </section>
       <div className="container mb-5">
+        <button
+          type="button"
+          className="btn btn-outline-secondary btn-sm mt-3"
+          onClick={() => navigate(-1)} // or navigate('/') to go home
+          style={{ fontSize: '14px' }}
+        >
+          ← Back
+        </button>
         <div className="row">
           <div className="col-sm-12 mb-5 mt-5 fw-bolder">
             <h4 className="fw-bolder text-dark">
@@ -881,15 +889,15 @@ const OperatorMobile = () => {
                                                 style={{ fontSize: "18px" }}
                                               >
                                                 {operatorType === "GD570" ||
-                                                operatorType === "GD580" ||
-                                                operatorType === "GD590" ||
-                                                operatorType === "gd_jackpot"
+                                                  operatorType === "GD580" ||
+                                                  operatorType === "GD590" ||
+                                                  operatorType === "gd_jackpot"
                                                   ? latestGame590?.gameName
                                                   : nextGame[
-                                                      propertyMapping[
-                                                        operatorType
-                                                      ]?.name
-                                                    ]}
+                                                  propertyMapping[
+                                                    operatorType
+                                                  ]?.name
+                                                  ]}
                                               </small>
                                               <br />
                                               <br />
@@ -963,9 +971,9 @@ const OperatorMobile = () => {
                                                     const sanitizedOperatorType =
                                                       operatorType === "GH 5/90"
                                                         ? operatorType.replace(
-                                                            /[\s/]+/g,
-                                                            "_"
-                                                          )
+                                                          /[\s/]+/g,
+                                                          "_"
+                                                        )
                                                         : operatorType;
 
                                                     navigate(
