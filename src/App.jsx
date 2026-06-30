@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { routes } from "./routing/routes";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LatestWinner from "./components/LatestWinner";
@@ -7,6 +7,37 @@ import LatestGame from "./components/LatestGame";
 import NotFound from "./components/NotFound/NotFound";
 import PwaInstallModal from "./components/PwaInstallModal";
 import { PwaInstallProvider } from "./context/PwaInstallContext";
+
+const HIDE_TICKERS_ON = ["/betconstruct-games", "/betconstruct-other-games"];
+
+function AppContent() {
+  const location = useLocation();
+  const hideTickers = HIDE_TICKERS_ON.includes(location.pathname);
+
+  return (
+    <>
+      <Routes>
+        {routes.map((route, index) => (
+          <Route
+            key={index}
+            path={route.path}
+            element={
+              route.protected ? (
+                <PrivateRoute>{route.element}</PrivateRoute>
+              ) : (
+                route.element
+              )
+            }
+          />
+        ))}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      {!hideTickers && <LatestWinner />}
+      {!hideTickers && <LatestGame />}
+      <PwaInstallModal />
+    </>
+  );
+}
 
 function App() {
   useEffect(() => {
@@ -25,25 +56,7 @@ function App() {
   return (
     <BrowserRouter>
       <PwaInstallProvider>
-        <Routes>
-          {routes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={
-                route.protected ? (
-                  <PrivateRoute>{route.element}</PrivateRoute>
-                ) : (
-                  route.element
-                )
-              }
-            />
-          ))}
-          <Route path="*" element={<NotFound />} /> {/* Wildcard route */}
-        </Routes>
-        <LatestWinner />
-        <LatestGame />
-        <PwaInstallModal />
+        <AppContent />
       </PwaInstallProvider>
     </BrowserRouter>
   );

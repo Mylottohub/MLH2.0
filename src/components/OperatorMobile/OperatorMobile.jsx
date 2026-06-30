@@ -80,6 +80,7 @@ const OperatorMobile = () => {
     "GD570",
     "GD580",
     "GD590",
+    "modernlottogames",
 
   ];
 
@@ -152,6 +153,7 @@ const OperatorMobile = () => {
     GD570: "GD570",
     GD580: "GD580",
     GD590: "GD590",
+    modernlottogames: "modernlottogames",
 
   };
 
@@ -371,6 +373,7 @@ const OperatorMobile = () => {
                       afrimillions: { name: "GameName", time: "drawTime" }, // AfriMillions 6/49
                       afrimillions_5_90: { name: "GameName", time: "drawTime" }, // AfriMillions 5/90
                       afrimillions_5_55: { name: "GameName", time: "drawTime" }, // AfriMillions 5/55
+                      modernlottogames: { name: "name", time: "drawTime" },
                     };
 
                     const dataArray = Array.isArray(operatorDataArray)

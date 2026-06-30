@@ -84,6 +84,7 @@ const Operator = () => {
     "GD570",
     "GD580",
     "GD590",
+    "modernlottogames",
   ];
 
   const requestTypeMapping = {
@@ -154,6 +155,7 @@ const Operator = () => {
     GD580: "GD580",
     GD590: "GD590",
     NNP: "nnp",
+    modernlottogames: "modernlottogames",
   };
 
   const handleCloseModal = async () => {
@@ -477,6 +479,7 @@ const Operator = () => {
                       afrimillions: { name: "GameName", time: "drawTime" }, // AfriMillions 6/49
                       afrimillions_5_90: { name: "GameName", time: "drawTime" }, // AfriMillions 5/90
                       afrimillions_5_55: { name: "GameName", time: "drawTime" }, // AfriMillions 5/55
+                      modernlottogames: { name: "name", time: "drawTime" },
                     };
 
                     const dataArray = Array.isArray(operatorDataArray)
@@ -655,6 +658,10 @@ const Operator = () => {
                         operatorType === "afrimillions_5_55"
                       ) {
                         // drawTime is Unix timestamp in milliseconds
+                        drawTime = game?.drawTime
+                          ? moment(game.drawTime)
+                          : null;
+                      } else if (operatorType === "modernlottogames") {
                         drawTime = game?.drawTime
                           ? moment(game.drawTime)
                           : null;
@@ -905,6 +912,8 @@ const Operator = () => {
                       ) {
                         // drawTime is Unix timestamp in milliseconds
                         return game?.drawTime ? new Date(game.drawTime) : null;
+                      } else if (operatorType === "modernlottogames") {
+                        return game?.drawTime ? new Date(game.drawTime) : null;
                       } else {
                         const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                           .utcOffset("+00:00")
@@ -1031,6 +1040,10 @@ const Operator = () => {
                                       operatorType === "afrimillions_5_55"
                                     ) {
                                       navigate("/afrimillions?type=5_55");
+                                    } else if (
+                                      operatorType === "modernlottogames"
+                                    ) {
+                                      navigate("/modern-lotto-games");
                                     } else {
                                       const sanitizedOperatorType =
                                         operatorType === "GH 5/90"
