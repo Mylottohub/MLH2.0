@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 
 const HEADER_HEIGHT = 52;
+const CARD_IMAGE_HEIGHT = 150; // fixed banner height so every card image is identically sized
 
 const BetConstructOtherGames = () => {
   const [games, setGames] = useState([]);
@@ -183,7 +184,7 @@ const BetConstructOtherGames = () => {
     setIsDemoMode(false);
   };
 
-  const gameTitle = selectedGame?.name || selectedGame?.gameName || "Classic Games";
+  const gameTitle = selectedGame?.name || selectedGame?.gameName || "Instant Games";
   // For demo mode, use the 'demo' property if available, otherwise fallback to regular link
   const gameUrl = isDemoMode 
     ? (selectedGame?.demo || selectedGame?.link || "") 
@@ -204,7 +205,7 @@ const BetConstructOtherGames = () => {
         </button>
         <p>
           <strong className="text-capitalize fw-bolder text-dark">
-            Select Operator &gt;&gt; Classic Games
+            Select Operator &gt;&gt; Instant Gamess
           </strong>
         </p>
         <br />
@@ -235,7 +236,7 @@ const BetConstructOtherGames = () => {
 
         {!isLoading && !error && filteredGames.length === 0 && rawResponse !== null && (
           <div className="alert alert-warning">
-            <strong>No Classic Games found.</strong>
+            <strong>No Instant Gamess found.</strong>
             <br />
             <small>Showing only "Others" type. Check the console for all available games.</small>
             <br />
@@ -248,7 +249,7 @@ const BetConstructOtherGames = () => {
         {!isLoading && !error && filteredGames.length > 0 && (
           <>
             <p className="text-muted mb-5">
-              {filteredGames.length} Classic Games{filteredGames.length !== 1 ? "s" : ""} available
+              {filteredGames.length} Instant Game{filteredGames.length !== 1 ? "s" : ""} available
             </p>
             <div className="row g-3">
               {filteredGames.map((game, index) => {
@@ -264,14 +265,27 @@ const BetConstructOtherGames = () => {
                       style={{ cursor: "pointer", transition: "box-shadow 0.2s" }}
                     >
                       <div 
-                        className="card-img-top p-3 d-flex align-items-center justify-content-center bg-light"
+                        className="card-img-top d-flex align-items-center justify-content-center bg-light"
+                        style={{
+                          height: `${CARD_IMAGE_HEIGHT}px`,
+                          minHeight: `${CARD_IMAGE_HEIGHT}px`,
+                          overflow: "hidden",
+                          padding: "8px",
+                        }}
                         onClick={() => handleOpenGame(game)}
                       >
                         {gameImage ? (
                           <img
                             src={gameImage}
                             alt={gameName}
-                            className="img-fluid"
+                            style={{
+                              maxWidth: "100%",
+                              maxHeight: "100%",
+                              width: "auto",
+                              height: "auto",
+                              objectFit: "contain",
+                              display: "block",
+                            }}
                             onError={(e) => {
                               e.target.onerror = null;
                               e.target.style.display = "none";

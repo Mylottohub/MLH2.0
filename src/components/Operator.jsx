@@ -383,7 +383,7 @@ const Operator = () => {
                 </div>
                 <h3 className="fw-bolder mb-2">Coming Soon</h3>
                 <p className="mb-0" style={{ lineHeight: "25px" }}>
-                  Instant Lotto is getting polished for launch. Check back soon
+                  Instant Games is getting polished for launch. Check back soon
                   for a faster way to play.
                 </p>
               </div>
@@ -1237,17 +1237,17 @@ const Operator = () => {
                 </div>
                 &nbsp;&nbsp;&nbsp;
                 <div className="col-xs-6  w-50">
-                  {/* <a
+                  <a
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                     // onClick={() => navigate("/login")}
                     className="btn btn-blue btn-block btn-lg"
-                  > */}
-                    <a
+                  >
+                    {/* <a
                    className="btn btn-blue btn-block btn-lg"
                     href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"
-                  >
+                  >*/}
                     Login
-                  </a>
+                  </a> 
                 </div>
               </div>
             ) : null}
@@ -1291,7 +1291,7 @@ const Operator = () => {
                   <img src="/images/instant_games_icon.png" alt="" />
                 </span>
                 <span className="mobile_game_title text-white">
-                  Instant Lotto
+                  Instant Games
                 </span>
                  <span className="mobile_game_action fw-bolder">Play Now →</span>
         

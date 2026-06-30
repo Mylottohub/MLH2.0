@@ -390,7 +390,7 @@ const Navbar = () => {
                             className="dropdown-item p-2"
                             onClick={() => handleNav("/betconstruct-other-games")}
                           >
-                            Instant Lotto
+                            Instant Games
                           </a>
                         </li>
                         <li>
@@ -740,7 +740,7 @@ const Navbar = () => {
                         className="dropdown-item p-2"
                        onClick={() => handleNav("/betconstruct-other-games")}
                       >
-                        Instant Lotto
+                        Instant Games
                       </a>
                     </li>
                     <li>
@@ -873,8 +873,8 @@ const Navbar = () => {
                       Sign Up
                     </motion.span>
                   </a>
-                  {/* <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"> */}
-                  <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com">
+                  <a href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com">
+                  {/* <a href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"> */}
                     <motion.span
                       className="btn btn-yellow  "
                       whileHover={{ scale: 1.03 }}
@@ -954,16 +954,16 @@ const Navbar = () => {
                 )}
                 <hr />
                 <li className="nav-item">
-                  {/* <a
+                  <a
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
-                  > */}
-                    <a
+                  >
+                    {/* <a
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"
-                  >
+                  >*/}
                     Sign In
-                  </a>
+                  </a> 
                 </li>
                 <hr />
               </ul>
@@ -1082,7 +1082,7 @@ const Navbar = () => {
                 </div>
                 <h3 className="fw-bolder mb-2">Coming Soon</h3>
                 <p className="mb-0" style={{ lineHeight: "25px" }}>
-                  Instant Lotto is getting polished for launch. Check back soon
+                  Instant Games is getting polished for launch. Check back soon
                   for a faster way to play.
                 </p>
               </div>

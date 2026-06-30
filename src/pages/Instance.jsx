@@ -150,7 +150,6 @@ const Instance = () => {
               height: "100%",
               width: "100%",
               objectFit: "contain",
-              padding: "10px",
             }}
           />
         </div>

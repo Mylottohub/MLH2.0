@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 
 const HEADER_HEIGHT = 52;
+const CARD_IMAGE_HEIGHT = 150; // fixed banner height so every card image is identically sized
 
 const BetConstructGames = () => {
   const [games, setGames] = useState([]);
@@ -259,7 +260,7 @@ const BetConstructGames = () => {
         {!isLoading && !error && filteredGames.length > 0 && (
           <>
             <p className="text-muted mb-5">
-              {filteredGames.length} Instant Game{filteredGames.length !== 1 ? "s" : ""} available
+              {filteredGames.length} Instant Games{filteredGames.length !== 1 ? "s" : ""} available
             </p>
             <div className="row g-3">
               {filteredGames.map((game, index) => {
@@ -275,14 +276,27 @@ const BetConstructGames = () => {
                       style={{ cursor: "pointer", transition: "box-shadow 0.2s" }}
                     >
                       <div
-                        className="card-img-top p-3 d-flex align-items-center justify-content-center bg-light"
+                        className="card-img-top d-flex align-items-center justify-content-center bg-light"
+                        style={{
+                          height: `${CARD_IMAGE_HEIGHT}px`,
+                          minHeight: `${CARD_IMAGE_HEIGHT}px`,
+                          overflow: "hidden",
+                          padding: "8px",
+                        }}
                         onClick={() => handleOpenGame(game)}
                       >
                         {gameImage ? (
                           <img
                             src={gameImage}
                             alt={gameName}
-                            className="img-fluid"
+                            style={{
+                              maxWidth: "100%",
+                              maxHeight: "100%",
+                              width: "auto",
+                              height: "auto",
+                              objectFit: "contain",
+                              display: "block",
+                            }}
                             onError={(e) => {
                               e.target.onerror = null;
                               e.target.style.display = "none";
