@@ -21,6 +21,7 @@ const Instance = () => {
   const [loadingIframe, setLoadingIframe] = useState(false);
   const [gameTitle, setGameTitle] = useState("");
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [mobileSelectedGame, setMobileSelectedGame] = useState(null);
 
   const OPERATOR_CODE = "MYLOTTOHUB";
   const CURRENCY = "NGN";
@@ -126,7 +127,13 @@ const Instance = () => {
                 key={game.key}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                onClick={() => setHoveredIndex(hoveredIndex === index ? null : index)}
+                onClick={() => {
+                  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                    setMobileSelectedGame(game);
+                  } else {
+                    setHoveredIndex(hoveredIndex === index ? null : index);
+                  }
+                }}
               >
                 <div className="bcg-tile-img">
                   <img src={game.image} alt={game.title} />
@@ -221,6 +228,34 @@ const Instance = () => {
               onLoad={() => setLoadingIframe(false)}
               style={{ width: "100%", height: "100%", border: "none", display: "block", background: "#000" }}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Bottom Sheet */}
+      {mobileSelectedGame && (
+        <div className="bcg-bottom-sheet-backdrop" onClick={() => setMobileSelectedGame(null)}>
+          <div className="bcg-bottom-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="bcg-bottom-sheet-header">
+              <span className="bcg-bottom-sheet-title">{mobileSelectedGame.title}</span>
+              <button className="bcg-bottom-sheet-close" onClick={() => setMobileSelectedGame(null)}>✕</button>
+            </div>
+            <div className="bcg-bottom-sheet-buttons">
+              <button
+                className="bcg-btn-play"
+                onClick={() => { mobileSelectedGame.onPlay(); setMobileSelectedGame(null); }}
+              >
+                ▶ Play Now
+              </button>
+              {mobileSelectedGame.onDemo && (
+                <button
+                  className="bcg-btn-demo"
+                  onClick={() => { mobileSelectedGame.onDemo(); setMobileSelectedGame(null); }}
+                >
+                  Demo
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -373,7 +408,58 @@ const Instance = () => {
           }
         }
         @media (hover: none) {
-          .bcg-hover-overlay.visible { opacity: 1; }
+          .bcg-hover-overlay { display: none; }
+        }
+
+        .bcg-bottom-sheet-backdrop {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.5);
+          z-index: 9998;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+        }
+        .bcg-bottom-sheet {
+          background: #fff;
+          border-radius: 16px 16px 0 0;
+          padding: 20px;
+          width: 100%;
+          max-width: 400px;
+          animation: slideUp 0.25s ease-out;
+        }
+        @keyframes slideUp {
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
+        }
+        .bcg-bottom-sheet-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+        .bcg-bottom-sheet-title {
+          font-weight: 700;
+          font-size: 16px;
+          color: #222;
+        }
+        .bcg-bottom-sheet-close {
+          background: none;
+          border: none;
+          font-size: 20px;
+          color: #666;
+          cursor: pointer;
+        }
+        .bcg-bottom-sheet-buttons {
+          display: flex;
+          gap: 10px;
+        }
+        .bcg-bottom-sheet-buttons .bcg-btn-play,
+        .bcg-bottom-sheet-buttons .bcg-btn-demo {
+          flex: 1;
+          padding: 14px;
+          font-size: 15px;
+          border-radius: 8px;
         }
       `}</style>
     </div>

@@ -119,33 +119,27 @@ const Header = () => {
         </div>
       </header>
       <div className="mobile__header-hide p-3 slide-up">
-        <table cellPadding="5" style={{ width: "100%" }}>
-          <tbody>
-            <tr>
-              <td>
-                <a onClick={() => navigate("/")}>
-                  <motion.img
-                    src={images.logo}
-                    alt=""
-                    width="107"
-                    height="67"
-                    className="meg_logo"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                  />
-                </a>
-              </td>
-              <td valign="middle">
-                <motion.p className="balance-display" style={{ marginBottom: 0 }} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
-                  {userProfileResponse?.username}
-                  <br />
-                  <strong>User ID:</strong> {userProfileResponse?.id}
-                </motion.p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <a onClick={() => navigate("/")}>
+              <motion.img
+                src={images.logo}
+                alt=""
+                width="107"
+                height="67"
+                className="meg_logo"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              />
+            </a>
+            <motion.p className="balance-display" style={{ marginBottom: 0 }} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+              {userProfileResponse?.username}
+              <br />
+              <strong>User ID:</strong> {userProfileResponse?.id}
+            </motion.p>
+          </div>
+        </div>
       </div>
 
       {/* Modals with AnimatePresence */}
