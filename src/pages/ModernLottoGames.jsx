@@ -132,15 +132,38 @@ const ModernLottoGames = () => {
       return;
     }
 
-    const url = game?.apiUrl;
-    if (!url) {
-      toast.error("Game URL not found");
+    const typeId = game?.typeId;
+    if (!typeId) {
+      toast.error("Game type not found");
       return;
     }
 
-    setSelectedGame({ ...game, launchUrl: url });
     setLoadingIframe(true);
     setIsModalOpen(true);
+    setSelectedGame(game);
+
+    try {
+      const response = await HTTP.post("/play_modern_lotto_game", { typeId }, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const redirectUrl = response.data?.redirectUrl || response.data?.url || response.data?.redirect_url || response.data?.data?.redirectUrl || response.data?.data?.url || response.data?.link;
+      if (redirectUrl && typeof redirectUrl === 'string' && redirectUrl.startsWith('http')) {
+        setSelectedGame({ ...game, launchUrl: redirectUrl });
+      } else {
+        toast.error("Could not get game URL");
+        setIsModalOpen(false);
+        setSelectedGame(null);
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to launch game");
+      setIsModalOpen(false);
+      setSelectedGame(null);
+    }
   };
 
   const handleCloseModal = () => {
