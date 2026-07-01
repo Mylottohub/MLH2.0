@@ -1358,15 +1358,15 @@ const Operator = () => {
                 </div>
                 &nbsp;&nbsp;&nbsp;
                 <div className="col-xs-6  w-50">
-                  <a
+                  {/* <a
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
                     // onClick={() => navigate("/login")}
                     className="btn btn-blue btn-block btn-lg"
-                  >
-                    {/* <a
+                  > */}
+                    <a
                    className="btn btn-blue btn-block btn-lg"
                     href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"
-                  >*/}
+                  >
                     Login
                   </a> 
                 </div>

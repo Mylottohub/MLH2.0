@@ -954,14 +954,14 @@ const Navbar = () => {
                 )}
                 <hr />
                 <li className="nav-item">
-                  <a
+                  {/* <a
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=v8kfysqoljbgd&response_type=code&scope=openid+email+profile&redirect_uri=https://app.mylottohub.com"
-                  >
-                    {/* <a
+                  > */}
+                    <a
                     className="nav-link text-dark fw-bolder me-3"
                     href="https://api.mpin.io/authorize?client_id=vv4g3gaqxgvhi&response_type=code&scope=openid+email+profile&redirect_uri=https://test.mylottohub.com"
-                  >*/}
+                  >
                     Sign In
                   </a> 
                 </li>
