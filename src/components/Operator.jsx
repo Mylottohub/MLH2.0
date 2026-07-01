@@ -9,6 +9,7 @@ import { HTTP } from "../utils";
 import { useGetProfileUser } from "../react-query";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { images } from "../constant";
 
 // Cache display-operators logos for this session to avoid re-fetching on navigation
 let OPERATOR_LOGOS_CACHE = null;
@@ -22,6 +23,7 @@ const Operator = () => {
   const [isIframeLoading, setIsIframeLoading] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [showComingSoonModal, setShowComingSoonModal] = useState(false);
+  const [modernLottoFirstGame, setModernLottoFirstGame] = useState(null);
 
   // AfriMillions modal state
 
@@ -65,6 +67,26 @@ const Operator = () => {
     fetchOperatorLogos();
   }, []);
 
+  // Fetch first Modern Lotto game for display
+  useEffect(() => {
+    const fetchModernLotto = async () => {
+      try {
+        const response = await HTTP.post("/get-games", {
+          operator_type: "modernlottogames",
+        }, {
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+        });
+        const list = response.data?.data || response.data?.result || [];
+        if (Array.isArray(list) && list.length > 0) {
+          setModernLottoFirstGame(list[0]);
+        }
+      } catch (err) {
+        // silently fail
+      }
+    };
+    fetchModernLotto();
+  }, []);
+
   const operatorTypes = [
     "afrimillions_5_55", // AfriMillions 5/55
     "afrimillions", // AfriMillions 6/49
@@ -84,7 +106,6 @@ const Operator = () => {
     "GD570",
     "GD580",
     "GD590",
-    "modernlottogames",
   ];
 
   const requestTypeMapping = {
@@ -126,6 +147,26 @@ const Operator = () => {
       }
     });
   }, [userInfo]);
+
+  // Fetch Modern Lotto first game
+  useEffect(() => {
+    const fetchModernLotto = async () => {
+      try {
+        const response = await HTTP.post("/get-games", {
+          operator_type: "modernlottogames",
+        }, {
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+        });
+        const list = response.data?.data || response.data?.result || [];
+        if (Array.isArray(list) && list.length > 0) {
+          setModernLottoFirstGame(list[0]);
+        }
+      } catch (err) {
+        // silently fail
+      }
+    };
+    fetchModernLotto();
+  }, []);
 
   const now = new Date();
 
@@ -438,6 +479,73 @@ const Operator = () => {
             </tr>
           ) : (
             <LayoutGroup>
+              {/* Modern Lotto Games - First Operator */}
+              <motion.div
+                layout
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="col-md-3 col-sm-6 col-xs-12 col-2"
+              >
+                <motion.div
+                  className="service-wrap mb-5"
+                  whileHover={{
+                    y: -6,
+                    boxShadow: "0 14px 34px rgba(0,0,0,0.12)",
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 260,
+                    damping: 24,
+                  }}
+                >
+                  <a>
+                    <motion.div
+                      className="service-img"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <motion.img
+                        src={images.modern}
+                        alt="Modern Lotto Games"
+                        className="img-fluid mb-3"
+                      />
+                    </motion.div>
+                  </a>
+                  <div className="service-conten text-center">
+                    <p
+                      style={{
+                        color: "#000",
+                        fontWeight: "bolder",
+                        fontSize: "18px",
+                      }}
+                    >
+                      <strong>NEXT GAME:</strong>
+                      <br />
+                      {modernLottoFirstGame?.typeName || "Modern Lotto Games"}
+                    </p>
+                    <p onClick={() => navigate("/modern-lotto-games")}>
+                      <motion.a
+                        className="btn btn-blue btn-sm btn-block w-100 p-2"
+                        style={{ minHeight: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        whileHover={{
+                          scale: [1, 1.05, 1],
+                          y: [-1, 0],
+                          transition: {
+                            duration: 0.6,
+                            repeat: Infinity,
+                            repeatType: "mirror",
+                          },
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Play Now
+                      </motion.a>
+                    </p>
+                  </div>
+                </motion.div>
+              </motion.div>
+
               <AnimatePresence initial={false}>
                 {operatorTypes.map((operatorType, index) => {
                   const operatorDataArray = operatorData[operatorType];

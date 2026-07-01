@@ -36,6 +36,7 @@ import AfriMillionsPage from "../pages/AfriMillionsPage";
 import CrashGames from "../pages/CrashGames";
 import BetConstructGames from "../pages/BetConstructGames";
 import BetConstructOtherGames from "../pages/BetConstructOtherGames";
+import ModernLottoGames from "../pages/ModernLottoGames";
 
 export const routes = [
   {
@@ -277,6 +278,12 @@ export const routes = [
     id: 38,
     path: "/betconstruct-other-games",
     element: <BetConstructOtherGames />,
+    protected: false,
+  },
+  {
+    id: 39,
+    path: "/modern-lotto-games",
+    element: <ModernLottoGames />,
     protected: false,
   },
 ];

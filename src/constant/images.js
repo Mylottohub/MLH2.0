@@ -26,6 +26,7 @@ import xcape from "../assets/images/xcape.jpeg";
 import eagle from "../assets/images/eagle.jpeg";
 import luckyrise from "../assets/images/luckyrise.jpeg";
 import afrimillions from "../assets/images/affrimilli.svg";
+import modern from "../assets/images/modern.jpg"
 
 const allImages = {
   easywin,
@@ -55,7 +56,8 @@ const allImages = {
   xcape,
   eagle,
   luckyrise,
-  afrimillions
+  afrimillions,
+  modern
 };
 
 export default allImages;

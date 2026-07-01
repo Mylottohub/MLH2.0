@@ -12,6 +12,7 @@ import Slider from "../Slider";
 import { useGetProfileUser } from "../../react-query";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { images } from "../../constant";
 
 // Cache display-operators logos for this session to avoid re-fetching on navigation
 let OPERATOR_LOGOS_CACHE_MOBILE = null;
@@ -22,6 +23,7 @@ const OperatorMobile = () => {
   const [showModal, setShowModal] = useState(false);
   const [iframeUrl, setIframeUrl] = useState("");
   const [isIframeLoading, setIsIframeLoading] = useState(false);
+  const [modernLottoFirstGame, setModernLottoFirstGame] = useState(null);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -62,6 +64,26 @@ const OperatorMobile = () => {
     fetchOperatorLogos();
   }, []);
 
+  // Fetch first Modern Lotto game
+  useEffect(() => {
+    const fetchModernLotto = async () => {
+      try {
+        const response = await HTTP.post("/get-games", {
+          operator_type: "modernlottogames",
+        }, {
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+        });
+        const list = response.data?.data || response.data?.result || [];
+        if (Array.isArray(list) && list.length > 0) {
+          setModernLottoFirstGame(list[0]);
+        }
+      } catch (err) {
+        // silently fail
+      }
+    };
+    fetchModernLotto();
+  }, []);
+
   const operatorTypes = [
     "afrimillions_5_55", // AfriMillions 5/55
     "afrimillions", // AfriMillions 6/49
@@ -80,7 +102,6 @@ const OperatorMobile = () => {
     "GD570",
     "GD580",
     "GD590",
-    "modernlottogames",
 
   ];
 
@@ -331,6 +352,57 @@ const OperatorMobile = () => {
             </div>
           ) : (
             <LayoutGroup>
+              {/* Modern Lotto Games - First Operator */}
+              <motion.div
+                layout
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <div className="hidden-md hidden-lg div_vlgrey">
+                  <table width="100%" cellPadding="3">
+                    <tbody>
+                      <tr valign="top">
+                        <td width="41%">
+                          <motion.img
+                            src={images.modern}
+                            className="img-fluid"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.98 }}
+                          />
+                        </td>
+                        <td style={{ lineHeight: "19px!important" }}>
+                          <table width="100%" cellPadding="3">
+                            <tbody style={{ color: "#000", fontWeight: "bolder" }}>
+                              <tr valign="top">
+                                <td style={{ lineHeight: "27px!important" }}>
+                                  <small><strong>NEXT GAME:</strong></small>
+                                  <br />
+                                  <small className="fw-bolder" style={{ fontSize: "18px" }}>
+                                    {modernLottoFirstGame?.typeName || "Modern Lotto Games"}
+                                  </small>
+                                  <br /><br />
+                                  <p onClick={() => navigate("/modern-lotto-games")}>
+                                    <motion.a
+                                      className="btn btn-blue btn-sm btn-block w-100 mt-3"
+                                      style={{ minHeight: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                                      whileHover={{ scale: [1, 1.05, 1], y: [-1, 0], transition: { duration: 0.6, repeat: Infinity, repeatType: "mirror" } }}
+                                      whileTap={{ scale: 0.98 }}
+                                    >
+                                      Play Now
+                                    </motion.a>
+                                  </p>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </motion.div>
+
               <AnimatePresence initial={false}>
                 {operatorTypes?.map((operatorType, index) => {
                   // Special handling for AfriMillions
@@ -549,6 +621,8 @@ const OperatorMobile = () => {
                         }
                       } else if (operatorType === "afrimillions" || operatorType === "afrimillions_5_90" || operatorType === "afrimillions_5_55") {
                         // drawTime is Unix timestamp in milliseconds
+                        drawTime = game?.drawTime ? moment(game.drawTime) : null;
+                      } else if (operatorType === "modernlottogames") {
                         drawTime = game?.drawTime ? moment(game.drawTime) : null;
                       }
 
@@ -830,6 +904,8 @@ const OperatorMobile = () => {
                       } else if (operatorType === "afrimillions" || operatorType === "afrimillions_5_90" || operatorType === "afrimillions_5_55") {
                         // drawTime is Unix timestamp in milliseconds
                         return game?.drawTime ? new Date(game.drawTime) : null;
+                      } else if (operatorType === "modernlottogames") {
+                        return game?.drawTime ? new Date(game.drawTime) : null;
                       } else {
                         const parsedTime = moment(time, "DD/MM/YYYY HH:mm")
                           .utcOffset("+00:00")
@@ -970,6 +1046,10 @@ const OperatorMobile = () => {
                                                     operatorType === "afrimillions_5_55"
                                                   ) {
                                                     navigate("/afrimillions?type=5_55");
+                                                  } else if (
+                                                    operatorType === "modernlottogames"
+                                                  ) {
+                                                    navigate("/modern-lotto-games");
                                                   } else {
                                                     const sanitizedOperatorType =
                                                       operatorType === "GH 5/90"
