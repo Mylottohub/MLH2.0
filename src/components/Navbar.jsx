@@ -132,17 +132,133 @@ const Navbar = () => {
 
       {token && expires && new Date(expires) > new Date() ? (
         <>
-          <div className="mobile__header">
+          <div className="mobile__header" style={{ position: "relative" }}>
             <Header />
 
+            {/* User icon dropdown positioned on the yellow header bar - MOBILE ONLY */}
+            <div className="d-block d-md-none" style={{ position: "absolute", top: "50%", right: "8px", transform: "translateY(-50%)", zIndex: 10 }}>
+              <ul className="list-unstyled mb-0">
+                <li className="nav-item dropdown">
+                  <a
+                    id="app__mobile-nav"
+                    className="nav-link dropdown-toggle"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    style={{ padding: 0 }}
+                  >
+                    <span className="avatar-with-live">
+                      <FaUser className="fa-2x" style={{ color: "#0B3E53" }} />
+                      <motion.span
+                        className="live-dot"
+                        animate={{
+                          scale: [1, 1.3, 1],
+                          opacity: [0.8, 1, 0.8],
+                        }}
+                        transition={{ duration: 1.2, repeat: Infinity }}
+                      />
+                    </span>
+                  </a>
+                  <motion.ul
+                    className="dropdown-menu dropdown-menu-end fw-bolder"
+                    style={{ minWidth: "220px", right: 0 }}
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    {/* User Profile section */}
+                    <li>
+                      <button
+                        type="button"
+                        className="dropdown-item p-2 fw-bolder d-flex justify-content-between align-items-center"
+                        onClick={() => setIsMobileUserSectionOpen((prev) => !prev)}
+                      >
+                        <a className="fw-bolder text-decoration-none text-dark" onClick={() => navigate("/profile")}>
+                          &nbsp;&nbsp;User Profile
+                        </a>
+                        <span>{isMobileUserSectionOpen ? "−" : "+"}</span>
+                      </button>
+                    </li>
+                    {isMobileUserSectionOpen && (
+                      <>
+                        <li onClick={() => handleUserProfile()}>
+                          <a className="dropdown-item ps-4 p-2 fw-bolder">Profile</a>
+                        </li>
+                        <li onClick={() => navigate("/transactions")}>
+                          <a className="dropdown-item ps-4 p-2 fw-bolder">Transactions</a>
+                        </li>
+                        <li onClick={() => navigate("/referral")}>
+                          <a className="dropdown-item ps-4 p-2 fw-bolder">Referral</a>
+                        </li>
+                        <li><hr className="dropdown-divider" /></li>
+                      </>
+                    )}
+
+                    {/* Wallet section */}
+                    <li>
+                      <button
+                        type="button"
+                        className="dropdown-item p-2 fw-bolder d-flex justify-content-between align-items-center"
+                        style={{ fontSize: "15px" }}
+                        onClick={() => setIsMobileWalletSectionOpen((prev) => !prev)}
+                      >
+                        <a className="fw-bolder text-decoration-none text-dark">&nbsp;&nbsp;Wallet</a>
+                        <span>{isMobileWalletSectionOpen ? "−" : "+"}</span>
+                      </button>
+                    </li>
+                    {isMobileWalletSectionOpen && (
+                      <>
+                        <li onClick={() => navigate("/wallet")}>
+                          <a className="dropdown-item ps-4 p-2 fw-bolder">Wallet Information</a>
+                        </li>
+                        <li><a className="dropdown-item ps-4 p-2 fw-bolder" onClick={() => handleDeposit()}>Deposit</a></li>
+                        <li><a className="dropdown-item ps-4 p-2 fw-bolder" onClick={() => handleWithdraw()}>Withdraw</a></li>
+                        <li><hr className="dropdown-divider" /></li>
+                      </>
+                    )}
+
+                    {/* Results */}
+                    <li><a className="dropdown-item p-2 fw-bolder" onClick={() => navigate("/result")}>&nbsp;&nbsp;Results</a></li>
+                    <li><hr className="dropdown-divider" /></li>
+
+                    {/* Tools section */}
+                    <li>
+                      <button
+                        type="button"
+                        className="dropdown-item p-2 fw-bolder d-flex justify-content-between align-items-center"
+                        style={{ fontSize: "15px" }}
+                        onClick={() => setIsMobileToolsSectionOpen((prev) => !prev)}
+                      >
+                        <a className="fw-bolder text-decoration-none text-dark">&nbsp;&nbsp;Tools</a>
+                        <span>{isMobileToolsSectionOpen ? "−" : "+"}</span>
+                      </button>
+                    </li>
+                    {isMobileToolsSectionOpen && (
+                      <>
+                        <li><a className="dropdown-item ps-4 p-2 fw-bolder" onClick={() => navigate("/forecast")}>Quick Forecast</a></li>
+                        <li><a className="dropdown-item ps-4 p-2 fw-bolder" onClick={() => navigate("/create-chart")}>Create Chart</a></li>
+                        <li><a className="dropdown-item ps-4 p-2 fw-bolder" onClick={() => navigate("/timetable")}>Time Table</a></li>
+                        <li><hr className="dropdown-divider" /></li>
+                      </>
+                    )}
+
+                    {/* Lotto Ladies & Logout */}
+                    <li><a className="dropdown-item p-2 fw-bolder" onClick={() => navigate("/lotto-ladies")}>&nbsp;&nbsp;Watch Videos</a></li>
+                    <li>
+                      <motion.a onClick={() => handleLogout()} className="dropdown-item p-2 fw-bolder" whileTap={{ scale: 0.96, opacity: 0.9 }}>
+                        &nbsp;&nbsp;Logout
+                      </motion.a>
+                    </li>
+                  </motion.ul>
+                </li>
+              </ul>
+            </div>
+
             <nav
-              className={`navbar navbar-expand-lg app__navbar-bg ${isScrolled ? "navbar-scrolled" : ""
-                }`}
+              className={`navbar navbar-expand-lg app__navbar-bg d-none d-lg-flex ${isScrolled ? "navbar-scrolled" : ""}`}
             >
-              <div className="container">
-                {/* left spacer */}
-                <p></p>
-                <div className="text-white app__transaction-mobile">
+              <div className="container d-flex align-items-center justify-content-end">
+                <div className="text-white app__transaction-mobile" style={{ display: "none" }}>
                   <span>
                     <ul className="d-flex justify-content-between app__sign-in fw-bolder">
                       <li className="nav-item dropdown text-center">

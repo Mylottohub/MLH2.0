@@ -213,6 +213,7 @@ const ModernLottoGames = () => {
                   key={index}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => setHoveredIndex(hoveredIndex === index ? null : index)}
                 >
                   <div className="bcg-tile-img">
                     {gameImage ? (

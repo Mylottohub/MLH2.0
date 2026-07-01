@@ -126,6 +126,7 @@ const Instance = () => {
                 key={game.key}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => setHoveredIndex(hoveredIndex === index ? null : index)}
               >
                 <div className="bcg-tile-img">
                   <img src={game.image} alt={game.title} />

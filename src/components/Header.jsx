@@ -119,7 +119,7 @@ const Header = () => {
         </div>
       </header>
       <div className="mobile__header-hide p-3 slide-up">
-        <table cellPadding="5">
+        <table cellPadding="5" style={{ width: "100%" }}>
           <tbody>
             <tr>
               <td>
@@ -137,7 +137,7 @@ const Header = () => {
                 </a>
               </td>
               <td valign="middle">
-                <motion.p className="balance-display" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+                <motion.p className="balance-display" style={{ marginBottom: 0 }} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
                   {userProfileResponse?.username}
                   <br />
                   <strong>User ID:</strong> {userProfileResponse?.id}
